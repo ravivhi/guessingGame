@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -229,8 +229,7 @@
 <body>
 
     <div class="game-container">
-        <h1>משחק אליאס</h1>
-        <div class="subtitle">גרסת הטורניר - 10 שחקנים נפרדים</div>
+        <h1>משחק הניחושים</h1>
 
         <!-- מסך הגדרה ראשוני -->
         <div id="setup-screen" class="hidden">
@@ -1090,26 +1089,6 @@ self.addEventListener('fetch', e => {
                 .catch(err => console.log('SW failed:', err));
         }
 
-        // ── PWA: כפתור התקנה ──
-        let deferredPrompt = null;
-        window.addEventListener('beforeinstallprompt', e => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (!document.getElementById('install-banner')) {
-                const banner = document.createElement('div');
-                banner.id = 'install-banner';
-                banner.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#4a00e0;color:white;padding:12px 20px;border-radius:30px;font-size:1rem;font-weight:bold;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:9999;display:flex;gap:12px;align-items:center;white-space:nowrap;';
-                banner.innerHTML = '<span>\uD83D\uDCF2 הוסף לדף הבית</span><button id="install-btn" style="background:white;color:#4a00e0;border:none;border-radius:20px;padding:6px 14px;font-weight:bold;cursor:pointer;">התקן</button><span id="install-close" style="opacity:.7;font-size:1.2rem;cursor:pointer;">✕</span>';
-                document.body.appendChild(banner);
-                document.getElementById('install-btn').onclick = async () => {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    deferredPrompt = null;
-                    banner.remove();
-                };
-                document.getElementById('install-close').onclick = () => banner.remove();
-            }
-        });
-    </script>
+        </script>
 </body>
 </html>

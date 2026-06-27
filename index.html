@@ -6,12 +6,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="אליאס">
+    <meta name="apple-mobile-web-app-title" content="ניחוש">
     <meta name="theme-color" content="#4a00e0">
-    <title>אליאס - טורניר 10 שחקנים</title>
+    <title>ניחוש - טורניר 10 שחקנים</title>
 
     <!-- PWA Manifest inline as data URI -->
-    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D7%90%D7%9C%D7%99%D7%90%D7%A1%20-%20%D7%98%D7%95%D7%A8%D7%A0%D7%99%D7%A8%2010%20%D7%A9%D7%97%D7%A7%D7%A0%D7%99%D7%9D%22%2C%22short_name%22%3A%22%D7%90%D7%9C%D7%99%D7%90%D7%A1%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%234a00e0%22%2C%22theme_color%22%3A%22%234a00e0%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg'%2520viewBox%253D'0%25200%2520192%2520192'%253E%253Ccircle%2520cx%253D'96'%2520cy%253D'96'%2520r%253D'96'%2520fill%253D'%25234a00e0'%252F%253E%253Ctext%2520x%253D'50%2525'%2520y%253D'50%2525'%2520dominant-baseline%253D'middle'%2520text-anchor%253D'middle'%2520font-size%253D'96'%253E%25F0%259F%2594%25A4%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D7%A0%D7%99%D7%97%D7%95%D7%A9%20-%20%D7%98%D7%95%D7%A8%D7%A0%D7%99%D7%A8%2010%20%D7%A9%D7%97%D7%A7%D7%A0%D7%99%D7%9D%22%2C%22short_name%22%3A%22%D7%A0%D7%99%D7%97%D7%95%D7%A9%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%234a00e0%22%2C%22theme_color%22%3A%22%234a00e0%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg'%2520viewBox%253D'0%25200%2520192%2520192'%253E%253Ccircle%2520cx%253D'96'%2520cy%253D'96'%2520r%253D'96'%2520fill%253D'%25234a00e0'%252F%253E%253Ctext%2520x%253D'50%2525'%2520y%253D'50%2525'%2520dominant-baseline%253D'middle'%2520text-anchor%253D'middle'%2520font-size%253D'96'%253E%25F0%259F%2594%25A4%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
     <!-- Apple touch icon inline SVG -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%234a00e0'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='100'>🔤</text></svg>">
@@ -737,8 +737,8 @@
 
         function initTournament() {
             const DATA_VERSION = "v3-configurable";
-            const savedData = localStorage.getItem('aliasTournamentData');
-            const savedVersion = localStorage.getItem('aliasDataVersion');
+            const savedData = localStorage.getItem('guessingTournamentData');
+            const savedVersion = localStorage.getItem('guessingDataVersion');
 
             if (savedData && savedVersion === DATA_VERSION) {
                 tournamentData = JSON.parse(savedData);
@@ -819,7 +819,7 @@
                 };
             }
 
-            localStorage.setItem('aliasDataVersion', 'v3-configurable');
+            localStorage.setItem('guessingDataVersion', 'v3-configurable');
             saveToStorage();
             activePlayerId = 'player1';
             showMainScreen();
@@ -1049,13 +1049,13 @@
         }
 
         function saveToStorage() {
-            localStorage.setItem('aliasTournamentData', JSON.stringify(tournamentData));
+            localStorage.setItem('guessingTournamentData', JSON.stringify(tournamentData));
         }
 
         function resetAllData() {
             if (confirm("איפוס מוחלט? כל הניקוד ימחק ותוכל להגדיר טורניר חדש.")) {
-                localStorage.removeItem('aliasTournamentData');
-                localStorage.removeItem('aliasDataVersion');
+                localStorage.removeItem('guessingTournamentData');
+                localStorage.removeItem('guessingDataVersion');
                 tournamentData = {};
                 activePlayerId = 'player1';
                 showSetupScreen();
@@ -1065,7 +1065,7 @@
         // ── PWA: Service Worker רשום דרך Blob (עובד גם מקובץ מקומי) ──
         if ('serviceWorker' in navigator) {
             const swCode = `
-const CACHE = 'alias-v1';
+const CACHE = 'guessing-v1';
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
 self.addEventListener('fetch', e => {

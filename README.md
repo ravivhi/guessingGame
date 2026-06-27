@@ -1,2 +1,2 @@
-# aliascards
-alias cards
+# guessingGame
+guessing game

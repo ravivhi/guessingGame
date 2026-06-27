@@ -1,0 +1,27 @@
+{
+  "name": "ניחוש - טורניר",
+  "short_name": "ניחוש",
+  "description": "משחק ניחוש מילים למסיבות",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#4a00e0",
+  "theme_color": "#4a00e0",
+  "orientation": "portrait",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

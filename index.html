@@ -1090,4 +1090,10 @@ self.addEventListener('fetch', e => {
             const blob = new Blob([swCode], { type: 'application/javascript' });
             const swUrl = URL.createObjectURL(blob);
             navigator.serviceWorker.register(swUrl)
-                
+                .then(() => console.log('SW registered'))
+                .catch(err => console.log('SW failed:', err));
+        }
+
+        </script>
+</body>
+</html>

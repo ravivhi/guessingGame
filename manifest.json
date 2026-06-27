@@ -1,7 +1,7 @@
 {
-  "name": "ניחוש - טורניר",
-  "short_name": "ניחוש",
-  "description": "משחק ניחוש מילים למסיבות",
+  "name": "guessing game",
+  "short_name": "guessing game",
+  "description": "all players need to guess the words",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -1,0 +1,39 @@
+{
+  "packageId": "com.raviv.guessingGame",
+  "host": "ravivh.com",
+  "name": "guessing game",
+  "launcherName": "guessing game",
+  "display": "standalone",
+  "themeColor": "#4a00e0",
+  "navigationColor": "#4a00e0",
+  "navigationColorDark": "#4a00e0",
+  "navigationDividerColor": "#4a00e0",
+  "navigationDividerColorDark": "#4a00e0",
+  "backgroundColor": "#4a00e0",
+  "enableNotifications": false,
+  "startUrl": "/",
+  "iconUrl": "https://ravivh.com/icons/icon-512.png",
+  "maskableIconUrl": "https://ravivh.com/icons/icon-512.png",
+  "monochromeIconUrl": "https://ravivh.com/icons/icon-512.png",
+  "appVersion": "1",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "guessingGame"
+  },
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://ravivh.com/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "serviceAccountJsonFile": "",
+  "shortcuts": []
+}

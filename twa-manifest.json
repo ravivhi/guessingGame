@@ -1,8 +1,8 @@
 {
   "packageId": "com.raviv.guessingGame",
   "host": "ravivh.com",
-  "name": "guessing game",
-  "launcherName": "guessing game",
+  "name": "Guessing Game",
+  "launcherName": "Guessing Game",
   "display": "standalone",
   "themeColor": "#4a00e0",
   "navigationColor": "#4a00e0",

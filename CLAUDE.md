@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Alias Cards** is a Hebrew-language PWA implementation of the classic "Alias" party game. Deployed at `ravivh.com` via GitHub Pages. The entire app — markup, styles, logic, and 700+ word dictionary — lives in a single `index.html` file with no build pipeline.
+**Guessing Game** is a Hebrew-language PWA implementation of a word-guessing party game. Deployed at `ravivh.com` via GitHub Pages. The entire app — markup, styles, logic, and 700+ word dictionary — lives in a single `index.html` file with no build pipeline.
 
 ## Development
 

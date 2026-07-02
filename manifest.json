@@ -1,6 +1,6 @@
 {
-  "name": "guessing game",
-  "short_name": "guessing game",
+  "name": "Guessing Game",
+  "short_name": "Guessing Game",
   "description": "all players need to guess the words",
   "start_url": "/",
   "scope": "/",

@@ -853,11 +853,55 @@
 
             if (savedData && savedVersion === DATA_VERSION) {
                 tournamentData = JSON.parse(savedData);
-                showMainScreen();
+                restoreGameState();
             } else {
                 // אין טורניר שמור — הצג מסך הגדרה
                 showSetupScreen();
             }
+        }
+
+        // שחזור המסך שבו המשתמש היה לפני הרענון (במקום לחזור תמיד לתפריט)
+        function restoreGameState() {
+            const raw = localStorage.getItem('guessingGameState');
+            if (raw) {
+                try {
+                    const state = JSON.parse(raw);
+                    if (state.screen === 'game' && tournamentData[state.activePlayerId]) {
+                        resumeGameScreen(state);
+                        return;
+                    }
+                    if (state.screen === 'summary' && tournamentData[state.activePlayerId]) {
+                        activePlayerId = state.activePlayerId;
+                        showSummaryFromState(state);
+                        return;
+                    }
+                    if (state.screen === 'names') {
+                        showMainScreen();
+                        openNamesScreen();
+                        return;
+                    }
+                } catch (e) {}
+            }
+            showMainScreen();
+        }
+
+        function persistGameState(screen) {
+            const state = {
+                screen: screen,
+                activePlayerId: activePlayerId,
+                currentRoundWords: currentRoundWords,
+                currentWordIndex: currentWordIndex,
+                roundScoreChange: roundScoreChange,
+                timeLeft: timeLeft,
+                isTimeUp: isTimeUp,
+                playedInRoundHistory: playedInRoundHistory,
+                savedAt: Date.now()
+            };
+            localStorage.setItem('guessingGameState', JSON.stringify(state));
+        }
+
+        function clearGameState() {
+            localStorage.removeItem('guessingGameState');
         }
 
         function showSetupScreen(defaultCount) {
@@ -941,6 +985,7 @@
                 document.getElementById(id).classList.add('hidden');
             });
             document.getElementById('start-screen').classList.remove('hidden');
+            persistGameState('start');
 
             const selectElem = document.getElementById('player-select');
             selectElem.innerHTML = '';
@@ -965,6 +1010,7 @@
         function openNamesScreen() {
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('names-screen').classList.remove('hidden');
+            persistGameState('names');
             const grid = document.getElementById('names-grid');
             grid.innerHTML = '';
             Object.keys(tournamentData).forEach((pid, idx) => {
@@ -978,6 +1024,7 @@
         function closeNamesScreen() {
             document.getElementById('names-screen').classList.add('hidden');
             document.getElementById('start-screen').classList.remove('hidden');
+            persistGameState('start');
         }
 
         function saveNames() {
@@ -1072,17 +1119,79 @@
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
 
-            // טיימר
+            persistGameState('game');
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 timeLeft--;
                 const tElem = document.getElementById('timer');
                 if (tElem) tElem.innerText = timeLeft;
+                persistGameState('game');
 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     handleTimeUp();
                 }
             }, 1000);
+        }
+
+        // שחזור סיבוב שהיה באמצע כשהדף רוענן
+        function resumeGameScreen(state) {
+            activePlayerId = state.activePlayerId;
+            const player = tournamentData[activePlayerId];
+
+            currentRoundWords = state.currentRoundWords || [];
+            currentWordIndex = state.currentWordIndex || 0;
+            roundScoreChange = state.roundScoreChange || 0;
+            playedInRoundHistory = state.playedInRoundHistory || [];
+            isTimeUp = !!state.isTimeUp;
+
+            const elapsedSeconds = Math.floor((Date.now() - (state.savedAt || Date.now())) / 1000);
+            timeLeft = Math.max(0, (state.timeLeft || 0) - elapsedSeconds);
+
+            document.getElementById('game-current-player').innerText = player.name;
+            document.getElementById('score').innerText = roundScoreChange;
+            document.getElementById('timer-box').innerHTML = 'זמן: <span id="timer" class="timer">' + timeLeft + '</span>';
+
+            ['setup-screen','start-screen','names-screen','summary-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('game-screen').classList.remove('hidden');
+
+            if (timeLeft <= 0 || isTimeUp) {
+                handleTimeUp();
+                return;
+            }
+
+            showNextWord();
+            persistGameState('game');
+            startTimer();
+        }
+
+        function showSummaryFromState(state) {
+            const player = tournamentData[activePlayerId];
+            roundScoreChange = state.roundScoreChange || 0;
+            playedInRoundHistory = state.playedInRoundHistory || [];
+
+            document.getElementById('summary-player-name').innerText = player.name;
+            document.getElementById('round-score').innerText = (roundScoreChange >= 0 ? '+' : '') + roundScoreChange;
+            document.getElementById('summary-total-score').innerText = player.totalScore;
+
+            const listElem = document.getElementById('summary-list');
+            listElem.innerHTML = playedInRoundHistory.map(item => `
+                <div class="summary-item">
+                    <span>${item.word}</span>
+                    <span class="${item.success ? 'status-v' : 'status-x'}">${item.success ? '✓' : '✗'}</span>
+                </div>
+            `).join('');
+
+            ['setup-screen','start-screen','names-screen','game-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('summary-screen').classList.remove('hidden');
         }
 
         function showNextWord() {
@@ -1125,6 +1234,7 @@
             } else {
                 currentWordIndex++;
                 showNextWord();
+                persistGameState('game');
             }
         }
 
@@ -1155,6 +1265,8 @@
             // מעבר מסכים
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('summary-screen').classList.remove('hidden');
+
+            persistGameState('summary');
         }
 
         function backToMenu() {
@@ -1172,6 +1284,7 @@
             if (confirm("איפוס מוחלט? כל הניקוד ימחק ותוכל להגדיר טורניר חדש.")) {
                 localStorage.removeItem('guessingTournamentData');
                 localStorage.removeItem('guessingDataVersion');
+                clearGameState();
                 tournamentData = {};
                 activePlayerId = 'player1';
                 showSetupScreen();

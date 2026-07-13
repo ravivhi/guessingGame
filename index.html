@@ -295,7 +295,8 @@
                 <div>נקודות שהושגו בסיבוב: <span id="round-score" class="score">0</span></div>
                 <div>ניקוד כולל מצטבר: <span id="summary-total-score" style="color: #2980b9;">0</span></div>
             </div>
-            
+            <div id="summary-bonus" class="hidden" style="color:#f39c12;font-weight:bold;margin-bottom:10px;">🌟 בונוס! ניחוש מושלם בלי אף טעות (+1)</div>
+
             <h3>מילים מהסיבוב האחרון:</h3>
             <div class="summary-list" id="summary-list"></div>
             
@@ -1180,6 +1181,9 @@
             document.getElementById('round-score').innerText = (roundScoreChange >= 0 ? '+' : '') + roundScoreChange;
             document.getElementById('summary-total-score').innerText = player.totalScore;
 
+            const isPerfectRound = playedInRoundHistory.length > 0 && playedInRoundHistory.every(item => item.success);
+            document.getElementById('summary-bonus').classList.toggle('hidden', !isPerfectRound);
+
             const listElem = document.getElementById('summary-list');
             listElem.innerHTML = playedInRoundHistory.map(item => `
                 <div class="summary-item">
@@ -1241,6 +1245,12 @@
         function endRound() {
             clearInterval(timerInterval);
 
+            // בונוס: ניחוש מושלם של כל המילים בסיבוב בלי אף טעות
+            const isPerfectRound = playedInRoundHistory.length > 0 && playedInRoundHistory.every(item => item.success);
+            if (isPerfectRound) {
+                roundScoreChange += 1;
+            }
+
             // הוספת הניקוד שהושג לניקוד הכללי המצטבר של השחקן
             const player = tournamentData[activePlayerId];
             player.totalScore += roundScoreChange;
@@ -1253,6 +1263,7 @@
             document.getElementById('summary-player-name').innerText = player.name;
             document.getElementById('round-score').innerText = (roundScoreChange >= 0 ? '+' : '') + roundScoreChange;
             document.getElementById('summary-total-score').innerText = player.totalScore;
+            document.getElementById('summary-bonus').classList.toggle('hidden', !isPerfectRound);
 
             const listElem = document.getElementById('summary-list');
             listElem.innerHTML = playedInRoundHistory.map(item => `

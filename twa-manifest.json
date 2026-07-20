@@ -33,7 +33,7 @@
   "fullScopeUrl": "https://ravivh.com/",
   "minSdkVersion": 21,
   "orientation": "portrait",
-  "fingerprints": [],
+  "fingerprints": ["EA:AC:4B:5B:2E:B1:F7:49:77:4F:AC:BD:01:08:F0:C5:11:59:46:C9:73:7E:34:1F:73:FF:FC:95:2C:C1:06:F4"],
   "serviceAccountJsonFile": "",
   "shortcuts": []
 }

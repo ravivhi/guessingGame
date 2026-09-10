@@ -11,10 +11,10 @@
   "navigationDividerColorDark": "#4a00e0",
   "backgroundColor": "#4a00e0",
   "enableNotifications": false,
-  "startUrl": "/",
-  "iconUrl": "https://ravivh.com/icons/icon-512.png",
-  "maskableIconUrl": "https://ravivh.com/icons/icon-512.png",
-  "monochromeIconUrl": "https://ravivh.com/icons/icon-512.png",
+  "startUrl": "/guessingGame/",
+  "iconUrl": "https://ravivh.com/guessingGame/icons/icon-512.png",
+  "maskableIconUrl": "https://ravivh.com/guessingGame/icons/icon-512.png",
+  "monochromeIconUrl": "https://ravivh.com/guessingGame/icons/icon-512.png",
   "appVersion": "1.0.0.2",
   "appVersionCode": 3,
   "signingKey": {
@@ -30,7 +30,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://ravivh.com/",
+  "fullScopeUrl": "https://ravivh.com/guessingGame/",
   "minSdkVersion": 21,
   "orientation": "portrait",
   "fingerprints": [

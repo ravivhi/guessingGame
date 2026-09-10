@@ -2,8 +2,8 @@
   "name": "Guessing Game",
   "short_name": "Guessing Game",
   "description": "all players need to guess the words",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/guessingGame/",
+  "scope": "/guessingGame/",
   "display": "standalone",
   "background_color": "#4a00e0",
   "theme_color": "#4a00e0",
@@ -12,13 +12,13 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/guessingGame/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/guessingGame/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

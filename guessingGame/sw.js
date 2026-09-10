@@ -1,4 +1,4 @@
-const CACHE = 'guessing-v2';
+const CACHE = 'guessing-v3';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });

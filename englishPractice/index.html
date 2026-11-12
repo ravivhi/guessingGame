@@ -7,6 +7,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#4a00e0">
     <title>משחק מילים באנגלית - אליפות!</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="משחק מילים באנגלית">
+    <meta property="og:image" content="https://ravivh.com/englishPractice/preview.png">
+    <meta property="og:url" content="https://ravivh.com/englishPractice/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://ravivh.com/englishPractice/preview.png">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -168,15 +174,13 @@
             <p style="margin:6px 0;">כל שורה: <b>מילה, פירוש, טעות1, טעות2, טעות3</b></p>
             <p style="margin:6px 0;font-size:0.9rem;color:#666;">אם מוסיפים רק מילה ופירוש, הטעויות נבחרות אוטומטית (צריך לפחות 4 מילים).</p>
             <textarea id="words-input" dir="ltr" rows="8" style="width:100%;margin:10px 0;padding:10px;border-radius:10px;border:2px solid #ccc;font-size:1rem;" placeholder="apple, תפוח&#10;dog, כלב, חתול, סוס, פרה"></textarea>
-            <input type="file" id="file-input" accept=".csv,.txt" style="margin-bottom:10px;max-width:100%;">
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
-                <p style="margin:4px 0;font-weight:bold;">📷 קריאת מילים מתמונה (חינם, בלי מפתח)</p>
+                <p style="margin:4px 0;font-weight:bold;">📷 קריאת מילים מתמונה</p>
                 <input type="file" id="photo-input" accept="image/*" multiple style="max-width:100%;">
                 <div id="photo-status" style="min-height:1.4em;margin:6px 0;font-size:0.9rem;color:#2b6cb0;"></div>
             </div>
             <div id="start-error" style="color:#c53030;min-height:1.4em;margin-bottom:6px;"></div>
             <button class="btn-restart" onclick="startFromInput()">התחל משחק</button>
-            <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="useDefaultWords()">השתמש במילים המובנות</button>
         </div>
 
         <div id="game-screen" style="display:none;">
@@ -208,60 +212,7 @@
         }
     </script>
     <script>
-        const defaultWords = [
-            { word: "animal", correct: "חיה", dynamics: ["צמח", "בן אדם", "מכונית"] },
-            { word: "Arabic", correct: "ערבית", dynamics: ["עברית", "אנגלית", "רוסית"] },
-            { word: "bath", correct: "אמבטיה", dynamics: ["מקלחת", "מטבח", "סלון"] },
-            { word: "beach", correct: "חוף ים", dynamics: ["בריכה", "פארק", "הרים"] },
-            { word: "behind", correct: "מאחורי", dynamics: ["לפני", "מתחת", "על יד"] },
-            { word: "bike", correct: "אופניים", dynamics: ["אופנוע", "רכב", "רכבת"] },
-            { word: "birthday", correct: "יום הולדת", dynamics: ["חג", "שבת", "מסיבה"] },
-            { word: "bring", correct: "להביא", dynamics: ["לקחת", "לתת", "לשלוח"] },
-            { word: "cake", correct: "עוגה", dynamics: ["עוגייה", "לחם", "שוקולד"] },
-            { word: "clean", correct: "נקי", dynamics: ["מלוכלך", "חדש", "יפה"] },
-            { word: "cool", correct: "מגניב / קריר", dynamics: ["חם", "משעמם", "עצוב"] },
-            { word: "dance", correct: "לרקוד", dynamics: ["לשיר", "לרוץ", "לשחק"] },
-            { word: "dinner", correct: "ארוחת ערב", dynamics: ["ארוחת בוקר", "ארוחת צהריים", "חטיף"] },
-            { word: "dirty", correct: "מלוכלך", dynamics: ["נקי", "יבש", "רטוב"] },
-            { word: "doctor", correct: "רופא", dynamics: ["מורה", "שוטר", "טבח"] },
-            { word: "drink", correct: "לשתות", dynamics: ["לאכול", "לבשל", "לטעום"] },
-            { word: "elephant", correct: "פיל", dynamics: ["אריה", "קוף", "ג'ירפה"] },
-            { word: "face", correct: "פנים", dynamics: ["ראש", "יד", "רגל"] },
-            { word: "farm", correct: "חווה", dynamics: ["גינה", "חנות", "מפעל"] },
-            { word: "floor", correct: "רצפה", dynamics: ["קיר", "תקרה", "גג"] },
-            { word: "great", correct: "נהדר", dynamics: ["גרוע", "קטן", "נחמד"] },
-            { word: "Hebrew", correct: "עברית", dynamics: ["אנגלית", "ערבית", "צרפתית"] },
-            { word: "horse", correct: "סוס", dynamics: ["חמור", "כלב", "פרה"] },
-            { word: "hospital", correct: "בית חולים", dynamics: ["מרפאה", "בית ספר", "מלון"] },
-            { word: "hungry", correct: "רעב", dynamics: ["צמא", "עייף", "שבע"] },
-            { word: "kitten", correct: "גור חתולים", dynamics: ["כלבלב", "ארנב", "אפרוח"] },
-            { word: "lion", correct: "אריה", dynamics: ["נמר", "דוב", "זאב"] },
-            { word: "listen", correct: "להקשיב", dynamics: ["לדבר", "לראות", "לשתוק"] },
-            { word: "party", correct: "מסיבה", dynamics: ["מפגש", "חופשה", "שיעור"] },
-            { word: "penguin", correct: "פינגווין", dynamics: ["ציפור", "ברווז", "תוכי"] },
-            { word: "people", correct: "אנשים", dynamics: ["ילדים", "חיות", "חברים"] },
-            { word: "ride", correct: "לרכוב", dynamics: ["לנהוג", "ללכת", "לטוס"] },
-            { word: "scared", correct: "מפוחד", dynamics: ["אמיץ", "שמח", "כועס"] },
-            { word: "sea", correct: "ים", dynamics: ["אגם", "נהר", "בריכה"] },
-            { word: "smile", correct: "לחייך", dynamics: ["לבכות", "לצחוק", "לצעוק"] },
-            { word: "swimsuit", correct: "בגד ים", dynamics: ["מכנס", "חולצה", "מגבת"] },
-            { word: "table", correct: "שולחן", dynamics: ["כיסא", "ארון", "מיטה"] },
-            { word: "take", correct: "לקחת", dynamics: ["להביא", "לתת", "לשמור"] },
-            { word: "thirsty", correct: "צמא", dynamics: ["רעב", "עייף", "רוה"] },
-            { word: "this", correct: "הזה / הזאת", dynamics: ["ההוא", "אלה", "שם"] },
-            { word: "tired", correct: "עייף", dynamics: ["רענן", "ישן", "חולה"] },
-            { word: "tricks", correct: "תעלולים / קסמים", dynamics: ["משחקים", "סיפורים", "ריקודים"] },
-            { word: "try", correct: "לנסות", dynamics: ["להצליח", "לוותר", "לטעות"] },
-            { word: "turtle", correct: "צב", dynamics: ["לטאה", "נחש", "חלזון"] },
-            { word: "wake up", correct: "להתעורר", dynamics: ["לישון", "לקום", "לנוח"] },
-            { word: "watch", correct: "לצפות", dynamics: ["להקשיב", "לקרוא", "לכתוב"] },
-            { word: "water", correct: "מים", dynamics: ["מיץ", "חלב", "סודה"] },
-            { word: "when", correct: "מתי", dynamics: ["איפה", "למה", "מי"] },
-            { word: "with", correct: "עם", dynamics: ["בלי", "על", "בתוך"] },
-            { word: "woman", correct: "אישה", dynamics: ["איש", "ילדה", "סבתא"] }
-        ];
-
-        let wordsData = defaultWords.slice();
+        let wordsData = [];
         const STORE_KEY = 'englishpractice-words';
 
         let currentIndex = 0;
@@ -404,7 +355,7 @@
 
         function parseWords(text) {
             const rows = text.replace(/^\uFEFF/, '').split(/\r?\n/)
-                .map(l => l.split(/[,;\t]/).map(x => x.trim()).filter(x => x))
+                .map(l => l.split(/[,;\t]/).map(x => x.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "").trim()).filter(x => x))
                 .filter(r => r.length >= 2);
             const pool = [], seen = new Set();
             for (const r of rows) {
@@ -434,13 +385,10 @@
             const text = document.getElementById("words-input").value;
             const res = parseWords(text);
             if (res.error) { document.getElementById("start-error").innerText = res.error; return; }
-            try { localStorage.setItem(STORE_KEY, text); } catch (e) {}
+            document.getElementById("words-input").value = text.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
+            try { localStorage.setItem(STORE_KEY, document.getElementById("words-input").value); } catch (e) {}
             document.getElementById("start-error").innerText = "";
             beginGame(res.words);
-        }
-
-        function useDefaultWords() {
-            beginGame(defaultWords.slice());
         }
 
         function showStart() {
@@ -448,14 +396,6 @@
             document.getElementById("game-screen").style.display = "none";
             document.getElementById("start-screen").style.display = "block";
         }
-
-        document.getElementById("file-input").addEventListener("change", e => {
-            const f = e.target.files[0];
-            if (!f) return;
-            const r = new FileReader();
-            r.onload = () => { document.getElementById("words-input").value = r.result; };
-            r.readAsText(f, "UTF-8");
-        });
 
         let ocrWorker = null;
 
@@ -526,7 +466,7 @@
             const j = await r.json();
             const t = j.responseData && j.responseData.translatedText || "";
             if (/MYMEMORY WARNING|QUERY LENGTH/i.test(t) || j.responseStatus == 429) throw new Error("חרגת ממכסת התרגום היומית");
-            return t.replace(/[,;]/g, " /").trim();
+            return t.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "").replace(/[,;]/g, " /").trim();
         }
 
         document.getElementById("photo-input").addEventListener("change", async e => {
@@ -554,7 +494,7 @@
                     const add = out.filter(l => l && !have.has(l));
                     box.value = (box.value.trim() ? box.value.trim() + "\n" : "") + add.join("\n");
                 }
-                status.innerText = "מוכן! בדקו את הרשימה (OCR ותרגום לא מושלמים) ולחצו התחל.";
+                status.innerText = "מוכן! בדקו את הרשימה ולחצו התחל.";
             } catch (err) {
                 status.innerText = "שגיאה: " + err.message;
             }
@@ -563,7 +503,7 @@
 
         try {
             const saved = localStorage.getItem(STORE_KEY);
-            if (saved) document.getElementById("words-input").value = saved;
+            if (saved) document.getElementById("words-input").value = saved.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
         } catch (e) {}
     </script>
 </body>

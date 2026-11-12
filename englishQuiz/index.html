@@ -441,7 +441,7 @@
         async function getWorker() {
             if (ocrWorker) return ocrWorker;
             if (!window.Tesseract) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js");
-            ocrWorker = await Tesseract.createWorker("eng+heb");
+            ocrWorker = await Tesseract.createWorker("eng+heb+ara");
             return ocrWorker;
         }
 
@@ -449,33 +449,125 @@
             const scale = Math.min(1.5, 2200 / Math.max(bmp.width, bmp.height));
             const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
             const c = document.createElement("canvas");
-            const swap = deg === 90 || deg === 270;
-            c.width = swap ? h : w; c.height = swap ? w : h;
+            const swap = deg === 90 || deg === 270, pad = Math.round(Math.max(w, h) * 0.04);
+            c.width = (swap ? h : w) + 2 * pad; c.height = (swap ? w : h) + 2 * pad;
             const x = c.getContext("2d");
+            x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height);
             x.translate(c.width / 2, c.height / 2);
             x.rotate(deg * Math.PI / 180);
             x.drawImage(bmp, -w / 2, -h / 2, w, h);
             return c;
         }
 
+        // Local-contrast black/white: removes shadows and text showing through from the other side of the page.
+        function binarize(canvas) {
+            const W = canvas.width, H = canvas.height, ctx = canvas.getContext("2d");
+            const img = ctx.getImageData(0, 0, W, H), d = img.data;
+            const g = new Float32Array(W * H), I = new Float64Array((W + 1) * (H + 1));
+            for (let i = 0; i < W * H; i++) g[i] = (d[i * 4] * 3 + d[i * 4 + 1] * 6 + d[i * 4 + 2]) / 10;
+            for (let y = 0; y < H; y++) { let row = 0; for (let x = 0; x < W; x++) { row += g[y * W + x]; I[(y + 1) * (W + 1) + x + 1] = I[y * (W + 1) + x + 1] + row; } }
+            const r = Math.max(10, Math.round(Math.max(W, H) / 40));
+            for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+                const x0 = Math.max(0, x - r), x1 = Math.min(W, x + r + 1), y0 = Math.max(0, y - r), y1 = Math.min(H, y + r + 1);
+                const mean = (I[y1 * (W + 1) + x1] - I[y0 * (W + 1) + x1] - I[y1 * (W + 1) + x0] + I[y0 * (W + 1) + x0]) / ((x1 - x0) * (y1 - y0));
+                const v = g[y * W + x] < mean * 0.85 ? 0 : 255, k = (y * W + x) * 4;
+                d[k] = d[k + 1] = d[k + 2] = v; d[k + 3] = 255;
+            }
+            ctx.putImageData(img, 0, 0);
+            return canvas;
+        }
+
+        // Returns the photo in black/white. If it has a framed box (e.g. "New Words"), only the inside of the box
+        // is kept (everything outside painted white, cropped to the box).
+        function boxOnly(bmp) {
+            const full = document.createElement("canvas");
+            const fs = Math.min(1, 2400 / Math.max(bmp.width, bmp.height));
+            full.width = Math.round(bmp.width * fs); full.height = Math.round(bmp.height * fs);
+            full.getContext("2d").drawImage(bmp, 0, 0, full.width, full.height);
+            binarize(full);
+
+            const sc = Math.min(1, 700 / Math.max(full.width, full.height));
+            const W = Math.round(full.width * sc), H = Math.round(full.height * sc);
+            const small = document.createElement("canvas"); small.width = W; small.height = H;
+            small.getContext("2d").drawImage(full, 0, 0, W, H);
+            const px = small.getContext("2d").getImageData(0, 0, W, H).data;
+            // dark pixels, slightly thickened so a thin frame stays connected
+            const dark = new Uint8Array(W * H);
+            for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4] < 128)
+                for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+                    const yy = y + dy, xx = x + dx;
+                    if (yy >= 0 && yy < H && xx >= 0 && xx < W) dark[yy * W + xx] = 1;
+                }
+            // connected components; the frame = a big, thin one
+            const lab = new Int32Array(W * H), stack = [];
+            let best = null, n = 0;
+            for (let i = 0; i < W * H; i++) if (dark[i] && !lab[i]) {
+                n++; let cnt = 0, x0 = W, x1 = 0, y0 = H, y1 = 0;
+                lab[i] = n; stack.push(i);
+                while (stack.length) {
+                    const j = stack.pop(), x = j % W, y = (j - x) / W; cnt++;
+                    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+                    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+                        const yy = y + dy, xx = x + dx, k = yy * W + xx;
+                        if (yy >= 0 && yy < H && xx >= 0 && xx < W && dark[k] && !lab[k]) { lab[k] = n; stack.push(k); }
+                    }
+                }
+                const area = (x1 - x0 + 1) * (y1 - y0 + 1);
+                if (area > 0.15 * W * H && cnt / area < 0.2 && (!best || area > best.area)) best = { id: n, area };
+            }
+            if (!best) return full;
+            // inside = odd number of frame crossings in at least 3 of the 4 directions
+            const isF = i => lab[i] === best.id, votes = new Uint8Array(W * H);
+            const scan = (outerN, innerN, idx) => {
+                for (let o = 0; o < outerN; o++) {
+                    let par = 0, inF = false;
+                    for (let t = 0; t < innerN; t++) { const i = idx(o, t); if (isF(i)) { if (!inF) par ^= 1; inF = true; } else { inF = false; votes[i] += par; } }
+                    par = 0; inF = false;
+                    for (let t = innerN - 1; t >= 0; t--) { const i = idx(o, t); if (isF(i)) { if (!inF) par ^= 1; inF = true; } else { inF = false; votes[i] += par; } }
+                }
+            };
+            scan(W, H, (x, y) => y * W + x);
+            scan(H, W, (y, x) => y * W + x);
+            let bx0 = W, bx1 = 0, by0 = H, by1 = 0, inside = 0;
+            for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (votes[y * W + x] >= 3) {
+                inside++; if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y;
+            }
+            if (inside < 0.1 * W * H) return full;
+            // white overlay for everything outside the box
+            const ov = document.createElement("canvas"); ov.width = W; ov.height = H;
+            const oc = ov.getContext("2d"), od = oc.createImageData(W, H);
+            for (let i = 0; i < W * H; i++) if (votes[i] < 3) { od.data[i * 4] = od.data[i * 4 + 1] = od.data[i * 4 + 2] = 255; od.data[i * 4 + 3] = 255; }
+            oc.putImageData(od, 0, 0);
+            const fc = full.getContext("2d");
+            fc.imageSmoothingEnabled = false;
+            fc.drawImage(ov, 0, 0, full.width, full.height);
+            const out = document.createElement("canvas");
+            const cx = Math.round(bx0 / sc), cy = Math.round(by0 / sc);
+            out.width = Math.round((bx1 - bx0 + 1) / sc); out.height = Math.round((by1 - by0 + 1) / sc);
+            out.getContext("2d").drawImage(full, cx, cy, out.width, out.height, 0, 0, out.width, out.height);
+            return out;
+        }
+
         const isHe = s => /[\u0590-\u05FF]/.test(s);
 
-        // Returns [{en, he}] — he is the Hebrew text found on the same line in the photo (or "")
+        // Returns [{en, he}] — he is the Hebrew found next to the word in the photo: on the same line,
+        // or directly below it (card layouts: English word, Hebrew under it). Arabic is ignored.
         function itemsFromLines(lines) {
-            const items = [];
-            for (const line of lines) {
+            const all = [];
+            lines.forEach((line, li) => {
                 const ws = line.words
-                    .filter(w => /[A-Za-z\u0590-\u05FF]/.test(w.text) && w.confidence > (isHe(w.text) ? 40 : 55))
+                    .filter(w => !/[\u0600-\u06FF]/.test(w.text) && /[A-Za-z\u0590-\u05FF]/.test(w.text) && w.confidence > (isHe(w.text) ? 40 : 55))
                     .sort((p, q) => p.bbox.x0 - q.bbox.x0);
-                const segs = [];
                 let cur = [];
                 const flush = () => {
                     if (!cur.length) return;
                     const he = isHe(cur[0].text);
                     const t = he
-                        ? cur.slice().reverse().map(w => w.text).join(" ").replace(/[^\u0590-\u05FF' \-]/g, "").replace(/\s+/g, " ").trim()
+                        ? cur.slice().reverse().map(w => w.text).join(" ").replace(/[^\u0590-\u05FF' ,\-]/g, "").replace(/\s+/g, " ").replace(/^[ ,]+|[ ,]+$/g, "").trim()
                         : cur.map(w => w.text).join(" ").replace(/\(\w+\)/g, "").replace(/[^A-Za-z' ]/g, "").replace(/\s+/g, " ").trim();
-                    if (t.length >= 2) segs.push({ he, t, x: (cur[0].bbox.x0 + cur[cur.length - 1].bbox.x1) / 2 });
+                    if (t.length >= 2) all.push({ he, t, li, conf: Math.min(...cur.map(w => w.confidence)),
+                        x0: cur[0].bbox.x0, x1: cur[cur.length - 1].bbox.x1,
+                        y0: Math.min(...cur.map(w => w.bbox.y0)), y1: Math.max(...cur.map(w => w.bbox.y1)) });
                     cur = [];
                 };
                 for (const w of ws) {
@@ -484,29 +576,55 @@
                     cur.push(w);
                 }
                 flush();
-                const heSegs = segs.filter(x => x.he);
-                for (const sg of segs) if (!sg.he) {
+            });
+            const heSegs = all.filter(x => x.he), en = all.filter(x => !x.he);
+            const cx = q => (q.x0 + q.x1) / 2, pair = new Map();
+            const match = ok => {
+                for (const sg of en) if (!pair.has(sg)) {
                     let best = null;
-                    for (const h of heSegs) if (!h.used && (!best || Math.abs(h.x - sg.x) < Math.abs(best.x - sg.x))) best = h;
-                    if (best) best.used = true;
-                    items.push({ en: sg.t, he: best ? best.t : "" });
+                    for (const h of heSegs) if (!h.used && ok(sg, h) && (!best || ok.better(sg, h, best))) best = h;
+                    if (best) { best.used = true; pair.set(sg, best); }
                 }
+            };
+            const nearX = (sg, h, b) => Math.abs(cx(h) - cx(sg)) < Math.abs(cx(b) - cx(sg));
+            // 1) same OCR line  2) same row, side by side  3) directly below (card layouts)
+            const sameLine = (sg, h) => h.li === sg.li; sameLine.better = nearX; match(sameLine);
+            const sameRow = (sg, h) => Math.min(h.y1, sg.y1) - Math.max(h.y0, sg.y0) >= 0.5 * Math.min(h.y1 - h.y0, sg.y1 - sg.y0)
+                && Math.max(h.x0 - sg.x1, sg.x0 - h.x1) <= 6 * (sg.y1 - sg.y0);
+            sameRow.better = nearX; match(sameRow);
+            const below = (sg, h) => {
+                const lh = sg.y1 - sg.y0;
+                return h.y0 >= sg.y1 - lh * 0.3 && h.y0 - sg.y1 <= lh * 2.5 && Math.min(h.x1, sg.x1) - Math.max(h.x0, sg.x0) >= -lh;
+            };
+            below.better = (sg, h, b) => h.y0 < b.y0 || (h.y0 === b.y0 && nearX(sg, h, b)); match(below);
+            const items = [];
+            for (const sg of en) {
+                const he = pair.get(sg);
+                if (he ? sg.conf < 60 : sg.conf < 90) continue;
+                items.push({ en: sg.t, he: he ? he.t : "" });
             }
             return items;
         }
 
         async function ocrPhoto(file, status) {
             const worker = await getWorker();
-            const bmp = await createImageBitmap(file);
+            const bmp = boxOnly(await createImageBitmap(file));
             let best = null;
+            await worker.setParameters({ tessedit_pageseg_mode: "3" });
             for (const deg of [0, 90, 270]) {
                 status.innerText = `קורא תמונה (כיוון ${deg}°)...`;
                 const { data } = await worker.recognize(drawRotated(bmp, deg));
                 const good = data.words.filter(w => w.confidence > 75 && /^[A-Za-z]{3,}$/.test(w.text)).length;
-                if (!best || good > best.good) best = { good, lines: data.lines };
+                if (!best || good > best.good) best = { good, deg, lines: data.lines };
                 if (good > 25) break;
             }
-            return itemsFromLines(best.lines);
+            const a = itemsFromLines(best.lines);
+            status.innerText = "קורא שוב (פריסה אחרת)...";
+            await worker.setParameters({ tessedit_pageseg_mode: "11" });
+            const { data } = await worker.recognize(drawRotated(bmp, best.deg));
+            const b = itemsFromLines(data.lines);
+            const score = items => items.filter(i => i.he).length * 2 + items.length;
+            return score(b) > score(a) ? b : a;
         }
 
         async function translate(word) {

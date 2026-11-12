@@ -20,3 +20,5 @@ signing-key-info.txt
 *.aab
 *.idsig
 *.stackdump
+
+PLAY_PUBLISHING.md

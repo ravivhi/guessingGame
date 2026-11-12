@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4a00e0">
+    <title>משחק מילים באנגלית - אליפות!</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .game-container {
+            width: 95%;
+            max-width: 450px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .score-box {
+            color: #2b6cb0;
+        }
+
+        .timer-box {
+            color: #dd6b20;
+        }
+
+        .progress-box {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .question-text {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1a202c;
+        }
+
+        .instruction-text {
+            font-size: 1rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .btn-answer {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.2rem;
+            background-color: #edf2f7;
+            border: 2px solid #cbd5e0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.15s, transform 0.1s, border-color 0.15s;
+            touch-action: manipulation;
+        }
+
+        .btn-answer:active {
+            transform: scale(0.98);
+        }
+
+        .btn-answer.correct {
+            background-color: #48bb78 !important;
+            border-color: #38a169 !important;
+            color: white;
+        }
+
+        .btn-answer.wrong {
+            background-color: #f56565 !important;
+            border-color: #e53e3e !important;
+            color: white;
+        }
+
+        .summary-screen {
+            display: none;
+        }
+
+        .emoji-animation {
+            font-size: 5rem;
+            margin: 20px 0;
+            display: inline-block;
+            animation: bounce 0.8s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .bonus-badge {
+            background-color: #feebc8;
+            color: #c05621;
+            padding: 10px 15px;
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: bold;
+            margin: 15px 0;
+            border: 1px dashed #dd6b20;
+        }
+
+        .btn-restart {
+            margin-top: 25px;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(50,130,206,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div id="start-screen">
+            <div class="result-title" style="margin-bottom:10px;">משחק מילים באנגלית</div>
+            <p style="margin:6px 0;">כל שורה: <b>מילה, פירוש, טעות1, טעות2, טעות3</b></p>
+            <p style="margin:6px 0;font-size:0.9rem;color:#666;">אם מוסיפים רק מילה ופירוש, הטעויות נבחרות אוטומטית (צריך לפחות 4 מילים).</p>
+            <textarea id="words-input" dir="ltr" rows="8" style="width:100%;margin:10px 0;padding:10px;border-radius:10px;border:2px solid #ccc;font-size:1rem;" placeholder="apple, תפוח&#10;dog, כלב, חתול, סוס, פרה"></textarea>
+            <input type="file" id="file-input" accept=".csv,.txt" style="margin-bottom:10px;max-width:100%;">
+            <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
+                <p style="margin:4px 0;font-weight:bold;">📷 קריאת מילים מתמונה (חינם, בלי מפתח)</p>
+                <input type="file" id="photo-input" accept="image/*" multiple style="max-width:100%;">
+                <div id="photo-status" style="min-height:1.4em;margin:6px 0;font-size:0.9rem;color:#2b6cb0;"></div>
+            </div>
+            <div id="start-error" style="color:#c53030;min-height:1.4em;margin-bottom:6px;"></div>
+            <button class="btn-restart" onclick="startFromInput()">התחל משחק</button>
+            <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="useDefaultWords()">השתמש במילים המובנות</button>
+        </div>
+
+        <div id="game-screen" style="display:none;">
+            <div class="header-info">
+                <div class="score-box">נקודות: <span id="score">0</span></div>
+                <div class="progress-box">שאלה: <span id="current-progress">1</span>/<span id="total-progress">0</span></div>
+            </div>
+            
+            <div class="instruction-text">מה הפירוש הנכון של המילה:</div>
+            <div class="question-text" id="question-word">Word</div>
+            
+            <div class="answers-grid" id="answers-container"></div>
+        </div>
+
+        <div id="summary-screen" class="summary-screen">
+            <div class="emoji-animation" id="summary-emoji">🏆</div>
+            <div class="result-title" id="summary-title">וואו! אתם פשוט אלופים!</div>
+            <div id="bonus-container"></div>
+            <p style="font-size: 1.3rem; margin: 10px 0;" id="summary-stats">צדקתם ב-0 מתוך 0 מילים</p>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #2b6cb0;" id="summary-final-score">ציון סופי: 0</p>
+            <button class="btn-restart" onclick="restartGame()">נסו שוב</button>
+            <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="showStart()">החלפת מילים</button>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+    <script>
+        const defaultWords = [
+            { word: "animal", correct: "חיה", dynamics: ["צמח", "בן אדם", "מכונית"] },
+            { word: "Arabic", correct: "ערבית", dynamics: ["עברית", "אנגלית", "רוסית"] },
+            { word: "bath", correct: "אמבטיה", dynamics: ["מקלחת", "מטבח", "סלון"] },
+            { word: "beach", correct: "חוף ים", dynamics: ["בריכה", "פארק", "הרים"] },
+            { word: "behind", correct: "מאחורי", dynamics: ["לפני", "מתחת", "על יד"] },
+            { word: "bike", correct: "אופניים", dynamics: ["אופנוע", "רכב", "רכבת"] },
+            { word: "birthday", correct: "יום הולדת", dynamics: ["חג", "שבת", "מסיבה"] },
+            { word: "bring", correct: "להביא", dynamics: ["לקחת", "לתת", "לשלוח"] },
+            { word: "cake", correct: "עוגה", dynamics: ["עוגייה", "לחם", "שוקולד"] },
+            { word: "clean", correct: "נקי", dynamics: ["מלוכלך", "חדש", "יפה"] },
+            { word: "cool", correct: "מגניב / קריר", dynamics: ["חם", "משעמם", "עצוב"] },
+            { word: "dance", correct: "לרקוד", dynamics: ["לשיר", "לרוץ", "לשחק"] },
+            { word: "dinner", correct: "ארוחת ערב", dynamics: ["ארוחת בוקר", "ארוחת צהריים", "חטיף"] },
+            { word: "dirty", correct: "מלוכלך", dynamics: ["נקי", "יבש", "רטוב"] },
+            { word: "doctor", correct: "רופא", dynamics: ["מורה", "שוטר", "טבח"] },
+            { word: "drink", correct: "לשתות", dynamics: ["לאכול", "לבשל", "לטעום"] },
+            { word: "elephant", correct: "פיל", dynamics: ["אריה", "קוף", "ג'ירפה"] },
+            { word: "face", correct: "פנים", dynamics: ["ראש", "יד", "רגל"] },
+            { word: "farm", correct: "חווה", dynamics: ["גינה", "חנות", "מפעל"] },
+            { word: "floor", correct: "רצפה", dynamics: ["קיר", "תקרה", "גג"] },
+            { word: "great", correct: "נהדר", dynamics: ["גרוע", "קטן", "נחמד"] },
+            { word: "Hebrew", correct: "עברית", dynamics: ["אנגלית", "ערבית", "צרפתית"] },
+            { word: "horse", correct: "סוס", dynamics: ["חמור", "כלב", "פרה"] },
+            { word: "hospital", correct: "בית חולים", dynamics: ["מרפאה", "בית ספר", "מלון"] },
+            { word: "hungry", correct: "רעב", dynamics: ["צמא", "עייף", "שבע"] },
+            { word: "kitten", correct: "גור חתולים", dynamics: ["כלבלב", "ארנב", "אפרוח"] },
+            { word: "lion", correct: "אריה", dynamics: ["נמר", "דוב", "זאב"] },
+            { word: "listen", correct: "להקשיב", dynamics: ["לדבר", "לראות", "לשתוק"] },
+            { word: "party", correct: "מסיבה", dynamics: ["מפגש", "חופשה", "שיעור"] },
+            { word: "penguin", correct: "פינגווין", dynamics: ["ציפור", "ברווז", "תוכי"] },
+            { word: "people", correct: "אנשים", dynamics: ["ילדים", "חיות", "חברים"] },
+            { word: "ride", correct: "לרכוב", dynamics: ["לנהוג", "ללכת", "לטוס"] },
+            { word: "scared", correct: "מפוחד", dynamics: ["אמיץ", "שמח", "כועס"] },
+            { word: "sea", correct: "ים", dynamics: ["אגם", "נהר", "בריכה"] },
+            { word: "smile", correct: "לחייך", dynamics: ["לבכות", "לצחוק", "לצעוק"] },
+            { word: "swimsuit", correct: "בגד ים", dynamics: ["מכנס", "חולצה", "מגבת"] },
+            { word: "table", correct: "שולחן", dynamics: ["כיסא", "ארון", "מיטה"] },
+            { word: "take", correct: "לקחת", dynamics: ["להביא", "לתת", "לשמור"] },
+            { word: "thirsty", correct: "צמא", dynamics: ["רעב", "עייף", "רוה"] },
+            { word: "this", correct: "הזה / הזאת", dynamics: ["ההוא", "אלה", "שם"] },
+            { word: "tired", correct: "עייף", dynamics: ["רענן", "ישן", "חולה"] },
+            { word: "tricks", correct: "תעלולים / קסמים", dynamics: ["משחקים", "סיפורים", "ריקודים"] },
+            { word: "try", correct: "לנסות", dynamics: ["להצליח", "לוותר", "לטעות"] },
+            { word: "turtle", correct: "צב", dynamics: ["לטאה", "נחש", "חלזון"] },
+            { word: "wake up", correct: "להתעורר", dynamics: ["לישון", "לקום", "לנוח"] },
+            { word: "watch", correct: "לצפות", dynamics: ["להקשיב", "לקרוא", "לכתוב"] },
+            { word: "water", correct: "מים", dynamics: ["מיץ", "חלב", "סודה"] },
+            { word: "when", correct: "מתי", dynamics: ["איפה", "למה", "מי"] },
+            { word: "with", correct: "עם", dynamics: ["בלי", "על", "בתוך"] },
+            { word: "woman", correct: "אישה", dynamics: ["איש", "ילדה", "סבתא"] }
+        ];
+
+        let wordsData = defaultWords.slice();
+        const STORE_KEY = 'englishpractice-words';
+
+        let currentIndex = 0;
+        let totalScore = 0;
+        let correctFirstTryCount = 0;
+        
+        const POINTS = [20, 10, 5, 0];
+        let wrongCount = 0;
+        let canAnswer = true;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadQuestion() {
+            document.getElementById("total-progress").innerText = wordsData.length;
+            
+            if (currentIndex >= wordsData.length) {
+                showSummary();
+                return;
+            }
+
+            canAnswer = true;
+            wrongCount = 0;
+            document.getElementById("current-progress").innerText = currentIndex + 1;
+
+            const currentData = wordsData[currentIndex];
+            document.getElementById("question-word").innerText = currentData.word;
+
+            let allAnswers = [currentData.correct, ...currentData.dynamics];
+            allAnswers = shuffle(allAnswers);
+
+            const container = document.getElementById("answers-container");
+            container.innerHTML = "";
+
+            allAnswers.forEach(ans => {
+                const button = document.createElement("button");
+                button.className = "btn-answer";
+                button.innerText = ans;
+                button.onclick = () => handleAnswer(button, ans, currentData.correct);
+                container.appendChild(button);
+            });
+        }
+
+        function handleAnswer(selectedButton, selectedAnswer, correctAnswer) {
+            if (!canAnswer) return;
+
+            if (selectedAnswer === correctAnswer) {
+                canAnswer = false;
+                selectedButton.classList.add("correct");
+
+                totalScore += POINTS[Math.min(wrongCount, POINTS.length - 1)];
+                if (wrongCount === 0) correctFirstTryCount++;
+                document.getElementById("score").innerText = totalScore;
+
+                setTimeout(() => {
+                    currentIndex++;
+                    loadQuestion();
+                }, 500);
+
+            } else {
+                selectedButton.classList.add("wrong");
+                selectedButton.disabled = true;
+                wrongCount++;
+            }
+        }
+
+        function showSummary() {
+            document.getElementById("game-screen").style.display = "none";
+            const summaryScreen = document.getElementById("summary-screen");
+            summaryScreen.style.display = "block";
+
+            const totalWords = wordsData.length;
+            const successRate = (correctFirstTryCount / totalWords) * 100;
+
+            let emoji = "💪";
+            let title = "כל הכבוד על המאמץ!";
+            
+            if (successRate >= 90) {
+                emoji = "🏆";
+                title = "וואו! אתם פשוט אלופים!";
+            } else if (successRate >= 70) {
+                emoji = "⭐";
+                title = "עבודה מצוינת!";
+            }
+
+            const bonusContainer = document.getElementById("bonus-container");
+            bonusContainer.innerHTML = "";
+            if (correctFirstTryCount === totalWords) {
+                totalScore += 100;
+                const bonusBadge = document.createElement("div");
+                bonusBadge.className = "bonus-badge";
+                bonusBadge.innerText = "💥 מטורף! 100 נקודות בונוס על הצלחה מלאה בניסיון ראשון!";
+                bonusContainer.appendChild(bonusBadge);
+            }
+
+            document.getElementById("summary-emoji").innerText = emoji;
+            document.getElementById("summary-title").innerText = title;
+            document.getElementById("summary-stats").innerText = `צדקתם בניסיון ראשון ב-${correctFirstTryCount} מתוך ${totalWords} מילים`;
+            document.getElementById("summary-final-score").innerText = `ציון סופי: ${totalScore}`;
+        }
+
+        function restartGame() {
+            currentIndex = 0;
+            totalScore = 0;
+            correctFirstTryCount = 0;
+            document.getElementById("score").innerText = "0";
+            document.getElementById("summary-screen").style.display = "none";
+            document.getElementById("game-screen").style.display = "block";
+            shuffle(wordsData);
+            loadQuestion();
+        }
+
+        const CATS = {
+            months: "january february march april may june july august september october november december".split(" "),
+            days: "sunday monday tuesday wednesday thursday friday saturday".split(" "),
+            numbers: "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred thousand a hundred".split(" ").concat(["a hundred"]),
+            family: "mother father mom dad brother sister grandmother grandfather grandma grandpa aunt uncle cousin son daughter baby parents family".split(" "),
+            animals: "animal dog cat horse cow sheep lion tiger elephant monkey bird fish rabbit mouse bear wolf turtle penguin kitten puppy duck chicken pig giraffe snake frog".split(" "),
+            food: "cake candy bread milk cheese apple banana egg rice flour sugar salt pizza chocolate cookie ice cream sandwich soup meat fruit vegetable juice water".split(" "),
+            house: "bathroom bedroom kitchen classroom dining room living room toilet bath floor wall roof door window sofa table chair bed flat building house garden".split(" "),
+            colors: "red blue green yellow orange purple pink black white brown gray grey".split(" "),
+            body: "head face eye ear nose mouth hand arm leg foot feet finger hair tooth teeth".split(" "),
+            feelings: "happy sad angry scared tired hungry thirsty sorry sick excited bored".split(" "),
+            music: "guitar piano song drum violin music sing hobby".split(" "),
+            languages: "arabic hebrew english russian french spanish".split(" "),
+            time: "year month week day hour minute second today tomorrow yesterday soon then when".split(" "),
+            school: "student teacher subject study teach class book pen pencil school".split(" "),
+            places: "market village beach farm hospital park city street israel outside".split(" ")
+        };
+        function catOf(word) {
+            const w = word.toLowerCase().replace(/\(\w+\)/g, "").trim();
+            for (const k in CATS) if (CATS[k].includes(w)) return k;
+            return null;
+        }
+
+        function parseWords(text) {
+            const rows = text.replace(/^\uFEFF/, '').split(/\r?\n/)
+                .map(l => l.split(/[,;\t]/).map(x => x.trim()).filter(x => x))
+                .filter(r => r.length >= 2);
+            const pool = [], seen = new Set();
+            for (const r of rows) {
+                if (!seen.has(r[1])) { seen.add(r[1]); pool.push({ t: r[1], cat: catOf(r[0]), verb: r[1].startsWith("ל") }); }
+            }
+            const out = [];
+            for (const r of rows) {
+                const cat = catOf(r[0]), verb = r[1].startsWith("ל");
+                const dynamics = [...new Set(r.slice(2))].filter(x => x !== r[1]).slice(0, 3);
+                const score = x => (cat && x.cat === cat ? 4 : 0) + (x.verb === verb ? 2 : 0) + (!cat && !x.cat ? 1 : 0);
+                const extra = shuffle(pool.filter(x => x.t !== r[1] && !dynamics.includes(x.t))).sort((p, q) => score(p) - score(q));
+                while (dynamics.length < 3 && extra.length) dynamics.push(extra.pop().t);
+                if (dynamics.length < 3) return { error: 'צריך לפחות 4 פירושים שונים (או 3 טעויות בכל שורה).' };
+                out.push({ word: r[0], correct: r[1], dynamics });
+            }
+            if (!out.length) return { error: 'לא נמצאו מילים. פורמט: מילה, פירוש' };
+            return { words: out };
+        }
+
+        function beginGame(words) {
+            wordsData = words;
+            document.getElementById("start-screen").style.display = "none";
+            restartGame();
+        }
+
+        function startFromInput() {
+            const text = document.getElementById("words-input").value;
+            const res = parseWords(text);
+            if (res.error) { document.getElementById("start-error").innerText = res.error; return; }
+            try { localStorage.setItem(STORE_KEY, text); } catch (e) {}
+            document.getElementById("start-error").innerText = "";
+            beginGame(res.words);
+        }
+
+        function useDefaultWords() {
+            beginGame(defaultWords.slice());
+        }
+
+        function showStart() {
+            document.getElementById("summary-screen").style.display = "none";
+            document.getElementById("game-screen").style.display = "none";
+            document.getElementById("start-screen").style.display = "block";
+        }
+
+        document.getElementById("file-input").addEventListener("change", e => {
+            const f = e.target.files[0];
+            if (!f) return;
+            const r = new FileReader();
+            r.onload = () => { document.getElementById("words-input").value = r.result; };
+            r.readAsText(f, "UTF-8");
+        });
+
+        let ocrWorker = null;
+
+        function loadScript(src) {
+            return new Promise((res, rej) => {
+                const t = document.createElement("script");
+                t.src = src; t.onload = res; t.onerror = () => rej(new Error("טעינת OCR נכשלה (צריך אינטרנט)"));
+                document.head.appendChild(t);
+            });
+        }
+
+        async function getWorker() {
+            if (ocrWorker) return ocrWorker;
+            if (!window.Tesseract) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js");
+            ocrWorker = await Tesseract.createWorker("eng");
+            return ocrWorker;
+        }
+
+        function drawRotated(bmp, deg) {
+            const scale = Math.min(1.5, 2200 / Math.max(bmp.width, bmp.height));
+            const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+            const c = document.createElement("canvas");
+            const swap = deg === 90 || deg === 270;
+            c.width = swap ? h : w; c.height = swap ? w : h;
+            const x = c.getContext("2d");
+            x.translate(c.width / 2, c.height / 2);
+            x.rotate(deg * Math.PI / 180);
+            x.drawImage(bmp, -w / 2, -h / 2, w, h);
+            return c;
+        }
+
+        function itemsFromLines(lines) {
+            const items = [];
+            for (const line of lines) {
+                const ws = line.words.filter(w => w.confidence > 55).sort((p, q) => p.bbox.x0 - q.bbox.x0);
+                let cur = [];
+                const flush = () => {
+                    let t = cur.map(w => w.text).join(" ").replace(/\(\w+\)/g, "").replace(/[^A-Za-z' ]/g, "").replace(/\s+/g, " ").trim();
+                    if (t.length >= 2) items.push(t);
+                    cur = [];
+                };
+                for (const w of ws) {
+                    const h = w.bbox.y1 - w.bbox.y0;
+                    if (cur.length && w.bbox.x0 - cur[cur.length - 1].bbox.x1 > h * 1.2) flush();
+                    cur.push(w);
+                }
+                flush();
+            }
+            return items;
+        }
+
+        async function ocrPhoto(file, status) {
+            const worker = await getWorker();
+            const bmp = await createImageBitmap(file);
+            let best = null;
+            for (const deg of [0, 90, 270]) {
+                status.innerText = `קורא תמונה (כיוון ${deg}°)...`;
+                const { data } = await worker.recognize(drawRotated(bmp, deg));
+                const good = data.words.filter(w => w.confidence > 75 && /^[A-Za-z]{3,}$/.test(w.text)).length;
+                if (!best || good > best.good) best = { good, lines: data.lines };
+                if (good > 25) break;
+            }
+            return itemsFromLines(best.lines);
+        }
+
+        async function translate(word) {
+            const r = await fetch("https://api.mymemory.translated.net/get?langpair=en|he&q=" + encodeURIComponent(word));
+            const j = await r.json();
+            const t = j.responseData && j.responseData.translatedText || "";
+            if (/MYMEMORY WARNING|QUERY LENGTH/i.test(t) || j.responseStatus == 429) throw new Error("חרגת ממכסת התרגום היומית");
+            return t.replace(/[,;]/g, " /").trim();
+        }
+
+        document.getElementById("photo-input").addEventListener("change", async e => {
+            const files = [...e.target.files];
+            const status = document.getElementById("photo-status");
+            const box = document.getElementById("words-input");
+            if (!files.length) return;
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    status.innerText = `תמונה ${i + 1}/${files.length}: טוען OCR...`;
+                    const items = [...new Set(await ocrPhoto(files[i], status))];
+                    const out = new Array(items.length);
+                    let next = 0, done = 0;
+                    const run = async () => {
+                        while (next < items.length) {
+                            const k = next++;
+                            let t = "";
+                            try { t = await translate(items[k]); } catch (err) { if (/מכסת/.test(err.message)) throw err; }
+                            out[k] = t && t.toLowerCase() !== items[k].toLowerCase() ? `${items[k]}, ${t}` : "";
+                            status.innerText = `מתרגם ${++done}/${items.length}...`;
+                        }
+                    };
+                    await Promise.all([run(), run(), run(), run()]);
+                    const have = new Set(box.value.split(/\r?\n/).map(l => l.trim()));
+                    const add = out.filter(l => l && !have.has(l));
+                    box.value = (box.value.trim() ? box.value.trim() + "\n" : "") + add.join("\n");
+                }
+                status.innerText = "מוכן! בדקו את הרשימה (OCR ותרגום לא מושלמים) ולחצו התחל.";
+            } catch (err) {
+                status.innerText = "שגיאה: " + err.message;
+            }
+            e.target.value = "";
+        });
+
+        try {
+            const saved = localStorage.getItem(STORE_KEY);
+            if (saved) document.getElementById("words-input").value = saved;
+        } catch (e) {}
+    </script>
+</body>
+</html>

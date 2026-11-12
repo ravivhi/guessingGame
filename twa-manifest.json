@@ -1,0 +1,41 @@
+{
+  "packageId": "com.raviv.englishPractice",
+  "host": "ravivh.com",
+  "name": "English Practice",
+  "launcherName": "English Practice",
+  "display": "standalone",
+  "themeColor": "#4a00e0",
+  "navigationColor": "#4a00e0",
+  "navigationColorDark": "#4a00e0",
+  "navigationDividerColor": "#4a00e0",
+  "navigationDividerColorDark": "#4a00e0",
+  "backgroundColor": "#4a00e0",
+  "enableNotifications": false,
+  "startUrl": "/englishPractice/",
+  "iconUrl": "https://ravivh.com/englishPractice/icons/icon-512.png",
+  "maskableIconUrl": "https://ravivh.com/englishPractice/icons/icon-512.png",
+  "appVersion": "1.0.0.1",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "englishpractice"
+  },
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "features": {},
+  "alphaDependencies": { "enabled": false },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://ravivh.com/englishPractice/",
+  "minSdkVersion": 24,
+  "orientation": "portrait",
+  "splashScreenFadeOutDuration": 300,
+  "fingerprints": [
+    "6A:75:18:83:9A:1E:E1:37:3E:D5:81:0C:31:87:35:88:FE:F3:1A:73:A7:41:B4:6C:40:F1:B0:71:2B:14:F4:AF"
+  ],
+  "serviceAccountJsonFile": "",
+  "shortcuts": []
+}
+
+

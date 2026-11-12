@@ -610,7 +610,7 @@
             const worker = await getWorker();
             const bmp = boxOnly(await createImageBitmap(file));
             let best = null;
-            await worker.setParameters({ tessedit_pageseg_mode: "3" });
+            await worker.setParameters({ tessedit_pageseg_mode: "11" });
             for (const deg of [0, 90, 270]) {
                 status.innerText = `קורא תמונה (כיוון ${deg}°)...`;
                 const { data } = await worker.recognize(drawRotated(bmp, deg));
@@ -620,11 +620,11 @@
             }
             const a = itemsFromLines(best.lines);
             status.innerText = "קורא שוב (פריסה אחרת)...";
-            await worker.setParameters({ tessedit_pageseg_mode: "11" });
+            await worker.setParameters({ tessedit_pageseg_mode: "3" });
             const { data } = await worker.recognize(drawRotated(bmp, best.deg));
             const b = itemsFromLines(data.lines);
             const score = items => items.filter(i => i.he).length * 2 + items.length;
-            return score(b) > score(a) ? b : a;
+            return score(b) > score(a) ? b : a; // a = sparse layout (cards), b = auto layout (lists)
         }
 
         async function translate(word) {

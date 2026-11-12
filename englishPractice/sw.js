@@ -1,4 +1,4 @@
-const CACHE = 'englishpractice-v7';
+const CACHE = 'englishpractice-v14';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });

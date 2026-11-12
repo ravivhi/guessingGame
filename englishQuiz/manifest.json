@@ -1,6 +1,6 @@
 {
-  "name": "English Practice",
-  "short_name": "English Practice",
+  "name": "English Quiz",
+  "short_name": "English Quiz",
   "description": "English words quiz",
   "start_url": "./",
   "scope": "./",

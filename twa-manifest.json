@@ -4,25 +4,27 @@
   "name": "Guessing Game",
   "launcherName": "Guessing Game",
   "display": "standalone",
-  "themeColor": "#4a00e0",
-  "navigationColor": "#4a00e0",
-  "navigationColorDark": "#4a00e0",
-  "navigationDividerColor": "#4a00e0",
-  "navigationDividerColorDark": "#4a00e0",
-  "backgroundColor": "#4a00e0",
+  "themeColor": "#4A00E0",
+  "themeColorDark": "#000000",
+  "navigationColor": "#4A00E0",
+  "navigationColorDark": "#4A00E0",
+  "navigationDividerColor": "#4A00E0",
+  "navigationDividerColorDark": "#4A00E0",
+  "backgroundColor": "#4A00E0",
   "enableNotifications": false,
   "startUrl": "/guessingGame/",
   "iconUrl": "https://ravivh.com/guessingGame/icons/icon-512.png",
   "maskableIconUrl": "https://ravivh.com/guessingGame/icons/icon-512.png",
   "monochromeIconUrl": "https://ravivh.com/guessingGame/icons/icon-512.png",
-  "appVersion": "1.0.0.2",
-  "appVersionCode": 3,
   "signingKey": {
     "path": "./android.keystore",
     "alias": "my-key-alias"
   },
-  "additionalTrustedOrigins": [],
-  "retainedBundles": [],
+  "appVersionName": "1.0.0.4",
+  "appVersionCode": 5,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
     "enabled": false
@@ -33,9 +35,13 @@
   "fullScopeUrl": "https://ravivh.com/guessingGame/",
   "minSdkVersion": 21,
   "orientation": "portrait",
+  "splashScreenFadeOutDuration": 300,
   "fingerprints": [
     "EA:AC:4B:5B:2E:B1:F7:49:77:4F:AC:BD:01:08:F0:C5:11:59:46:C9:73:7E:34:1F:73:FF:FC:95:2C:C1:06:F4"
   ],
   "serviceAccountJsonFile": "",
-  "shortcuts": []
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "displayOverride": [],
+  "appVersion": "1.0.0.4"
 }

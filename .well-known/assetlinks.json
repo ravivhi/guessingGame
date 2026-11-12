@@ -1,8 +1,26 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.raviv.guessingGame",
-    "sha256_cert_fingerprints": ["EA:AC:4B:5B:2E:B1:F7:49:77:4F:AC:BD:01:08:F0:C5:11:59:46:C9:73:7E:34:1F:73:FF:FC:95:2C:C1:06:F4"]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.raviv.guessingGame",
+      "sha256_cert_fingerprints": [
+        "EA:AC:4B:5B:2E:B1:F7:49:77:4F:AC:BD:01:08:F0:C5:11:59:46:C9:73:7E:34:1F:73:FF:FC:95:2C:C1:06:F4"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.raviv.englishPractice",
+      "sha256_cert_fingerprints": [
+        "6A:75:18:83:9A:1E:E1:37:3E:D5:81:0C:31:87:35:88:FE:F3:1A:73:A7:41:B4:6C:40:F1:B0:71:2B:14:F4:AF"
+      ]
+    }
   }
-}]
+]

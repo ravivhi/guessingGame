@@ -9,10 +9,10 @@
     <title>משחק מילים באנגלית - אליפות!</title>
     <meta property="og:type" content="website">
     <meta property="og:title" content="משחק מילים באנגלית">
-    <meta property="og:image" content="https://ravivh.com/englishPractice/preview.png">
-    <meta property="og:url" content="https://ravivh.com/englishPractice/">
+    <meta property="og:image" content="https://ravivh.com/englishQuiz/preview.png">
+    <meta property="og:url" content="https://ravivh.com/englishQuiz/">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://ravivh.com/englishPractice/preview.png">
+    <meta name="twitter:image" content="https://ravivh.com/englishQuiz/preview.png">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -213,7 +213,7 @@
     </script>
     <script>
         let wordsData = [];
-        const STORE_KEY = 'englishpractice-words';
+        const STORE_KEY = 'englishquiz-words';
 
         let currentIndex = 0;
         let totalScore = 0;
@@ -502,7 +502,7 @@
         });
 
         try {
-            const saved = localStorage.getItem(STORE_KEY);
+            const saved = localStorage.getItem(STORE_KEY) || localStorage.getItem('englishpractice-words');
             if (saved) document.getElementById("words-input").value = saved.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
         } catch (e) {}
     </script>

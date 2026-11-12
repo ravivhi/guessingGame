@@ -19,7 +19,8 @@
       "namespace": "android_app",
       "package_name": "com.raviv.englishQuiz",
       "sha256_cert_fingerprints": [
-        "6A:75:18:83:9A:1E:E1:37:3E:D5:81:0C:31:87:35:88:FE:F3:1A:73:A7:41:B4:6C:40:F1:B0:71:2B:14:F4:AF"
+        "6A:75:18:83:9A:1E:E1:37:3E:D5:81:0C:31:87:35:88:FE:F3:1A:73:A7:41:B4:6C:40:F1:B0:71:2B:14:F4:AF",
+        "C2:8A:6D:DA:ED:C1:FC:53:37:16:A7:59:73:78:9A:3E:1A:88:A3:5A:B8:ED:78:1D:3F:7B:B1:F1:30:C3:95:CA"
       ]
     }
   }

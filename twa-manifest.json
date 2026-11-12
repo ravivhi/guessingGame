@@ -4,38 +4,43 @@
   "name": "English Quiz",
   "launcherName": "English Quiz",
   "display": "standalone",
-  "themeColor": "#4a00e0",
-  "navigationColor": "#4a00e0",
-  "navigationColorDark": "#4a00e0",
-  "navigationDividerColor": "#4a00e0",
-  "navigationDividerColorDark": "#4a00e0",
-  "backgroundColor": "#4a00e0",
+  "themeColor": "#4A00E0",
+  "themeColorDark": "#000000",
+  "navigationColor": "#4A00E0",
+  "navigationColorDark": "#4A00E0",
+  "navigationDividerColor": "#4A00E0",
+  "navigationDividerColorDark": "#4A00E0",
+  "backgroundColor": "#4A00E0",
   "enableNotifications": false,
   "startUrl": "/englishQuiz/",
   "iconUrl": "https://ravivh.com/englishQuiz/icons/icon-512.png",
   "maskableIconUrl": "https://ravivh.com/englishQuiz/icons/icon-512.png",
-  "appVersion": "1.0.0.1",
-  "appVersionCode": 1,
+  "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
     "alias": "englishpractice"
   },
-  "additionalTrustedOrigins": [],
-  "retainedBundles": [],
+  "appVersionName": "1.0.0.2",
+  "appVersionCode": 3,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "fallbackType": "customtabs",
   "features": {},
-  "alphaDependencies": { "enabled": false },
+  "alphaDependencies": {
+    "enabled": false
+  },
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://ravivh.com/englishQuiz/",
   "minSdkVersion": 24,
   "orientation": "portrait",
-  "splashScreenFadeOutDuration": 300,
   "fingerprints": [
     "6A:75:18:83:9A:1E:E1:37:3E:D5:81:0C:31:87:35:88:FE:F3:1A:73:A7:41:B4:6C:40:F1:B0:71:2B:14:F4:AF"
   ],
   "serviceAccountJsonFile": "",
-  "shortcuts": []
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "displayOverride": [],
+  "appVersion": "1.0.0.2"
 }
-
-

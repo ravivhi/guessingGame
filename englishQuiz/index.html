@@ -6,9 +6,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#4a00e0">
-    <title>משחק מילים באנגלית - אליפות!</title>
+    <title>בוחן באנגלית - אליפות!</title>
     <meta property="og:type" content="website">
-    <meta property="og:title" content="משחק מילים באנגלית">
+    <meta property="og:title" content="בוחן באנגלית">
     <meta property="og:image" content="https://ravivh.com/englishQuiz/preview.png">
     <meta property="og:url" content="https://ravivh.com/englishQuiz/">
     <meta name="twitter:card" content="summary_large_image">
@@ -170,7 +170,7 @@
 
     <div class="game-container">
         <div id="start-screen">
-            <div class="result-title" style="margin-bottom:10px;">משחק מילים באנגלית</div>
+            <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
             <p style="margin:6px 0;">כל שורה: <b>מילה, פירוש, טעות1, טעות2, טעות3</b></p>
             <p style="margin:6px 0;font-size:0.9rem;color:#666;">אם מוסיפים רק מילה ופירוש, הטעויות נבחרות אוטומטית.</p>
             <textarea id="words-input" dir="ltr" rows="8" style="width:100%;margin:10px 0;padding:10px;border-radius:10px;border:2px solid #ccc;font-size:1rem;" placeholder="apple, תפוח&#10;dog, כלב, חתול, סוס, פרה"></textarea>
@@ -192,7 +192,10 @@
             </div>
             
             <div class="instruction-text">מה הפירוש הנכון של המילה:</div>
-            <div class="question-text" id="question-word">Word</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+                <div class="question-text" id="question-word" dir="ltr">Word</div>
+                <button type="button" id="speak-btn" onclick="speakWord()" aria-label="השמעת המילה" title="השמעת המילה" style="font-size:1.6rem;line-height:1;padding:6px 10px;margin-bottom:5px;background:#e2e8f0;border:none;border-radius:50%;cursor:pointer;">🔊</button>
+            </div>
             
             <div class="answers-grid" id="answers-container"></div>
         </div>
@@ -405,6 +408,19 @@
             document.getElementById("start-error").innerText = "";
             box.focus();
         }
+
+        function speakWord() {
+            const word = document.getElementById("question-word").innerText.trim();
+            if (!word || !("speechSynthesis" in window)) return;
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = "en-US";
+            u.rate = 0.85;
+            const v = speechSynthesis.getVoices().find(v => /^en[-_]US/i.test(v.lang)) || speechSynthesis.getVoices().find(v => /^en/i.test(v.lang));
+            if (v) u.voice = v;
+            speechSynthesis.speak(u);
+        }
+        if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { const b = document.getElementById("speak-btn"); if (b) b.style.display = "none"; });
 
         function showStart() {
             document.getElementById("summary-screen").style.display = "none";

@@ -21,11 +21,11 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'com.raviv.englishPractice',
+    applicationId: 'com.raviv.englishQuiz',
     hostName: 'ravivh.com', // The domain being opened in the TWA.
-    launchUrl: '/englishPractice/', // The start path for the TWA. Must be relative to the domain.
-    name: 'English Practice', // The application name.
-    launcherName: 'English Practice', // The name shown on the Android Launcher.
+    launchUrl: '/englishQuiz/', // The start path for the TWA. Must be relative to the domain.
+    name: 'English Quiz', // The application name.
+    launcherName: 'English Quiz', // The name shown on the Android Launcher.
     themeColor: '#4A00E0', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#4A00E0', // The color used for the navigation bar.
@@ -52,9 +52,9 @@ def twaManifest = [
 
 android {
     compileSdkVersion 36
-    namespace "com.raviv.englishPractice"
+    namespace "com.raviv.englishQuiz"
     defaultConfig {
-        applicationId "com.raviv.englishPractice"
+        applicationId "com.raviv.englishQuiz"
         minSdkVersion 24
         targetSdkVersion 36
         versionCode 1
@@ -76,7 +76,7 @@ android {
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://ravivh.com/englishPractice/'
+            resValue "string", "fullScopeUrl", 'https://ravivh.com/englishQuiz/'
         
 
         

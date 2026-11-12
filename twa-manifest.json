@@ -33,7 +33,7 @@
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://ravivh.com/guessingGame/",
-  "minSdkVersion": 21,
+  "minSdkVersion": 24,
   "orientation": "portrait",
   "splashScreenFadeOutDuration": 300,
   "fingerprints": [

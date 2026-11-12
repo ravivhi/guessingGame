@@ -172,7 +172,7 @@
         <div id="start-screen">
             <div class="result-title" style="margin-bottom:10px;">משחק מילים באנגלית</div>
             <p style="margin:6px 0;">כל שורה: <b>מילה, פירוש, טעות1, טעות2, טעות3</b></p>
-            <p style="margin:6px 0;font-size:0.9rem;color:#666;">אם מוסיפים רק מילה ופירוש, הטעויות נבחרות אוטומטית (צריך לפחות 4 מילים).</p>
+            <p style="margin:6px 0;font-size:0.9rem;color:#666;">אם מוסיפים רק מילה ופירוש, הטעויות נבחרות אוטומטית.</p>
             <textarea id="words-input" dir="ltr" rows="8" style="width:100%;margin:10px 0;padding:10px;border-radius:10px;border:2px solid #ccc;font-size:1rem;" placeholder="apple, תפוח&#10;dog, כלב, חתול, סוס, פרה"></textarea>
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
                 <p style="margin:4px 0;font-weight:bold;">📷 קריאת מילים מתמונה</p>
@@ -353,6 +353,8 @@
             return null;
         }
 
+        const FALLBACK = "שולחן כיסא ספר חלון דלת בית כלב חתול מכונית עץ פרח שמש ירח כוכב נהר ים הר לחם חלב תפוח מים לרוץ ללכת לאכול לשתות לישון לכתוב לקרוא לשחק לשיר לצחוק לבכות לקפוץ לצייר לפתוח לסגור גדול קטן מהיר איטי חם קר חדש ישן".split(" ");
+
         function parseWords(text) {
             const rows = text.replace(/^\uFEFF/, '').split(/\r?\n/)
                 .map(l => l.split(/[,;\t]/).map(x => x.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "").trim()).filter(x => x))
@@ -361,6 +363,7 @@
             for (const r of rows) {
                 if (!seen.has(r[1])) { seen.add(r[1]); pool.push({ t: r[1], cat: catOf(r[0]), verb: r[1].startsWith("ל") }); }
             }
+            for (const t of FALLBACK) if (!seen.has(t)) { seen.add(t); pool.push({ t, cat: null, verb: t.startsWith("ל") }); }
             const out = [];
             for (const r of rows) {
                 const cat = catOf(r[0]), verb = r[1].startsWith("ל");

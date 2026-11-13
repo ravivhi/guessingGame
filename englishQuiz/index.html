@@ -155,6 +155,9 @@
             border: 1px dashed #dd6b20;
         }
 
+        /* message lines take no space until they have text */
+        #photo-status:empty, #start-error:empty { display: none; }
+
         .btn-restart:disabled {
             background-color: #a0aec0;
             cursor: not-allowed;
@@ -193,10 +196,10 @@
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
                 <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
                 <label for="photo-input" style="display:inline-block;margin:4px 0;padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border-radius:10px;cursor:pointer;">📷 קריאת מילים מתמונה</label>
-                <div id="photo-status" style="min-height:1.4em;margin:6px 0;font-size:0.9rem;color:#2b6cb0;"></div>
+                <div id="photo-status" style="margin:6px 0 0;font-size:0.9rem;color:#2b6cb0;"></div>
             </div>
-            <div id="start-error" style="color:#c53030;min-height:1.4em;margin-bottom:6px;"></div>
-            <button class="btn-restart" id="start-btn" onclick="startFromInput()">התחל משחק</button>
+            <div id="start-error" style="color:#c53030;margin-top:6px;"></div>
+            <button class="btn-restart" id="start-btn" onclick="startFromInput()" style="margin-top:12px;">התחל משחק</button>
         </div>
 
         <div id="game-screen" style="display:none;">

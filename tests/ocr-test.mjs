@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|pairs|list|translation|practice|chooser|header|persist
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|pairs|list|translation|practice|chooser|header|persist
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -436,7 +436,48 @@ async function testRandom() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
+// The app view never scrolls (any screen, any common portrait phone size); only the words box does.
+async function testLayout() {
+  console.log('\n[layout] no page scrolling, only the words box scrolls');
+  const page = await openPage();
+  const wordsText = n => Array.from({ length: n }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n');
+  const setWords = n => page.evaluate(t => { document.getElementById('words-input').value = t; renderWords(); }, wordsText(n));
+  const pageOverflow = () => page.evaluate(() => ({ y: document.documentElement.scrollHeight - innerHeight, x: document.documentElement.scrollWidth - innerWidth }));
+
+  for (const [w, h] of [[320, 568], [360, 640], [360, 740], [390, 844], [412, 915]]) {
+    const tag = `${w}x${h}`;
+    await page.setViewport({ width: w, height: h });
+    await page.evaluate(() => showStart());
+    for (const n of [20, 40]) {
+      await setWords(n);
+      const o = await pageOverflow();
+      const s = await page.evaluate(() => {
+        const box = document.querySelector('.words-box'), b = document.getElementById('start-btn').getBoundingClientRect();
+        return { boxScrolls: box.scrollHeight > box.clientHeight, btnInView: b.top >= 0 && b.bottom <= innerHeight };
+      });
+      check(o.y <= 0 && o.x <= 0, `${tag}, ${n} words: the page does not scroll (vertical ${o.y}px, horizontal ${o.x}px)`);
+      check(s.boxScrolls && s.btnInView, `${tag}, ${n} words: the words box scrolls and the start button stays in view`);
+    }
+    // random-words button and level picker share one line, inside the card
+    const line = await page.evaluate(() => {
+      const r = id => document.getElementById(id).getBoundingClientRect(), b = r('random-btn'), s = r('level-select'), c = document.querySelector('.game-container').getBoundingClientRect();
+      return { sameLine: Math.abs((b.top + b.bottom) / 2 - (s.top + s.bottom) / 2) <= 4, inside: Math.min(b.left, s.left) >= c.left && Math.max(b.right, s.right) <= c.right };
+    });
+    check(line.sameLine && line.inside, `${tag}: "20 random words" and the level picker are on one line, inside the card`);
+    // game screen and the busiest result screen (all 4 buttons)
+    await setWords(6);
+    await page.evaluate(() => startFromInput());
+    const g = await pageOverflow();
+    check(g.y <= 0 && g.x <= 0, `${tag}, game screen: the page does not scroll (${g.y}px)`);
+    await page.evaluate(() => { missed = wordsData.slice(0, 2); wordsData = wordsData.slice(0, 3); showSummary(); });
+    const r = await pageOverflow();
+    check(r.y <= 0 && r.x <= 0, `${tag}, result screen with 4 buttons: the page does not scroll (${r.y}px)`);
+  }
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

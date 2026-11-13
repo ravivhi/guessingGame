@@ -1,4 +1,4 @@
-const CACHE = 'englishquiz-v43';
+const CACHE = 'englishquiz-v44';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });

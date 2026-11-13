@@ -30,27 +30,48 @@
             overscroll-behavior-y: none;
         }
 
+        /* The page itself never scrolls: it is exactly one screen high, the card fits inside it and
+           only the words table scrolls (see .words-box). margin:auto centres the card and, unlike
+           align-items:center, keeps it reachable if a very short screen makes it taller than the page. */
         body {
             margin: 0;
-            padding: 0;
+            padding: 10px;
             background: linear-gradient(135deg, #4a00e0, #8e2de2);
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            height: 100dvh;
             color: #333;
         }
 
         .game-container {
-            width: 95%;
+            width: 100%;
             max-width: 450px;
             min-width: 0;
+            margin: auto;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             padding: 20px;
             text-align: center;
         }
+
+        /* start screen: everything keeps its size, the words box takes the remaining height */
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+        #start-screen > * { flex: none; }
+        #start-screen > .words-box {
+            flex: 1 1 auto;
+            min-height: 96px;
+            overflow: auto;
+        }
+
 
         .header-info {
             display: flex;
@@ -181,6 +202,25 @@
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(50,130,206,0.3);
         }
+
+        /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
+        @media (max-width: 360px) {
+            .game-container { padding: 14px; }
+        }
+        /* short phones: tighter big buttons / emoji so the result screen fits without page scrolling */
+        @media (max-height: 700px) {
+            .btn-restart { margin-top: 12px; padding: 11px 32px; font-size: 1.15rem; }
+            .emoji-animation { font-size: 3.2rem; margin: 8px 0; }
+            .result-title { margin-bottom: 8px; }
+            .summary-screen p { margin: 6px 0 !important; }
+        }
+        @media (max-height: 620px) {
+            .game-container { padding: 14px; }
+            .btn-restart { margin-top: 8px; padding: 9px 28px; font-size: 1.05rem; }
+            .emoji-animation { font-size: 2.6rem; margin: 4px 0; }
+            .summary-screen #summary-stats { font-size: 1.05rem !important; }
+            .summary-screen #summary-final-score { font-size: 1.25rem !important; }
+        }
     </style>
 </head>
 <body>
@@ -193,7 +233,7 @@
             <textarea id="words-input" hidden></textarea>
             <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
             <div id="words-hint" style="margin:0 0 4px;font-size:0.8rem;color:#975a16;"></div>
-            <div style="max-height:45vh;overflow:auto;border:2px solid #ccc;border-radius:10px;">
+            <div class="words-box" style="border:2px solid #ccc;border-radius:10px;">
                 <table id="words-table" style="width:100%;table-layout:fixed;border-collapse:collapse;direction:ltr;"></table>
             </div>
             <div style="margin:8px 0;display:flex;gap:8px;justify-content:center;">
@@ -201,17 +241,12 @@
                 <button type="button" onclick="clearWords()" style="flex:1;white-space:nowrap;padding:8px 10px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">🗑️ ניקוי המילים</button>
             </div>
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
-                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin:4px 0;">
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <label for="level-select" style="font-size:0.95rem;color:#4a5568;white-space:nowrap;">רמת קושי:</label>
-                        <select id="level-select" aria-label="רמת קושי" onchange="saveLevel()" style="padding:7px 8px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
-                            <option value="1">1 – קלה</option>
-                            <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
-                            <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
-                            <option value="10">10 – קשה</option>
-                        </select>
-                    </div>
-                    <button type="button" id="random-btn" onclick="randomWords()" style="padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;white-space:nowrap;">🎲 20 מילים אקראיות</button>
+                <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:4px 0;">
+                    <button type="button" id="random-btn" onclick="randomWords()" style="padding:8px 12px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;white-space:nowrap;">🎲 20 מילים אקראיות</button>
+                    <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה ... 10 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
+                        <option value="1">רמה 1</option><option value="2">רמה 2</option><option value="3">רמה 3</option><option value="4">רמה 4</option><option value="5">רמה 5</option>
+                        <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option><option value="10">רמה 10</option>
+                    </select>
                 </div>
                 <div id="random-status" style="margin:2px 0 6px;font-size:0.9rem;color:#2b6cb0;"></div>
                 <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
@@ -641,7 +676,7 @@
         function showStart() {
             document.getElementById("summary-screen").style.display = "none";
             document.getElementById("game-screen").style.display = "none";
-            document.getElementById("start-screen").style.display = "block";
+            document.getElementById("start-screen").style.display = "flex";
         }
 
         let ocrWorker = null;

@@ -270,6 +270,11 @@
         /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
         @media (max-width: 360px) {
             .game-container { padding: 14px; }
+            /* narrow phones: slightly smaller buttons (all of them, so they keep one look) so the longer
+               random-words label still shares a line with the level picker and the tab names stay on one line */
+            .action-btn { font-size: 0.85rem; padding: 8px 8px; }
+            #level-select { font-size: 0.85rem; padding: 7px 4px; }
+            .tab-btn { font-size: 0.85rem; padding: 9px 4px; }
         }
         /* short phones: tighter big buttons / emoji so the result screen fits without page scrolling */
         @media (max-height: 700px) {
@@ -299,7 +304,7 @@
             </div>
             <div id="panel-random" role="tabpanel">
                 <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:4px 0;">
-                    <button type="button" id="random-btn" class="action-btn" onclick="randomWords()">🎲 20 מילים אקראיות</button>
+                    <button type="button" id="random-btn" class="action-btn" onclick="randomWords()">🎲 לחץ ל20 מילים אקראיות</button>
                     <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה ... 10 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
                         <option value="1">רמה 1</option><option value="2">רמה 2</option><option value="3">רמה 3</option><option value="4">רמה 4</option><option value="5">רמה 5</option>
                         <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option><option value="10">רמה 10</option>
@@ -395,9 +400,12 @@
         let nextQuestionTimer = null;   // the short pause after a right answer, before the next question
 
         // A big emoji appears behind the quiz after 5 answers in a row that were right on the first try, and a
-        // happier one every 5 more (15 emojis = a streak of 75). One wrong first try and it starts again from zero.
+        // happier one every 5 more (30 emojis = a streak of 150). One wrong first try and it starts again from zero.
         // The streak carries on into the next round ("try again"); going back to the menu ends it.
-        const STREAK_EMOJIS = ["🙂", "😊", "😀", "😃", "😄", "😁", "😆", "😎", "😍", "🤩", "🥰", "🥳", "😂", "🤣", "😻"];
+        // 30 emojis that look clearly different from each other (no near-twins like 😀 / 😃): faces from a slight
+        // smile up to 😻 at 75, then 🤗 😉 😸 🤑 💯 and celebration symbols up to 👑 at a streak of 150.
+        const STREAK_EMOJIS = ["🙂", "😊", "😄", "😆", "😎", "😍", "🥰", "🤩", "😂", "😋", "🥳", "🤪", "🤠", "😇", "😻",
+                               "🤗", "😉", "😸", "🤑", "💯", "🔥", "🌈", "🦄", "🌟", "🚀", "🦸", "💎", "🏆", "🐲", "👑"];
         let streak = 0, shownStage = 0;
         function updateStreakEmoji() {
             const el = document.getElementById("streak-emoji");

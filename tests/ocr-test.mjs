@@ -603,7 +603,7 @@ async function testTabs() {
   await page.close();
 }
 
-// A big emoji after every 5 first-try answers in a row: 15 different emojis, a mistake resets, the streak carries over.
+// A big emoji after every 5 first-try answers in a row, up to 150: 30 different emojis, a mistake resets, the streak carries over.
 async function testStreak() {
   console.log('\n[streak] emoji after every 5 right answers in a row');
   const page = await openPage();
@@ -616,7 +616,11 @@ async function testStreak() {
   }, firstWrong);
   const next = ms => new Promise(r => setTimeout(r, ms));
   const emojis = await page.evaluate(() => STREAK_EMOJIS);
-  check(emojis.length === 15 && new Set(emojis).size === 15, `there are 15 different emojis (${emojis.join(' ')})`);
+  check(emojis.length === 30 && new Set(emojis).size === 30, `there are 30 different emojis, one per 5 in a row up to 150 (${emojis.join(' ')})`);
+  // near-twins that people can not tell apart on a phone: at most one face from each family may be used
+  const FAMILIES = [['😀', '😃', '😄', '😁'], ['😂', '🤣', '😹'], ['🙂', '🙃'], ['😊', '☺️'], ['🌟', '⭐'], ['😜', '😝', '😛'], ['😸', '😺', '😃']];
+  const clash = FAMILIES.filter(f => f.filter(x => emojis.includes(x)).length > 1).map(f => f.filter(x => emojis.includes(x)).join(' + '));
+  check(clash.length === 0, `no two emojis that look alike (${clash.join('; ') || 'ok'})`);
 
   await page.click('#start-btn');
   for (let i = 0; i < 4; i++) { await answer(true); await next(560); }
@@ -639,12 +643,14 @@ async function testStreak() {
   const before = (await emoji()).text;
   await page.evaluate(() => restartGame());
   check((await emoji()).on && (await emoji()).text === before, 'a new round keeps the emoji of the streak');
-  await page.evaluate(() => { streak = 74; shownStage = 0; updateStreakEmoji(); });
-  check((await emoji()).text === emojis[13], `74 in a row shows the 14th emoji (${(await emoji()).text})`);
+  await page.evaluate(() => { streak = 100; shownStage = 0; updateStreakEmoji(); });
+  check((await emoji()).text === emojis[19] && emojis[19] === '💯', `100 in a row shows the 20th emoji (${(await emoji()).text})`);
+  await page.evaluate(() => { streak = 149; shownStage = 0; updateStreakEmoji(); });
+  check((await emoji()).text === emojis[28], `149 in a row shows the 29th emoji (${(await emoji()).text})`);
   await answer(true); await next(560);
-  check((await emoji()).text === emojis[14], `75 in a row shows the 15th, happiest emoji (${(await emoji()).text})`);
-  await page.evaluate(() => { streak = 200; updateStreakEmoji(); });
-  check((await emoji()).text === emojis[14], 'and it stays at the 15th beyond that');
+  check((await emoji()).text === emojis[29], `150 in a row shows the 30th, top emoji (${(await emoji()).text})`);
+  await page.evaluate(() => { streak = 400; updateStreakEmoji(); });
+  check((await emoji()).text === emojis[29], 'and it stays at the 30th beyond that');
   await page.evaluate(() => showStart());
   check(!(await emoji()).on, 'back at the menu the streak is over');
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);

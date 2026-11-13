@@ -407,9 +407,30 @@
             beginGame(res.words);
         }
 
-        function clearWords() {
+        // In-app confirm dialog (the browser's confirm() shows the site's address)
+        function askConfirm(text, okText) {
+            return new Promise(resolve => {
+                const bg = document.createElement("div");
+                bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;";
+                bg.innerHTML = `<div dir="rtl" style="background:#fff;color:#1a202c;border-radius:16px;padding:22px 20px 16px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);">
+                    <div data-text style="font-size:1.15rem;font-weight:bold;margin-bottom:18px;"></div>
+                    <div style="display:flex;gap:10px;justify-content:center;">
+                        <button data-ok style="flex:1;padding:10px;font-size:1rem;font-weight:bold;border:none;border-radius:10px;background:#e53e3e;color:#fff;cursor:pointer;"></button>
+                        <button data-cancel style="flex:1;padding:10px;font-size:1rem;border:none;border-radius:10px;background:#e2e8f0;color:#2d3748;cursor:pointer;">ביטול</button>
+                    </div></div>`;
+                bg.querySelector("[data-text]").textContent = text;
+                bg.querySelector("[data-ok]").textContent = okText;
+                const done = v => { bg.remove(); resolve(v); };
+                bg.querySelector("[data-ok]").onclick = () => done(true);
+                bg.querySelector("[data-cancel]").onclick = () => done(false);
+                bg.onclick = e => { if (e.target === bg) done(false); };
+                document.body.appendChild(bg);
+            });
+        }
+
+        async function clearWords() {
             const box = document.getElementById("words-input");
-            if (box.value.trim() && !confirm("למחוק את כל המילים מהרשימה?")) return;
+            if (box.value.trim() && !(await askConfirm("למחוק את כל המילים מהרשימה?", "מחיקה"))) return;
             box.value = "";
             try { localStorage.removeItem(STORE_KEY); localStorage.removeItem('englishpractice-words'); } catch (e) {}
             document.getElementById("photo-status").innerText = "";

@@ -25,6 +25,11 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* no pull-to-refresh: swiping down must not reload the page */
+        html, body {
+            overscroll-behavior-y: none;
+        }
+
         body {
             margin: 0;
             padding: 0;

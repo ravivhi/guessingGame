@@ -1,0 +1,196 @@
+one|אחד
+two|שניים
+three|שלושה
+four|ארבעה
+five|חמישה
+six|שישה
+seven|שבעה
+eight|שמונה
+nine|תשעה
+ten|עשרה
+eleven|אחד עשר
+twelve|שנים עשר
+thirteen|שלושה עשר
+fourteen|ארבעה עשר
+fifteen|חמישה עשר
+sixteen|שישה עשר
+seventeen|שבעה עשר
+eighteen|שמונה עשר
+nineteen|תשעה עשר
+twenty|עשרים
+red|אדום
+blue|כחול
+green|ירוק
+yellow|צהוב
+black|שחור
+white|לבן
+brown|חום
+pink|ורוד
+purple|סגול
+gray|אפור
+mother|אמא
+father|אבא
+brother|אח
+sister|אחות
+baby|תינוק
+son|בן
+daughter|בת
+grandmother|סבתא
+grandfather|סבא
+friend|חבר
+family|משפחה
+boy|ילד
+girl|ילדה
+man|גבר
+woman|אישה
+name|שם
+cat|חתול
+dog|כלב
+bird|ציפור
+fish|דג
+horse|סוס
+cow|פרה
+pig|חזיר
+sheep|כבשה
+chicken|תרנגולת
+duck|ברווז
+rabbit|ארנב
+mouse|עכבר
+lion|אריה
+tiger|נמר
+elephant|פיל
+monkey|קוף
+bear|דוב
+snake|נחש
+frog|צפרדע
+bee|דבורה
+butterfly|פרפר
+spider|עכביש
+giraffe|ג'ירפה
+zebra|זברה
+head|ראש
+eye|עין
+ear|אוזן
+nose|אף
+mouth|פה
+hand|יד
+foot|כף רגל
+leg|רגל
+arm|זרוע
+hair|שיער
+face|פנים
+tooth|שן
+finger|אצבע
+apple|תפוח
+banana|בננה
+orange|תפוז
+bread|לחם
+milk|חלב
+water|מים
+egg|ביצה
+cheese|גבינה
+rice|אורז
+meat|בשר
+cake|עוגה
+juice|מיץ
+tea|תה
+coffee|קפה
+sugar|סוכר
+salt|מלח
+soup|מרק
+pizza|פיצה
+chocolate|שוקולד
+ice cream|גלידה
+tomato|עגבנייה
+potato|תפוח אדמה
+carrot|גזר
+lemon|לימון
+grape|ענב
+house|בית
+door|דלת
+window|חלון
+table|שולחן
+chair|כיסא
+bed|מיטה
+book|ספר
+pen|עט
+pencil|עיפרון
+bag|תיק
+school|בית ספר
+teacher|מורה
+student|תלמיד
+room|חדר
+kitchen|מטבח
+bathroom|חדר אמבטיה
+garden|גינה
+car|מכונית
+bus|אוטובוס
+ball|כדור
+toy|צעצוע
+clock|שעון
+phone|טלפון
+computer|מחשב
+paper|נייר
+box|קופסה
+day|יום
+night|לילה
+morning|בוקר
+today|היום
+week|שבוע
+month|חודש
+year|שנה
+hour|שעה
+minute|דקה
+time|זמן
+Sunday|יום ראשון
+Monday|יום שני
+Tuesday|יום שלישי
+Wednesday|יום רביעי
+Thursday|יום חמישי
+Friday|יום שישי
+Saturday|שבת
+big|גדול
+small|קטן
+good|טוב
+bad|רע
+hot|חם
+cold|קר
+happy|שמח
+sad|עצוב
+old|ישן
+new|חדש
+fast|מהיר
+slow|איטי
+long|ארוך
+short|קצר
+hungry|רעב
+tired|עייף
+eat|לאכול
+drink|לשתות
+sleep|לישון
+run|לרוץ
+walk|ללכת ברגל
+jump|לקפוץ
+read|לקרוא
+write|לכתוב
+play|לשחק
+sing|לשיר
+dance|לרקוד
+swim|לשחות
+open|לפתוח
+close|לסגור
+see|לראות
+yes|כן
+no|לא
+hello|שלום
+goodbye|להתראות
+please|בבקשה
+thanks|תודה
+sun|שמש
+moon|ירח
+star|כוכב
+tree|עץ
+flower|פרח
+sky|שמיים
+rain|גשם
+sea|ים

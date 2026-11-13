@@ -161,7 +161,7 @@
         }
 
         /* message lines take no space until they have text */
-        #photo-status:empty, #start-error:empty, #words-hint:empty { display: none; }
+        #photo-status:empty, #start-error:empty, #words-hint:empty, #random-status:empty { display: none; }
 
         .btn-restart:disabled {
             background-color: #a0aec0;
@@ -201,6 +201,19 @@
                 <button type="button" onclick="clearWords()" style="flex:1;white-space:nowrap;padding:8px 10px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">🗑️ ניקוי המילים</button>
             </div>
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin:4px 0;">
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <label for="level-select" style="font-size:0.95rem;color:#4a5568;white-space:nowrap;">רמת קושי:</label>
+                        <select id="level-select" aria-label="רמת קושי" onchange="saveLevel()" style="padding:7px 8px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
+                            <option value="1">1 – קלה</option>
+                            <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                            <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                            <option value="10">10 – קשה</option>
+                        </select>
+                    </div>
+                    <button type="button" id="random-btn" onclick="randomWords()" style="padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;white-space:nowrap;">🎲 20 מילים אקראיות</button>
+                </div>
+                <div id="random-status" style="margin:2px 0 6px;font-size:0.9rem;color:#2b6cb0;"></div>
                 <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
                 <label for="photo-input" style="display:inline-block;margin:4px 0;padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border-radius:10px;cursor:pointer;">📷 קריאת מילים מתמונה</label>
                 <div id="photo-status" style="margin:6px 0 0;font-size:0.9rem;color:#2b6cb0;"></div>
@@ -973,6 +986,50 @@
             }
             return null;
         }
+
+        // ---- Random words from the built-in word bank: wordbank/level-1.txt ... level-10.txt, "english|hebrew" per line ----
+        const LEVEL_KEY = 'englishquiz-level';
+        const levelCache = {};
+        async function loadLevel(level) {
+            if (levelCache[level]) return levelCache[level];
+            const res = await fetch(`wordbank/level-${level}.txt`);
+            if (!res.ok) throw new Error("לא נטען");
+            const text = new TextDecoder("utf-8").decode(await res.arrayBuffer());
+            const words = text.split(/\r?\n/).map(l => l.split("|"))
+                .filter(p => p.length >= 2 && p[0].trim() && p[1].trim())
+                .map(p => ({ en: p[0].trim(), he: p[1].trim() }));
+            return (levelCache[level] = words);
+        }
+
+        function saveLevel() {
+            try { localStorage.setItem(LEVEL_KEY, document.getElementById("level-select").value); } catch (e) {}
+        }
+
+        // Puts 20 random words of the chosen level into the table (the student can still edit before starting).
+        async function randomWords() {
+            const level = +document.getElementById("level-select").value;
+            const status = document.getElementById("random-status");
+            status.textContent = "";
+            let words;
+            try { words = await loadLevel(level); }
+            catch (e) { status.textContent = "לא הצלחנו לטעון את מאגר המילים – בדקו את החיבור לאינטרנט."; return; }
+            if (rows.some(r => r.en.trim() || r.he.trim()) && !(await askConfirm("להחליף את הרשימה הנוכחית ב-20 מילים אקראיות?", "החלפה"))) return;
+            const picked = shuffle(words.slice()).slice(0, 20);
+            // a meaning picked by hand earlier (▾) wins over the bank's default
+            rows = picked.map(w => ({ en: w.en, he: chosen[w.en.toLowerCase()] || w.he, extra: [] }));
+            saveRows();
+            drawWords();
+            document.getElementById("start-error").innerText = "";
+            status.textContent = `נבחרו ${picked.length} מילים מרמה ${level}. לחצו "התחל משחק".`;
+        }
+
+        try { const lv = localStorage.getItem(LEVEL_KEY); if (lv) document.getElementById("level-select").value = lv; } catch (e) {}
+        // once, in the background: fetch all levels so the service worker keeps them for offline use
+        window.addEventListener("load", () => setTimeout(() => {
+            try { if (localStorage.getItem("englishquiz-bank-cached") === "1") return; } catch (e) {}
+            Promise.all(Array.from({ length: 10 }, (_, i) => fetch(`wordbank/level-${i + 1}.txt`).then(r => { if (!r.ok) throw 0; })))
+                .then(() => { try { localStorage.setItem("englishquiz-bank-cached", "1"); } catch (e) {} }).catch(() => {});
+        }, 3000));
 
         document.getElementById("photo-input").addEventListener("change", async e => {
             const files = [...e.target.files];

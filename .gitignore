@@ -22,4 +22,4 @@ signing-key-info.txt
 *.stackdump
 
 PLAY_PUBLISHING.md
-upload.ps1
+passwords.ps1

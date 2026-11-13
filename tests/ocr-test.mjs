@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs pairs|list|translation|practice|chooser|header
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs pairs|list|translation|practice|chooser|header|persist
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -259,9 +259,7 @@ async function testChooser() {
   const again = await page.evaluate(() => translateWithRetry('outside'));
   check(again === 'החוצה', `the choice is remembered for the next photo (got ${JSON.stringify(again)})`);
   const reqs = page.tr.total;
-  // the list is only saved to the device when a game is started, so mimic that before reloading
-  await page.evaluate(() => localStorage.setItem('englishquiz-words', document.getElementById('words-input').value));
-  await page.reload({ waitUntil: 'load' });
+  await page.reload({ waitUntil: 'load' });   // the list is saved on every change, no game needed
   check((await cell()).bg !== 'rgb(255, 251, 234)', 'after a reload the confirmed cell is still not yellow');
   check(page.tr.total === reqs, 'no extra translation requests were needed');
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
@@ -305,7 +303,49 @@ async function testHeader() {
   await page.close();
 }
 
-const TESTS = { pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader };
+// Corrections must survive a refresh (and any other reload) without starting a game.
+async function testPersist() {
+  console.log('\n[persist] edits survive a refresh');
+  const page = await openPage();
+  await page.evaluate(async () => {
+    const lines = [];
+    for (const w of ['apple', 'dog', 'cat']) lines.push(w + '\t' + await translateWithRetry(w));   // automatic translations
+    document.getElementById('words-input').value = lines.join('\n');
+    renderWords();
+  });
+  const cells = () => page.$$eval('#words-table tbody tr', trs => trs.map(tr => [...tr.querySelectorAll('input')].map(i => i.value)));
+
+  // 1) type a correction into a Hebrew cell, leave the cell
+  const heInputs = await page.$$('#words-table tbody tr td:nth-child(2) input');
+  await heInputs[0].click({ clickCount: 3 });
+  await heInputs[0].type('תפוח עץ');
+  await page.keyboard.press('Tab');
+  // 2) delete the 'dog' row, add a new word by hand
+  await page.click('#words-table tbody tr:nth-child(2) button[aria-label="מחיקת השורה"]');
+  await page.evaluate(() => addWordRow());
+  const enInputs = await page.$$('#words-table tbody tr td:nth-child(1) input');
+  await enInputs[enInputs.length - 1].type('sun');
+  const heInputs2 = await page.$$('#words-table tbody tr td:nth-child(2) input');
+  await heInputs2[heInputs2.length - 1].type('שמש');
+  await page.keyboard.press('Tab');
+
+  await page.reload({ waitUntil: 'load' });   // like pull-to-refresh / F5 - no game was started
+  const after = await cells();
+  check(JSON.stringify(after) === JSON.stringify([['apple', 'תפוח עץ'], ['cat', 'תרגום'], ['sun', 'שמש']]), `the table after a reload keeps the corrections, the deleted row and the new row (${JSON.stringify(after)})`);
+  const yellow = await page.$$eval('#words-table tbody tr td:nth-child(2) input', is => is.map(i => getComputedStyle(i).backgroundColor === 'rgb(255, 251, 234)'));
+  check(JSON.stringify(yellow) === JSON.stringify([false, true, false]), `only the untouched automatic translation is still yellow (${JSON.stringify(yellow)})`);
+  const again = await page.evaluate(() => translateWithRetry('apple'));
+  check(again === 'תפוח עץ', `reading the same word again keeps the typed correction (got ${JSON.stringify(again)})`);
+
+  await page.click('button[onclick="clearWords()"]');
+  await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.innerText === 'מחיקה').click());
+  await page.reload({ waitUntil: 'load' });
+  check((await cells()).length === 0, 'after "clear the list" and a reload the list stays empty');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

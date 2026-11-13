@@ -247,7 +247,8 @@
         let totalScore = 0;
         let correctFirstTryCount = 0;
         
-        // Scoring: +1 for a correct answer, -1 for every wrong click, +1 bonus for a round with no mistakes.
+        // Scoring: +1 for a word answered right on the first try, -1 for a word missed on the first try,
+        // +1 bonus for a round with no mistakes.
         // A round never ends below 0, and the points add up from game to game (saved on the device).
         const TOTAL_KEY = 'englishquiz-total-points';
         let grandTotal = 0;
@@ -300,8 +301,7 @@
                 canAnswer = false;
                 selectedButton.classList.add("correct");
 
-                totalScore += 1;
-                if (wrongCount === 0) correctFirstTryCount++;
+                if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; }
                 document.getElementById("score").innerText = totalScore;
 
                 setTimeout(() => {
@@ -312,8 +312,8 @@
             } else {
                 selectedButton.classList.add("wrong");
                 selectedButton.disabled = true;
+                if (wrongCount === 0) totalScore -= 1;
                 wrongCount++;
-                totalScore -= 1;
                 document.getElementById("score").innerText = totalScore;
                 const cur = wordsData[currentIndex];
                 if (!missed.includes(cur)) missed.push(cur);

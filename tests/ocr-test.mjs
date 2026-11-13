@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (all fixtures)   |   node ocr-test.mjs pairs|list
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs pairs|list|translation|practice|chooser
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -80,10 +80,13 @@ async function openPage(mode = () => 'ok') {
     const service = u.includes('translate.googleapis.com') ? 'google' : u.includes('api.mymemory.translated.net') ? 'mm' : null;
     if (!service) return req.continue();
     const n = ++page.tr.total; page.tr[service]++;
-    if (mode(n, service) === 'fail') { page.tr.failed++; return req.abort('failed'); }
-    // Google answers with vowel marks (niqqud); the page must strip them -> 'תרגום'
+    if (mode(n, service, u) === 'fail') { page.tr.failed++; return req.abort('failed'); }
+    // Google answers with vowel marks (niqqud); the page must strip them -> 'תרגום'.
+    // With dt=bd it also returns dictionary entries (other meanings, grouped by part of speech).
     const body = service === 'google'
-      ? [[['תַּרְגּוּם', 'x', null, null, 2]], null, 'en']
+      ? (u.includes('dt=bd')
+        ? [[['בחוץ', 'outside']], [['adverb', ['בָּחוּץ', 'הַחוּצָה'], [['בחוץ', ['outside'], 0.5], ['החוצה', ['outside'], 0.2]], 'outside'], ['noun', ['חוּץ'], [['חוץ', ['outside'], 0.1]], 'outside']]]
+        : [[['תַּרְגּוּם', 'x', null, null, 2]], null, 'en'])
       : { responseData: { translatedText: 'תרגום' }, responseStatus: 200, matches: [] };
     req.respond({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) });
   });
@@ -177,15 +180,114 @@ async function testTranslationRetry() {
   await page.close();
 }
 
+// "Practise the words I missed": the summary offers the missed words, a clean round clears them, "all words" goes back.
+async function testPractice() {
+  console.log('\n[practice] practise missed words');
+  const page = await openPage();
+  await page.evaluate(() => { document.getElementById('words-input').value = 'apple\tתפוח\ndog\tכלב\ncat\tחתול\nsun\tשמש'; renderWords(); });
+  await page.click('#start-btn');
+
+  // Plays the round on screen. Words in `miss` are answered wrong first (like a student), then right.
+  const playRound = async (miss = []) => {
+    for (let guard = 0; guard < 20; guard++) {
+      const st = await page.evaluate(() => ({ summary: getComputedStyle(document.getElementById('summary-screen')).display !== 'none', word: wordsData[currentIndex]?.word, correct: wordsData[currentIndex]?.correct }));
+      if (st.summary) return;
+      await page.evaluate((miss, st) => {
+        const btns = [...document.querySelectorAll('#answers-container button')];
+        if (miss.includes(st.word)) btns.find(b => b.innerText !== st.correct).click();
+        btns.find(b => b.innerText === st.correct).click();
+      }, miss, st);
+      await new Promise(r => setTimeout(r, 650));
+    }
+  };
+  const vis = sel => page.$eval(sel, e => getComputedStyle(e).display !== 'none');
+  const text = sel => page.$eval(sel, e => e.innerText.trim());
+
+  await playRound(['dog', 'sun']);
+  check(await vis('#practice-missed-btn') && /\(2\)/.test(await text('#practice-missed-btn')), `summary offers to practise the 2 missed words ("${await text('#practice-missed-btn')}")`);
+  check(!(await vis('#all-words-btn')), '"all words" button is hidden in a normal round');
+
+  await page.click('#practice-missed-btn');
+  const words = await page.evaluate(() => wordsData.map(w => w.word).sort());
+  check(JSON.stringify(words) === JSON.stringify(['dog', 'sun']), `practice round has only the missed words (${words.join(', ')})`);
+  check(await text('#total-progress') === '2', `progress shows 2 questions (${await text('#total-progress')})`);
+
+  await playRound([]);   // clean round
+  check(!(await vis('#practice-missed-btn')), 'no missed words left -> practice button is hidden');
+  check(await vis('#all-words-btn'), '"all words" button is shown after practising');
+
+  await page.click('#all-words-btn');
+  check(await text('#total-progress') === '4', `"all words" returns to the full list (${await text('#total-progress')} questions)`);
+
+  await playRound(['cat']);                       // missed words are tracked fresh each round
+  check(/\(1\)/.test(await text('#practice-missed-btn')), `a new round starts counting from zero ("${await text('#practice-missed-btn')}")`);
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+// The ▾ button: other meanings from the dictionary, light-yellow auto-translated cells, remembered choice.
+async function testChooser() {
+  console.log('\n[chooser] pick another meaning');
+  let page = await openPage();
+  await page.evaluate(async () => {
+    const he = await translateWithRetry('outside');            // automatic translation -> counts as unconfirmed
+    document.getElementById('words-input').value = 'outside\t' + he;
+    renderWords();
+  });
+  const cell = () => page.$eval('#words-table tbody tr td:nth-child(2) input', e => ({ bg: getComputedStyle(e).backgroundColor, value: e.value }));
+  const hint = () => page.$eval('#words-hint', e => (getComputedStyle(e).display === 'none' ? '' : e.innerText));
+  check((await cell()).bg === 'rgb(255, 251, 234)', `auto-translated cell is light yellow (${(await cell()).bg})`);
+  check((await hint()).includes('▾'), `a hint explains the colour and the ▾ button ("${await hint()}")`);
+
+  await page.click('#words-table tbody tr button[aria-label="פירושים נוספים"]');
+  await page.waitForSelector('[data-role=alternatives] button');
+  const opts = await page.$$eval('[data-role=alternatives] button', bs => bs.map(b => b.innerText));
+  const labels = await page.$eval('[data-role=alternatives]', e => e.innerText);
+  check(['בחוץ', 'החוצה', 'חוץ'].every(o => opts.includes(o)), `chooser lists the dictionary meanings, vowel marks stripped (${opts.join(', ')})`);
+  check(labels.includes('תואר פועל') && labels.includes('שם עצם'), 'meanings are grouped by part of speech');
+
+  await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.innerText === 'ביטול').click());
+  check((await cell()).value === 'תרגום' && !(await page.$('[data-role=alternatives]')), 'cancel closes the chooser and changes nothing');
+
+  await page.click('#words-table tbody tr button[aria-label="פירושים נוספים"]');
+  await page.waitForSelector('[data-role=alternatives] button');
+  await page.evaluate(() => [...document.querySelectorAll('[data-role=alternatives] button')].find(b => b.innerText === 'החוצה').click());
+  const after = await cell();
+  const stored = await page.$eval('#words-input', e => e.value);
+  check(after.value === 'החוצה' && stored === 'outside\tהחוצה', `the picked meaning is written to the cell and the list (${JSON.stringify(stored)})`);
+  check(after.bg !== 'rgb(255, 251, 234)' && (await hint()) === '', 'a confirmed meaning is no longer yellow, hint disappears');
+  const again = await page.evaluate(() => translateWithRetry('outside'));
+  check(again === 'החוצה', `the choice is remembered for the next photo (got ${JSON.stringify(again)})`);
+  const reqs = page.tr.total;
+  // the list is only saved to the device when a game is started, so mimic that before reloading
+  await page.evaluate(() => localStorage.setItem('englishquiz-words', document.getElementById('words-input').value));
+  await page.reload({ waitUntil: 'load' });
+  check((await cell()).bg !== 'rgb(255, 251, 234)', 'after a reload the confirmed cell is still not yellow');
+  check(page.tr.total === reqs, 'no extra translation requests were needed');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+
+  // offline / blocked dictionary request -> a friendly message, nothing breaks
+  page = await openPage((n, service, u) => (u.includes('dt=bd') ? 'fail' : 'ok'));
+  await page.evaluate(() => { document.getElementById('words-input').value = 'outside\tבחוץ'; renderWords(); });
+  await page.click('#words-table tbody tr button[aria-label="פירושים נוספים"]');
+  await page.waitForFunction(() => /בדקו את החיבור/.test(document.querySelector('[data-role=alternatives]')?.innerText || ''), { timeout: 10000 });
+  check(true, 'when the dictionary can not be reached the chooser says so (check the connection)');
+  await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.innerText === 'ביטול').click());
+  check((await page.$eval('#words-input', e => e.value)) === 'outside\tבחוץ', 'the list is unchanged after a failed lookup');
+  await page.close();
+}
+
+const TESTS = { pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser };
 try {
   let ran = 0;
-  for (const [name, fx] of Object.entries(FIXTURES)) {
-    if (only && only !== name && only !== 'retry') continue;
-    if (!fs.existsSync(path.resolve(here, 'fixtures', fx.file))) { console.log(`\n[${name}] SKIPPED - tests/fixtures/${fx.file} not found (photos are git-ignored)`); continue; }
-    await (name === 'pairs' ? testPairs : testList)(fx); ran++;
+  for (const [name, run] of Object.entries(TESTS)) {
+    if (only && only !== name) continue;
+    const fx = FIXTURES[name];
+    if (fx && !fs.existsSync(path.resolve(here, 'fixtures', fx.file))) { console.log(`\n[${name}] SKIPPED - tests/fixtures/${fx.file} not found (photos are git-ignored)`); continue; }
+    await run(); ran++;
   }
-  if (!only || only === 'retry') { await testTranslationRetry(); ran++; }
-  if (!ran) { console.error('Nothing ran.'); process.exitCode = 2; }
+  if (!ran) { console.error(`Nothing ran (known tests: ${Object.keys(TESTS).join(', ')}).`); process.exitCode = 2; }
 } finally {
   await browser.close();
   server.close();

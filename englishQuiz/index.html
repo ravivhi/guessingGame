@@ -156,7 +156,7 @@
         }
 
         /* message lines take no space until they have text */
-        #photo-status:empty, #start-error:empty { display: none; }
+        #photo-status:empty, #start-error:empty, #words-hint:empty { display: none; }
 
         .btn-restart:disabled {
             background-color: #a0aec0;
@@ -186,6 +186,7 @@
             <p style="margin:6px 0;">בכל שורה: מילה באנגלית ופירוש.</p>
             <textarea id="words-input" hidden></textarea>
             <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
+            <div id="words-hint" style="margin:0 0 4px;font-size:0.8rem;color:#975a16;"></div>
             <div style="max-height:45vh;overflow:auto;border:2px solid #ccc;border-radius:10px;">
                 <table id="words-table" style="width:100%;table-layout:fixed;border-collapse:collapse;direction:ltr;"></table>
             </div>
@@ -224,6 +225,8 @@
             <p style="font-size: 1.3rem; margin: 10px 0;" id="summary-stats">צדקתם ב-0 מתוך 0 מילים</p>
             <p style="font-size: 1.5rem; font-weight: bold; color: #2b6cb0;" id="summary-final-score">ציון סופי: 0</p>
             <button class="btn-restart" onclick="restartGame()">נסו שוב</button>
+            <button class="btn-restart" id="practice-missed-btn" style="display:none;margin-top:10px;background:#dd6b20;" onclick="practiceMissed()">תרגול המילים שטעיתי</button>
+            <button class="btn-restart" id="all-words-btn" style="display:none;margin-top:10px;background:#718096;" onclick="playAll()">כל המילים</button>
             <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="showStart()">החלפת מילים</button>
         </div>
     </div>
@@ -235,6 +238,8 @@
     </script>
     <script>
         let wordsData = [];
+        let fullWords = [];   // the whole list from the start screen (wordsData is a subset while practising missed words)
+        let missed = [];      // words answered wrong at least once in the current round
         const STORE_KEY = 'englishquiz-words';
 
         let currentIndex = 0;
@@ -303,6 +308,8 @@
                 selectedButton.classList.add("wrong");
                 selectedButton.disabled = true;
                 wrongCount++;
+                const cur = wordsData[currentIndex];
+                if (!missed.includes(cur)) missed.push(cur);
             }
         }
 
@@ -339,12 +346,30 @@
             document.getElementById("summary-title").innerText = title;
             document.getElementById("summary-stats").innerText = `צדקתם בניסיון ראשון ב-${correctFirstTryCount} מתוך ${totalWords} מילים`;
             document.getElementById("summary-final-score").innerText = `ציון סופי: ${totalScore}`;
+
+            const practiceBtn = document.getElementById("practice-missed-btn");
+            practiceBtn.style.display = missed.length ? "" : "none";
+            practiceBtn.innerText = `תרגול המילים שטעיתי (${missed.length})`;
+            document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
+        }
+
+        // New round with only the words that were answered wrong at least once
+        function practiceMissed() {
+            wordsData = missed.slice();
+            restartGame();
+        }
+
+        // Back to the whole list after practising
+        function playAll() {
+            wordsData = fullWords;
+            restartGame();
         }
 
         function restartGame() {
             currentIndex = 0;
             totalScore = 0;
             correctFirstTryCount = 0;
+            missed = [];
             document.getElementById("score").innerText = "0";
             document.getElementById("summary-screen").style.display = "none";
             document.getElementById("game-screen").style.display = "block";
@@ -401,7 +426,7 @@
         }
 
         function beginGame(words) {
-            wordsData = words;
+            wordsData = fullWords = words;
             document.getElementById("start-screen").style.display = "none";
             restartGame();
         }
@@ -474,6 +499,7 @@
         function updateWordsCount() {
             const n = rows.filter(r => r.en.trim() && r.he.trim()).length;
             document.getElementById("words-count").textContent = n ? `${n} מילים ברשימה` : "אין מילים עדיין – הוסיפו מילה או צלמו תמונה";
+            document.getElementById("words-hint").textContent = rows.some(isAutoMeaning) ? "🟨 תורגם אוטומטית – לחצו ▾ לפירוש אחר" : "";
         }
 
         function drawWords(focusIdx) {
@@ -495,17 +521,43 @@
         function buildWordRow(body, r) {
             const tr = body.insertRow();
             tr.style.borderTop = "1px solid #e2e8f0";
+            let heInp, altBtn;
+            // light yellow = the meaning came from automatic translation and wasn't confirmed; ▾ only when there's a word
+            const refresh = () => {
+                const auto = isAutoMeaning(r);
+                heInp.style.background = auto ? "#fffbea" : "";
+                heInp.style.borderColor = auto ? "#ecc94b" : "#cbd5e0";
+                altBtn.style.visibility = r.en.trim() ? "visible" : "hidden";
+            };
             [["en", "ltr", "אנגלית"], ["he", "rtl", "עברית"]].forEach(([key, dir, label]) => {
                 const td = tr.insertCell();
-                td.style.padding = "4px";
+                td.style.cssText = "padding:4px;position:relative;";
                 const inp = document.createElement("input");
                 inp.value = r[key];
                 inp.dir = dir;
                 inp.setAttribute("aria-label", label);
                 inp.autocomplete = "off";
-                inp.style.cssText = "width:100%;box-sizing:border-box;padding:8px;font-size:1rem;border:1px solid #cbd5e0;border-radius:8px;";
-                inp.addEventListener("input", () => { r[key] = inp.value; saveRows(); });
+                inp.style.cssText = "width:100%;box-sizing:border-box;padding:8px;font-size:1rem;border:1px solid #cbd5e0;border-radius:8px;" + (key === "he" ? "padding-left:32px;" : "");
+                inp.addEventListener("input", () => { r[key] = inp.value; saveRows(); refresh(); });
                 td.appendChild(inp);
+                if (key === "he") {
+                    heInp = inp;
+                    altBtn = document.createElement("button");
+                    altBtn.type = "button";
+                    altBtn.textContent = "▾";
+                    altBtn.setAttribute("aria-label", "פירושים נוספים");
+                    altBtn.title = "פירושים נוספים";
+                    altBtn.style.cssText = "position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1rem;color:#4a5568;cursor:pointer;padding:4px;";
+                    altBtn.onclick = async () => {
+                        const choice = await chooseMeaning(r.en.trim(), r.he.trim());
+                        if (!choice) return;
+                        r.he = choice; heInp.value = choice;
+                        chosen[r.en.trim().toLowerCase()] = choice;   // remembered: the same word gets this meaning next time
+                        try { localStorage.setItem(CH_KEY, JSON.stringify(chosen)); } catch (e) {}
+                        saveRows(); refresh();
+                    };
+                    td.appendChild(altBtn);
+                }
             });
             const td = tr.insertCell();
             td.style.cssText = "padding:4px;text-align:center;";
@@ -516,6 +568,7 @@
             del.style.cssText = "font-size:1.2rem;background:none;border:none;cursor:pointer;padding:6px;";
             del.onclick = () => { rows.splice(rows.indexOf(r), 1); saveRows(); drawWords(); };
             td.appendChild(del);
+            refresh();
         }
 
         // Re-read the stored text and redraw (call after changing #words-input programmatically)
@@ -786,8 +839,96 @@
         const TR_KEY = 'englishquiz-translations';
         let trCache = {};
         try { trCache = JSON.parse(localStorage.getItem(TR_KEY) || "{}"); } catch (e) {}
+        // Meanings picked by hand with the ▾ button. They win over the automatic translation next time.
+        const CH_KEY = 'englishquiz-chosen';
+        let chosen = {};
+        try { chosen = JSON.parse(localStorage.getItem(CH_KEY) || "{}"); } catch (e) {}
+        // true = the cell holds an automatic translation that nobody confirmed (shown in light yellow)
+        const isAutoMeaning = r => {
+            const k = r.en.trim().toLowerCase(), he = r.he.trim();
+            return !!he && trCache[k] === he && chosen[k] !== he;
+        };
+
+        // Other meanings of an English word from Google's dictionary data, grouped by part of speech.
+        const POS_HE = { noun: "שם עצם", verb: "פועל", adjective: "תואר", adverb: "תואר פועל", preposition: "מילת יחס", pronoun: "כינוי", conjunction: "מילת חיבור", interjection: "מילת קריאה", determiner: "מגדיר", article: "מגדיר" };
+        const altCache = {};
+        async function fetchAlternatives(word) {
+            const key = word.toLowerCase();
+            if (altCache[key]) return altCache[key];
+            const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=iw&dt=t&dt=bd&q=" + encodeURIComponent(word));
+            if (!r.ok) throw new Error("תקלת רשת");
+            const j = await r.json();
+            const strip = s => String(s).replace(/[֑-ׇ]/g, "").trim();
+            const groups = [];
+            for (const e of (j && j[1]) || []) {
+                const terms = [...new Set((e[1] || []).map(strip).filter(t => t && /^[֐-׿\s'"\-]+$/.test(t)))].slice(0, 6);
+                if (terms.length) groups.push({ pos: POS_HE[e[0]] || e[0], terms });
+            }
+            if (!groups.length) {   // no dictionary entry: offer at least the plain translation
+                const main = strip(((j && j[0]) || []).map(s => s[0]).join(""));
+                if (/^[֐-׿\s'"\-]+$/.test(main)) groups.push({ pos: "", terms: [main] });
+            }
+            return (altCache[key] = groups);
+        }
+
+        // Chooser dialog. Resolves with the picked meaning, or null if cancelled.
+        function chooseMeaning(en, current) {
+            return new Promise(resolve => {
+                const bg = document.createElement("div");
+                bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;";
+                const box = document.createElement("div");
+                box.dir = "rtl";
+                box.style.cssText = "background:#fff;color:#1a202c;border-radius:16px;padding:18px 16px 14px;max-width:340px;width:100%;max-height:80vh;overflow:auto;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);";
+                const title = document.createElement("div");
+                title.dir = "ltr";
+                title.textContent = en;
+                title.style.cssText = "font-size:1.3rem;font-weight:bold;margin-bottom:4px;";
+                const sub = document.createElement("div");
+                sub.textContent = "בחרו פירוש:";
+                sub.style.cssText = "font-size:0.9rem;color:#4a5568;margin-bottom:10px;";
+                const body = document.createElement("div");
+                body.dataset.role = "alternatives";
+                body.textContent = "טוען...";
+                body.style.cssText = "text-align:right;";
+                const cancel = document.createElement("button");
+                cancel.type = "button";
+                cancel.textContent = "ביטול";
+                cancel.style.cssText = "margin-top:12px;width:100%;padding:10px;font-size:1rem;border:none;border-radius:10px;background:#e2e8f0;color:#2d3748;cursor:pointer;";
+                const done = v => { bg.remove(); resolve(v); };
+                cancel.onclick = () => done(null);
+                bg.onclick = e => { if (e.target === bg) done(null); };
+                box.append(title, sub, body, cancel);
+                bg.appendChild(box);
+                document.body.appendChild(bg);
+                fetchAlternatives(en).then(groups => {
+                    body.textContent = "";
+                    if (!groups.length) { body.textContent = "לא נמצאו פירושים נוספים."; return; }
+                    for (const g of groups) {
+                        if (g.pos) {
+                            const label = document.createElement("div");
+                            label.textContent = g.pos;
+                            label.style.cssText = "font-size:0.8rem;color:#718096;margin:8px 0 4px;";
+                            body.appendChild(label);
+                        }
+                        const wrap = document.createElement("div");
+                        wrap.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;";
+                        for (const t of g.terms) {
+                            const b = document.createElement("button");
+                            b.type = "button";
+                            b.textContent = t;
+                            b.style.cssText = `padding:8px 12px;font-size:1rem;border:none;border-radius:10px;cursor:pointer;background:${t === current ? "#bee3f8" : "#e2e8f0"};color:#2d3748;`;
+                            b.onclick = () => done(t);
+                            wrap.appendChild(b);
+                        }
+                        body.appendChild(wrap);
+                    }
+                }).catch(() => { body.textContent = "לא הצלחנו לטעון פירושים – בדקו את החיבור לאינטרנט."; });
+            });
+        }
+
         async function translateWithRetry(word) {
             const key = word.toLowerCase();
+            if (chosen[key]) return chosen[key];
             if (trCache[key]) return trCache[key];
             for (let attempt = 0; attempt < 3; attempt++) {
                 try {

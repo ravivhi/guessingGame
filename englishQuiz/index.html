@@ -248,7 +248,7 @@
         let correctFirstTryCount = 0;
         
         // Scoring: +1 for a word answered right on the first try, -1 for a word missed on the first try,
-        // +1 bonus for a round with no mistakes.
+        // +1 bonus for a round of 10+ words with no mistakes.
         // A round never ends below 0, and the points add up from game to game (saved on the device).
         const TOTAL_KEY = 'englishquiz-total-points';
         let grandTotal = 0;
@@ -341,7 +341,8 @@
 
             const bonusContainer = document.getElementById("bonus-container");
             bonusContainer.innerHTML = "";
-            if (missed.length === 0) {
+            // Bonus only for a quiz of at least 10 words, all answered right on the first try
+            if (totalWords >= 10 && correctFirstTryCount === totalWords) {
                 totalScore += 1;
                 const bonusBadge = document.createElement("div");
                 bonusBadge.className = "bonus-badge";

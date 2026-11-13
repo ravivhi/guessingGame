@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs pairs|list|translation|practice|chooser
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs pairs|list|translation|practice|chooser|header
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -278,7 +278,34 @@ async function testChooser() {
   await page.close();
 }
 
-const TESTS = { pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser };
+// The "English | עברית" header must stay in place while a long list scrolls, with the rows going UNDER it.
+async function testHeader() {
+  console.log('\n[header] sticky table header');
+  const page = await openPage();
+  await page.evaluate(() => {
+    document.getElementById('words-input').value = Array.from({ length: 40 }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n');
+    renderWords();
+  });
+  const probe = () => page.evaluate(() => {
+    const wrap = document.getElementById('words-table').parentElement;
+    const ths = [...document.querySelectorAll('#words-table th')];
+    const covered = ths.filter(th => th.textContent).map(th => {
+      const r = th.getBoundingClientRect();
+      const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return top === th || th.contains(top);
+    });
+    return { scroll: Math.round(wrap.scrollTop), headerTop: Math.round(ths[0].getBoundingClientRect().top), headerOnTop: covered.every(Boolean) };
+  });
+  const before = await probe();
+  await page.evaluate(() => { document.getElementById('words-table').parentElement.scrollTop = 600; });
+  const after = await probe();
+  check(after.scroll >= 500, `the list scrolled (${after.scroll}px)`);
+  check(after.headerTop === before.headerTop, `header stays in place while scrolling (top ${before.headerTop}px -> ${after.headerTop}px)`);
+  check(after.headerOnTop, 'rows slide under the header and never cover its text');
+  await page.close();
+}
+
+const TESTS = { pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

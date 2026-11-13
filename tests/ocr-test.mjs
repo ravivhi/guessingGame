@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs pairs|list|translation|practice|chooser|header|persist
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|pairs|list|translation|practice|chooser|header|persist
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -47,7 +47,7 @@ const chromePath = [
 ].find(p => p && fs.existsSync(p));
 if (!chromePath) { console.error('Chrome/Edge not found. Set CHROME_PATH.'); process.exit(2); }
 
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.txt': 'text/plain; charset=utf-8' };
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
   if (p.endsWith('/')) p += 'index.html';
@@ -72,11 +72,14 @@ async function openPage(mode = () => 'ok') {
   const closePage = page.close.bind(page);
   page.close = async () => { await closePage(); await ctx.close(); };
   await page.setViewport({ width: 360, height: 800 });   // small phone
-  page.pageErrors = []; page.tr = { total: 0, failed: 0, google: 0, mm: 0 };
+  page.pageErrors = []; page.tr = { total: 0, failed: 0, google: 0, mm: 0, bank: 0 };
   page.on('pageerror', e => page.pageErrors.push(e.message));
+  await page.setBypassServiceWorker(true);   // so every request below is seen (and can be stubbed) by the page
   await page.setRequestInterception(true);
   page.on('request', req => {
     const u = req.url();
+    // the built-in word bank files: counted, and can be made to fail with mode(0, 'bank', url)
+    if (u.includes('/wordbank/')) { page.tr.bank++; return mode(0, 'bank', u) === 'fail' ? req.abort('failed') : req.continue(); }
     const service = u.includes('translate.googleapis.com') ? 'google' : u.includes('api.mymemory.translated.net') ? 'mm' : null;
     if (!service) return req.continue();
     const n = ++page.tr.total; page.tr[service]++;
@@ -345,7 +348,95 @@ async function testPersist() {
   await page.close();
 }
 
-const TESTS = { pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
+// The built-in word bank files themselves: format, size, no duplicates, clean Hebrew.
+async function testWordbank() {
+  console.log('\n[wordbank] built-in word bank files');
+  const bank = {}, allEn = new Map();
+  for (let lv = 1; lv <= 10; lv++) {
+    const f = path.join(root, 'englishQuiz', 'wordbank', `level-${lv}.txt`);
+    if (!fs.existsSync(f)) { check(false, `level-${lv}.txt exists`); continue; }
+    bank[lv] = fs.readFileSync(f, 'utf8').split(/\r?\n/).filter(l => l.trim()).map(l => l.split('|'));
+  }
+  check(Object.keys(bank).length === 10, 'there are 10 level files');
+  const total = Object.values(bank).flat().length;
+  check(Object.values(bank).every(a => a.length >= 100), `every level has at least 100 words (${Object.entries(bank).map(([l, a]) => `L${l}:${a.length}`).join(' ')}; ${total} in total)`);
+  const badFormat = [], badEn = [], badHe = [], longHe = [], dupEn = [];
+  for (const [lv, arr] of Object.entries(bank)) for (const p of arr) {
+    const [en, he] = p;
+    if (p.length !== 2 || !en.trim() || !he.trim()) { badFormat.push(`L${lv} ${p.join('|')}`); continue; }
+    if (!/^[A-Za-z][A-Za-z' -]*$/.test(en)) badEn.push(`L${lv} ${en}`);
+    if (!/^[֐-׿][֐-׿ '"\-\/,]*$/.test(he) || /[֑-ׇ]/.test(he)) badHe.push(`L${lv} ${en}=${he}`);
+    if (he.split(/\s+/).length > 3) longHe.push(`L${lv} ${en}=${he}`);
+    const k = en.toLowerCase(); if (allEn.has(k)) dupEn.push(`${en} (L${allEn.get(k)} and L${lv})`); else allEn.set(k, lv);
+  }
+  check(!badFormat.length, `every line is "english|hebrew" (${badFormat.slice(0, 3).join('; ') || 'ok'})`);
+  check(!badEn.length, `English words use plain letters only (${badEn.slice(0, 5).join(', ') || 'ok'})`);
+  check(!badHe.length, `Hebrew uses Hebrew letters only, no vowel marks (${badHe.slice(0, 5).join(', ') || 'ok'})`);
+  check(!longHe.length, `no Hebrew meaning is longer than 3 words (${longHe.slice(0, 5).join(', ') || 'ok'})`);
+  check(!dupEn.length, `no English word appears twice in the bank (${dupEn.slice(0, 5).join(', ') || 'ok'})`);
+}
+
+// The 🎲 button: 20 random words of the chosen level go into the table.
+async function testRandom() {
+  console.log('\n[random] 20 random words by level');
+  const bankOf = lv => fs.readFileSync(path.join(root, 'englishQuiz', 'wordbank', `level-${lv}.txt`), 'utf8').split(/\r?\n/).filter(Boolean).map(l => l.split('|'));
+  let page = await openPage();
+  const table = () => page.$$eval('#words-table tbody tr', trs => trs.map(tr => [...tr.querySelectorAll('input')].map(i => i.value)));
+  const selectLevel = lv => page.select('#level-select', String(lv));
+
+  await selectLevel(5);
+  await page.click('#random-btn');
+  await page.waitForFunction(() => document.querySelectorAll('#words-table tbody tr').length === 20, { timeout: 10000 });
+  const first = await table();
+  const level5 = Object.fromEntries(bankOf(5));
+  check(first.length === 20 && new Set(first.map(r => r[0])).size === 20, 'the table has 20 different words');
+  check(first.every(r => level5[r[0]] === r[1]), 'every word and meaning comes from level 5 of the bank');
+  check((await page.$eval('#random-status', e => e.innerText)).includes('רמה 5'), `a message says which level was used ("${await page.$eval('#random-status', e => e.innerText)}")`);
+
+  // another click on a non-empty list asks first; cancel keeps the list
+  await page.click('#random-btn');
+  await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.innerText === 'ביטול'));
+  await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.innerText === 'ביטול').click());
+  check(JSON.stringify(await table()) === JSON.stringify(first), 'cancelling the question keeps the current list');
+  // confirm replaces it with a new random set
+  await page.click('#random-btn');
+  await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.innerText === 'החלפה'));
+  await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.innerText === 'החלפה').click());
+  await page.waitForFunction(first => JSON.stringify([...document.querySelectorAll('#words-table tbody tr')].map(tr => [...tr.querySelectorAll('input')].map(i => i.value))) !== first, { timeout: 10000 }, JSON.stringify(first));
+  const second = await table();
+  check(second.length === 20 && JSON.stringify(second) !== JSON.stringify(first), 'confirming replaces the list with a different random set');
+
+  // level + list survive a reload
+  await page.reload({ waitUntil: 'load' });
+  check(JSON.stringify(await table()) === JSON.stringify(second), 'the list is still there after a reload');
+  check(await page.$eval('#level-select', e => e.value) === '5', 'the chosen level is remembered');
+
+  // a meaning picked by hand earlier wins over the bank's default; and the game starts with the 20 words
+  await page.evaluate(() => { chosen['one'] = 'אחת'; shuffle = a => a; });   // no shuffling: the first 20 words of the level
+  await page.evaluate(() => { document.getElementById('words-input').value = ''; renderWords(); });
+  await selectLevel(1);
+  await page.click('#random-btn');
+  await page.waitForFunction(() => document.querySelectorAll('#words-table tbody tr').length === 20);
+  const l1 = await table();
+  check(l1[0][0] === 'one' && l1[0][1] === 'אחת', `a hand-picked meaning wins over the bank (${l1[0].join(' = ')})`);
+  await page.click('#start-btn');
+  await new Promise(r => setTimeout(r, 400));
+  check(await page.$eval('#total-progress', e => e.innerText) === '20', 'the game starts with 20 questions');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+
+  // the bank can't be loaded (offline / blocked): friendly message, the list is untouched
+  page = await openPage((n, service, u) => (service === 'bank' && u.includes('level-3') ? 'fail' : 'ok'));
+  await page.evaluate(() => { document.getElementById('words-input').value = 'apple\tתפוח'; renderWords(); });
+  await selectLevel(3);
+  await page.click('#random-btn');
+  await page.waitForFunction(() => /מאגר המילים/.test(document.getElementById('random-status').innerText), { timeout: 10000 });
+  check(JSON.stringify(await table()) === JSON.stringify([['apple', 'תפוח']]), 'when the level cannot be loaded the list is not touched');
+  check((await page.$eval('#random-status', e => e.innerText)).includes('בדקו את החיבור'), 'and a message asks to check the connection');
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

@@ -183,6 +183,7 @@
     <div class="game-container">
         <div id="start-screen">
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
+            <div id="grand-total" style="font-weight:bold;color:#2b6cb0;margin:-4px 0 6px;"></div>
             <p style="margin:6px 0;">בכל שורה: מילה באנגלית ופירוש.</p>
             <textarea id="words-input" hidden></textarea>
             <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
@@ -246,7 +247,11 @@
         let totalScore = 0;
         let correctFirstTryCount = 0;
         
-        const POINTS = [20, 10, 5, 0];
+        // Scoring: +1 for a correct answer, -1 for every wrong click, +1 bonus for a round with no mistakes.
+        // A round never ends below 0, and the points add up from game to game (saved on the device).
+        const TOTAL_KEY = 'englishquiz-total-points';
+        let grandTotal = 0;
+        try { grandTotal = Math.max(0, parseInt(localStorage.getItem(TOTAL_KEY), 10) || 0); } catch (e) {}
         let wrongCount = 0;
         let canAnswer = true;
 
@@ -295,7 +300,7 @@
                 canAnswer = false;
                 selectedButton.classList.add("correct");
 
-                totalScore += POINTS[Math.min(wrongCount, POINTS.length - 1)];
+                totalScore += 1;
                 if (wrongCount === 0) correctFirstTryCount++;
                 document.getElementById("score").innerText = totalScore;
 
@@ -308,6 +313,8 @@
                 selectedButton.classList.add("wrong");
                 selectedButton.disabled = true;
                 wrongCount++;
+                totalScore -= 1;
+                document.getElementById("score").innerText = totalScore;
                 const cur = wordsData[currentIndex];
                 if (!missed.includes(cur)) missed.push(cur);
             }
@@ -334,18 +341,22 @@
 
             const bonusContainer = document.getElementById("bonus-container");
             bonusContainer.innerHTML = "";
-            if (correctFirstTryCount === totalWords) {
-                totalScore += 100;
+            if (missed.length === 0) {
+                totalScore += 1;
                 const bonusBadge = document.createElement("div");
                 bonusBadge.className = "bonus-badge";
-                bonusBadge.innerText = "💥 מטורף! 100 נקודות בונוס על הצלחה מלאה בניסיון ראשון!";
+                bonusBadge.innerText = "💥 מטורף! נקודת בונוס על בוחן בלי טעויות!";
                 bonusContainer.appendChild(bonusBadge);
             }
+            totalScore = Math.max(0, totalScore);
+            grandTotal += totalScore;
+            try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
+            showGrandTotal();
 
             document.getElementById("summary-emoji").innerText = emoji;
             document.getElementById("summary-title").innerText = title;
             document.getElementById("summary-stats").innerText = `צדקתם בניסיון ראשון ב-${correctFirstTryCount} מתוך ${totalWords} מילים`;
-            document.getElementById("summary-final-score").innerText = `ציון סופי: ${totalScore}`;
+            document.getElementById("summary-final-score").innerText = `נקודות בבוחן: ${totalScore} · סה״כ: ${grandTotal}`;
 
             const practiceBtn = document.getElementById("practice-missed-btn");
             practiceBtn.style.display = missed.length ? "" : "none";
@@ -363,6 +374,11 @@
         function playAll() {
             wordsData = fullWords;
             restartGame();
+        }
+
+        function showGrandTotal() {
+            const el = document.getElementById("grand-total");
+            if (el) el.innerText = grandTotal ? `⭐ סה״כ נקודות: ${grandTotal}` : "";
         }
 
         function restartGame() {
@@ -988,6 +1004,7 @@
             e.target.value = "";
         });
 
+        showGrandTotal();
         try {
             const saved = localStorage.getItem(STORE_KEY) || localStorage.getItem('englishpractice-words');
             if (saved) document.getElementById("words-input").value = saved.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");

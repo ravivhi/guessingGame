@@ -473,6 +473,15 @@ async function testLayout() {
     const r = await pageOverflow();
     check(r.y <= 0 && r.x <= 0, `${tag}, result screen with 4 buttons: the page does not scroll (${r.y}px)`);
   }
+  // the four grey action buttons look the same, and the photo one is a real button that opens the file chooser
+  await page.setViewport({ width: 360, height: 740 });
+  await page.evaluate(() => showStart());
+  const looks = await page.$$eval('.action-btn', bs => bs.map(b => { const s = getComputedStyle(b); return { id: b.id || b.textContent.trim().slice(0, 12), tag: b.tagName, look: [s.backgroundColor, s.borderTopWidth, s.borderTopColor, s.borderRadius, s.fontSize, s.color, s.boxShadow].join('|') }; }));
+  check(looks.length === 4 && looks.every(l => l.tag === 'BUTTON'), `there are 4 action buttons and all are real buttons (${looks.map(l => l.id).join(', ')})`);
+  check(new Set(looks.map(l => l.look)).size === 1, 'the add, clear, random-words and photo buttons share the same look');
+  const [chooser] = await Promise.all([page.waitForFileChooser({ timeout: 5000 }).catch(() => null), page.click('#photo-btn')]);
+  check(!!chooser, 'the photo button opens the file chooser');
+  if (chooser) await chooser.cancel();
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();
 }

@@ -181,6 +181,25 @@
             border: 1px dashed #dd6b20;
         }
 
+        /* the small grey action buttons on the start screen (add / clear / random words / photo) */
+        .action-btn {
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            background: #e2e8f0;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+            cursor: pointer;
+            white-space: nowrap;
+            touch-action: manipulation;
+        }
+        .action-btn:active {
+            background: #cbd5e0;
+            box-shadow: none;
+            transform: translateY(1px);
+        }
+
         /* message lines take no space until they have text */
         #photo-status:empty, #start-error:empty, #words-hint:empty, #random-status:empty { display: none; }
 
@@ -237,12 +256,12 @@
                 <table id="words-table" style="width:100%;table-layout:fixed;border-collapse:collapse;direction:ltr;"></table>
             </div>
             <div style="margin:8px 0;display:flex;gap:8px;justify-content:center;">
-                <button type="button" onclick="addWordRow()" style="flex:1;white-space:nowrap;padding:8px 10px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">➕ הוספת מילה</button>
-                <button type="button" onclick="clearWords()" style="flex:1;white-space:nowrap;padding:8px 10px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">🗑️ ניקוי המילים</button>
+                <button type="button" class="action-btn" onclick="addWordRow()" style="flex:1;">➕ הוספת מילה</button>
+                <button type="button" class="action-btn" onclick="clearWords()" style="flex:1;">🗑️ ניקוי המילים</button>
             </div>
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
                 <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:4px 0;">
-                    <button type="button" id="random-btn" onclick="randomWords()" style="padding:8px 12px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;white-space:nowrap;">🎲 20 מילים אקראיות</button>
+                    <button type="button" id="random-btn" class="action-btn" onclick="randomWords()">🎲 20 מילים אקראיות</button>
                     <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה ... 10 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
                         <option value="1">רמה 1</option><option value="2">רמה 2</option><option value="3">רמה 3</option><option value="4">רמה 4</option><option value="5">רמה 5</option>
                         <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option><option value="10">רמה 10</option>
@@ -250,7 +269,7 @@
                 </div>
                 <div id="random-status" style="margin:2px 0 6px;font-size:0.9rem;color:#2b6cb0;"></div>
                 <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
-                <label for="photo-input" style="display:inline-block;margin:4px 0;padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border-radius:10px;cursor:pointer;">📷 קריאת מילים מתמונה</label>
+                <button type="button" id="photo-btn" class="action-btn" onclick="document.getElementById('photo-input').click()" style="margin:4px 0;">📷 קריאת מילים מתמונה</button>
                 <div id="photo-status" style="margin:6px 0 0;font-size:0.9rem;color:#2b6cb0;"></div>
             </div>
             <div id="start-error" style="color:#c53030;margin-top:6px;"></div>

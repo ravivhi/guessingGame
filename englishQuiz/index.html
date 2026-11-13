@@ -39,6 +39,7 @@
         .game-container {
             width: 95%;
             max-width: 450px;
+            min-width: 0;
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -184,7 +185,7 @@
             <textarea id="words-input" hidden></textarea>
             <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
             <div style="max-height:45vh;overflow:auto;border:2px solid #ccc;border-radius:10px;">
-                <table id="words-table" style="width:100%;border-collapse:collapse;direction:ltr;"></table>
+                <table id="words-table" style="width:100%;table-layout:fixed;border-collapse:collapse;direction:ltr;"></table>
             </div>
             <div style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap;">
                 <button type="button" onclick="addWordRow()" style="padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">➕ הוספת מילה</button>
@@ -377,7 +378,7 @@
 
         function parseWords(text) {
             const rows = text.replace(/^\uFEFF/, '').split(/\r?\n/)
-                .map(l => l.split(/[,;\t]/).map(x => x.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "").trim()).filter(x => x))
+                .map(l => (l.includes("\t") ? l.split("\t") : l.split(/[,;]/)).map(x => x.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "").trim()).filter(x => x))
                 .filter(r => r.length >= 2);
             const pool = [], seen = new Set();
             for (const r of rows) {
@@ -453,7 +454,7 @@
         function loadRows() {
             const text = document.getElementById("words-input").value;
             rows = text.replace(/^﻿/, "").split(/\r?\n/)
-                .map(l => l.split(/[,;\t]/).map(x => x.trim()))
+                .map(l => (l.includes("\t") ? l.split("\t") : l.split(/[,;]/)).map(x => x.trim()))
                 .filter(r => r.some(x => x))
                 .map(r => ({ en: r[0] || "", he: r[1] || "", extra: r.slice(2).filter(x => x) }));
         }
@@ -464,7 +465,7 @@
                 .map(r => {
                     const cells = [r.en.trim(), r.he.trim(), ...r.extra];
                     while (cells.length > 1 && !cells[cells.length - 1]) cells.pop();
-                    return cells.join(", ");
+                    return cells.join("\t");   // tab-separated, so commas inside a meaning are kept as typed
                 }).join("\n");
             updateWordsCount();
         }
@@ -778,7 +779,7 @@
                             const k = next++;
                             let t = items[k].he;
                             if (!t) try { t = await translate(items[k].en); } catch (err) { if (/מכסת/.test(err.message)) throw err; }
-                            out[k] = `${items[k].en}, ${t || items[k].en}`;
+                            out[k] = `${items[k].en}\t${t || items[k].en}`;
                             status.innerText = `מתרגם ${++done}/${items.length}...`;
                         }
                     };

@@ -486,33 +486,35 @@
                 hr.appendChild(th);
             });
             const body = t.createTBody();
-            rows.forEach((r, i) => {
-                const tr = body.insertRow();
-                tr.style.borderTop = "1px solid #e2e8f0";
-                [["en", "ltr", "אנגלית"], ["he", "rtl", "עברית"]].forEach(([key, dir, label]) => {
-                    const td = tr.insertCell();
-                    td.style.padding = "4px";
-                    const inp = document.createElement("input");
-                    inp.value = r[key];
-                    inp.dir = dir;
-                    inp.setAttribute("aria-label", label);
-                    inp.autocomplete = "off";
-                    inp.style.cssText = "width:100%;box-sizing:border-box;padding:8px;font-size:1rem;border:1px solid #cbd5e0;border-radius:8px;";
-                    inp.addEventListener("input", () => { r[key] = inp.value; saveRows(); });
-                    td.appendChild(inp);
-                });
-                const td = tr.insertCell();
-                td.style.cssText = "padding:4px;text-align:center;";
-                const del = document.createElement("button");
-                del.type = "button";
-                del.textContent = "🗑️";
-                del.setAttribute("aria-label", "מחיקת השורה");
-                del.style.cssText = "font-size:1.2rem;background:none;border:none;cursor:pointer;padding:6px;";
-                del.onclick = () => { rows.splice(i, 1); saveRows(); drawWords(); };
-                td.appendChild(del);
-            });
+            rows.forEach(r => buildWordRow(body, r));
             updateWordsCount();
             if (focusIdx != null && body.rows[focusIdx]) body.rows[focusIdx].cells[0].firstChild.focus();
+        }
+
+        function buildWordRow(body, r) {
+            const tr = body.insertRow();
+            tr.style.borderTop = "1px solid #e2e8f0";
+            [["en", "ltr", "אנגלית"], ["he", "rtl", "עברית"]].forEach(([key, dir, label]) => {
+                const td = tr.insertCell();
+                td.style.padding = "4px";
+                const inp = document.createElement("input");
+                inp.value = r[key];
+                inp.dir = dir;
+                inp.setAttribute("aria-label", label);
+                inp.autocomplete = "off";
+                inp.style.cssText = "width:100%;box-sizing:border-box;padding:8px;font-size:1rem;border:1px solid #cbd5e0;border-radius:8px;";
+                inp.addEventListener("input", () => { r[key] = inp.value; saveRows(); });
+                td.appendChild(inp);
+            });
+            const td = tr.insertCell();
+            td.style.cssText = "padding:4px;text-align:center;";
+            const del = document.createElement("button");
+            del.type = "button";
+            del.textContent = "🗑️";
+            del.setAttribute("aria-label", "מחיקת השורה");
+            del.style.cssText = "font-size:1.2rem;background:none;border:none;cursor:pointer;padding:6px;";
+            del.onclick = () => { rows.splice(rows.indexOf(r), 1); saveRows(); drawWords(); };
+            td.appendChild(del);
         }
 
         // Re-read the stored text and redraw (call after changing #words-input programmatically)
@@ -748,7 +750,23 @@
             return score(b) > score(a) ? b : a; // a = sparse layout (cards), b = auto layout (lists)
         }
 
+        // Google's public web translate endpoint: fast (~0.4s per word). Throws on network/HTTP errors so the
+        // caller can fall back to MyMemory. Strips niqqud (vowel marks); too long / non-Hebrew results keep the English word.
+        async function translateGoogle(word) {
+            const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=iw&dt=t&q=" + encodeURIComponent(word));
+            if (!r.ok) throw new Error("תקלת רשת בתרגום");
+            const j = await r.json();
+            const t = ((j && j[0]) || []).map(s => s[0]).join("")
+                .replace(/[֑-ׇ]/g, "").replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "").replace(/[,;]/g, " /").replace(/[.!?]+$/, "").trim();
+            return /^[֐-׿\s'"\-\/]+$/.test(t) && t.split(/\s+/).length <= 4 ? t : word;
+        }
+
         async function translate(word) {
+            try { return await translateGoogle(word); }
+            catch (e) { return await translateMyMemory(word); }
+        }
+
+        async function translateMyMemory(word) {
             const r = await fetch("https://api.mymemory.translated.net/get?langpair=en|he&q=" + encodeURIComponent(word));
             if (!r.ok) throw new Error("תקלת רשת בתרגום");
             const j = await r.json();
@@ -811,7 +829,7 @@
                             status.innerText = `מתרגם ${++done}/${items.length}...`;
                         }
                     };
-                    await Promise.all([run(), run()]);
+                    await Promise.all([run(), run(), run(), run()]);
                     const have = new Set(box.value.split(/\r?\n/).map(l => l.trim()));
                     const add = out.filter(l => l && !have.has(l));
                     box.value = (box.value.trim() ? box.value.trim() + "\n" : "") + add.join("\n");

@@ -64,24 +64,28 @@ const check = (ok, msg) => { console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${msg}`); i
 
 const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new', args: ['--no-sandbox'], protocolTimeout: 600000 });
 
-// Opens the page with the translation service stubbed. mode(n) decides per request: 'ok' | 'fail'.
+// Opens the page with both translation services stubbed (Google first, MyMemory as fallback).
+// mode(n, service) decides per request: 'ok' | 'fail'   (n counts all translation requests, service = 'google' | 'mm').
 async function openPage(mode = () => 'ok') {
   const ctx = await browser.createBrowserContext();       // fresh storage per test (the page saves the word list)
   const page = await ctx.newPage();
   const closePage = page.close.bind(page);
   page.close = async () => { await closePage(); await ctx.close(); };
   await page.setViewport({ width: 360, height: 800 });   // small phone
-  page.pageErrors = []; page.tr = { total: 0, failed: 0 };
+  page.pageErrors = []; page.tr = { total: 0, failed: 0, google: 0, mm: 0 };
   page.on('pageerror', e => page.pageErrors.push(e.message));
   await page.setRequestInterception(true);
   page.on('request', req => {
-    if (!req.url().includes('api.mymemory.translated.net')) return req.continue();
-    const n = ++page.tr.total;
-    if (mode(n, req.url()) === 'fail') { page.tr.failed++; return req.abort('failed'); }
-    req.respond({
-      status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ responseData: { translatedText: 'תרגום' }, responseStatus: 200, matches: [] }),
-    });
+    const u = req.url();
+    const service = u.includes('translate.googleapis.com') ? 'google' : u.includes('api.mymemory.translated.net') ? 'mm' : null;
+    if (!service) return req.continue();
+    const n = ++page.tr.total; page.tr[service]++;
+    if (mode(n, service) === 'fail') { page.tr.failed++; return req.abort('failed'); }
+    // Google answers with vowel marks (niqqud); the page must strip them -> 'תרגום'
+    const body = service === 'google'
+      ? [[['תַּרְגּוּם', 'x', null, null, 2]], null, 'en']
+      : { responseData: { translatedText: 'תרגום' }, responseStatus: 200, matches: [] };
+    req.respond({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) });
   });
   await page.goto(url, { waitUntil: 'load' });
   return page;
@@ -135,6 +139,7 @@ async function testList(fx) {
   check(extra.length === 0, `no wrong/garbled words (extra: ${extra.join(', ') || '-'})`);
   const notTranslated = rows.filter(r => r[1] !== 'תרגום');
   check(notTranslated.length === 0, `every word got its (stubbed) translation, none blank or paired with page text${notTranslated.length ? ' (got: ' + notTranslated.map(r => `${r[0]}=${JSON.stringify(r[1])}`).join(', ') + ')' : ''}`);
+  check(page.tr.google >= rows.length && page.tr.mm === 0, `translated through Google only, no MyMemory calls (google: ${page.tr.google}, mymemory: ${page.tr.mm})`);
   const junk = rows.filter(r => fx.marginJunk.includes(r[1]));
   check(junk.length === 0, `Hebrew from the page margin is not used as a meaning${junk.length ? ' (' + junk.map(r => r[0]).join(', ') + ')' : ''}`);
   const ov = await overflowOf(page);
@@ -145,17 +150,30 @@ async function testList(fx) {
 
 // Rate limiting / flaky network: retries recover; a service that never answers leaves a blank, not the English word.
 async function testTranslationRetry() {
-  console.log('\n[retry] translation service failures');
-  let page = await openPage(n => (n <= 2 ? 'fail' : 'ok'));
-  const t1 = await page.evaluate(() => translateWithRetry('apple'));
-  check(t1 === 'תרגום', `recovers after 2 failed requests (got ${JSON.stringify(t1)}, ${page.tr.total} requests)`);
-  const again = await page.evaluate(() => translateWithRetry('apple'));
-  check(again === 'תרגום' && page.tr.total === 3, `a translated word is cached (no new request; total ${page.tr.total})`);
+  console.log('\n[translation] Google first, MyMemory fallback, retries, cache');
+  const tr = (page, w) => page.evaluate(x => translateWithRetry(x), w);
+
+  let page = await openPage();
+  const t0 = await tr(page, 'apple');
+  check(t0 === 'תרגום', `Google answer is used, vowel marks stripped (got ${JSON.stringify(t0)})`);
+  check(page.tr.google === 1 && page.tr.mm === 0, `only Google was asked (google ${page.tr.google}, mymemory ${page.tr.mm})`);
+  await tr(page, 'apple');
+  check(page.tr.total === 1, `a translated word is cached - no new request (total ${page.tr.total})`);
+  await page.close();
+
+  page = await openPage((n, service) => (service === 'google' ? 'fail' : 'ok'));
+  const t1 = await tr(page, 'apple');
+  check(t1 === 'תרגום' && page.tr.google === 1 && page.tr.mm === 1, `falls back to MyMemory when Google is unreachable (got ${JSON.stringify(t1)}; google ${page.tr.google}, mymemory ${page.tr.mm})`);
+  await page.close();
+
+  page = await openPage(n => (n <= 4 ? 'fail' : 'ok'));
+  const t2 = await tr(page, 'apple');
+  check(t2 === 'תרגום' && page.tr.total === 5, `retries after both services failed twice (got ${JSON.stringify(t2)}, ${page.tr.total} requests)`);
   await page.close();
 
   page = await openPage(() => 'fail');
-  const t2 = await page.evaluate(() => translateWithRetry('banana'));
-  check(t2 === null, `returns null when the service never answers (got ${JSON.stringify(t2)}, ${page.tr.total} requests)`);
+  const t3 = await tr(page, 'banana');
+  check(t3 === null, `returns null when no service ever answers (got ${JSON.stringify(t3)}, ${page.tr.total} requests)`);
   await page.close();
 }
 

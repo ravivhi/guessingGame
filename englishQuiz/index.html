@@ -665,6 +665,7 @@
         }
 
         const isHe = s => /[\u0590-\u05FF]/.test(s);
+        const EN_ONLY_MIN_CONF = /*EN_THR*/60;   // min OCR confidence for a word in an English-only list
 
         // Returns [{en, he}] — he is the Hebrew found next to the word in the photo: on the same line,
         // or directly below it (card layouts: English word, Hebrew under it). Arabic is ignored.
@@ -680,7 +681,7 @@
                     const he = isHe(cur[0].text);
                     const t = he
                         ? cur.slice().reverse().map(w => w.text).join(" ").replace(/[^\u0590-\u05FF' ,\-]/g, "").replace(/\s+/g, " ").replace(/^[ ,]+|[ ,]+$/g, "").trim()
-                        : cur.map(w => w.text).join(" ").replace(/\(\w+\)/g, "").replace(/[^A-Za-z' ]/g, "").replace(/\s+/g, " ").trim();
+                        : cur.map(w => w.text).join(" ").replace(/\(\w+\)/g, "").replace(/[^A-Za-z' ]/g, "").replace(/\s+/g, " ").replace(/^[b-hj-zB-HJ-Z] /, "").trim();   // a stray letter before a word is noise (only "a"/"I" are real words)
                     if (t.length >= 2) all.push({ he, t, li, conf: Math.min(...cur.map(w => w.confidence)),
                         x0: cur[0].bbox.x0, x1: cur[cur.length - 1].bbox.x1,
                         y0: Math.min(...cur.map(w => w.bbox.y0)), y1: Math.max(...cur.map(w => w.bbox.y1)) });
@@ -713,10 +714,14 @@
                 return h.y0 >= sg.y1 - lh * 0.3 && h.y0 - sg.y1 <= lh * 2.5 && Math.min(h.x1, sg.x1) - Math.max(h.x0, sg.x0) >= -lh;
             };
             below.better = (sg, h, b) => h.y0 < b.y0 || (h.y0 === b.y0 && nearX(sg, h, b)); match(below);
+            // Two kinds of photos: English+Hebrew pairs (most words have a Hebrew partner) and English-only lists.
+            // In an English-only list, a stray Hebrew label in the page margin must not become a "meaning".
+            const paired = en.filter(sg => pair.has(sg)).length;
+            const hasHe = paired >= 3 && paired >= 0.3 * en.length;
             const items = [];
             for (const sg of en) {
-                const he = pair.get(sg);
-                if (he ? sg.conf < 60 : sg.conf < 90) continue;
+                const he = hasHe ? pair.get(sg) : null;
+                if (he ? sg.conf < 60 : sg.conf < (hasHe ? 90 : EN_ONLY_MIN_CONF)) continue;
                 items.push({ en: sg.t, he: he ? he.t : "" });
             }
             return items;
@@ -745,6 +750,7 @@
 
         async function translate(word) {
             const r = await fetch("https://api.mymemory.translated.net/get?langpair=en|he&q=" + encodeURIComponent(word));
+            if (!r.ok) throw new Error("תקלת רשת בתרגום");
             const j = await r.json();
             const t0 = j.responseData && j.responseData.translatedText || "";
             if (/MYMEMORY WARNING|QUERY LENGTH/i.test(t0) || j.responseStatus == 429) throw new Error("חרגת ממכסת התרגום היומית");
@@ -756,6 +762,27 @@
             return cands.find(ok) || word;
         }
 
+        // The free service rate-limits bursts (blocked requests look like CORS/network errors), so: retry with a
+        // growing pause, and remember good translations on this device. Returns null if it never answered.
+        const TR_KEY = 'englishquiz-translations';
+        let trCache = {};
+        try { trCache = JSON.parse(localStorage.getItem(TR_KEY) || "{}"); } catch (e) {}
+        async function translateWithRetry(word) {
+            const key = word.toLowerCase();
+            if (trCache[key]) return trCache[key];
+            for (let attempt = 0; attempt < 3; attempt++) {
+                try {
+                    const t = await translate(word);
+                    if (t !== word) { trCache[key] = t; try { localStorage.setItem(TR_KEY, JSON.stringify(trCache)); } catch (e) {} }
+                    return t;
+                } catch (err) {
+                    if (/מכסת/.test(err.message)) throw err;
+                    await new Promise(res => setTimeout(res, 700 * (attempt + 1)));
+                }
+            }
+            return null;
+        }
+
         document.getElementById("photo-input").addEventListener("change", async e => {
             const files = [...e.target.files];
             const status = document.getElementById("photo-status");
@@ -763,6 +790,7 @@
             if (!files.length) return;
             const startBtn = document.getElementById("start-btn");
             startBtn.disabled = true;
+            let failed = 0;
             try {
                 for (let i = 0; i < files.length; i++) {
                     status.innerText = `תמונה ${i + 1}/${files.length}: טוען OCR...`;
@@ -778,18 +806,20 @@
                         while (next < items.length) {
                             const k = next++;
                             let t = items[k].he;
-                            if (!t) try { t = await translate(items[k].en); } catch (err) { if (/מכסת/.test(err.message)) throw err; }
-                            out[k] = `${items[k].en}\t${t || items[k].en}`;
+                            if (!t) { t = await translateWithRetry(items[k].en); if (t === null) failed++; }
+                            out[k] = `${items[k].en}\t${t === null ? "" : (t || items[k].en)}`;   // no answer -> blank cell to fill in
                             status.innerText = `מתרגם ${++done}/${items.length}...`;
                         }
                     };
-                    await Promise.all([run(), run(), run(), run()]);
+                    await Promise.all([run(), run()]);
                     const have = new Set(box.value.split(/\r?\n/).map(l => l.trim()));
                     const add = out.filter(l => l && !have.has(l));
                     box.value = (box.value.trim() ? box.value.trim() + "\n" : "") + add.join("\n");
                     renderWords();
                 }
-                status.innerText = "מוכן! בדקו את הרשימה ולחצו התחל.";
+                status.innerText = failed
+                    ? `מוכן! ${failed} מילים לא תורגמו (שירות התרגום עמוס) – השלימו אותן ידנית בטבלה, או נסו שוב עוד רגע.`
+                    : "מוכן! בדקו את הרשימה ולחצו התחל.";
             } catch (err) {
                 status.innerText = "שגיאה: " + err.message;
             } finally {

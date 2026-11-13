@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|pairs|list|translation|practice|chooser|header|persist
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -98,6 +98,7 @@ async function openPage(mode = () => 'ok') {
 }
 
 async function uploadAndRead(page, file) {
+  await page.evaluate(() => setMode('picture'));   // photos belong to the picture tab (random words is the default tab)
   await (await page.$('#photo-input')).uploadFile(path.resolve(here, 'fixtures', file));
   await page.waitForFunction(() => /מוכן|שגיאה/.test(document.getElementById('photo-status').innerText), { timeout: 420000 });
   const status = await page.$eval('#photo-status', e => e.innerText);
@@ -469,14 +470,33 @@ async function testLayout() {
     await page.evaluate(() => startFromInput());
     const g = await pageOverflow();
     check(g.y <= 0 && g.x <= 0, `${tag}, game screen: the page does not scroll (${g.y}px)`);
+    // with the streak emoji showing at the top there is less room: it must still fit
+    await page.evaluate(() => { streak = 75; shownStage = 0; updateStreakEmoji(); });
+    const geNow = () => page.evaluate(() => ({ y: document.documentElement.scrollHeight - innerHeight, x: document.documentElement.scrollWidth - innerWidth, h: document.getElementById('streak-emoji').offsetHeight }));
+    await new Promise(r => setTimeout(r, 300));
+    const mid = await geNow();     // while the emoji is still popping in
+    await new Promise(r => setTimeout(r, 700));
+    const ge = await geNow();      // after the animation
+    check(Math.max(mid.y, ge.y, mid.x, ge.x) <= 0 && ge.h >= 40, `${tag}, game screen with the streak emoji on top (${ge.h}px high): the page does not scroll, not even while it pops in (vertical ${ge.y}px, horizontal ${Math.max(mid.x, ge.x)}px)`);
     await page.evaluate(() => { missed = wordsData.slice(0, 2); wordsData = wordsData.slice(0, 3); showSummary(); });
     const r = await pageOverflow();
     check(r.y <= 0 && r.x <= 0, `${tag}, result screen with 4 buttons: the page does not scroll (${r.y}px)`);
   }
+  // the picture tab must fit too
+  await page.evaluate(() => setMode('picture'));
+  for (const [w, h] of [[320, 568], [360, 640], [412, 915]]) {
+    await page.setViewport({ width: w, height: h });
+    for (const n of [0, 20, 40]) {
+      await setWords(n);
+      const o = await pageOverflow();
+      const s = await page.evaluate(() => ({ btnInView: document.getElementById('start-btn').getBoundingClientRect().bottom <= innerHeight, photoInView: document.getElementById('photo-btn').getBoundingClientRect().bottom <= innerHeight }));
+      check(o.y <= 0 && o.x <= 0 && s.btnInView && s.photoInView, `${w}x${h}, picture tab, ${n} words: no page scrolling, photo and start buttons in view`);
+    }
+  }
   // the four grey action buttons look the same, and the photo one is a real button that opens the file chooser
   await page.setViewport({ width: 360, height: 740 });
   await page.evaluate(() => showStart());
-  const looks = await page.$$eval('.action-btn', bs => bs.map(b => { const s = getComputedStyle(b); return { id: b.id || b.textContent.trim().slice(0, 12), tag: b.tagName, look: [s.backgroundColor, s.borderTopWidth, s.borderTopColor, s.borderRadius, s.fontSize, s.color, s.boxShadow].join('|') }; }));
+  const looks = await page.$$eval('#start-screen .action-btn', bs => bs.map(b => { const s = getComputedStyle(b); return { id: b.id || b.textContent.trim().slice(0, 12), tag: b.tagName, look: [s.backgroundColor, s.borderTopWidth, s.borderTopColor, s.borderRadius, s.fontSize, s.color, s.boxShadow].join('|') }; }));
   check(looks.length === 4 && looks.every(l => l.tag === 'BUTTON'), `there are 4 action buttons and all are real buttons (${looks.map(l => l.id).join(', ')})`);
   check(new Set(looks.map(l => l.look)).size === 1, 'the add, clear, random-words and photo buttons share the same look');
   const [chooser] = await Promise.all([page.waitForFileChooser({ timeout: 5000 }).catch(() => null), page.click('#photo-btn')]);
@@ -486,7 +506,152 @@ async function testLayout() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
+// "→ תפריט" in the middle of a quiz: asks first, cancelling carries on, confirming goes to the main menu.
+async function testBack() {
+  console.log('\n[back] back to the main menu from a quiz');
+  const page = await openPage();
+  await page.evaluate(() => { document.getElementById('words-input').value = 'apple\tתפוח\ndog\tכלב\ncat\tחתול\nsun\tשמש'; renderWords(); });
+  const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
+  const txt = id => page.$eval('#' + id, e => e.innerText.trim());
+  const total = () => page.evaluate(() => localStorage.getItem('englishquiz-total-points'));
+  const dialogOpen = text => page.waitForFunction(t => [...document.querySelectorAll('button')].some(b => b.innerText.trim() === t), { timeout: 5000 }, text);
+  const clickText = t => page.evaluate(t => [...document.querySelectorAll('button')].find(b => b.innerText.trim() === t).click(), t);
+  const clickCorrect = () => page.evaluate(() => { const c = wordsData[currentIndex].correct; [...document.querySelectorAll('#answers-container button')].find(b => b.innerText === c).click(); });
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  await page.click('#start-btn');
+  check(await vis('game-screen') && await vis('back-btn'), 'the quiz screen has a back-to-menu button');
+
+  await page.click('#back-btn'); await dialogOpen('חזרה לתפריט');
+  check(true, 'tapping it asks before leaving');
+  await clickText('ביטול');
+  check(await vis('game-screen') && !(await vis('start-screen')) && await txt('current-progress') === '1', 'cancel stays in the quiz, on the same question');
+  await clickCorrect();
+  await page.click('#back-btn'); await dialogOpen('חזרה לתפריט'); await clickText('ביטול');
+  await page.waitForFunction(() => document.getElementById('current-progress').innerText === '2', { timeout: 5000 });
+  check(true, 'cancelling right after a right answer still moves on to the next word');
+
+  const before = await total();
+  await page.click('#back-btn'); await dialogOpen('חזרה לתפריט'); await clickText('חזרה לתפריט');
+  check(await vis('start-screen') && !(await vis('game-screen')) && !(await vis('summary-screen')), 'confirming goes back to the main menu');
+  check((await total()) === before, `the points of the abandoned round are not added to the total (${before} -> ${await total()})`);
+  check((await page.$$eval('#words-table tbody tr', r => r.length)) === 4, 'the word list is still there');
+
+  await page.click('#start-btn');
+  check(await txt('current-progress') === '1' && await txt('total-progress') === '4' && await txt('score') === '0', 'a new quiz starts from the beginning (question 1 of 4, 0 points)');
+
+  // leaving at the very moment the LAST answer is right: the pending "next question" must not pop the result screen up
+  for (let i = 0; i < 3; i++) { await clickCorrect(); await wait(700); }
+  const before2 = await total();
+  await clickCorrect();
+  await page.click('#back-btn'); await dialogOpen('חזרה לתפריט'); await clickText('חזרה לתפריט');
+  await wait(900);
+  check(await vis('start-screen') && !(await vis('summary-screen')) && !(await vis('game-screen')), 'leaving right after the last right answer stays on the main menu (no result screen pops up)');
+  check((await total()) === before2, 'and no points were added');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+// Two tabs: random words (default) and picture. Each keeps its own list.
+async function testTabs() {
+  console.log('\n[tabs] random words / picture tabs, one list each');
+  let page = await openPage();
+  const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
+  const selected = id => page.$eval('#' + id, e => e.getAttribute('aria-selected'));
+  const table = () => page.$$eval('#words-table tbody tr', trs => trs.map(tr => [...tr.querySelectorAll('input')].map(i => i.value)));
+  const setText = t => page.evaluate(t => { document.getElementById('words-input').value = t; renderWords(); saveRows(); }, t);
+
+  check(await selected('tab-random') === 'true' && await selected('tab-picture') === 'false', 'the random-words tab is the default');
+  check(await vis('panel-random') && !(await vis('panel-picture')), 'the default tab shows the level picker and the dice button, not the photo button');
+  check((await page.$eval('#words-count', e => e.innerText)).includes('🎲'), 'an empty random list says to press the dice');
+
+  await setText('apple\tתפוח\ndog\tכלב');
+  await page.click('#tab-picture');
+  check(await selected('tab-picture') === 'true' && await vis('panel-picture') && !(await vis('panel-random')), 'the picture tab shows the photo button instead');
+  check((await table()).length === 0, 'the picture tab starts with its own, empty list');
+  await setText('cat\tחתול\nsun\tשמש\nmoon\tירח\nstar\tכוכב');
+  await page.click('#tab-random');
+  check(JSON.stringify(await table()) === JSON.stringify([['apple', 'תפוח'], ['dog', 'כלב']]), 'going back to the random tab brings back its own list');
+
+  // both lists and the last tab survive a reload
+  await page.click('#tab-picture');
+  await page.reload({ waitUntil: 'load' });
+  check(await selected('tab-picture') === 'true', 'the last open tab is remembered');
+  check((await table()).length === 4, 'the picture list is still there');
+  await page.click('#tab-random');
+  check((await table()).length === 2, 'and so is the random list');
+
+  // the quiz plays the list of the tab that is open
+  await page.click('#tab-picture');
+  await page.click('#start-btn');
+  check(await page.$eval('#total-progress', e => e.innerText) === '4', 'start plays the list of the open tab (picture: 4 words)');
+  await page.evaluate(() => showStart());
+  await page.click('#tab-random');
+  await page.evaluate(() => { document.getElementById('words-input').value = 'apple\tתפוח\ndog\tכלב\ncat\tחתול\nsun\tשמש\nmoon\tירח\nstar\tכוכב'; renderWords(); saveRows(); });
+  await page.click('#start-btn');
+  check(await page.$eval('#total-progress', e => e.innerText) === '6', 'and in the random tab it plays the random list (6 words)');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+
+  // an older single list (saved before the tabs existed) shows up in the picture tab; the random tab starts empty
+  page = await openPage();
+  await page.evaluate(() => { localStorage.setItem('englishquiz-words', 'old\tישן\nnew\tחדש'); localStorage.removeItem('englishquiz-mode'); localStorage.removeItem('englishquiz-words-random'); });
+  await page.reload({ waitUntil: 'load' });
+  check((await table()).length === 0, 'after an update the random tab starts empty');
+  await page.click('#tab-picture');
+  check(JSON.stringify(await table()) === JSON.stringify([['old', 'ישן'], ['new', 'חדש']]), 'a list saved by an older version appears in the picture tab');
+  await page.close();
+}
+
+// A big emoji after every 5 first-try answers in a row: 15 different emojis, a mistake resets, the streak carries over.
+async function testStreak() {
+  console.log('\n[streak] emoji after every 5 right answers in a row');
+  const page = await openPage();
+  await page.evaluate(() => { document.getElementById('words-input').value = Array.from({ length: 24 }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n'); renderWords(); });
+  const emoji = () => page.$eval('#streak-emoji', e => ({ text: e.textContent, on: e.classList.contains('on') }));
+  const answer = (right, firstWrong = false) => page.evaluate((firstWrong) => {
+    const c = wordsData[currentIndex].correct, bs = [...document.querySelectorAll('#answers-container button')];
+    if (firstWrong) bs.find(b => b.innerText !== c).click();
+    bs.find(b => b.innerText === c).click();
+  }, firstWrong);
+  const next = ms => new Promise(r => setTimeout(r, ms));
+  const emojis = await page.evaluate(() => STREAK_EMOJIS);
+  check(emojis.length === 15 && new Set(emojis).size === 15, `there are 15 different emojis (${emojis.join(' ')})`);
+
+  await page.click('#start-btn');
+  for (let i = 0; i < 4; i++) { await answer(true); await next(560); }
+  check(!(await emoji()).on, 'no emoji after 4 right answers');
+  await answer(true); await next(560);
+  let e = await emoji();
+  check(e.on && e.text === emojis[0], `the 1st emoji appears after 5 in a row (${e.text})`);
+  for (let i = 0; i < 4; i++) { await answer(true); await next(560); }
+  check((await emoji()).text === emojis[0], 'it stays the same until the next 5 (9 in a row)');
+  await answer(true); await next(560);
+  e = await emoji();
+  check(e.on && e.text === emojis[1], `a happier one after 10 in a row (${e.text})`);
+  await answer(true, true); await next(560);   // a mistake first, then the right answer
+  check(!(await emoji()).on, 'one wrong first try: the emoji fades away');
+  for (let i = 0; i < 5; i++) { await answer(true); await next(560); }
+  check((await emoji()).on && (await emoji()).text === emojis[0], 'and the streak starts again from the first emoji');
+
+  // the streak carries on into the next round, and ends when you go back to the menu
+  await page.evaluate(() => { streak = 14; shownStage = 0; updateStreakEmoji(); });   // 14 in a row: 2nd emoji
+  const before = (await emoji()).text;
+  await page.evaluate(() => restartGame());
+  check((await emoji()).on && (await emoji()).text === before, 'a new round keeps the emoji of the streak');
+  await page.evaluate(() => { streak = 74; shownStage = 0; updateStreakEmoji(); });
+  check((await emoji()).text === emojis[13], `74 in a row shows the 14th emoji (${(await emoji()).text})`);
+  await answer(true); await next(560);
+  check((await emoji()).text === emojis[14], `75 in a row shows the 15th, happiest emoji (${(await emoji()).text})`);
+  await page.evaluate(() => { streak = 200; updateStreakEmoji(); });
+  check((await emoji()).text === emojis[14], 'and it stays at the 15th beyond that');
+  await page.evaluate(() => showStart());
+  check(!(await emoji()).on, 'back at the menu the streak is over');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

@@ -181,6 +181,51 @@
             border: 1px dashed #dd6b20;
         }
 
+        /* the two modes of the start screen: random words / words from a picture */
+        .tabs { display: flex; gap: 6px; margin: 2px 0 8px; }
+        .tab-btn {
+            flex: 1;
+            padding: 9px 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .tab-btn[aria-selected="true"] {
+            background: #3182ce;
+            border-color: #3182ce;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(50,130,206,0.35);
+        }
+        .tab-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* a big emoji at the top of the quiz: gets happier every 5 first-try answers in a row.
+           It takes no room until it appears, then it slides open above the header. */
+        #streak-emoji {
+            width: fit-content;   /* only as wide as the emoji, so the pop animation can never widen the page */
+            height: 0;
+            margin: 0 auto;
+            overflow: hidden;
+            font-size: clamp(3rem, 9vh, 5rem);
+            line-height: 1.15;
+            text-align: center;
+            opacity: 0;
+            transition: height 0.3s, margin 0.3s, opacity 0.35s;
+            pointer-events: none;
+            user-select: none;
+        }
+        #streak-emoji.on { height: 1.15em; margin: 0 auto 8px; opacity: 1; overflow: visible; }
+        #streak-emoji.pop { animation: streakPop 0.75s ease-out; }
+        @keyframes streakPop {
+            0%   { transform: scale(0.2) rotate(-15deg); }
+            60%  { transform: scale(1.18) rotate(6deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
         /* the small grey action buttons on the start screen (add / clear / random words / photo) */
         .action-btn {
             padding: 8px 12px;
@@ -248,6 +293,25 @@
         <div id="start-screen">
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
             <div id="grand-total" style="font-weight:bold;color:#2b6cb0;margin:-4px 0 6px;"></div>
+            <div class="tabs" role="tablist">
+                <button type="button" role="tab" id="tab-random" class="tab-btn" aria-selected="true" onclick="setMode('random')">🎲 מילים אקראיות</button>
+                <button type="button" role="tab" id="tab-picture" class="tab-btn" aria-selected="false" onclick="setMode('picture')">📷 מתמונה</button>
+            </div>
+            <div id="panel-random" role="tabpanel">
+                <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:4px 0;">
+                    <button type="button" id="random-btn" class="action-btn" onclick="randomWords()">🎲 20 מילים אקראיות</button>
+                    <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה ... 10 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
+                        <option value="1">רמה 1</option><option value="2">רמה 2</option><option value="3">רמה 3</option><option value="4">רמה 4</option><option value="5">רמה 5</option>
+                        <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option><option value="10">רמה 10</option>
+                    </select>
+                </div>
+                <div id="random-status" style="margin:2px 0 4px;font-size:0.9rem;color:#2b6cb0;"></div>
+            </div>
+            <div id="panel-picture" role="tabpanel" style="display:none;">
+                <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
+                <button type="button" id="photo-btn" class="action-btn" onclick="document.getElementById('photo-input').click()" style="margin:4px 0;">📷 קריאת מילים מתמונה</button>
+                <div id="photo-status" style="margin:4px 0 4px;font-size:0.9rem;color:#2b6cb0;"></div>
+            </div>
             <p style="margin:6px 0;">בכל שורה: מילה באנגלית ופירוש.</p>
             <textarea id="words-input" hidden></textarea>
             <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
@@ -259,25 +323,14 @@
                 <button type="button" class="action-btn" onclick="addWordRow()" style="flex:1;">➕ הוספת מילה</button>
                 <button type="button" class="action-btn" onclick="clearWords()" style="flex:1;">🗑️ ניקוי המילים</button>
             </div>
-            <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
-                <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:4px 0;">
-                    <button type="button" id="random-btn" class="action-btn" onclick="randomWords()">🎲 20 מילים אקראיות</button>
-                    <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה ... 10 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
-                        <option value="1">רמה 1</option><option value="2">רמה 2</option><option value="3">רמה 3</option><option value="4">רמה 4</option><option value="5">רמה 5</option>
-                        <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option><option value="10">רמה 10</option>
-                    </select>
-                </div>
-                <div id="random-status" style="margin:2px 0 6px;font-size:0.9rem;color:#2b6cb0;"></div>
-                <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
-                <button type="button" id="photo-btn" class="action-btn" onclick="document.getElementById('photo-input').click()" style="margin:4px 0;">📷 קריאת מילים מתמונה</button>
-                <div id="photo-status" style="margin:6px 0 0;font-size:0.9rem;color:#2b6cb0;"></div>
-            </div>
             <div id="start-error" style="color:#c53030;margin-top:6px;"></div>
             <button class="btn-restart" id="start-btn" onclick="startFromInput()" style="margin-top:12px;">התחל משחק</button>
         </div>
 
         <div id="game-screen" style="display:none;">
+            <div id="streak-emoji" aria-hidden="true"></div>
             <div class="header-info">
+                <button type="button" id="back-btn" class="action-btn" onclick="leaveGame()" aria-label="חזרה לתפריט הראשי" title="חזרה לתפריט הראשי" style="padding:5px 10px;font-size:0.9rem;">→ תפריט</button>
                 <div class="score-box">נקודות: <span id="score">0</span></div>
                 <div class="progress-box">שאלה: <span id="current-progress">1</span>/<span id="total-progress">0</span></div>
             </div>
@@ -313,7 +366,19 @@
         let wordsData = [];
         let fullWords = [];   // the whole list from the start screen (wordsData is a subset while practising missed words)
         let missed = [];      // words answered wrong at least once in the current round
-        const STORE_KEY = 'englishquiz-words';
+        // Two modes (the tabs), each with its own word list kept on the device:
+        //   random  - words picked from the built-in word bank (default tab)
+        //   picture - words typed by hand or read from a photo (keeps the old key, so an older saved list shows up here)
+        const MODE_KEY = 'englishquiz-mode';
+        const LIST_KEYS = { random: 'englishquiz-words-random', picture: 'englishquiz-words' };
+        let mode = 'random';
+        try { const m = localStorage.getItem(MODE_KEY); if (m === 'random' || m === 'picture') mode = m; } catch (e) {}
+        const storeKey = () => LIST_KEYS[mode];
+        function readList(m) {
+            let t = "";
+            try { t = localStorage.getItem(LIST_KEYS[m]) || (m === "picture" ? localStorage.getItem('englishpractice-words') : "") || ""; } catch (e) {}
+            return t.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
+        }
 
         let currentIndex = 0;
         let totalScore = 0;
@@ -327,6 +392,23 @@
         try { grandTotal = Math.max(0, parseInt(localStorage.getItem(TOTAL_KEY), 10) || 0); } catch (e) {}
         let wrongCount = 0;
         let canAnswer = true;
+        let nextQuestionTimer = null;   // the short pause after a right answer, before the next question
+
+        // A big emoji appears behind the quiz after 5 answers in a row that were right on the first try, and a
+        // happier one every 5 more (15 emojis = a streak of 75). One wrong first try and it starts again from zero.
+        // The streak carries on into the next round ("try again"); going back to the menu ends it.
+        const STREAK_EMOJIS = ["🙂", "😊", "😀", "😃", "😄", "😁", "😆", "😎", "😍", "🤩", "🥰", "🥳", "😂", "🤣", "😻"];
+        let streak = 0, shownStage = 0;
+        function updateStreakEmoji() {
+            const el = document.getElementById("streak-emoji");
+            const stage = Math.min(STREAK_EMOJIS.length, Math.floor(streak / 5));
+            if (stage === shownStage) return;
+            shownStage = stage;
+            if (stage === 0) { el.classList.remove("on", "pop"); return; }   // a mistake: the emoji fades away
+            el.textContent = STREAK_EMOJIS[stage - 1];
+            el.classList.add("on");
+            el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");   // pop in
+        }
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -373,10 +455,11 @@
                 canAnswer = false;
                 selectedButton.classList.add("correct");
 
-                if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; }
+                if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; streak++; updateStreakEmoji(); }
                 document.getElementById("score").innerText = totalScore;
 
-                setTimeout(() => {
+                nextQuestionTimer = setTimeout(() => {
+                    nextQuestionTimer = null;
                     currentIndex++;
                     loadQuestion();
                 }, 500);
@@ -384,7 +467,7 @@
             } else {
                 selectedButton.classList.add("wrong");
                 selectedButton.disabled = true;
-                if (wrongCount === 0) totalScore -= 1;
+                if (wrongCount === 0) { totalScore -= 1; streak = 0; updateStreakEmoji(); }
                 wrongCount++;
                 document.getElementById("score").innerText = totalScore;
                 const cur = wordsData[currentIndex];
@@ -435,6 +518,24 @@
             practiceBtn.style.display = missed.length ? "" : "none";
             practiceBtn.innerText = `תרגול המילים שטעיתי (${missed.length})`;
             document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
+        }
+
+        // "→ תפריט" in the middle of a quiz: back to the main menu. The round is abandoned, so its points
+        // are not added to the total (they are only added when a round is finished).
+        async function leaveGame() {
+            // freeze the quiz while the question is open (a right answer may be about to move on to the next word)
+            const pending = nextQuestionTimer !== null, couldAnswer = canAnswer;
+            clearTimeout(nextQuestionTimer); nextQuestionTimer = null;
+            canAnswer = false;
+            const leave = await askConfirm("לחזור לתפריט הראשי? הנקודות והתקדמות הבוחן הנוכחי לא יישמרו.", "חזרה לתפריט");
+            if (!leave) {   // carry on where we were
+                if (pending) { currentIndex++; loadQuestion(); } else canAnswer = couldAnswer;
+                return;
+            }
+            try { speechSynthesis.cancel(); } catch (e) {}
+            wordsData = fullWords;   // the menu always works with the whole list
+            missed = [];
+            showStart();
         }
 
         // New round with only the words that were answered wrong at least once
@@ -527,7 +628,7 @@
             if (res.error) { document.getElementById("start-error").innerText = res.error; return; }
             document.getElementById("words-input").value = text.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
             renderWords();
-            try { localStorage.setItem(STORE_KEY, document.getElementById("words-input").value); } catch (e) {}
+            try { localStorage.setItem(storeKey(), document.getElementById("words-input").value); } catch (e) {}
             document.getElementById("start-error").innerText = "";
             beginGame(res.words);
         }
@@ -557,7 +658,7 @@
             const box = document.getElementById("words-input");
             if (box.value.trim() && !(await askConfirm("למחוק את כל המילים מהרשימה?", "מחיקה"))) return;
             box.value = "";
-            try { localStorage.removeItem(STORE_KEY); localStorage.removeItem('englishpractice-words'); } catch (e) {}
+            try { localStorage.removeItem(storeKey()); if (mode === "picture") localStorage.removeItem('englishpractice-words'); } catch (e) {}
             document.getElementById("photo-status").innerText = "";
             document.getElementById("start-error").innerText = "";
             renderWords();
@@ -584,13 +685,14 @@
                 }).join("\n");
             document.getElementById("words-input").value = text;
             // keep the list on the device after every change, so a refresh never brings back old words
-            try { localStorage.setItem(STORE_KEY, text); } catch (e) {}
+            try { localStorage.setItem(storeKey(), text); } catch (e) {}
             updateWordsCount();
         }
 
         function updateWordsCount() {
             const n = rows.filter(r => r.en.trim() && r.he.trim()).length;
-            document.getElementById("words-count").textContent = n ? `${n} מילים ברשימה` : "אין מילים עדיין – הוסיפו מילה או צלמו תמונה";
+            document.getElementById("words-count").textContent = n ? `${n} מילים ברשימה`
+                : mode === "random" ? "אין מילים עדיין – לחצו על 🎲 לקבלת 20 מילים" : "אין מילים עדיין – הוסיפו מילה או צלמו תמונה";
             document.getElementById("words-hint").textContent = rows.some(isAutoMeaning) ? "🟨 תורגם אוטומטית – לחצו ▾ לפירוש אחר" : "";
         }
 
@@ -693,6 +795,7 @@
         if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { const b = document.getElementById("speak-btn"); if (b) b.style.display = "none"; });
 
         function showStart() {
+            streak = 0; updateStreakEmoji();   // back at the menu: the streak is over
             document.getElementById("summary-screen").style.display = "none";
             document.getElementById("game-screen").style.display = "none";
             document.getElementById("start-screen").style.display = "flex";
@@ -1092,6 +1195,7 @@
             if (!files.length) return;
             const startBtn = document.getElementById("start-btn");
             startBtn.disabled = true;
+            document.querySelectorAll(".tab-btn").forEach(b => b.disabled = true);   // stay on this tab until the photo is done
             let failed = 0;
             try {
                 for (let i = 0; i < files.length; i++) {
@@ -1118,6 +1222,7 @@
                     const add = out.filter(l => l && !have.has(l));
                     box.value = (box.value.trim() ? box.value.trim() + "\n" : "") + add.join("\n");
                     renderWords();
+                    saveRows();   // keep the words from the photo on the device right away
                 }
                 status.innerText = failed
                     ? `מוכן! ${failed} מילים לא תורגמו (שירות התרגום עמוס) – השלימו אותן ידנית בטבלה, או נסו שוב עוד רגע.`
@@ -1126,15 +1231,33 @@
                 status.innerText = "שגיאה: " + err.message;
             } finally {
                 startBtn.disabled = false;
+                document.querySelectorAll(".tab-btn").forEach(b => b.disabled = false);
             }
             e.target.value = "";
         });
 
+        // ---- Tabs: random words / picture. Each tab has its own list. ----
+        function applyModeUI() {
+            for (const m of ["random", "picture"]) {
+                document.getElementById("tab-" + m).setAttribute("aria-selected", String(m === mode));
+                document.getElementById("panel-" + m).style.display = m === mode ? "" : "none";
+            }
+        }
+
+        function setMode(m) {
+            if (m !== "random" && m !== "picture") return;
+            saveRows();   // the list we are leaving stays saved under its own key
+            mode = m;
+            try { localStorage.setItem(MODE_KEY, m); } catch (e) {}
+            document.getElementById("words-input").value = readList(m);
+            applyModeUI();
+            renderWords();
+            for (const id of ["start-error", "random-status", "photo-status"]) document.getElementById(id).textContent = "";
+        }
+
         showGrandTotal();
-        try {
-            const saved = localStorage.getItem(STORE_KEY) || localStorage.getItem('englishpractice-words');
-            if (saved) document.getElementById("words-input").value = saved.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
-        } catch (e) {}
+        document.getElementById("words-input").value = readList(mode);
+        applyModeUI();
         renderWords();
     </script>
 </body>

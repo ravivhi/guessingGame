@@ -508,13 +508,16 @@
         }
 
         function saveRows() {
-            document.getElementById("words-input").value = rows
+            const text = rows
                 .filter(r => r.en.trim() || r.he.trim())
                 .map(r => {
                     const cells = [r.en.trim(), r.he.trim(), ...r.extra];
                     while (cells.length > 1 && !cells[cells.length - 1]) cells.pop();
                     return cells.join("\t");   // tab-separated, so commas inside a meaning are kept as typed
                 }).join("\n");
+            document.getElementById("words-input").value = text;
+            // keep the list on the device after every change, so a refresh never brings back old words
+            try { localStorage.setItem(STORE_KEY, text); } catch (e) {}
             updateWordsCount();
         }
 
@@ -564,6 +567,12 @@
                 td.appendChild(inp);
                 if (key === "he") {
                     heInp = inp;
+                    // a meaning typed by hand counts as confirmed: remembered, so reading the same word again keeps it
+                    inp.addEventListener("change", () => {
+                        const en = r.en.trim().toLowerCase(), he = inp.value.trim();
+                        if (en && he) { chosen[en] = he; try { localStorage.setItem(CH_KEY, JSON.stringify(chosen)); } catch (e) {} }
+                        refresh();
+                    });
                     altBtn = document.createElement("button");
                     altBtn.type = "button";
                     altBtn.textContent = "▾";

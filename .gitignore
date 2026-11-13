@@ -22,3 +22,7 @@ signing-key-info.txt
 *.stackdump
 
 PLAY_PUBLISHING.md
+
+# local-only test photos (copyrighted workbook pages) and test deps
+/tests/fixtures/
+/tests/node_modules/

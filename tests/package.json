@@ -1,0 +1,11 @@
+{
+  "name": "englishquiz-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ocr": "node ocr-test.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

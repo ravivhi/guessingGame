@@ -179,10 +179,17 @@
     <div class="game-container">
         <div id="start-screen">
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
-            <p style="margin:6px 0;">כל שורה: <b>מילה, פירוש, טעות1, טעות2, טעות3</b></p>
-            <p style="margin:6px 0;font-size:0.9rem;color:#666;">אם מוסיפים רק מילה ופירוש, הטעויות נבחרות אוטומטית.</p>
-            <textarea id="words-input" dir="ltr" rows="8" style="width:100%;margin:10px 0;padding:10px;border-radius:10px;border:2px solid #ccc;font-size:1rem;" placeholder="apple, תפוח&#10;dog, כלב, חתול, סוס, פרה"></textarea>
-            <button type="button" onclick="clearWords()" style="margin:0 0 8px;padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">🗑️ ניקוי רשימת המילים</button>
+            <p style="margin:6px 0;">הוסיפו בכל שורה מילה באנגלית ואת הפירוש שלה.</p>
+            <p style="margin:6px 0;font-size:0.9rem;color:#666;">הטעויות בתשובות נבחרות אוטומטית.</p>
+            <textarea id="words-input" hidden></textarea>
+            <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
+            <div style="max-height:45vh;overflow:auto;border:2px solid #ccc;border-radius:10px;">
+                <table id="words-table" style="width:100%;border-collapse:collapse;direction:ltr;"></table>
+            </div>
+            <div style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" onclick="addWordRow()" style="padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">➕ הוספת מילה</button>
+                <button type="button" onclick="clearWords()" style="padding:8px 18px;font-size:0.95rem;background:#e2e8f0;color:#2d3748;border:none;border-radius:10px;cursor:pointer;">🗑️ ניקוי רשימת המילים</button>
+            </div>
             <div style="border-top:1px solid #ddd;padding-top:10px;margin-top:4px;">
                 <p style="margin:4px 0;font-weight:bold;">📷 קריאת מילים מתמונה</p>
                 <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
@@ -398,10 +405,12 @@
         }
 
         function startFromInput() {
+            if (rows.some(r => !r.en.trim() !== !r.he.trim())) { document.getElementById("start-error").innerText = 'יש שורות שחסרים בהן מילה או פירוש.'; return; }
             const text = document.getElementById("words-input").value;
             const res = parseWords(text);
             if (res.error) { document.getElementById("start-error").innerText = res.error; return; }
             document.getElementById("words-input").value = text.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
+            renderWords();
             try { localStorage.setItem(STORE_KEY, document.getElementById("words-input").value); } catch (e) {}
             document.getElementById("start-error").innerText = "";
             beginGame(res.words);
@@ -435,7 +444,84 @@
             try { localStorage.removeItem(STORE_KEY); localStorage.removeItem('englishpractice-words'); } catch (e) {}
             document.getElementById("photo-status").innerText = "";
             document.getElementById("start-error").innerText = "";
-            box.focus();
+            renderWords();
+        }
+
+        // ---- Word table: rows are the editable view; the hidden textarea #words-input stays the stored text ----
+        let rows = [];   // { en, he, extra: [custom wrong answers kept as-is] }
+
+        function loadRows() {
+            const text = document.getElementById("words-input").value;
+            rows = text.replace(/^﻿/, "").split(/\r?\n/)
+                .map(l => l.split(/[,;\t]/).map(x => x.trim()))
+                .filter(r => r.some(x => x))
+                .map(r => ({ en: r[0] || "", he: r[1] || "", extra: r.slice(2).filter(x => x) }));
+        }
+
+        function saveRows() {
+            document.getElementById("words-input").value = rows
+                .filter(r => r.en.trim() || r.he.trim())
+                .map(r => {
+                    const cells = [r.en.trim(), r.he.trim(), ...r.extra];
+                    while (cells.length > 1 && !cells[cells.length - 1]) cells.pop();
+                    return cells.join(", ");
+                }).join("\n");
+            updateWordsCount();
+        }
+
+        function updateWordsCount() {
+            const n = rows.filter(r => r.en.trim() && r.he.trim()).length;
+            document.getElementById("words-count").textContent = n ? `${n} מילים ברשימה` : "אין מילים עדיין – הוסיפו מילה או צלמו תמונה";
+        }
+
+        function drawWords(focusIdx) {
+            const t = document.getElementById("words-table");
+            t.innerHTML = "";
+            const hr = t.createTHead().insertRow();
+            [["English", "left"], ["עברית", "right"], ["", "center"]].forEach(([label, align], i) => {
+                const th = document.createElement("th");
+                th.textContent = label;
+                th.style.cssText = `position:sticky;top:0;background:#edf2f7;padding:8px;font-size:0.9rem;color:#4a5568;text-align:${align};${i === 2 ? "width:44px;" : ""}`;
+                hr.appendChild(th);
+            });
+            const body = t.createTBody();
+            rows.forEach((r, i) => {
+                const tr = body.insertRow();
+                tr.style.borderTop = "1px solid #e2e8f0";
+                [["en", "ltr", "אנגלית"], ["he", "rtl", "עברית"]].forEach(([key, dir, label]) => {
+                    const td = tr.insertCell();
+                    td.style.padding = "4px";
+                    const inp = document.createElement("input");
+                    inp.value = r[key];
+                    inp.dir = dir;
+                    inp.setAttribute("aria-label", label);
+                    inp.autocomplete = "off";
+                    inp.style.cssText = "width:100%;box-sizing:border-box;padding:8px;font-size:1rem;border:1px solid #cbd5e0;border-radius:8px;";
+                    inp.addEventListener("input", () => { r[key] = inp.value; saveRows(); });
+                    td.appendChild(inp);
+                });
+                const td = tr.insertCell();
+                td.style.cssText = "padding:4px;text-align:center;";
+                const del = document.createElement("button");
+                del.type = "button";
+                del.textContent = "🗑️";
+                del.setAttribute("aria-label", "מחיקת השורה");
+                del.style.cssText = "font-size:1.2rem;background:none;border:none;cursor:pointer;padding:6px;";
+                del.onclick = () => { rows.splice(i, 1); saveRows(); drawWords(); };
+                td.appendChild(del);
+            });
+            updateWordsCount();
+            if (focusIdx != null && body.rows[focusIdx]) body.rows[focusIdx].cells[0].firstChild.focus();
+        }
+
+        // Re-read the stored text and redraw (call after changing #words-input programmatically)
+        function renderWords() { loadRows(); drawWords(); }
+
+        function addWordRow() {
+            rows.push({ en: "", he: "", extra: [] });
+            drawWords(rows.length - 1);
+            const wrap = document.getElementById("words-table").parentElement;
+            wrap.scrollTop = wrap.scrollHeight;
         }
 
         function speakWord() {
@@ -700,6 +786,7 @@
                     const have = new Set(box.value.split(/\r?\n/).map(l => l.trim()));
                     const add = out.filter(l => l && !have.has(l));
                     box.value = (box.value.trim() ? box.value.trim() + "\n" : "") + add.join("\n");
+                    renderWords();
                 }
                 status.innerText = "מוכן! בדקו את הרשימה ולחצו התחל.";
             } catch (err) {
@@ -714,6 +801,7 @@
             const saved = localStorage.getItem(STORE_KEY) || localStorage.getItem('englishpractice-words');
             if (saved) document.getElementById("words-input").value = saved.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
         } catch (e) {}
+        renderWords();
     </script>
 </body>
 </html>

@@ -297,8 +297,10 @@
     <div class="game-container">
         <div id="start-screen">
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
-            <div id="menu-streak" aria-hidden="true" style="font-size:1.8rem;line-height:1.2;margin:-2px 0 4px;"></div>
-            <div id="grand-total" style="font-weight:bold;color:#2b6cb0;margin:-4px 0 6px;"></div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
+                <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
+                <div id="menu-streak" aria-hidden="true" style="font-size:1.6rem;line-height:1.2;"></div>
+            </div>
             <div class="tabs" role="tablist">
                 <button type="button" role="tab" id="tab-random" class="tab-btn" aria-selected="true" onclick="setMode('random')">🎲 מילים אקראיות</button>
                 <button type="button" role="tab" id="tab-picture" class="tab-btn" aria-selected="false" onclick="setMode('picture')">📷 מתמונה</button>

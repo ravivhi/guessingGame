@@ -1,185 +1,628 @@
-shirt|חולצה
-pants|מכנסיים
-dress|שמלה
-skirt|חצאית
-shoes|נעליים
-socks|גרביים
-hat|כובע
-coat|מעיל
-jacket|ז'קט
-glasses|משקפיים
-umbrella|מטרייה
-pocket|כיס
-button|כפתור
-scarf|צעיף
-gloves|כפפות
-breakfast|ארוחת בוקר
-lunch|ארוחת צהריים
-dinner|ארוחת ערב
-sandwich|כריך
-salad|סלט
-vegetable|ירק
-fruit|פרי
-butter|חמאה
-honey|דבש
-cookie|עוגייה
-candy|ממתק
-cucumber|מלפפון
-onion|בצל
-strawberry|תות
-peach|אפרסק
-watermelon|אבטיח
-pepper|פלפל
-fork|מזלג
-knife|סכין
-spoon|כף
-plate|צלחת
-cup|כוס
-bottle|בקבוק
-bowl|קערה
-city|עיר
-village|כפר
-street|רחוב
-road|דרך
-park|פארק
-beach|חוף
-zoo|גן חיות
-shop|חנות
-market|שוק
-hospital|בית חולים
-library|ספרייה
-museum|מוזיאון
-restaurant|מסעדה
-bank|בנק
-airport|שדה תעופה
-station|תחנה
-bridge|גשר
-farm|חווה
-mountain|הר
-river|נהר
-forest|יער
-desert|מדבר
-island|אי
-country|מדינה
-world|עולם
-train|רכבת
-plane|מטוס
-ship|ספינה
-boat|סירה
-bicycle|אופניים
-taxi|מונית
-truck|משאית
-ticket|כרטיס
-weather|מזג אוויר
-snow|שלג
-wind|רוח
-cloud|ענן
-storm|סערה
+# days of the week
+Sunday|יום ראשון
+Monday|יום שני
+Tuesday|יום שלישי
+Wednesday|יום רביעי
+Thursday|יום חמישי
+Friday|יום שישי
+Saturday|שבת
+weekend|סוף שבוע
+# months
+January|ינואר
+February|פברואר
+March|מרץ
+April|אפריל
+May|מאי
+June|יוני
+July|יולי
+August|אוגוסט
+September|ספטמבר
+October|אוקטובר
+November|נובמבר
+December|דצמבר
+# seasons
 summer|קיץ
 winter|חורף
 spring|אביב
 autumn|סתיו
-season|עונה
-fire|אש
-grass|דשא
-doctor|רופא
-nurse|אחות
-driver|נהג
-farmer|חקלאי
-cook|טבח
-policeman|שוטר
-pilot|טייס
-singer|זמר
-artist|אמן
-dentist|רופא שיניים
-baker|אופה
-sofa|ספה
-lamp|מנורה
-mirror|מראה
-carpet|שטיח
-stairs|מדרגות
-roof|גג
-wall|קיר
-floor|רצפה
-key|מפתח
-picture|תמונה
-television|טלוויזיה
-radio|רדיו
-camera|מצלמה
-give|לתת
-take|לקחת
-make|להכין
-buy|לקנות
-sell|למכור
-wash|לשטוף
-clean|לנקות
-help|לעזור
-ask|לשאול
-answer|לענות
-listen|להקשיב
-speak|לדבר
-think|לחשוב
-know|לדעת
-learn|ללמוד
-teach|ללמד
-wait|לחכות
-find|למצוא
-bring|להביא
-draw|לצייר
-ride|לרכוב
-fly|לעוף
-climb|לטפס
-throw|לזרוק
-catch|לתפוס
-go|ללכת
-come|לבוא
-beautiful|יפה
-ugly|מכוער
-dirty|מלוכלך
-easy|קל
-difficult|קשה
-heavy|כבד
-strong|חזק
-weak|חלש
-rich|עשיר
-poor|עני
-young|צעיר
-tall|גבוה
-loud|רועש
-quiet|שקט
-dark|חשוך
-full|מלא
-empty|ריק
-wet|רטוב
-dry|יבש
-sweet|מתוק
-sour|חמוץ
-angry|כועס
-afraid|מפחד
+# time
+today|היום
+tomorrow|מחר
+yesterday|אתמול
+morning|בוקר
+afternoon|אחר הצהריים
+evening|ערב
+night|לילה
+day|יום
+week|שבוע
+month|חודש
+year|שנה
+hour|שעה
+minute|דקה
+second|שנייה
+time|זמן
+now|עכשיו
+soon|בקרוב
 always|תמיד
 never|אף פעם
 sometimes|לפעמים
-now|עכשיו
-soon|בקרוב
+often|הרבה פעמים
 early|מוקדם
 late|מאוחר
-again|שוב
-here|כאן
-there|שם
+# more numbers
+thirty|שלושים
+forty|ארבעים
+fifty|חמישים
+sixty|שישים
+seventy|שבעים
+eighty|שמונים
+ninety|תשעים
+hundred|מאה
+thousand|אלף
+first|ראשון
+third|שלישי
+last|אחרון
+next|הבא
+half|חצי
+# jobs
+job|עבודה
+worker|עובד
+doctor|רופא
+nurse|אחות
+dentist|רופא שיניים
+vet|וטרינר
+farmer|חקלאי
+driver|נהג
+pilot|טייס
+police officer|שוטר
+firefighter|כבאי
+baker|אופה
+singer|זמר
+dancer|רקדן
+artist|אמן
+actor|שחקן
+builder|בנאי
+waiter|מלצר
+scientist|מדען
+soldier|חייל
+postman|דוור
+mechanic|מכונאי
+photographer|צלם
+athlete|ספורטאי
+shopkeeper|חנווני
+# sports and hobbies
+sport|ספורט
 football|כדורגל
-music|מוזיקה
-song|שיר
-game|משחק
-party|מסיבה
-holiday|חג
-birthday|יום הולדת
-gift|מתנה
+basketball|כדורסל
+tennis|טניס
+volleyball|כדורעף
+baseball|בייסבול
+hockey|הוקי
+swimming|שחייה
+running|ריצה
+cycling|רכיבה על אופניים
+skiing|סקי
+gymnastics|התעמלות
+karate|קראטה
+team|קבוצה
+race|מרוץ
+winner|מנצח
+goal|שער
+hobby|תחביב
+guitar|גיטרה
+piano|פסנתר
+drum|תוף
+violin|כינור
+chess|שחמט
+cards|קלפים
+camera|מצלמה
+# town
+town|עיירה
+bank|בנק
+post office|דואר
+cinema|קולנוע
+museum|מוזיאון
+restaurant|מסעדה
+bakery|מאפייה
+airport|שדה תעופה
+station|תחנה
+bridge|גשר
+traffic light|רמזור
+market|שוק
+synagogue|בית כנסת
+pharmacy|בית מרקחת
+police station|משטרה
+office|משרד
+factory|מפעל
+center|מרכז
+corner|פינה
+road|כביש
+sidewalk|מדרכה
+address|כתובת
+# more animals
+insect|חרק
+worm|תולעת
+bat|עטלף
+dinosaur|דינוזאור
+lizard|לטאה
+seal|כלב ים
+hedgehog|קיפוד
+mosquito|יתוש
+bull|שור
+lamb|טלה
+chick|אפרוח
+ladybug|חיפושית
+octopus|תמנון
+jellyfish|מדוזה
+crab|סרטן
+pigeon|יונה
+stork|חסידה
+goldfish|דג זהב
+cheetah|ברדלס
+shell|קונכייה
+nest|קן
+wing|כנף
+tail|זנב
+fur|פרווה
+paw|כפה
+horn|קרן
+# more food and drink
+breakfast|ארוחת בוקר
+lunch|ארוחת צהריים
+dinner|ארוחת ערב
+meal|ארוחה
+dessert|קינוח
+menu|תפריט
+noodles|אטריות
+yogurt|יוגורט
+ketchup|קטשופ
+popcorn|פופקורן
+pancake|פנקייק
+ice lolly|קרטיב
+steak|סטייק
+tuna|טונה
+jelly|ג'לי
+cereal|דגני בוקר
+toast|טוסט
+flour|קמח
+oil|שמן
+pie|פשטידה
+cream|שמנת
+nut|אגוז
+peanut|בוטן
+raisin|צימוק
+olive|זית
+pickle|מלפפון חמוץ
+slice|פרוסה
+bite|ביס
+coconut|קוקוס
+avocado|אבוקדו
+kiwi|קיווי
+apricot|משמש
+spinach|תרד
+celery|סלרי
+beetroot|סלק
+cauliflower|כרובית
+zucchini|קישוא
+radish|צנונית
+# health and body
+sick|חולה
+healthy|בריא
+hurt|כואב
+headache|כאב ראש
+stomachache|כאב בטן
+fever|חום
+medicine|תרופה
+bandage|פלסטר
+cough|שיעול
+ambulance|אמבולנס
+bone|עצם
+brain|מוח
+blood|דם
+muscle|שריר
+thumb|אגודל
+ankle|קרסול
+beard|זקן
+eyebrow|גבה
+forehead|מצח
+stomach|קיבה
+chest|חזה
+voice|קול
+breath|נשימה
+# feelings
+excited|נרגש
+scared|מפוחד
+surprised|מופתע
+bored|משועמם
+proud|גאה
+worried|מודאג
+shy|ביישן
+lonely|בודד
+nervous|עצבני
+sleepy|ישנוני
+calm|רגוע
+upset|נסער
+pleased|מרוצה
+careful|זהיר
+brave|אמיץ
+# story characters
+neighbor|שכן
+king|מלך
+queen|מלכה
+prince|נסיך
+princess|נסיכה
+pirate|פיראט
+monster|מפלצת
+giant|ענק
+ghost|רוח רפאים
+witch|מכשפה
+clown|ליצן
+wizard|קוסם
+fairy|פיה
+dragon|דרקון
+hero|גיבור
+magic|קסם
+treasure|אוצר
+castle|טירה
+stranger|זר
+guest|אורח
+twin|תאום
+teenager|נער
+# more things we do
+buy|לקנות
+sell|למכור
+bring|להביא
+carry|לשאת
+catch|לתפוס
+throw|לזרוק
+kick|לבעוט
+climb|לטפס
+fall|ליפול
+push|לדחוף
+pull|למשוך
+wait|לחכות
+ask|לשאול
+answer|לענות
+learn|ללמוד
+teach|ללמד
+think|לחשוב
+know|לדעת
+remember|לזכור
+forget|לשכוח
+find|למצוא
+lose|לאבד
+call|להתקשר
+meet|לפגוש
+visit|לבקר
+travel|לטייל
+wake up|להתעורר
+brush|לצחצח
+build|לבנות
+break|לשבור
+fix|לתקן
+cut|לחתוך
+paint|לצבוע
+sweep|לטאטא
+wear|ללבוש
+put|לשים
+turn|להסתובב
+start|להתחיל
+finish|לסיים
+win|לנצח
+choose|לבחור
+try|לנסות
+show|להראות
+tell|לספר
+say|לומר
+speak|לדבר
+count|לספור
+ride|לרכוב
+drive|לנהוג
+cross|לחצות
+shout|לצעוק
+whisper|ללחוש
+smell|להריח
+taste|לטעום
+touch|לגעת
+hug|לחבק
+kiss|לנשק
+hide|להסתתר
+share|לחלוק
+save|להציל
+follow|לעקוב
+hold|להחזיק
+pick|לקטוף
+plant|לטעת
+grow|לגדול
+live|לגור
+pay|לשלם
+send|לשלוח
+receive|לקבל
+order|להזמין
+dream|לחלום
+hurry|למהר
+rest|לנוח
+stay|להישאר
+leave|לעזוב
+return|לחזור
+arrive|להגיע
+enter|להיכנס
+burn|לשרוף
+melt|להימס
+shine|לזרוח
+float|לצוף
+sink|לטבוע
+# more describing words
+young|צעיר
+rich|עשיר
+poor|עני
+easy|קל
+difficult|מסובך
+famous|מפורסם
+important|חשוב
+dangerous|מסוכן
+safe|בטוח
+free|חופשי
+busy|עסוק
+lazy|עצלן
+kind|אדיב
+polite|מנומס
+clever|חכם
+silly|מטופש
+sweet|מתוק
+sour|חמוץ
+salty|מלוח
+bitter|מר
+round|עגול
+flat|שטוח
+deep|עמוק
+high|גבוה
+low|נמוך
+thin|רזה
+thick|עבה
+wide|רחב
+narrow|צר
+dark|חשוך
+bright|בהיר
+lucky|בר מזל
+wrong|שגוי
+correct|נכון
+same|זהה
+different|שונה
+special|מיוחד
+favorite|אהוב
+ready|מוכן
+alone|לבד
+together|ביחד
+sharp|חד
+smooth|חלק
+shiny|מבריק
+tiny|זעיר
+huge|ענקי
+enough|מספיק
+whole|שלם
+broken|שבור
+crazy|מטורף
+tasty|טעים
+boring|משעמם
+interesting|מעניין
+exciting|מרגש
+# where things are
+behind|מאחורי
+between|בין
+next to|ליד
+in front of|מול
+near|קרוב
+far|רחוק
+inside|בפנים
+outside|בחוץ
+above|מעל
+across|מעבר
+through|דרך
+around|מסביב
+from|מ
+with|עם
+without|בלי
+before|לפני
+after|אחרי
+left|שמאל
+right|ימין
+middle|אמצע
+top|פסגה
+bottom|תחתית
+side|צד
+edge|קצה
+away|הרחק
+toward|לעבר
+until|עד
+during|במהלך
+# small words
+what|מה
+where|איפה
+when|מתי
+who|מי
+why|למה
+how|איך
+which|איזה
+I|אני
+you|אתה
+he|הוא
+she|היא
+it|זה
+we|אנחנו
+they|הם
+that|ההוא
+these|אלה
+my|שלי
+your|שלך
+his|שלו
+her|שלה
+our|שלנו
+their|שלהם
+and|ו
+but|אבל
+or|או
+because|כי
+if|אם
+very|מאוד
+also|גם
+only|רק
+maybe|אולי
+again|שוב
+all|כל
+some|כמה
+many|הרבה
+more|יותר
+less|פחות
+another|נוסף
+# travel and holiday
+holiday|חופשה
+trip|טיול
+hotel|מלון
+tent|אוהל
+map|מפה
+ticket|כרטיס
+suitcase|מזוודה
+passport|דרכון
+passenger|נוסע
+journey|מסע
+country|מדינה
+flag|דגל
+backpack|תרמיל
+swimsuit|בגד ים
+sunglasses|משקפי שמש
+campfire|מדורה
+island|אי
+desert|מדבר
+forest|יער
+lake|אגם
+ocean|אוקיינוס
+volcano|הר געש
+cave|מערה
+jungle|ג'ונגל
+valley|עמק
+hill|גבעה
+field|שדה
+planet|כוכב לכת
+earth|כדור הארץ
+space|חלל
+rocket|טיל
+astronaut|אסטרונאוט
+world|עולם
+# technology and media
+screen|מסך
+keyboard|מקלדת
+internet|אינטרנט
+video|סרטון
+photo|תצלום
+message|הודעה
+email|אימייל
+website|אתר
+password|סיסמה
+battery|סוללה
+radio|רדיו
 movie|סרט
-story|סיפור
-dream|חלום
-lesson|שיעור
+cartoon|סרט מצויר
+news|חדשות
+newspaper|עיתון
+magazine|מגזין
+letter|מכתב
+envelope|מעטפה
+stamp|בול
+# around the house
+balcony|מרפסת
+basement|מרתף
+elevator|מעלית
+fridge|מקרר
+oven|תנור
+shower|מקלחת
+towel|מגבת
+blanket|שמיכה
+pillow|כרית
+curtain|וילון
+toothbrush|מברשת שיניים
+toothpaste|משחת שיניים
+comb|מסרק
+bucket|דלי
+broom|מטאטא
+garbage|זבל
+ladder|סולם
+fence|גדר
+yard|חצר
+attic|עליית גג
+ceiling|תקרה
+lock|מנעול
+candle|נר
+tap|ברז
+hammer|פטיש
+saw|מסור
+tool|כלי עבודה
+rope|חבל
+needle|מחט
+button|כפתור
+zipper|רוכסן
+pocket|כיס
+# more clothes
+uniform|מדים
+ring|טבעת
+necklace|שרשרת
+wallet|ארנק
+jeans|ג'ינס
+tie|עניבה
+sandals|סנדלים
+slippers|נעלי בית
+bracelet|צמיד
+earrings|עגילים
+raincoat|מעיל גשם
+costume|תחפושת
+mask|מסכה
+# nature
+seed|זרע
+branch|ענף
+root|שורש
+bush|שיח
+stone|אבן
+dust|אבק
+mud|בוץ
+puddle|שלולית
+thunder|רעם
+lightning|ברק
+fog|ערפל
+wave|גל
+shadow|צל
+smoke|עשן
+air|אוויר
+# school subjects and words
 homework|שיעורי בית
-test|מבחן
-question|שאלה
-letter|אות
+exam|מבחן
+mistake|טעות
 word|מילה
+alphabet|אלפבית
+sentence|משפט
+page|עמוד
+story|סיפור
+dictionary|מילון
+subject|מקצוע
+math|חשבון
+science|מדעים
+history|היסטוריה
+art|אמנות
+recess|הפסקה
+principal|מנהל
+project|פרויקט
+language|שפה
+English|אנגלית
+Hebrew|עברית
+Arabic|ערבית
+# money and things
+coin|מטבע
+money|כסף
+price|מחיר
+prize|פרס
+basket|סל
+tray|מגש
+jar|צנצנת
+glass|זכוכית
+plastic|פלסטיק
+wood|עץ
+metal|מתכת

@@ -353,12 +353,12 @@ async function testPersist() {
 async function testWordbank() {
   console.log('\n[wordbank] built-in word bank files');
   const bank = {}, allEn = new Map();
-  for (let lv = 1; lv <= 10; lv++) {
+  for (let lv = 1; lv <= 9; lv++) {
     const f = path.join(root, 'wordbank', `level-${lv}.txt`);
     if (!fs.existsSync(f)) { check(false, `level-${lv}.txt exists`); continue; }
-    bank[lv] = fs.readFileSync(f, 'utf8').split(/\r?\n/).filter(l => l.trim()).map(l => l.split('|'));
+    bank[lv] = fs.readFileSync(f, 'utf8').split(/\r?\n/).filter(l => l.trim() && !l.startsWith('#')).map(l => l.split('|'));   // '# topic' header lines group the words of levels 1-2
   }
-  check(Object.keys(bank).length === 10, 'there are 10 level files');
+  check(Object.keys(bank).length === 9, 'there are 9 level files');
   const total = Object.values(bank).flat().length;
   check(Object.values(bank).every(a => a.length >= 100), `every level has at least 100 words (${Object.entries(bank).map(([l, a]) => `L${l}:${a.length}`).join(' ')}; ${total} in total)`);
   const badFormat = [], badEn = [], badHe = [], longHe = [], dupEn = [];
@@ -413,13 +413,13 @@ async function testRandom() {
   check(await page.$eval('#level-select', e => e.value) === '5', 'the chosen level is remembered');
 
   // a meaning picked by hand earlier wins over the bank's default; and the game starts with the 20 words
-  await page.evaluate(() => { chosen['one'] = 'אחת'; shuffle = a => a; });   // no shuffling: the first 20 words of the level
+  await page.evaluate(() => { chosen['hello'] = 'שלום רב'; shuffle = a => a; });   // no shuffling: the first 20 words of the level
   await page.evaluate(() => { document.getElementById('words-input').value = ''; renderWords(); });
   await selectLevel(1);
   await page.click('#random-btn');
   await page.waitForFunction(() => document.querySelectorAll('#words-table tbody tr').length === 20);
   const l1 = await table();
-  check(l1[0][0] === 'one' && l1[0][1] === 'אחת', `a hand-picked meaning wins over the bank (${l1[0].join(' = ')})`);
+  check(l1[0][0] === 'hello' && l1[0][1] === 'שלום רב', `a hand-picked meaning wins over the bank (${l1[0].join(' = ')})`);
   await page.click('#start-btn');
   await new Promise(r => setTimeout(r, 400));
   check(await page.$eval('#total-progress', e => e.innerText) === '20', 'the game starts with 20 questions');

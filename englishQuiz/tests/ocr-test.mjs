@@ -1,11 +1,11 @@
 // End-to-end OCR test for englishQuiz: loads the real page in headless Chrome, uploads photos from
 // tests/fixtures/ and checks the rows the page produces. Covers both kinds of photos:
-//   - "pairs": English words with their Hebrew next to them        (new-words-page29.jpg)
-//   - "list":  English-only word list, meanings come from translation (word-list-vocab.jpg)
+//   - "pairs": English words with their Hebrew next to them        (new-words-*.jpg)
+//   - "list":  English-only word list, meanings come from translation (word-list-*.jpg)
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist   (pairs/list take a file-name part too: node ocr-test.mjs list quarter)
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -19,7 +19,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');   // the englishQuiz folder (what the test server serves at /)
 
 const FIXTURES = {
-  pairs: {
+  pairs: [{
     file: 'new-words-page29.jpg',
     // Hebrew is taken verbatim from the photo, commas included.
     pairs: {
@@ -27,13 +27,84 @@ const FIXTURES = {
       flour: 'קמח', outside: 'בחוץ, החוצה', throw: 'לזרוק', do: 'לעשות, פועל עזר בהווה',
       give: 'לתת', ready: 'מוכן',
     },
-  },
-  list: {
+  }, {
+    file: 'new-words-card.jpg',          // sideways photo, Hebrew + Arabic under each word, a finger over the corner
+    pairs: {
+      card: 'כרטיס ברכה', for: 'ל-, עבור, למשך', market: 'שוק', sell: 'למכור',
+      end: 'סוף', hear: 'לשמוע', present: 'מתנה', thing: 'דבר',
+      flower: 'פרח', "I'm sorry": 'אני מצטער', pretty: 'יפה', village: 'כפר',
+    },
+  }, {
+    file: 'new-words-always.jpg',        // same kind of card
+    pairs: {
+      always: 'תמיד', find: 'למצוא', paint: 'לצייר, לצבוע', safe: 'בטוח, מוגן',
+      choose: 'לבחור', fix: 'לתקן', practice: 'להתאמן', 'table tennis': 'טניס שולחן',
+      club: 'מועדון, חוג', or: 'או', problem: 'בעיה', use: 'להשתמש',
+    },
+  }, {
+    file: 'new-words-country.jpg',       // same kind of card
+    pairs: {
+      country: 'מדינה', hour: 'שעה', many: 'הרבה', 'Olympic Games': 'משחקים אולימפיים',
+      first: 'ראשון', how: 'איך', medal: 'מדליה', prepare: 'להתכונן',
+      hard: 'קשה', later: 'מאוחר יותר, אחר כך', need: 'צריך', was: 'היה',
+    },
+  }, {
+    file: 'new-words-again.jpg',         // same kind of card; "(be) called" keeps its bracketed word
+    pairs: {
+      again: 'שוב', 'be called': 'נקרא', move: 'לזוז, להזיז', race: 'מירוץ',
+      artist: 'צייר', easy: 'קל', place: 'מקום', them: 'אותם, אותן',
+      because: 'כי', interesting: 'מעניין', plate: 'צלחת', tomorrow: 'מחר',
+    },
+  }, {
+    file: 'new-words-adult.jpg',
+    pairs: {
+      adult: 'מבוגר', get: 'לקבל', road: 'רחוב, כביש', think: 'לחשוב',
+      ago: 'לפני', player: 'שחקן', some: 'כמה, קצת', true: 'נכון, אמת',
+      build: 'לבנות', right: 'נכון', something: 'משהו', way: 'דרך',
+    },
+  }, {
+    file: 'new-words-cry.jpg',
+    pairs: {
+      cry: 'לבכות', hurt: 'נפצע, כואב', keep: 'לשמור', of: 'של, ב-',
+      excited: 'נרגש, מתרגש', ice: 'קרח', lie: 'לשכב', son: 'בן',
+      'get up': 'לקום', important: 'חשוב', noise: 'רעש', winner: 'מנצח',
+    },
+  }, {
+    file: 'new-words-anyone.jpg',
+    pairs: {
+      anyone: 'כל אחד, מישהו', heart: 'לב', point: 'להצביע', these: 'אלה',
+      'come from': 'מ-, לבוא מ-', light: 'קל', rich: 'עשיר', top: 'צמרת, פיסגה, למעלה',
+      finger: 'אצבע', list: 'רשימה', tent: 'אוהל', travel: 'לנסוע',
+    },
+  }, {
+    file: 'new-words-anyone-title.jpg',  // the same card with its "New Words 1" title in the photo: text outside the box is ignored
+    pairs: {
+      anyone: 'כל אחד, מישהו', heart: 'לב', point: 'להצביע', these: 'אלה',
+      'come from': 'מ-, לבוא מ-', light: 'קל', rich: 'עשיר', top: 'צמרת, פיסגה, למעלה',
+      finger: 'אצבע', list: 'רשימה', tent: 'אוהל', travel: 'לנסוע',
+    },
+  }],
+  list: [{
     file: 'word-list-vocab.jpg',
     words: "a hundred|a lot of|about|age|also|April|August|bathroom|building|candy|card|classroom|date|December|dining room|do|eighteen|eighty|end|every|everyone|far|fifteen|February|fifty|flat|flour|flower|for|forty|fourteen|give|goal|guitar|hear|her|hobby|I'm sorry|Israel|January|July|June|kick|like|March|market|May|month|nineteen|ninety|November|October|other|outside|piano|play|present|pretty|ready|same|sell|September|seventeen|seventy|sixteen|sixty|sofa|song|soon|special|student|study|subject|sweet|teach|their|then|thing|thirteen|thirty|throw|toilet|trip|twenty|village|wait|year".split('|'),
     maxMissing: 3,                       // OCR is not perfect (currently misses "other")
     marginJunk: ['תרגמו', 'נכונים'],     // Hebrew labels printed in the page margin - must never become a meaning
-  },
+  }, {
+    file: 'word-list-afternoon.jpg',     // "(v)" is a part-of-speech note and is dropped; "look (for)" keeps its word: "look for"
+    words: "afternoon|all|another|any|anything|as usual|ask for|before|blouse|body|bookshop|breakfast|butter|call|camera|cook|corner|cream|cucumber|cup|customer|different|don't worry|enjoy|evening|everything|friendly|garlic|Good afternoon|Have a good day|jam|knee|less|long|look for|mix|mug|neck|next|night|note|oil|once|onion|only|out|pass|pepper|put|quick|raincoat|recipe|restaurant|rice|salt|save|sometimes|spoon|steak|sugar|supper|take care of|tea|that|toy|understand|vegetable|waiter|waitress|watermelon|website|weekend|Well done|which|wrong|Yes please|yogurt".split('|'),
+    maxMissing: 0,
+    marginJunk: [],
+  }, {
+    file: 'word-list-quarter.jpg',
+    words: "a quarter past|a quarter to|adult|after|again|ago|always|artist|aunt|because|build|be called|choose|clock|club|country|cry|easy|excited|find|first|fix|get|get up|hard|hour|how|hurt|ice|important|interesting|keep|later|lie|many|medal|minute|money|more|move|need|neighbor|noise|of|Olympic Games|or|our|paint|parent|place|plate|player|poor|practice|prepare|prize|problem|race|right|road|safe|second|sick|sign|some|something|son|table tennis|them|think|time|tomorrow|true|us|use|was|way|winner".split('|'),
+    maxMissing: 0,
+    marginJunk: [],
+  }, {
+    file: 'word-list-anywhere.jpg',      // "Do you know ... ?" / "not very ..." lose their dots; "watch (n)" loses its note
+    words: "anywhere|as|ate|begin|beginning|catch|center|cool|dancer|daughter|difficult|Do you know|doll|drive|dry|early|farmer|floor|good luck|grandchildren|granddaughter|grandparents|grandson|group|half|have a nice time|heavy|him|hold|holiday|How about|husband|inside|internet|jacket|jeans|just|language|last night|late|laugh|leather|lie down|make plans|maybe|movie|never|nobody|not very|often|painter|part|price|program|push|radio|real|runner|Say it again please|seat|See you later|singer|someone|speak|spend|storm|strong|taxi|than|the moon|there|those|ticket|tonight|turn on|uncle|until|watch|well|wife|writer|yesterday|young".split('|'),
+    maxMissing: 0,
+    marginJunk: [],
+  }],
 };
 
 const only = process.argv[2];
@@ -59,6 +130,7 @@ const server = http.createServer((req, res) => {
 await new Promise(r => server.listen(0, r));
 const url = `http://localhost:${server.address().port}/`;
 
+const cdnCache = path.join(here, 'node_modules', '.cdn-cache');   // git-ignored with node_modules
 const failures = [];
 const check = (ok, msg) => { console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${msg}`); if (!ok) failures.push(msg); };
 
@@ -80,6 +152,12 @@ async function openPage(mode = () => 'ok') {
     const u = req.url();
     // the built-in word bank files: counted, and can be made to fail with mode(0, 'bank', url)
     if (u.includes('/wordbank/')) { page.tr.bank++; return mode(0, 'bank', u) === 'fail' ? req.abort('failed') : req.continue(); }
+    // the OCR library and its language files come from a CDN; keep a local copy so a slow CDN can't stall the tests
+    if (/^https:\/\/(cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com)\//.test(u)) {
+      const f = path.join(cdnCache, encodeURIComponent(u));
+      if (fs.existsSync(f)) return req.respond({ status: 200, contentType: u.endsWith('.js') ? 'text/javascript' : 'application/octet-stream', headers: { 'Access-Control-Allow-Origin': '*' }, body: fs.readFileSync(f) });
+      return req.continue();
+    }
     const service = u.includes('translate.googleapis.com') ? 'google' : u.includes('api.mymemory.translated.net') ? 'mm' : null;
     if (!service) return req.continue();
     const n = ++page.tr.total; page.tr[service]++;
@@ -93,14 +171,29 @@ async function openPage(mode = () => 'ok') {
       : { responseData: { translatedText: 'תרגום' }, responseStatus: 200, matches: [] };
     req.respond({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) });
   });
+  page.on('response', async res => {
+    const u = res.url(), f = path.join(cdnCache, encodeURIComponent(u));
+    if (!/^https:\/\/(cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com)\//.test(u) || !res.ok() || fs.existsSync(f)) return;
+    try { const body = await res.buffer(); fs.mkdirSync(cdnCache, { recursive: true }); fs.writeFileSync(f, body); } catch (e) {}
+  });
   await page.goto(url, { waitUntil: 'load' });
   return page;
 }
 
 async function uploadAndRead(page, file) {
-  await page.evaluate(() => setMode('picture'));   // photos belong to the picture tab (random words is the default tab)
-  await (await page.$('#photo-input')).uploadFile(path.resolve(here, 'fixtures', file));
-  await page.waitForFunction(() => /מוכן|שגיאה/.test(document.getElementById('photo-status').innerText), { timeout: 420000 });
+  // In headless Chrome the OCR engine now and then never finishes starting ("טוען OCR"), before any reading.
+  // That is retried once on a reloaded page; a stall anywhere else is reported with the step it stopped at.
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    await page.evaluate(() => setMode('picture'));   // photos belong to the picture tab (random words is the default tab)
+    await (await page.$('#photo-input')).uploadFile(path.resolve(here, 'fixtures', file));
+    const done = await page.waitForFunction(() => /מוכן|שגיאה/.test(document.getElementById('photo-status').innerText), { timeout: 90000 }).then(() => true, () => false);
+    if (done) break;
+    const at = await page.$eval('#photo-status', e => e.innerText);
+    console.log(`  (reading ${file} stalled at: ${at}${attempt === 1 && /טוען OCR/.test(at) ? ' - retrying' : ''})`);
+    if (attempt === 2 || !/טוען OCR/.test(at)) break;
+    await page.reload({ waitUntil: 'load' });
+    page.tr = { total: 0, failed: 0, google: 0, mm: 0, bank: 0 };
+  }
   const status = await page.$eval('#photo-status', e => e.innerText);
   const rows = await page.$$eval('#words-table tbody tr', trs => trs.map(tr => [...tr.querySelectorAll('input')].map(i => i.value.trim())));
   return { status, rows };
@@ -109,7 +202,7 @@ async function uploadAndRead(page, file) {
 const overflowOf = page => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
 async function testPairs(fx) {
-  console.log('\n[pairs] English + Hebrew in the photo');
+  console.log(`\n[pairs] English + Hebrew in the photo (${fx.file})`);
   const page = await openPage();
   const { status, rows } = await uploadAndRead(page, fx.file);
   const exp = fx.pairs, got = Object.fromEntries(rows.map(r => [r[0], r[1]]));
@@ -122,7 +215,7 @@ async function testPairs(fx) {
   check(!parsed.error && parsed.words.length === Object.keys(exp).length, `parseWords OK (${parsed.error || parsed.words?.length + ' words'})`);
   for (const w of parsed.words || []) if (exp[w.word]) check(w.correct === exp[w.word], `game correct answer for "${w.word}" is the full meaning`);
   const outside = (parsed.words || []).find(w => w.word === 'outside');
-  check(outside && !outside.dynamics.includes('החוצה'), 'part of a meaning is not reused as a wrong answer');
+  if (exp.outside) check(outside && !outside.dynamics.includes('החוצה'), 'part of a meaning is not reused as a wrong answer');
 
   const ov = await overflowOf(page);
   check(ov <= 0, `no horizontal overflow at 360px (overflow: ${ov}px)`);
@@ -135,7 +228,7 @@ async function testPairs(fx) {
 }
 
 async function testList(fx) {
-  console.log('\n[list] English-only list, meanings from translation');
+  console.log(`\n[list] English-only list, meanings from translation (${fx.file})`);
   const page = await openPage();
   const { status, rows } = await uploadAndRead(page, fx.file);
   const got = rows.map(r => r[0]), gotLc = got.map(w => w.toLowerCase());
@@ -690,13 +783,20 @@ async function testStreak() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => testPairs(FIXTURES.pairs), list: () => testList(FIXTURES.list), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
+// Runs a photo test on every fixture of its kind; a third argument on the command line picks one file (substring).
+async function eachFixture(kind, run) {
+  for (const fx of FIXTURES[kind]) {
+    if (process.argv[3] && !fx.file.includes(process.argv[3])) continue;
+    if (!fs.existsSync(path.resolve(here, 'fixtures', fx.file))) { console.log(`\n[${kind}] SKIPPED - tests/fixtures/${fx.file} not found (photos are git-ignored)`); continue; }
+    await run(fx);
+  }
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {
     if (only && only !== name) continue;
-    const fx = FIXTURES[name];
-    if (fx && !fs.existsSync(path.resolve(here, 'fixtures', fx.file))) { console.log(`\n[${name}] SKIPPED - tests/fixtures/${fx.file} not found (photos are git-ignored)`); continue; }
     await run(); ran++;
   }
   if (!ran) { console.error(`Nothing ran (known tests: ${Object.keys(TESTS).join(', ')}).`); process.exitCode = 2; }

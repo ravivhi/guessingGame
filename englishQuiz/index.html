@@ -882,6 +882,10 @@
             const fs = Math.min(1, 2400 / Math.max(bmp.width, bmp.height));
             full.width = Math.round(bmp.width * fs); full.height = Math.round(bmp.height * fs);
             full.getContext("2d").drawImage(bmp, 0, 0, full.width, full.height);
+            // the same picture before black/white: doubtful Hebrew words are read again from it (see itemsFromPage)
+            const gray = document.createElement("canvas"); gray.width = full.width; gray.height = full.height;
+            gray.getContext("2d").drawImage(full, 0, 0);
+            full.gray = gray;
             binarize(full);
 
             const sc = Math.min(1, 700 / Math.max(full.width, full.height));
@@ -914,18 +918,36 @@
                 if (area > 0.15 * W * H && cnt / area < 0.2 && (!best || area > best.area)) best = { id: n, area };
             }
             if (!best) return full;
-            // inside = odd number of frame crossings in at least 3 of the 4 directions
-            const isF = i => lab[i] === best.id, votes = new Uint8Array(W * H);
+            // Inside the box = no frame between the spot and the middle of the box. This also works when the frame
+            // runs off the photo or fades out on one side, and when a finger touches the frame.
+            // The middle: centre of the area that has the frame on at least 3 of its 4 sides.
+            const isF = i => lab[i] === best.id, hits = new Uint8Array(W * H);
             const scan = (outerN, innerN, idx) => {
                 for (let o = 0; o < outerN; o++) {
-                    let par = 0, inF = false;
-                    for (let t = 0; t < innerN; t++) { const i = idx(o, t); if (isF(i)) { if (!inF) par ^= 1; inF = true; } else { inF = false; votes[i] += par; } }
-                    par = 0; inF = false;
-                    for (let t = innerN - 1; t >= 0; t--) { const i = idx(o, t); if (isF(i)) { if (!inF) par ^= 1; inF = true; } else { inF = false; votes[i] += par; } }
+                    let hit = 0;
+                    for (let t = 0; t < innerN; t++) { const i = idx(o, t); if (isF(i)) hit = 1; else hits[i] += hit; }
+                    hit = 0;
+                    for (let t = innerN - 1; t >= 0; t--) { const i = idx(o, t); if (isF(i)) hit = 1; else hits[i] += hit; }
                 }
             };
             scan(W, H, (x, y) => y * W + x);
             scan(H, W, (y, x) => y * W + x);
+            let mx = 0, my = 0, mn = 0;
+            for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (hits[y * W + x] >= 3) { mx += x; my += y; mn++; }
+            if (mn < 0.1 * W * H) return full;
+            mx /= mn; my /= mn;
+            // walk from the middle to every pixel on the photo's edge; everything up to the frame is inside
+            const votes = new Uint8Array(W * H);   // 3 = inside, 0 = outside
+            const walk = (ex, ey) => {
+                const steps = Math.ceil(2 * Math.max(Math.abs(ex - mx), Math.abs(ey - my)));
+                for (let s = 0; s <= steps; s++) {
+                    const i = Math.round(my + (ey - my) * s / steps) * W + Math.round(mx + (ex - mx) * s / steps);
+                    if (isF(i)) return;
+                    votes[i] = 3;
+                }
+            };
+            for (let x = 0; x < W; x++) { walk(x, 0); walk(x, H - 1); }
+            for (let y = 0; y < H; y++) { walk(0, y); walk(W - 1, y); }
             let bx0 = W, bx1 = 0, by0 = H, by1 = 0, inside = 0;
             for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (votes[y * W + x] >= 3) {
                 inside++; if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y;
@@ -943,27 +965,39 @@
             const cx = Math.round(bx0 / sc), cy = Math.round(by0 / sc);
             out.width = Math.round((bx1 - bx0 + 1) / sc); out.height = Math.round((by1 - by0 + 1) / sc);
             out.getContext("2d").drawImage(full, cx, cy, out.width, out.height, 0, 0, out.width, out.height);
+            out.gray = document.createElement("canvas"); out.gray.width = out.width; out.gray.height = out.height;
+            out.gray.getContext("2d").drawImage(gray, cx, cy, out.width, out.height, 0, 0, out.width, out.height);
             return out;
         }
 
         const isHe = s => /[\u0590-\u05FF]/.test(s);
         const EN_ONLY_MIN_CONF = /*EN_THR*/60;   // min OCR confidence for a word in an English-only list
 
-        // Returns [{en, he}] — he is the Hebrew found next to the word in the photo: on the same line,
-        // or directly below it (card layouts: English word, Hebrew under it). Arabic is ignored.
-        function itemsFromLines(lines) {
+        // Real two-letter English words. Any other two-letter "word" with no Hebrew next to it is OCR noise (a speck, a page edge).
+        const TWO_LETTER = new Set("am an as at be by do go he hi if in is it me my no of ok on or ox pe so to tv up us we".split(" "));
+        // "(n)", "(v)"... after a word are part-of-speech notes and are dropped; other brackets hold a real word: "look (for)" -> "look for".
+        const POS_NOTE = /\((?:n|v|adj|adv|prep|pron|conj|pl|sing)\.?\)/gi;
+
+        // Groups OCR words into segments: neighbouring words in one language. Arabic is ignored.
+        // Each segment: { he (is Hebrew), t (text), li (OCR line), conf, x0, x1, y0, y1 }.
+        // Words the reader was very unsure about are not used as text, but they are remembered: a weak Hebrew word
+        // lowers the confidence of the segment next to it, and weak English letters become a "weak" segment
+        // (never a word by itself - only a hint that Hebrew may have been misread there).
+        function segsFromLines(lines) {
             const all = [];
             lines.forEach((line, li) => {
-                const ws = line.words
-                    .filter(w => !/[\u0600-\u06FF]/.test(w.text) && /[A-Za-z\u0590-\u05FF]/.test(w.text) && w.confidence > (isHe(w.text) ? 40 : 55))
-                    .sort((p, q) => p.bbox.x0 - q.bbox.x0);
+                const usable = line.words.filter(w => !/[\u0600-\u06FF]/.test(w.text) && /[A-Za-z\u0590-\u05FF]/.test(w.text));
+                const strong = w => w.confidence > (isHe(w.text) ? 40 : 55);
+                const ws = usable.filter(strong).sort((p, q) => p.bbox.x0 - q.bbox.x0);
+                const first = all.length;
                 let cur = [];
                 const flush = () => {
                     if (!cur.length) return;
                     const he = isHe(cur[0].text);
                     const t = he
                         ? cur.slice().reverse().map(w => w.text).join(" ").replace(/[^\u0590-\u05FF' ,\-]/g, "").replace(/\s+/g, " ").replace(/^[ ,]+|[ ,]+$/g, "").trim()
-                        : cur.map(w => w.text).join(" ").replace(/\(\w+\)/g, "").replace(/[^A-Za-z' ]/g, "").replace(/\s+/g, " ").replace(/^[b-hj-zB-HJ-Z] /, "").trim();   // a stray letter before a word is noise (only "a"/"I" are real words)
+                        // a hair-thin gap is one word that was split in two ("anyo ne")
+                        : cur.map((w, k) => (k && w.bbox.x0 - cur[k - 1].bbox.x1 > 0.15 * (w.bbox.y1 - w.bbox.y0) ? " " : "") + w.text).join("").replace(/[‘’`´]/g, "'").replace(POS_NOTE, "").replace(/[^A-Za-z' ]/g, "").replace(/\s+/g, " ").replace(/^[b-hj-zB-HJ-Z] /, "").trim();   // a stray letter before a word is noise (only "a"/"I" are real words)
                     if (t.length >= 2) all.push({ he, t, li, conf: Math.min(...cur.map(w => w.confidence)),
                         x0: cur[0].bbox.x0, x1: cur[cur.length - 1].bbox.x1,
                         y0: Math.min(...cur.map(w => w.bbox.y0)), y1: Math.max(...cur.map(w => w.bbox.y1)) });
@@ -975,8 +1009,64 @@
                     cur.push(w);
                 }
                 flush();
+                for (const w of usable) if (!strong(w)) {
+                    const b = w.bbox, h = b.y1 - b.y0;
+                    if (isHe(w.text)) {
+                        for (const q of all.slice(first)) if (q.he && Math.max(q.x0 - b.x1, b.x0 - q.x1) <= h * 1.2) { q.conf = Math.min(q.conf, w.confidence); q.x0 = Math.min(q.x0, b.x0); q.x1 = Math.max(q.x1, b.x1); }
+                    } else {
+                        const t = w.text.replace(/[^A-Za-z]/g, "");
+                        if (t.length >= 2) all.push({ he: false, weak: true, t, li, conf: w.confidence, x0: b.x0, x1: b.x1, y0: b.y0, y1: b.y1 });
+                    }
+                }
             });
-            const heSegs = all.filter(x => x.he), en = all.filter(x => !x.he);
+            // Arabic read as English letters ("Jal", "dal"): such a "word" sits in a row of Arabic. Drop it.
+            const ar = lines.flatMap(l => l.words).filter(w => /[؀-ۿ]/.test(w.text)).map(w => ({ y0: w.bbox.y0, y1: w.bbox.y1 }));
+            const en = all.filter(q => !q.he);
+            return all.filter(q => q.he || !(q.conf < 90 && ar.filter(a => sameRowY(q, a)).length > Math.max(1, en.filter(e => sameRowY(q, e)).length)));
+        }
+
+        const sameRowY = (a, b) => Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) >= 0.5 * Math.min(a.y1 - a.y0, b.y1 - b.y0);
+        const isBelow = (sg, h) => {
+            const lh = sg.y1 - sg.y0;
+            return h.y0 >= sg.y1 - lh * 0.3 && h.y0 - sg.y1 <= lh * 2.5 && Math.min(h.x1, sg.x1) - Math.max(h.x0, sg.x0) >= -lh;
+        };
+
+        // Card layouts (English word, Hebrew under it): a short Hebrew word is sometimes read as English letters
+        // (e.g. "פרח" -> "no"). Such a "word" sits in a row of Hebrew, right under a real English word.
+        // Returns those rows as { y0, y1, segs } so they can be read again as Hebrew only.
+        function misreadHebrewRows(all) {
+            const en = all.filter(x => !x.he && !x.weak), he = all.filter(x => x.he), rows = [];
+            for (const s of all.filter(x => !x.he)) {
+                if (rows.some(r => r.segs.includes(s))) continue;
+                // only Hebrew that was read well counts as "a row of Hebrew" (Arabic rows also give a few Hebrew-looking scraps)
+                const heRow = he.filter(h => h.conf >= 80 && sameRowY(s, h)), enRow = en.filter(e => e !== s && sameRowY(s, e)).concat(s);
+                const above = en.find(u => !enRow.includes(u) && isBelow(u, s));
+                if (!above) continue;
+                const mostlyHebrew = heRow.length >= 2 && heRow.length > enRow.length;
+                // tilted photo: the Hebrew row is not level, so fewer neighbours line up - then the reader must also have been unsure
+                const unsure = s.conf < 90 && heRow.length >= 1 && enRow.length === 1 && !he.some(h => sameRowY(above, h));
+                if (!mostlyHebrew && !unsure) continue;
+                const segs = [...heRow, ...enRow];
+                rows.push({ segs, y0: Math.min(...segs.map(q => q.y0)), y1: Math.max(...segs.map(q => q.y1)) });
+            }
+            // A Hebrew word the reader was unsure about (e.g. "היה" read as "ויה"), in a row that holds only Hebrew.
+            for (const s of he) {
+                if (s.conf >= 80 || rows.some(r => r.segs.includes(s)) || en.some(e => sameRowY(s, e))) continue;
+                const segs = he.filter(h => sameRowY(s, h));
+                rows.push({ segs, y0: Math.min(...segs.map(q => q.y0)), y1: Math.max(...segs.map(q => q.y1)) });
+            }
+            return rows;
+        }
+
+        // Returns [{en, he}] — he is the Hebrew found next to the word in the photo: on the same line,
+        // or directly below it (card layouts: English word, Hebrew under it).
+        function itemsFromSegs(all) {
+            const heSegs = all.filter(x => x.he), en = all.filter(x => !x.he && !x.weak);
+            // "was" read as "Was": letters like w/s/c look the same in both cases, so the height decides.
+            // A real capital is as tall as words with tall letters (b, d, h...); a small letter is clearly shorter.
+            const tall = en.filter(q => /[bdfhkltA-Z]/.test(q.t) && !/[gjpqy]/.test(q.t)).map(q => q.y1 - q.y0).sort((a, b) => a - b);
+            const tallH = tall.length >= 3 ? tall[tall.length >> 1] : 0;
+            for (const q of en) if (tallH && /^[CKOPSUVWXZ][aceimnorsuvwxz]+$/.test(q.t) && q.y1 - q.y0 < 0.85 * tallH) q.t = q.t.toLowerCase();
             const cx = q => (q.x0 + q.x1) / 2, pair = new Map();
             const match = ok => {
                 for (const sg of en) if (!pair.has(sg)) {
@@ -988,25 +1078,89 @@
             const nearX = (sg, h, b) => Math.abs(cx(h) - cx(sg)) < Math.abs(cx(b) - cx(sg));
             // 1) same OCR line  2) same row, side by side  3) directly below (card layouts)
             const sameLine = (sg, h) => h.li === sg.li; sameLine.better = nearX; match(sameLine);
-            const sameRow = (sg, h) => Math.min(h.y1, sg.y1) - Math.max(h.y0, sg.y0) >= 0.5 * Math.min(h.y1 - h.y0, sg.y1 - sg.y0)
+            const sameRow = (sg, h) => sameRowY(sg, h)
                 && Math.max(h.x0 - sg.x1, sg.x0 - h.x1) <= 6 * (sg.y1 - sg.y0);
             sameRow.better = nearX; match(sameRow);
-            const below = (sg, h) => {
-                const lh = sg.y1 - sg.y0;
-                return h.y0 >= sg.y1 - lh * 0.3 && h.y0 - sg.y1 <= lh * 2.5 && Math.min(h.x1, sg.x1) - Math.max(h.x0, sg.x0) >= -lh;
-            };
+            const below = (sg, h) => isBelow(sg, h);
             below.better = (sg, h, b) => h.y0 < b.y0 || (h.y0 === b.y0 && nearX(sg, h, b)); match(below);
             // Two kinds of photos: English+Hebrew pairs (most words have a Hebrew partner) and English-only lists.
             // In an English-only list, a stray Hebrew label in the page margin must not become a "meaning".
             const paired = en.filter(sg => pair.has(sg)).length;
             const hasHe = paired >= 3 && paired >= 0.3 * en.length;
+            // In a photo with Hebrew, the words are the grid of pairs. English with no Hebrew is kept only inside
+            // that grid (a word whose Hebrew wasn't read); text around it (a title like "New Words 1") is ignored.
+            const grid = { x0: Infinity, x1: -Infinity, y0: Infinity, y1: -Infinity };
+            for (const [sg, h] of pair) for (const q of [sg, h]) {
+                grid.x0 = Math.min(grid.x0, q.x0); grid.x1 = Math.max(grid.x1, q.x1); grid.y0 = Math.min(grid.y0, q.y0); grid.y1 = Math.max(grid.y1, q.y1);
+            }
+            const inGrid = q => (q.x0 + q.x1) / 2 > grid.x0 && (q.x0 + q.x1) / 2 < grid.x1 && (q.y0 + q.y1) / 2 > grid.y0 && (q.y0 + q.y1) / 2 < grid.y1;
             const items = [];
             for (const sg of en) {
                 const he = hasHe ? pair.get(sg) : null;
+                if (hasHe && !he && !inGrid(sg)) continue;
                 if (he ? sg.conf < 60 : sg.conf < (hasHe ? 90 : EN_ONLY_MIN_CONF)) continue;
-                items.push({ en: sg.t, he: he ? he.t : "" });
+                if (!he && sg.t.length === 2 && !TWO_LETTER.has(sg.t.toLowerCase())) continue;
+                items.push({ en: sg.t, he: he ? he.t : "", conf: sg.conf, heConf: he ? he.conf : 0, box: sg, heBox: he });
             }
             return items;
+        }
+
+        // Like itemsFromSegs(segsFromLines(lines)), plus: doubtful Hebrew words (read as English letters, or read
+        // with low confidence) are read again with the Hebrew-only model (loaded only when needed).
+        // No single way of reading gets every word right, so each doubtful word is read 6 times - 3 ways, from the
+        // black/white picture and from the grey one - and the readings vote, weighted by their confidence.
+        const REREADS = [   // [use the grey picture, page layout mode (7 = one line, 8 = one word), zoom, extra margin above/below]
+            [false, "7", 1, 0.15], [false, "8", 2, 0.15], [false, "7", 2, 0.3],
+            [true, "7", 2, 0.15], [true, "8", 2, 0.15], [true, "7", 2, 0.3],
+        ];
+        let heWorker = null;
+        async function itemsFromPage(lines, canvas, gray) {
+            let all = segsFromLines(lines);
+            const rows = misreadHebrewRows(all);
+            try {
+                if (rows.length && !heWorker) heWorker = await Tesseract.createWorker("heb");
+                const done = new Set();
+                for (const row of rows) for (const s of row.segs) {
+                    if (done.has(s) || (s.he && s.conf >= 80)) continue;
+                    // the doubtful word together with what touches it in the row ("IN מצטער" is one meaning: "אני מצטער")
+                    const group = [s];
+                    for (let grew = true; grew;) {
+                        grew = false;
+                        for (const q of row.segs) if (!group.includes(q) && group.some(g => Math.max(q.x0 - g.x1, g.x0 - q.x1) <= 1.2 * (g.y1 - g.y0))) { group.push(q); grew = true; }
+                    }
+                    group.forEach(q => done.add(q));
+                    const x0 = Math.min(...group.map(q => q.x0)), x1 = Math.max(...group.map(q => q.x1));
+                    const y0 = Math.min(...group.map(q => q.y0)), y1 = Math.max(...group.map(q => q.y1)), h = y1 - y0;
+                    if (h < 8 || x1 - x0 < 8) continue;
+                    const votes = new Map();
+                    for (const [useGray, psm, k, myf] of REREADS) {
+                        if (useGray && !gray) continue;
+                        // a tight crop (so the Arabic row below stays out), enlarged, on a white margin
+                        const mx = Math.round(h * 0.4), my = Math.round(h * myf), pad = Math.round(h * k * 0.6);
+                        const sx = Math.max(0, x0 - mx), sy = Math.max(0, y0 - my);
+                        const sw = Math.min(canvas.width, x1 + mx) - sx, sh = Math.min(canvas.height, y1 + my) - sy;
+                        const crop = document.createElement("canvas");
+                        crop.width = Math.round(sw * k) + 2 * pad; crop.height = Math.round(sh * k) + 2 * pad;
+                        const x = crop.getContext("2d");
+                        x.fillStyle = "#fff"; x.fillRect(0, 0, crop.width, crop.height);
+                        x.drawImage(useGray ? gray : canvas, sx, sy, sw, sh, pad, pad, Math.round(sw * k), Math.round(sh * k));
+                        await heWorker.setParameters({ tessedit_pageseg_mode: psm });
+                        const res = await Promise.race([heWorker.recognize(crop), new Promise(r => setTimeout(r, 10000))]);
+                        if (!res) throw new Error("reread timeout");
+                        const ws = res.data.words.filter(w => isHe(w.text)).sort((p, q) => q.bbox.x0 - p.bbox.x0);
+                        const t = ws.map(w => w.text).join(" ").replace(/[^֐-׿' ,\-]/g, "").replace(/\s+/g, " ").replace(/^[ ,]+|[ ,]+$/g, "").trim();
+                        if (t.length < 2) continue;
+                        const v = votes.get(t) || { t, sum: 0, best: 0 }, conf = Math.min(...ws.map(w => w.confidence));
+                        v.sum += conf; v.best = Math.max(v.best, conf); votes.set(t, v);
+                    }
+                    const win = [...votes.values()].sort((p, q) => q.sum - p.sum)[0];
+                    if (!win || win.sum <= 0) continue;
+                    all = all.filter(q => !group.includes(q)).concat({ he: true, t: win.t, li: -1 - done.size, conf: Math.max(win.best, 60), x0, x1, y0, y1 });
+                }
+            } catch (e) {   // no Hebrew model (offline) or the reader got stuck: keep the first reading
+                if (heWorker) { try { heWorker.terminate(); } catch (e2) {} heWorker = null; }
+            }
+            return itemsFromSegs(all);
         }
 
         async function ocrPhoto(file, status) {
@@ -1016,18 +1170,33 @@
             await worker.setParameters({ tessedit_pageseg_mode: "11" });
             for (const deg of [0, 90, 270]) {
                 status.innerText = `קורא תמונה (כיוון ${deg}°)...`;
-                const { data } = await worker.recognize(drawRotated(bmp, deg));
+                const canvas = drawRotated(bmp, deg);
+                const { data } = await worker.recognize(canvas);
                 const good = data.words.filter(w => w.confidence > 75 && /^[A-Za-z]{3,}$/.test(w.text)).length;
-                if (!best || good > best.good) best = { good, deg, lines: data.lines };
+                if (!best || good > best.good) best = { good, deg, lines: data.lines, canvas };
                 if (good > 25) break;
             }
-            const a = itemsFromLines(best.lines);
+            const gray = bmp.gray ? drawRotated(bmp.gray, best.deg) : null;
+            const a = await itemsFromPage(best.lines, best.canvas, gray);
             status.innerText = "קורא שוב (פריסה אחרת)...";
             await worker.setParameters({ tessedit_pageseg_mode: "3" });
-            const { data } = await worker.recognize(drawRotated(bmp, best.deg));
-            const b = itemsFromLines(data.lines);
+            const { data } = await worker.recognize(best.canvas);
+            const b = await itemsFromPage(data.lines, best.canvas, gray);
             const score = items => items.filter(i => i.he).length * 2 + items.length;
-            return score(b) > score(a) ? b : a; // a = sparse layout (cards), b = auto layout (lists)
+            const [base, other] = score(b) > score(a) ? [b, a] : [a, b]; // a = sparse layout (cards), b = auto layout (lists)
+            // A photo with Hebrew: each reading gets some words right that the other one misses, so combine them
+            // word by word (same place in the photo = same word) and keep the surer English and the surer Hebrew.
+            if (base.filter(i => i.he).length >= 3 && other.filter(i => i.he).length >= 3) for (const o of other) {
+                const cx = (o.box.x0 + o.box.x1) / 2, cy = (o.box.y0 + o.box.y1) / 2;
+                const m = base.find(i => cx > i.box.x0 && cx < i.box.x1 && cy > i.box.y0 && cy < i.box.y1);
+                if (!m) { if (o.he) base.push(o); continue; }
+                if (o.conf > m.conf) { m.en = o.en; m.conf = o.conf; }
+                // the Hebrew must be the same spot too (or fill a gap) - the other reading may have paired a neighbour's Hebrew
+                const hx = o.he ? (o.heBox.x0 + o.heBox.x1) / 2 : 0, hy = o.he ? (o.heBox.y0 + o.heBox.y1) / 2 : 0;
+                const sameSpot = m.he && hx > m.heBox.x0 && hx < m.heBox.x1 && hy > m.heBox.y0 - 10 && hy < m.heBox.y1 + 10;
+                if (o.he && (!m.he || (sameSpot && o.heConf > m.heConf))) { m.he = o.he; m.heConf = o.heConf; m.heBox = o.heBox; }
+            }
+            return base.map(i => ({ en: i.en, he: i.he }));
         }
 
         // Google's public web translate endpoint: fast (~0.4s per word). Throws on network/HTTP errors so the

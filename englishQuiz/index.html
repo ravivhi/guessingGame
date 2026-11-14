@@ -306,9 +306,9 @@
             <div id="panel-random" role="tabpanel">
                 <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:4px 0;">
                     <button type="button" id="random-btn" class="action-btn" onclick="randomWords()">🎲 לחץ ל20 מילים אקראיות</button>
-                    <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה ... 10 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
+                    <select id="level-select" aria-label="רמת קושי" title="רמת קושי: 1 קלה (לילדים קטנים) ... 9 קשה" onchange="saveLevel()" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;">
                         <option value="1">רמה 1</option><option value="2">רמה 2</option><option value="3">רמה 3</option><option value="4">רמה 4</option><option value="5">רמה 5</option>
-                        <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option><option value="10">רמה 10</option>
+                        <option value="6">רמה 6</option><option value="7">רמה 7</option><option value="8">רמה 8</option><option value="9">רמה 9</option>
                     </select>
                 </div>
                 <div id="random-status" style="margin:2px 0 4px;font-size:0.9rem;color:#2b6cb0;"></div>
@@ -1167,8 +1167,11 @@
             return null;
         }
 
-        // ---- Random words from the built-in word bank: wordbank/level-1.txt ... level-10.txt, "english|hebrew" per line ----
-        const LEVEL_KEY = 'englishquiz-level';
+        // ---- Random words from the built-in word bank: wordbank/level-1.txt ... level-9.txt, "english|hebrew" per line.
+        // Levels 1-2 are for young children and are split into small topic groups with "# topic" header lines (skipped here).
+        // The level numbers changed when levels 1-2 were added, so the saved choice uses a new key.
+        const LEVEL_COUNT = 9;
+        const LEVEL_KEY = 'englishquiz-level-v2';
         const levelCache = {};
         async function loadLevel(level) {
             if (levelCache[level]) return levelCache[level];
@@ -1206,9 +1209,9 @@
         try { const lv = localStorage.getItem(LEVEL_KEY); if (lv) document.getElementById("level-select").value = lv; } catch (e) {}
         // once, in the background: fetch all levels so the service worker keeps them for offline use
         window.addEventListener("load", () => setTimeout(() => {
-            try { if (localStorage.getItem("englishquiz-bank-cached") === "1") return; } catch (e) {}
-            Promise.all(Array.from({ length: 10 }, (_, i) => fetch(`wordbank/level-${i + 1}.txt`).then(r => { if (!r.ok) throw 0; })))
-                .then(() => { try { localStorage.setItem("englishquiz-bank-cached", "1"); } catch (e) {} }).catch(() => {});
+            try { if (localStorage.getItem("englishquiz-bank-cached-v2") === "1") return; } catch (e) {}
+            Promise.all(Array.from({ length: LEVEL_COUNT }, (_, i) => fetch(`wordbank/level-${i + 1}.txt`).then(r => { if (!r.ok) throw 0; })))
+                .then(() => { try { localStorage.setItem("englishquiz-bank-cached-v2", "1"); } catch (e) {} }).catch(() => {});
         }, 3000));
 
         document.getElementById("photo-input").addEventListener("change", async e => {

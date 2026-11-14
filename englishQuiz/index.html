@@ -400,16 +400,24 @@
         let nextQuestionTimer = null;   // the short pause after a right answer, before the next question
 
         // A big emoji appears behind the quiz after 5 answers in a row that were right on the first try, and a
-        // happier one every 5 more (30 emojis = a streak of 150). One wrong first try and it starts again from zero.
-        // The streak carries on into the next round ("try again"); going back to the menu ends it.
+        // happier one every 5 more for the first 10 emojis, every 10 for emojis 11-20, every 15 for 21-30 (30 emojis
+        // = a streak of 300). One wrong first try and it starts again from zero.
+        // The streak carries on into the next round and through the menu; only a wrong first try resets it.
         // 30 emojis that look clearly different from each other (no near-twins like 😀 / 😃): faces from a slight
-        // smile up to 😻 at 75, then 🤗 😉 😸 🤑 💯 and celebration symbols up to 👑 at a streak of 150.
+        // smile up to 😻 at 75, then 🤗 😉 😸 🤑 💯 and celebration symbols up to 👑 at a streak of 300.
         const STREAK_EMOJIS = ["🙂", "😊", "😄", "😆", "😎", "😍", "🥰", "🤩", "😂", "😋", "🥳", "🤪", "🤠", "😇", "😻",
                                "🤗", "😉", "😸", "🤑", "💯", "🔥", "🌈", "🦄", "🌟", "🚀", "🦸", "💎", "🏆", "🐲", "👑"];
+        // Emojis 1-10 come every 5 right answers (5..50), 11-20 every 10 (60..150), 21-30 every 15 (165..300).
+        function streakThreshold(n) { return n <= 10 ? 5 * n : n <= 20 ? 50 + 10 * (n - 10) : 150 + 15 * (n - 20); }
+        function streakStage(s) {
+            let stage = 0;
+            while (stage < STREAK_EMOJIS.length && streakThreshold(stage + 1) <= s) stage++;
+            return stage;
+        }
         let streak = 0, shownStage = 0;
         function updateStreakEmoji() {
             const el = document.getElementById("streak-emoji");
-            const stage = Math.min(STREAK_EMOJIS.length, Math.floor(streak / 5));
+            const stage = streakStage(streak);
             if (stage === shownStage) return;
             shownStage = stage;
             if (stage === 0) { el.classList.remove("on", "pop"); return; }   // a mistake: the emoji fades away
@@ -803,7 +811,6 @@
         if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { const b = document.getElementById("speak-btn"); if (b) b.style.display = "none"; });
 
         function showStart() {
-            streak = 0; updateStreakEmoji();   // back at the menu: the streak is over
             document.getElementById("summary-screen").style.display = "none";
             document.getElementById("game-screen").style.display = "none";
             document.getElementById("start-screen").style.display = "flex";

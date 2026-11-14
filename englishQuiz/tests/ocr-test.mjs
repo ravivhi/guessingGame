@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 import puppeteer from 'puppeteer-core';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(here, '..');
+const root = path.resolve(here, '..');   // the englishQuiz folder (what the test server serves at /)
 
 const FIXTURES = {
   pairs: {
@@ -57,7 +57,7 @@ const server = http.createServer((req, res) => {
   fs.createReadStream(f).pipe(res);
 });
 await new Promise(r => server.listen(0, r));
-const url = `http://localhost:${server.address().port}/englishQuiz/`;
+const url = `http://localhost:${server.address().port}/`;
 
 const failures = [];
 const check = (ok, msg) => { console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${msg}`); if (!ok) failures.push(msg); };
@@ -354,7 +354,7 @@ async function testWordbank() {
   console.log('\n[wordbank] built-in word bank files');
   const bank = {}, allEn = new Map();
   for (let lv = 1; lv <= 10; lv++) {
-    const f = path.join(root, 'englishQuiz', 'wordbank', `level-${lv}.txt`);
+    const f = path.join(root, 'wordbank', `level-${lv}.txt`);
     if (!fs.existsSync(f)) { check(false, `level-${lv}.txt exists`); continue; }
     bank[lv] = fs.readFileSync(f, 'utf8').split(/\r?\n/).filter(l => l.trim()).map(l => l.split('|'));
   }
@@ -380,7 +380,7 @@ async function testWordbank() {
 // The 🎲 button: 20 random words of the chosen level go into the table.
 async function testRandom() {
   console.log('\n[random] 20 random words by level');
-  const bankOf = lv => fs.readFileSync(path.join(root, 'englishQuiz', 'wordbank', `level-${lv}.txt`), 'utf8').split(/\r?\n/).filter(Boolean).map(l => l.split('|'));
+  const bankOf = lv => fs.readFileSync(path.join(root, 'wordbank', `level-${lv}.txt`), 'utf8').split(/\r?\n/).filter(Boolean).map(l => l.split('|'));
   let page = await openPage();
   const table = () => page.$$eval('#words-table tbody tr', trs => trs.map(tr => [...tr.querySelectorAll('input')].map(i => i.value)));
   const selectLevel = lv => page.select('#level-select', String(lv));
@@ -666,6 +666,22 @@ async function testStreak() {
   await page.evaluate(() => { streak = 7; shownStage = 0; updateStreakEmoji(); });
   await page.evaluate(() => showStart());
   check((await emoji()).text === emojis[0], 'going to the menu does not reset the streak');
+  // the streak survives a reload
+  await page.evaluate(() => { streak = 23; shownStage = 0; updateStreakEmoji(); });
+  await page.reload();
+  check(await page.evaluate(() => streak) === 23 && (await emoji()).on && (await emoji()).text === emojis[3], 'after a reload the streak (23) and its emoji are restored');
+  await page.evaluate(() => { streak = 3; updateStreakEmoji(); });
+  await page.reload();
+  check(await page.evaluate(() => streak) === 3 && !(await emoji()).on, 'a small streak is restored too, with no emoji yet');
+  // the main screen shows a small copy of the emoji
+  const menu = () => page.$eval('#menu-streak', e => ({ text: e.textContent, visible: e.getBoundingClientRect().height > 0 && e.offsetParent !== null }));
+  check((await menu()).text === '' , 'main screen: no small emoji below 5 in a row');
+  await page.evaluate(() => { streak = 23; updateStreakEmoji(); });
+  check((await menu()).text === emojis[3] && (await menu()).visible, 'main screen: the small emoji of the current streak is visible');
+  await page.evaluate(() => { streak = 11; updateStreakEmoji(); });
+  check((await menu()).text === emojis[1], 'main screen: it follows the streak (halved to 11 -> 2nd emoji)');
+  await page.reload();
+  check((await menu()).text === emojis[1] && (await menu()).visible, 'main screen: still there after a reload');
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();
 }

@@ -297,6 +297,7 @@
     <div class="game-container">
         <div id="start-screen">
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
+            <div id="menu-streak" aria-hidden="true" style="font-size:1.8rem;line-height:1.2;margin:-2px 0 4px;"></div>
             <div id="grand-total" style="font-weight:bold;color:#2b6cb0;margin:-4px 0 6px;"></div>
             <div class="tabs" role="tablist">
                 <button type="button" role="tab" id="tab-random" class="tab-btn" aria-selected="true" onclick="setMode('random')">🎲 מילים אקראיות</button>
@@ -414,10 +415,16 @@
             while (stage < STREAK_EMOJIS.length && streakThreshold(stage + 1) <= s) stage++;
             return stage;
         }
+        // The streak is saved on the device, so it survives a reload (e.g. the phone dropping the page in the background).
+        const STREAK_KEY = "englishQuizStreak";
         let streak = 0, shownStage = 0;
+        try { streak = Math.max(0, parseInt(localStorage.getItem(STREAK_KEY), 10) || 0); } catch (e) {}
         function updateStreakEmoji() {
+            try { localStorage.setItem(STREAK_KEY, String(streak)); } catch (e) {}
             const el = document.getElementById("streak-emoji");
             const stage = streakStage(streak);
+            const menuEl = document.getElementById("menu-streak");   // small copy of the emoji on the main screen
+            if (menuEl) menuEl.textContent = stage ? STREAK_EMOJIS[stage - 1] : "";
             if (stage === shownStage) return;
             shownStage = stage;
             if (stage === 0) { el.classList.remove("on", "pop"); return; }   // a mistake: the emoji fades away
@@ -425,6 +432,7 @@
             el.classList.add("on");
             el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");   // pop in
         }
+        updateStreakEmoji();   // show the emoji of a streak restored from the last visit
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {

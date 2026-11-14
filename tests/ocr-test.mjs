@@ -603,7 +603,7 @@ async function testTabs() {
   await page.close();
 }
 
-// A big emoji after every 5 / 10 / 15 (by tier) first-try answers in a row, up to 300: 30 different emojis, a mistake resets, the streak carries over.
+// A big emoji after every 5 / 10 / 15 (by tier) first-try answers in a row, up to 300: 30 different emojis, a mistake halves the streak, the streak carries over.
 async function testStreak() {
   console.log('\n[streak] emoji after every 5 right answers in a row');
   const page = await openPage();
@@ -634,11 +634,16 @@ async function testStreak() {
   e = await emoji();
   check(e.on && e.text === emojis[1], `a happier one after 10 in a row (${e.text})`);
   await answer(true, true); await next(560);   // a mistake first, then the right answer
-  check(!(await emoji()).on, 'one wrong first try: the emoji fades away');
-  for (let i = 0; i < 5; i++) { await answer(true); await next(560); }
-  check((await emoji()).on && (await emoji()).text === emojis[0], 'and the streak starts again from the first emoji');
+  check((await emoji()).on && (await emoji()).text === emojis[0], 'one wrong first try at 10 in a row halves the streak to 5: back to the 1st emoji');
+  await answer(true, true); await next(560);   // 5 -> 2
+  check(!(await emoji()).on, 'another wrong first try halves 5 to 2: the emoji fades away');
+  for (let i = 0; i < 3; i++) { await answer(true); await next(560); }
+  check((await emoji()).on && (await emoji()).text === emojis[0], 'and 3 more right answers (2 -> 5) bring the 1st emoji back');
+  await page.evaluate(() => { streak = 165; shownStage = 0; updateStreakEmoji(); });
+  await answer(true, true); await next(560);   // 165 -> 82
+  check(await page.evaluate(() => streak) === 82 && (await emoji()).text === emojis[(await page.evaluate(() => shownStage)) - 1], 'a wrong first try at 165 halves it to 82 and the emoji drops to match');
 
-  // the streak carries on into the next round and through the menu; only a wrong first try ends it
+  // the streak carries on into the next round and through the menu; only a wrong first try lowers it
   await page.evaluate(() => { streak = 14; shownStage = 0; updateStreakEmoji(); });   // 14 in a row: 2nd emoji
   const before = (await emoji()).text;
   await page.evaluate(() => restartGame());

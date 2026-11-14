@@ -401,8 +401,8 @@
 
         // A big emoji appears behind the quiz after 5 answers in a row that were right on the first try, and a
         // happier one every 5 more for the first 10 emojis, every 10 for emojis 11-20, every 15 for 21-30 (30 emojis
-        // = a streak of 300). One wrong first try and it starts again from zero.
-        // The streak carries on into the next round and through the menu; only a wrong first try resets it.
+        // = a streak of 300). One wrong first try halves the streak (rounded down).
+        // The streak carries on into the next round and through the menu; only a wrong first try lowers it.
         // 30 emojis that look clearly different from each other (no near-twins like 😀 / 😃): faces from a slight
         // smile up to 😻 at 75, then 🤗 😉 😸 🤑 💯 and celebration symbols up to 👑 at a streak of 300.
         const STREAK_EMOJIS = ["🙂", "😊", "😄", "😆", "😎", "😍", "🥰", "🤩", "😂", "😋", "🥳", "🤪", "🤠", "😇", "😻",
@@ -483,7 +483,7 @@
             } else {
                 selectedButton.classList.add("wrong");
                 selectedButton.disabled = true;
-                if (wrongCount === 0) { totalScore -= 1; streak = 0; updateStreakEmoji(); }
+                if (wrongCount === 0) { totalScore -= 1; streak = Math.floor(streak / 2); updateStreakEmoji(); }
                 wrongCount++;
                 document.getElementById("score").innerText = totalScore;
                 const cur = wordsData[currentIndex];

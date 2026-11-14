@@ -682,6 +682,10 @@ async function testStreak() {
   check((await menu()).text === emojis[1], 'main screen: it follows the streak (halved to 11 -> 2nd emoji)');
   await page.reload();
   check((await menu()).text === emojis[1] && (await menu()).visible, 'main screen: still there after a reload');
+  // the points total and the small emoji share one line
+  await page.evaluate(() => { localStorage.setItem('x', '1'); document.getElementById('grand-total').innerText = '⭐ סה״כ נקודות: 12'; });
+  const sameLine = await page.evaluate(() => { const a = document.getElementById('grand-total').getBoundingClientRect(), b = document.getElementById('menu-streak').getBoundingClientRect(); return { dy: Math.abs((a.top + a.bottom) / 2 - (b.top + b.bottom) / 2), ah: a.height, bh: b.height }; });
+  check(sameLine.dy < Math.max(sameLine.ah, sameLine.bh) / 2, `main screen: the points and the small emoji are on the same line (vertical centres ${Math.round(sameLine.dy)}px apart)`);
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();
 }

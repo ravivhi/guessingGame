@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Guessing Game** is a Hebrew-language PWA implementation of a word-guessing party game. Deployed at `ravivh.com` via GitHub Pages. The entire app — markup, styles, logic, and 700+ word dictionary — lives in a single `index.html` file with no build pipeline.
 
+## alfi/ is generated — do not edit here
+
+`alfi/` (served at ravivh.com/alfi/) is deployed from the separate repo **ravivhi/alfi** (`web/` folder) by its GitHub Action, which overwrites this folder on every push. Make alfi changes in that repo. `.well-known/assetlinks.json` stays here because it must live at the domain root.
+
 ## Development
 
 No build step, no package manager, no dependencies. To develop:

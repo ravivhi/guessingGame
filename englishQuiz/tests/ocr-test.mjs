@@ -786,7 +786,7 @@ async function testStreak() {
   await page.evaluate(() => { streak = 160; updateStreakEmoji(); });
   check(await nextText() === 'עוד 5', `game: 160 in a row -> 5 more to the 21st emoji (${await nextText()})`);
   await page.evaluate(() => { streak = 300; updateStreakEmoji(); });
-  check(await nextText() === '', 'game: nothing left to reach at the top emoji');
+  check(await nextText() === '🎁 עוד 20', `game: at the top emoji it counts down to the mystery box (${await nextText()})`);
   await page.evaluate(() => { streak = 11; updateStreakEmoji(); });
   const count = () => page.$eval('#menu-streak-count', e => e.textContent);
   check(await count() === '2', 'main screen: the emoji stage (11 in a row -> stage 2) is shown next to the small emoji');
@@ -899,11 +899,26 @@ async function testLearn() {
   st = await steps();
   check(st[0].cls === 'done' && st[1].cls === 'current' && st[2].cls === 'locked', 'back on the path: step 1 is done, step 2 is open, step 3 still locked');
 
+  // skipping the cards: straight to the quiz of step 2, and passing it opens step 3
+  await page.click('.cat-step.current');
+  check(await vis('learn-skip'), 'the cards have a "skip straight to the quiz" button');
+  const step2 = await page.evaluate(() => learn.step.words.map(w => w.en));
+  await page.click('#learn-skip');
+  const quiz2 = await page.evaluate(() => wordsData.map(w => w.word));
+  check(await vis('game-screen') && !(await vis('learn-screen')) && quiz2.length === step2.length && quiz2.every(w => step2.includes(w)), `it starts the quiz of the step right away (${quiz2.length} words)`);
+  await playQuiz(0);
+  check((await progress())[1] === 2 && await vis('next-step-btn'), 'passing the skipped-to quiz opens the next step');
+  await page.click('#change-words-btn');
+  await page.waitForSelector('.cat-step.current');
+  await page.evaluate(() => { learnProgress = { 1: 1 }; localStorage.setItem('englishquiz-learn-progress', JSON.stringify(learnProgress)); renderPath(); });
+  await page.waitForFunction(() => document.querySelectorAll('#cat-list .cat-step.done').length === 1, { timeout: 10000 });
+  // (2 unlock sounds so far: step 1 and the skipped-to step 2)
+
   // a finished step can be learned (and quizzed) again without changing the progress
   await page.click('.cat-step.done');
   check(await vis('learn-screen'), 'a finished step can be learned again');
   await doStep(0);
-  check(!(await text('step-result')).includes('🔓') && (await progress())[1] === 1 && await sounds() === 1, 'passing its quiz again opens nothing new (and no sound)');
+  check(!(await text('step-result')).includes('🔓') && (await progress())[1] === 1 && await sounds() === 2, 'passing its quiz again opens nothing new (and no sound)');
   await page.click('#change-words-btn');
   check(await vis('start-screen') && await page.$eval('#tab-category', e => e.getAttribute('aria-selected')) === 'true', '"back to the path" from the summary shows the path');
 
@@ -1041,7 +1056,77 @@ async function testShop() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop };
+// 🎁 Mystery boxes: after the last streak emoji (a streak of 300), 20 more right answers in a row earn a box and the
+// streak starts again from 0. The box is opened in the shop: a trophy or a medal for the collection.
+async function testBox() {
+  console.log('\n[box] a mystery box 20 right answers after the last emoji, then the streak starts over');
+  const page = await openPage();
+  const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
+  const text = id => page.$eval('#' + id, e => e.textContent);
+  const saved = () => page.evaluate(() => JSON.parse(localStorage.getItem('englishquiz-shop')) || {});
+  const start = () => page.evaluate(() => { document.getElementById('words-input').value = 'cat\tחתול\ndog\tכלב\nsun\tשמש\nmoon\tירח\nbook\tספר\nmilk\tחלב'; renderWords(); startFromInput(); });
+  const answer = right => page.evaluate(right => {
+    const c = wordsData[currentIndex].correct, bs = [...document.querySelectorAll('#answers-container button')];
+    if (!right) bs.find(b => b.innerText !== c).click();
+    bs.find(b => b.innerText === c).click();
+    clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; if (currentIndex < wordsData.length) loadQuestion();
+  }, right);
+
+  await page.click('#shop-btn');
+  check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('👑'), 'the shop has a mystery box section: no box yet, and it says how to get one');
+  check((await page.$$('#shop-awards .award.missing')).length === 10, 'the trophy collection shows 10 ❓ (none found yet)');
+  await page.evaluate(() => showStart());
+
+  await page.evaluate(() => { localStorage.setItem('englishQuizStreak', '318'); });
+  await page.reload();
+  await page.evaluate(() => { window.unlockSounds = 0; playUnlockSound = () => window.unlockSounds++; });
+  await start();
+  check((await text('streak-next')) === '🎁 עוד 2', `after the last emoji the game counts down to the box (${await text('streak-next')})`);
+  await answer(false);   // 317
+  await answer(true);    // 318
+  await answer(true);    // 319
+  check(((await saved()).boxes || 0) === 0 && (await text('streak-next')) === '🎁 עוד 1', '319: no box yet (a mistake took 1 off)');
+  await answer(true);    // 320
+  check((await saved()).boxes === 1 && await vis('box-toast') && (await text('box-toast')).includes('קופסת הפתעה') && (await page.evaluate(() => window.unlockSounds)) === 1, 'a streak of 320 earns a box: a note in the game and the happy sound');
+  check((await page.evaluate(() => streak)) === 0 && (await page.evaluate(() => localStorage.getItem('englishQuizStreak'))) === '0' && (await text('streak-next')) === 'עוד 5', 'and the streak starts again from 0 (5 more to the first face)');
+  check(!(await page.$eval('#streak-emoji', e => e.classList.contains('on'))) && (await text('menu-streak')) === '', 'the big emoji goes away, the faces start over');
+  await page.evaluate(() => showStart());
+  check((await page.$eval('#shop-btn', e => e.dataset.boxes)) === '1', 'the shop button shows a red 1');
+
+  // opening: a trophy or medal you don't have yet
+  await page.click('#shop-btn');
+  check((await text('box-count')).includes('1') && !(await page.$eval('#box-open', e => e.disabled)), 'the shop: 1 box to open');
+  await page.evaluate(() => { Math.random = () => 0; });
+  await page.click('#box-open');
+  await new Promise(r => setTimeout(r, 900));
+  const first = await page.evaluate(() => SHOP_AWARDS[0]);
+  check((await saved()).boxes === 0 && (await saved()).awards[first.id] === 1, `opening the box gives a trophy / medal (${first.pic} ${first.name})`);
+  check((await text('box-pic')) === first.pic && (await text('shop-msg')).includes(first.name) && (await page.evaluate(() => window.unlockSounds)) === 2, 'the box shows what was inside, with the happy sound');
+  check(await page.$eval('#box-open', e => e.disabled) && (await page.$eval('#shop-btn', e => e.dataset.boxes)) === undefined, 'no boxes left: the button is off and the red count is gone');
+  check((await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.className)) === 'award' && (await page.$$('#shop-awards .award.missing')).length === 9, 'it shows in the collection (9 still missing)');
+  // the next box gives a new one; after all 10, doubles
+  await page.evaluate(() => { shop.boxes = 1; saveShop(); renderShop(); });
+  await page.click('#box-open');
+  await new Promise(r => setTimeout(r, 900));
+  check(Object.keys((await saved()).awards).length === 2, 'the next box gives one you do not have yet');
+  await page.evaluate(() => { for (const a of SHOP_AWARDS) shop.awards[a.id] = 1; shop.boxes = 1; saveShop(); renderShop(); });
+  await page.click('#box-open');
+  await new Promise(r => setTimeout(r, 900));
+  check((await saved()).awards[first.id] === 2 && (await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.textContent)).includes('×2'), 'with the whole collection, a box gives a second one (×2)');
+  await page.reload();
+  await page.click('#shop-btn');
+  check((await page.$$('#shop-awards .award.missing')).length === 0, 'the collection is saved on the device');
+
+  for (const [w, h] of [[320, 568], [390, 844]]) {
+    await page.setViewport({ width: w, height: h });
+    const o = await page.evaluate(() => Math.max(document.documentElement.scrollHeight - innerHeight, document.documentElement.scrollWidth - innerWidth));
+    check(o <= 0, `${w}x${h}: the shop with the box and the collection fits without page scrolling (${o}px)`);
+  }
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

@@ -1855,7 +1855,19 @@
             { id: "owl", pic: "🦉", name: "ינשוף", price: 45 }, { id: "robot", pic: "🤖", name: "רובוט", price: 60 },
             { id: "alien", pic: "👽", name: "חייזר", price: 60 }, { id: "dino", pic: "🦖", name: "דינוזאור", price: 75 },
             { id: "dragon", pic: "🐉", name: "דרקון", price: 100 }, { id: "unicorn", pic: "🦄", name: "חד-קרן", price: 120 },
-        ];
+            { id: "pig", pic: "🐷", name: "חזרזיר", price: 15 }, { id: "chick", pic: "🐥", name: "אפרוח", price: 15 },
+            { id: "cow", pic: "🐮", name: "פרה", price: 20 }, { id: "bee", pic: "🐝", name: "דבורה", price: 20 },
+            { id: "bear", pic: "🐻", name: "דובי", price: 30 }, { id: "koala", pic: "🐨", name: "קואלה", price: 30 },
+            { id: "butterfly", pic: "🦋", name: "פרפר", price: 40 }, { id: "giraffe", pic: "🦒", name: "ג׳ירפה", price: 45 },
+            { id: "zebra", pic: "🦓", name: "זברה", price: 45 }, { id: "elephant", pic: "🐘", name: "פיל", price: 50 },
+            { id: "parrot", pic: "🦜", name: "תוכי", price: 50 }, { id: "dolphin", pic: "🐬", name: "דולפין", price: 55 },
+            { id: "octopus", pic: "🐙", name: "תמנון", price: 55 }, { id: "flamingo", pic: "🦩", name: "פלמינגו", price: 65 },
+            { id: "shark", pic: "🦈", name: "כריש", price: 70 }, { id: "sauropod", pic: "🦕", name: "ברונטו", price: 75 },
+            { id: "ghost", pic: "👻", name: "רוח רפאים", price: 80 }, { id: "wizard", pic: "🧙", name: "קוסם", price: 110 },
+            { id: "fairy", pic: "🧚", name: "פיה", price: 110 }, { id: "superhero", pic: "🦸", name: "גיבור על", price: 150 },
+            { id: "mermaid", pic: "🧜‍♀️", name: "בת ים", price: 150 }, { id: "astronaut", pic: "🧑‍🚀", name: "אסטרונאוט", price: 160 },
+            { id: "prince", pic: "🤴", name: "נסיך", price: 180 }, { id: "princess", pic: "👸", name: "נסיכה", price: 180 },
+        ].sort((a, b) => a.price - b.price);   // cheapest first
         const SHOP_THEMES = [
             { id: "purple", name: "סגול", price: 0, bg: "linear-gradient(135deg, #4a00e0, #8e2de2)" },
             { id: "ocean", name: "ים", price: 30, bg: "linear-gradient(135deg, #0052d4, #4fc3f7)" },
@@ -1865,7 +1877,15 @@
             { id: "night", name: "לילה", price: 80, bg: "linear-gradient(135deg, #0f2027, #2c5364)" },
             { id: "space", name: "חלל", price: 100, bg: "radial-gradient(circle at 30% 20%, #6a3093, #1a0b2e 70%)" },
             { id: "rainbow", name: "קשת", price: 150, bg: "linear-gradient(135deg, #ff595e, #ffca3a, #8ac926, #1982c4, #6a4c93)" },
-        ];
+            { id: "mint", name: "מנטה", price: 35, bg: "linear-gradient(135deg, #11998e, #38ef7d)" },
+            { id: "lemon", name: "לימון", price: 45, bg: "linear-gradient(135deg, #f7971e, #ffd200)" },
+            { id: "cherry", name: "דובדבן", price: 70, bg: "linear-gradient(135deg, #8e0e00, #eb3349)" },
+            { id: "ice", name: "קרח", price: 90, bg: "linear-gradient(135deg, #2c3e8f, #83a4d4, #b6fbff)" },
+            { id: "jungle", name: "ג׳ונגל", price: 110, bg: "linear-gradient(135deg, #0b3d0b, #3a7d2c, #a8c66c)" },
+            { id: "fire", name: "אש", price: 120, bg: "linear-gradient(0deg, #b21f1f, #f12711, #f5af19)" },
+            { id: "gold", name: "זהב", price: 200, bg: "linear-gradient(135deg, #8a6e2f, #d4af37, #f9e79f, #b8860b)" },
+            { id: "galaxy", name: "גלקסיה", price: 250, bg: "radial-gradient(circle at 70% 30%, #ff6ec4 0%, #7873f5 25%, #1e1b4b 60%, #000 100%)" },
+        ].sort((a, b) => a.price - b.price);   // cheapest first (the free purple one first)
         let shop = { owned: ["purple"], avatar: null, theme: "purple" };
         try { const v = JSON.parse(localStorage.getItem(SHOP_KEY)); if (v && Array.isArray(v.owned)) shop = { ...shop, ...v }; } catch (e) {}
         if (!shop.owned.includes("purple")) shop.owned.push("purple");

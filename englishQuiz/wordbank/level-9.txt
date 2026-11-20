@@ -1,7 +1,7 @@
 # ממשל ופוליטיקה
 regulation|תקנה
 sovereign|ריבוני
-protest|מחאה
+protest|מחאה|🪧
 suppress|לדכא
 privilege|זכות
 liberal|ליברלי
@@ -28,7 +28,7 @@ austerity|צנע
 tenure|כהונה
 legitimacy|לגיטימיות
 # חוק ומשפט
-prohibit|לאסור
+prohibit|לאסור|🚫
 suspend|להשעות
 restrict|להגביל
 procedure|הליך
@@ -109,7 +109,7 @@ replicate|לשכפל
 hypothetical|היפותטי
 rigorous|יסודי
 validate|לתקף
-magnify|להגדיל
+magnify|להגדיל|🔍
 dormant|רדום
 decay|ריקבון
 induce|לגרום
@@ -192,7 +192,7 @@ speculate|לשער
 reflect|להשתקף
 sensible|הגיוני ושקול
 misconception|תפיסה שגויה
-ponder|להרהר
+ponder|להרהר|🤔
 nuance|ניואנס
 envision|לדמיין
 foresee|לחזות
@@ -278,7 +278,7 @@ humiliation|השפלה
 pessimism|פסימיות
 hostility|עוינות
 devotion|מסירות
-astonish|להדהים
+astonish|להדהים|😲
 aspiration|שאיפה
 outrage|זעם ציבורי
 contempt|בוז
@@ -411,7 +411,7 @@ collaborate|לשתף פעולה
 compel|לכפות
 deprive|לקפח
 empower|להעצים
-embrace|לחבק
+embrace|לחבק|🤗
 obstruct|לחסום
 hamper|להפריע
 jeopardize|לסכן

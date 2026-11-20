@@ -3,7 +3,7 @@ population|אוכלוסייה
 neighborhood|שכונה
 volunteer|מתנדב
 rights|זכויות
-vote|להצביע
+vote|להצביע|🗳️
 mayor|ראש עיר
 public|ציבורי
 private|פרטי
@@ -48,19 +48,19 @@ rob|לשדוד
 jail|בית סוהר
 forbid|לאסור
 seatbelt|חגורת בטיחות
-battle|קרב
+battle|קרב|⚔️
 victory|ניצחון
 destroy|להרוס
 punish|להעניש
 shelter|מחסה
 poison|רעל
-alarm|אזעקה
+alarm|אזעקה|🚨
 trap|מלכודת
 burglar|פורץ
 fingerprint|טביעת אצבע
 handcuffs|אזיקים
 spy|מרגל
-bomb|פצצה
+bomb|פצצה|💣
 # מדיה ותקשורת
 media|תקשורת
 reporter|כתב
@@ -84,16 +84,16 @@ speech|נאום
 compliment|מחמאה
 viewer|צופה
 influencer|משפיען
-notification|התראה
+notification|התראה|🔔
 # טכנולוגיה
 technology|טכנולוגיה
 device|מכשיר
 update|עדכון
-virus|וירוס
+virus|וירוס|🦠
 account|חשבון
 username|שם משתמש
 spam|דואר זבל
-inbox|תיבת דואר
+inbox|תיבת דואר|📥
 software|תוכנה
 remote control|שלט רחוק
 drone|רחפן
@@ -121,8 +121,8 @@ acid rain|גשם חומצי
 sewage|ביוב
 landfill|מטמנה
 flood|שיטפון
-tornado|טורנדו
-hurricane|הוריקן
+tornado|טורנדו|🌪️
+hurricane|הוריקן|🌀
 # בריאות וגוף
 disease|מחלה
 treatment|טיפול
@@ -135,18 +135,18 @@ balance|איזון
 fit|מתאים
 condition|מצב
 bruise|חבורה
-germ|חיידק
+germ|חיידק|🦠
 crutches|קביים
 diabetes|סוכרת
 first aid|עזרה ראשונה
 bleed|לדמם
 pale|חיוור
-dizzy|מסוחרר
+dizzy|מסוחרר|😵
 vegetarian|צמחוני
 allergy|אלרגיה
 protein|חלבון
 painkiller|משכך כאבים
-smoking|עישון
+smoking|עישון|🚬
 # טיולים ותחבורה
 destination|יעד
 abroad|בחו"ל
@@ -156,8 +156,8 @@ explore|לחקור
 reservation|הזמנה
 vehicle|כלי רכב
 intersection|צומת
-highway|כביש מהיר
-ferry|מעבורת
+highway|כביש מהיר|🛣️
+ferry|מעבורת|⛴️
 transport|תחבורה
 depart|לצאת לדרך
 schedule|לוח זמנים
@@ -168,20 +168,20 @@ crowded|צפוף
 delay|עיכוב
 tour|סיור
 platform|רציף
-campsite|אתר קמפינג
-cruise|שייט
-parachute|מצנח
+campsite|אתר קמפינג|🏕️
+cruise|שייט|🛳️
+parachute|מצנח|🪂
 shortcut|קיצור דרך
-landing|נחיתה
+landing|נחיתה|🛬
 traffic jam|פקק תנועה
 hostel|אכסניה
-pedestrian|הולך רגל
+pedestrian|הולך רגל|🚶
 backpacker|תרמילאי
 # כסף וקניות
 cost|עלות
 afford|להרשות לעצמו
 bargain|מציאה
-receipt|קבלה
+receipt|קבלה|🧾
 salary|משכורת
 earn|להרוויח
 savings|חסכונות
@@ -247,7 +247,7 @@ underline|לסמן בקו
 skill|מיומנות
 professor|פרופסור
 tutor|מורה פרטי
-graduation|טקס סיום
+graduation|טקס סיום|🎓
 # היסטוריה ועבר
 ancient|עתיק
 century|מאה
@@ -285,9 +285,9 @@ statue|פסל
 animation|אנימציה
 sketch|סקיצה
 rhythm|קצב
-melody|מנגינה
+melody|מנגינה|🎵
 choir|מקהלה
-applause|מחיאות כפיים
+applause|מחיאות כפיים|👏
 audition|אודישן
 soundtrack|פסקול
 sequel|סרט המשך
@@ -316,8 +316,8 @@ mood|מצב רוח
 attitude|יחס
 behavior|התנהגות
 confident|בטוח בעצמו
-embarrassed|נבוך
-disappointed|מאוכזב
+embarrassed|נבוך|😳
+disappointed|מאוכזב|😞
 satisfied|מרוצה
 relaxed|רגוע
 honest|ישר
@@ -325,8 +325,8 @@ selfish|אנוכי
 mature|בוגר
 wise|נבון
 miserable|אומלל
-amazed|נדהם
-confused|מבולבל
+amazed|נדהם|😲
+confused|מבולבל|😕
 annoyed|מעוצבן
 brilliant|מבריק
 capable|מסוגל
@@ -339,11 +339,11 @@ ashamed|מתבייש
 impatient|חסר סבלנות
 careless|רשלן
 clumsy|מגושם
-terrified|מבועת
+terrified|מבועת|😱
 homesick|מתגעגע הביתה
 gloomy|קודר
 cheeky|חצוף
-relieved|מרגיש הקלה
+relieved|מרגיש הקלה|😌
 grumpy|רגזן
 jealous|קנאי
 loyal|נאמן
@@ -359,7 +359,7 @@ boredom|שעמום
 loneliness|בדידות
 # יחסים בין אנשים
 relationship|מערכת יחסים
-couple|זוג
+couple|זוג|💑
 marriage|נישואים
 respect|כבוד
 betray|לבגוד
@@ -497,7 +497,7 @@ boast|להתרברב
 reply|תשובה
 apologize|להתנצל
 sigh|לנאנח
-shrug|למשוך בכתפיים
+shrug|למשוך בכתפיים|🤷
 # פעלים: שינוי והתקדמות
 achieve|להשיג
 attempt|ניסיון
@@ -555,7 +555,7 @@ rare|נדיר
 similar|דומה
 royal|מלכותי
 awful|נורא
-disgusting|מגעיל
+disgusting|מגעיל|🤢
 rotten|רקוב
 ripe|בשל
 slippery|חלקלק
@@ -577,9 +577,9 @@ artery|עורק
 vein|וריד
 intestines|מעיים
 liquid|נוזל
-galaxy|גלקסיה
+galaxy|גלקסיה|🌌
 fossil|מאובן
-satellite|לוויין
+satellite|לוויין|🛰️
 predator|טורף
 prey|טרף
 extinct|נכחד

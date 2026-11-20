@@ -1,5 +1,6 @@
-feeling|רגש
-emotion|התרגשות
+# feelings
+feeling|הרגשה
+emotion|רגש
 fear|פחד
 hope|תקווה
 joy|שמחה
@@ -7,14 +8,45 @@ anger|כעס
 pride|גאווה
 shame|בושה
 worry|דאגה
+sadness|עצב
+happiness|אושר
+excitement|התלהבות
+jealousy|קנאה
+comfort|נחמה
+confidence|ביטחון עצמי
+# moods
+thrilled|נלהב
+puzzled|מבולבל
+delighted|שמח מאוד
+unhappy|לא מאושר
+fearless|חסר פחד
+restless|חסר מנוחה
+heartbroken|שבור לב
+speechless|בלי מילים
+shocked|בהלם
+insulted|נעלב
+# character and values
 trust|אמון
 courage|אומץ
 patience|סבלנות
 kindness|טוב לב
 honesty|יושר
-freedom|חופש
-war|מלחמה
-danger|סכנה
+loyalty|נאמנות
+generosity|נדיבות
+fairness|הגינות
+politeness|נימוס
+laziness|עצלות
+cooperation|שיתוף פעולה
+talented|מוכשר
+hardworking|חרוץ
+energetic|נמרץ
+outgoing|חברותי
+unkind|לא נחמד
+bossy|שתלטן
+liar|שקרן
+show-off|רברבן
+role model|מודל לחיקוי
+# life and ideas
 luck|מזל
 success|הצלחה
 failure|כישלון
@@ -26,77 +58,496 @@ opinion|דעה
 experience|חוויה
 memory|זיכרון
 habit|הרגל
-custom|מנהג
-tradition|מסורת
-culture|תרבות
-society|חברה
-community|קהילה
-government|ממשלה
-law|חוק
-election|בחירות
-citizen|אזרח
+danger|סכנה
+nightmare|סיוט
+# school
+civics|אזרחות
+computer science|מדעי המחשב
+physical education|חינוך גופני
+report card|תעודה
+field trip|סיור לימודי
+encyclopedia|אנציקלופדיה
+atlas|אטלס
+workbook|חוברת עבודה
+worksheet|דף עבודה
+staff room|חדר מורים
+counselor|יועץ
+high school|תיכון
+middle school|חטיבת ביניים
+protractor|מד זווית
+locker|לוקר
+whiteboard|לוח מחיק
+projector|מקרן
+binder|קלסר
+paper clip|אטב משרדי
+bulletin board|לוח מודעות
+detention|ריתוק
+contest|תחרות
+crossword|תשבץ
+# reading and writing
+explanation|הסבר
+punctuation|פיסוק
+illustration|איור
+syllable|הברה
+noun|שם עצם
+verb|פועל
+adjective|שם תואר
+plural|רבים
+singular|יחיד
+question mark|סימן שאלה
+comma|פסיק
+capital letter|אות גדולה
+handwriting|כתב יד
+draft|טיוטה
+ending|סוף
+autograph|חתימה
+brochure|עלון
+# math
+area|שטח
+million|מיליון
+billion|מיליארד
+multiplication|כפל
+division|חילוק
+subtraction|חיסור
+minus|מינוס
+plus|פלוס
+remainder|שארית
+quantity|כמות
+cube|קובייה
+cylinder|גליל
+cone|חרוט
+polygon|מצולע
+perimeter|היקף
+diagonal|אלכסון
+straight line|קו ישר
+infinite|אינסופי
+millimeter|מילימטר
+ton|טון
+sum|סכום
+angle|זווית
+digit|ספרה
+dozen|תריסר
+# science
+telescope|טלסקופ
+microscope|מיקרוסקופ
+experiment|ניסוי
+research|מחקר
+gas|גז
+crystal|גביש
+helium|הליום
+boiling point|נקודת רתיחה
+echo|הד
+vibration|רטט
+electric|חשמלי
+generator|גנרטור
+test tube|מבחנה
+funnel|משפך
+magnifying glass|זכוכית מגדלת
+magnet|מגנט
+# discovering and knowing
+discover|לגלות
+invent|להמציא
+invention|המצאה
+inventor|ממציא
+fact|עובדה
+truth|אמת
+lie|שקר
+proof|הוכחה
+information|מידע
+# the body
+lung|ריאה
+throat|גרון
+waist|מותניים
+wrist|פרק כף היד
+kidney|כליה
+skull|גולגולת
+jaw|לסת
+eyelid|עפעף
+palm|כף יד
+knuckle|פרק אצבע
+thigh|ירך
+navel|טבור
+blood vessel|כלי דם
+heartbeat|פעימת לב
+saliva|רוק
+digestion|עיכול
+spine|עמוד שדרה
+rib|צלע
+nostril|נחיר
+skeleton|שלד
+# health
+injection|זריקה
+wound|פצע
+illness|מחלה
+health|בריאות
+diet|דיאטה
+operation|ניתוח
+check-up|בדיקה רפואית
+stethoscope|סטטוסקופ
+syrup|סירופ
+ointment|משחה
+cast|גבס
+stitches|תפרים
+braces|גשר שיניים
+chickenpox|אבעבועות רוח
+asthma|אסתמה
+sore throat|כאב גרון
+runny nose|נזלת
+nosebleed|דימום מהאף
+blister|שלפוחית
+pimple|פצעון
+cavity|חור בשן
+injured|פצוע
+poisonous|רעיל
+harmful|מזיק
+swallow|לבלוע
+itch|לגרד
+vomit|להקיא
+wheelchair|כיסא גלגלים
+thermometer|מדחום
+blind|עיוור
+deaf|חירש
+# space
+space station|תחנת חלל
+spacesuit|חליפת חלל
+Milky Way|שביל החלב
+black hole|חור שחור
+Mercury|כוכב חמה
+Venus|נוגה
+Mars|מאדים
+Jupiter|צדק
+Saturn|שבתאי
+Uranus|אורנוס
+Neptune|נפטון
+spaceship|חללית
+# plants and animals
+stem|גבעול
+bud|ניצן
+sprout|נבט
+pollen|אבקה
+moss|טחב
+fern|שרך
+vine|גפן
+vineyard|כרם
+herd|עדר
+flock|להקה
+swarm|נחיל
+hive|כוורת
+den|מאורה
+burrow|מחילה
+rodent|מכרסם
+tadpole|ראשן
+carnivore|אוכל בשר
+herbivore|אוכל עשב
+food chain|שרשרת מזון
+camouflage|הסוואה
+venom|ארס
+gill|זימים
+fin|סנפיר
+breed|גזע
+hatch|לבקוע
+hibernate|לישון שנת חורף
+mammal|יונק
+reptile|זוחל
+# earth and geography
+equator|קו המשווה
+globe|גלובוס
+North Pole|הקוטב הצפוני
+South Pole|הקוטב הדרומי
 border|גבול
 capital|בירה
-nation|אומה
-army|צבא
-weapon|נשק
-prison|כלא
-crime|פשע
-police|משטרה
-court|בית משפט
-power|כוח
-energy|אנרגיה
-electricity|חשמל
-machine|מכונה
-screw|בורג
-chain|שרשרת
-iron|ברזל
-rubber|גומי
-cotton|כותנה
-wool|צמר
-gas|גז
-fuel|דלק
+mountain range|רכס הרים
+canyon|קניון
+crater|מכתש
+oasis|נווה מדבר
+dune|דיונה
+bay|מפרץ
+reef|שונית
+lagoon|לגונה
+pebble|חלוק נחל
+gem|אבן חן
+continent|יבשת
+cliff|צוק
+lava|לבה
+iceberg|קרחון
+# weather
+humidity|לחות
+drizzle|טפטוף
+thunderstorm|סופת רעמים
+blizzard|סופת שלגים
+sandstorm|סופת חול
+foggy|ערפילי
+muddy|בוצי
+dusty|מאובק
+damp|לח
+frozen|קפוא
+# environment and energy
 waste|פסולת
 recycle|למחזר
 pollution|זיהום
 environment|סביבה
 nature|טבע
-telescope|טלסקופ
-microscope|מיקרוסקופ
-experiment|ניסוי
-discover|לגלות
-invent|להמציא
-invention|המצאה
-research|מחקר
-theory|תיאוריה
-fact|עובדה
-truth|אמת
-lie|שקר
-proof|הוכחה
-evidence|ראיה
-information|מידע
-article|כתבה
-advertisement|פרסומת
-printer|מדפסת
+eco-friendly|ידידותי לסביבה
+nature reserve|שמורת טבע
+national park|פארק לאומי
+energy|אנרגיה
+electricity|חשמל
+power|כוח
+fuel|דלק
+coal|פחם
+solar panel|לוח סולארי
+dam|סכר
+# materials and tools
+machine|מכונה
+screw|בורג
+chain|שרשרת
+iron|ברזל
+steel|פלדה
+copper|נחושת
+aluminum|אלומיניום
+rubber|גומי
+cotton|כותנה
+wool|צמר
+leather|עור
+concrete|בטון
+marble|שיש
+clay|חימר
+cardboard|קרטון
+plank|קרש
+wire|חוט חשמל
+pipe|צינור
+pump|משאבה
+crane|מנוף
+pulley|גלגלת
+tape measure|סרט מדידה
+wrench|מפתח ברגים
+pliers|צבת
+toolbox|ארגז כלים
+sandpaper|נייר זכוכית
+# computers and media
+scanner|סורק
+webcam|מצלמת רשת
+touchscreen|מסך מגע
+smartwatch|שעון חכם
+socket|שקע
+joystick|ג'ויסטיק
+game console|קונסולת משחקים
 file|קובץ
 program|תוכנה
-game console|קונסולת משחקים
-download|להוריד
+coding|תכנות
+link|קישור
+icon|אייקון
+cursor|סמן במחשב
+avatar|אווטאר
+offline|לא מקוון
+article|כתבה
+advertisement|פרסומת
 upload|להעלות
-click|ללחוץ
-search|לחפש
-delete|למחוק
 connect|לחבר
-turn on|להדליק
-turn off|לכבות
-pill|גלולה
-injection|זריקה
-wound|פצע
-pain|כאב
-illness|מחלה
-health|בריאות
-diet|דיאטה
-lung|ריאה
-throat|גרון
-waist|מותניים
-wrist|פרק כף היד
+paste|להדביק
+chat|לשוחח
+laptop|מחשב נייד
+cable|כבל
+plug|תקע
+app|אפליקציה
+smartphone|טלפון חכם
+selfie|סלפי
+charger|מטען
+# community and town
+community|קהילה
+city hall|עירייה
+downtown|מרכז העיר
+fire station|תחנת כיבוי
+bus station|תחנה מרכזית
+parking lot|חניון
+crosswalk|מעבר חצייה
+street light|פנס רחוב
+recycling bin|פח מיחזור
+alley|סמטה
+avenue|שדרה
+church|כנסייה
+mosque|מסגד
+aquarium|אקווריום
+planetarium|פלנטריום
+amusement park|לונה פארק
+# culture and the arts
+custom|מנהג
+tradition|מסורת
+culture|תרבות
+theater|תיאטרון
+musical|מחזמר
+ballet|בלט
+painting|ציור
+cello|צ'לו
+harmonica|מפוחית
+drummer|מתופף
+violinist|כנר
+pianist|פסנתרן
+wedding|חתונה
+# sports and hobbies
+collection|אוסף
+archery|קשתות
+handball|כדוריד
+weightlifting|הרמת משקולות
+wrestling|היאבקות
+sit-up|כפיפת בטן
+push-up|שכיבת סמיכה
+warm-up|חימום
+lap|הקפה
+finish line|קו סיום
+foul|עבירה
+scoreboard|לוח תוצאות
+bronze|ארד
+trophy|גביע
+champion|אלוף
+# jobs
+designer|מעצב
+translator|מתרגם
+receptionist|פקיד קבלה
+businessman|איש עסקים
+banker|בנקאי
+babysitter|בייביסיטר
+janitor|שרת
+cleaner|מנקה
+courier|שליח
+paramedic|חובש
+miner|כורה
+tour guide|מורה דרך
+flight attendant|דייל
+journalist|עיתונאי
+electrician|חשמלאי
+plumber|שרברב
+pharmacist|רוקח
+programmer|מתכנת
+# government and law
+government|ממשלה
+law|חוק
+election|בחירות
+citizen|אזרח
+nation|אומה
+freedom|חופש
+ID card|תעודת זהות
+court|בית משפט
+crime|פשע
+prison|כלא
+punishment|עונש
+army|צבא
+weapon|נשק
+war|מלחמה
+# history
+Stone Age|תקופת האבן
+Middle Ages|ימי הביניים
+archaeologist|ארכיאולוג
+astronomer|אסטרונום
+gladiator|גלדיאטור
+chariot|מרכבה
+sundial|שעון שמש
+armor|שריון
+spear|חנית
+cannon|תותח
+sword|חרב
+# travel and shopping
+speed|מהירות
+detour|דרך עוקפת
+gas station|תחנת דלק
+driver's license|רישיון נהיגה
+tram|רכבת קלה
+cable car|רכבל
+boarding pass|כרטיס עלייה
+lighthouse|מגדלור
+anchor|עוגן
+shekel|שקל
+buyer|קונה
+checkout|קופה
+shopping cart|עגלת קניות
+# verbs: learning and talking
+solve|לפתור
+summarize|לסכם
+sort|למיין
+mark|לסמן
+report|לדווח
+giggle|לצחקק
+hum|לזמזם
+mumble|למלמל
+brag|להתרברב
+pray|להתפלל
+erase|למחוק
+# verbs: actions
+lead|להוביל
+hunt|לצוד
+sneak|להתגנב
+slip|להחליק
+stumble|למעוד
+kneel|לכרוע
+shiver|לרעוד
+hiccup|לשהק
+snore|לנחור
+pinch|לצבוט
+rub|לשפשף
+tear|לקרוע
+crush|למעוך
+smash|לנפץ
+flip|להפוך
+toss|לזרוק
+load|להעמיס
+roast|לצלות
+stir|לבחוש
+rinse|לשטוף
+sharpen|לחדד
+sail|לשוט
+fold|לקפל
+scream|לצרוח
+knock|לדפוק
+wipe|לנגב
+wink|לקרוץ
+splash|להתיז
+sniff|לרחרח
+roar|לשאוג
+# describing words
+possible|אפשרי
+impossible|בלתי אפשרי
+clear|ברור
+main|ראשי
+advanced|מתקדם
+original|מקורי
+recent|מהזמן האחרון
+unpleasant|לא נעים
+alive|חי
+awake|ער
+tame|מאולף
+harmless|לא מזיק
+muscular|שרירי
+wrinkled|מקומט
+cracked|סדוק
+bent|כפוף
+crooked|עקום
+brand-new|חדש לגמרי
+second-hand|יד שנייה
+homemade|תוצרת בית
+handmade|עבודת יד
+weekly|שבועי
+monthly|חודשי
+yearly|שנתי
+terrible|נורא
+fantastic|נהדר
+strange|מוזר
+magical|קסום
+haunted|רדוף רוחות
+# small useful words
+especially|במיוחד
+forever|לנצח
+against|נגד
+among|בין
+backwards|אחורה
+somehow|איכשהו
+exactly|בדיוק
+completely|לגמרי
+extremely|מאוד מאוד
+luckily|למזלי
+so far|עד עכשיו
+at least|לפחות
+at last|סוף סוף
+in fact|למעשה
+on purpose|בכוונה
+by accident|בטעות
+on time|בזמן

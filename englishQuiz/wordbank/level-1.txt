@@ -35,7 +35,13 @@ eighteen|שמונה עשר
 nineteen|תשעה עשר
 twenty|עשרים
 zero|אפס
-# colors
+# colors and shapes
+circle|עיגול
+square|ריבוע
+triangle|משולש
+star|כוכב
+heart|לב
+line|קו
 red|אדום
 blue|כחול
 green|ירוק
@@ -49,14 +55,7 @@ brown|חום
 gray|אפור
 gold|זהב
 silver|כסף
-# shapes
-circle|עיגול
-square|ריבוע
-triangle|משולש
-rectangle|מלבן
-star|כוכב
-heart|לב
-line|קו
+light blue|תכלת
 # family and people
 mom|אמא
 dad|אבא
@@ -67,7 +66,6 @@ grandma|סבתא
 grandpa|סבא
 aunt|דודה
 uncle|דוד
-cousin|בן דוד
 family|משפחה
 friend|חבר
 boy|ילד
@@ -103,12 +101,9 @@ toe|בוהן
 back|גב
 tummy|בטן
 body|גוף
-cheek|לחי
 lip|שפה
-chin|סנטר
-elbow|מרפק
 nail|ציפורן
-skin|עור
+belly button|פופיק
 # pets and farm animals
 animal|חיה
 dog|כלב
@@ -130,6 +125,11 @@ chicken|תרנגולת
 duck|ברווז
 rooster|תרנגול
 donkey|חמור
+pony|פוני
+bunny|ארנבון
+goldfish|דג זהב
+chick|אפרוח
+lamb|טלה
 # wild animals
 lion|אריה
 tiger|נמר
@@ -163,11 +163,17 @@ parrot|תוכי
 squirrel|סנאי
 camel|גמל
 rhino|קרנף
+koala|קואלה
+caterpillar|זחל
+flamingo|פלמינגו
+starfish|כוכב ים
+dinosaur|דינוזאור
+ladybug|חיפושית
+crab|סרטן
 # food
 food|אוכל
 bread|לחם
 cheese|גבינה
-milk|חלב
 egg|ביצה
 rice|אורז
 pasta|פסטה
@@ -190,6 +196,17 @@ salt|מלח
 meat|בשר
 sausage|נקניקייה
 snack|חטיף
+falafel|פלאפל
+hummus|חומוס
+lollipop|סוכרייה על מקל
+gum|מסטיק
+donut|סופגנייה
+popsicle|ארטיק
+cupcake|קאפקייק
+popcorn|פופקורן
+pancake|פנקייק
+yogurt|יוגורט
+ketchup|קטשופ
 # fruit
 fruit|פרי
 apple|תפוח
@@ -205,7 +222,7 @@ pineapple|אננס
 mango|מנגו
 melon|מלון
 plum|שזיף
-tangerine|קלמנטינה
+fig|תאנה
 # vegetables
 vegetable|ירק
 carrot|גזר
@@ -217,13 +234,10 @@ pepper|פלפל
 corn|תירס
 pea|אפונה
 bean|שעועית
-lettuce|חסה
-cabbage|כרוב
-garlic|שום
 pumpkin|דלעת
 broccoli|ברוקולי
 mushroom|פטרייה
-eggplant|חציל
+sweet potato|בטטה
 # drinks
 water|מים
 juice|מיץ
@@ -232,6 +246,8 @@ coffee|קפה
 lemonade|לימונדה
 soda|סודה
 cocoa|קקאו
+milk|חלב
+milkshake|מילקשייק
 # clothes
 clothes|בגדים
 shirt|חולצה
@@ -255,6 +271,7 @@ glasses|משקפיים
 umbrella|מטרייה
 bag|תיק
 belt|חגורה
+sneakers|נעלי ספורט
 # home
 house|בית
 room|חדר
@@ -282,8 +299,6 @@ television|טלוויזיה
 phone|טלפון
 computer|מחשב
 picture|תמונה
-carpet|שטיח
-shelf|מדף
 cup|כוס
 plate|צלחת
 spoon|כפית
@@ -294,6 +309,14 @@ bottle|בקבוק
 box|קופסה
 key|מפתח
 soap|סבון
+pot|סיר
+mug|ספל
+straw|קש
+tissue|טישו
+hairbrush|מברשת שיער
+pacifier|מוצץ
+diaper|חיתול
+lunchbox|קופסת אוכל
 # school
 school|בית ספר
 teacher|מורה
@@ -313,6 +336,9 @@ crayon|עפרון צבעוני
 color|צבע
 board|לוח
 lesson|שיעור
+pencil case|קלמר
+sticker|מדבקה
+chalk|גיר
 # toys and games
 ball|כדור
 doll|בובה
@@ -331,6 +357,13 @@ party|מסיבה
 birthday|יום הולדת
 music|מוזיקה
 song|שיר
+bubbles|בועות
+sandbox|ארגז חול
+trampoline|טרמפולינה
+snowman|איש שלג
+sandcastle|ארמון חול
+play dough|פלסטלינה
+puppet|בובת יד
 # transport
 car|מכונית
 bus|אוטובוס
@@ -343,6 +376,11 @@ truck|משאית
 taxi|מונית
 helicopter|מסוק
 motorcycle|אופנוע
+scooter|קורקינט
+tractor|טרקטור
+fire truck|כבאית
+police car|ניידת
+submarine|צוללת
 # nature and weather
 sun|שמש
 moon|ירח
@@ -366,6 +404,9 @@ rock|סלע
 fire|אש
 ice|קרח
 weather|מזג אוויר
+snowflake|פתית שלג
+sunflower|חמנייה
+rose|ורד
 # places
 park|פארק
 zoo|גן חיות
@@ -373,11 +414,11 @@ shop|חנות
 farm|חווה
 street|רחוב
 city|עיר
-village|כפר
 hospital|בית חולים
-library|ספרייה
 supermarket|סופרמרקט
 playground|גן שעשועים
+pool|בריכה
+kindergarten|גן ילדים
 # things we do
 go|ללכת
 come|לבוא
@@ -416,6 +457,11 @@ cry|לבכות
 laugh|לצחוק
 smile|לחייך
 help|לעזור
+roll|להתגלגל
+blow|לנשוף
+spin|להסתובב
+hug|לחבק
+kiss|לנשק
 # describing words
 big|גדול
 small|קטן
@@ -441,7 +487,7 @@ dirty|מלוכלך
 full|מלא
 empty|ריק
 soft|רך
-hard|קשיח
+hard|קשה
 wet|רטוב
 dry|יבש
 heavy|כבד
@@ -450,9 +496,10 @@ ugly|מכוער
 funny|מצחיק
 scary|מפחיד
 strong|חזק
-weak|חלש
 loud|רועש
 quiet|שקט
+cute|חמוד
+yummy|טעים
 # place words
 up|למעלה
 down|למטה
@@ -460,3 +507,20 @@ in|בתוך
 on|על
 under|מתחת
 here|כאן
+out|החוצה
+over|מעל
+# fairy tales
+king|מלך
+queen|מלכה
+prince|נסיך
+princess|נסיכה
+pirate|פיראט
+monster|מפלצת
+dragon|דרקון
+fairy|פיה
+witch|מכשפה
+ghost|רוח רפאים
+crown|כתר
+mermaid|בת ים
+superhero|גיבור על
+unicorn|חד קרן

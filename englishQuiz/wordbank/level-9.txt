@@ -1,160 +1,520 @@
-privilege|זכות
-procedure|הליך
-proceed|להמשיך הלאה
-profit|רווח
-prohibit|לאסור
-promote|לקדם
-prompt|מיידי ומהיר
-proper|ראוי
-property|רכוש
-proportion|יחס
-proposal|הצעה
-prospect|סיכוי עתידי
-protest|מחאה
-provoke|לעורר
-psychology|פסיכולוגיה
-publish|לפרסם
-punish|להעניש
-pursue|לרדוף
-quality|איכות
-quarrel|ריב
-quote|לצטט
-radical|קיצוני מאוד
-random|אקראי
-range|טווח
-rare|נדיר
-rate|שיעור
-rational|הגיוני
-reaction|תגובה
-realistic|ריאלי
-rebel|מורד
-recall|להיזכר
-reception|קבלת פנים
-recognize|להכיר
-recommend|להמליץ
-record|לתעד
-recover|להחלים
-reduce|להפחית
-refer|להפנות
-reflect|להשתקף
+# government and politics
 reform|רפורמה
-refuse|לסרב
-regard|להתייחס
-region|אזור
-register|להירשם
-regret|חרטה
 regulation|תקנה
-reject|לדחות
-relate|לקשר
-relative|קרוב משפחה
-release|לשחרר
-reliable|אמין
-relief|הקלה
-religion|דת
-reluctant|מסויג
-rely|לסמוך
-remain|להישאר
-remote|מרוחק
-remove|להסיר
-render|להפוך
-renew|לחדש
-repeat|לחזור על
-reply|תשובה
-represent|לייצג
-reputation|מוניטין
-require|לדרוש
-rescue|הצלה
-resemble|להידמות
-resident|תושב
-resign|להתפטר
-resource|משאב
-respond|להגיב
-responsible|אחראי
-restore|לשחזר
-restrict|להגביל
-retain|לשמר בידיו
-retire|לפרוש
-revenue|הכנסות ממכירות
-reverse|הפוך
-review|ביקורת
-revise|לתקן טקסט
 revolution|מהפכה
-reward|גמול
-ridiculous|מגוחך
-risk|סיכון מחושב
-ritual|טקס חוזר
-rival|מתחרה
-role|תפקיד
-rough|גס
-routine|שגרה
-royal|מלכותי
-rural|כפרי
-sacred|קדוש
-sacrifice|הקרבה
-scarce|דל
-scatter|לפזר
-scope|היקף
-sector|מגזר
-secure|מאובטח
-seek|לבקש
-segment|מקטע
-senior|בכיר
-sensible|הגיוני ושקול
-sensitive|רגיש
-sequence|רצף
-settle|להתיישב
-severe|חמור
-shallow|רדוד
-shelter|מחסה
-shift|משמרת
-shrink|להתכווץ
-signal|אות
-significant|משמעותי
-similar|דומה
-simulate|לדמות
-site|אתר
-skill|מיומנות
-slight|קל ביותר
-slope|מדרון
-solid|מוצק
-sophisticated|מתוחכם
 sovereign|ריבוני
+rebel|מורד
+protest|מחאה
+resign|להתפטר
+suppress|לדכא
+privilege|זכות
+liberal|ליברלי
+cabinet|קבינט
+autonomy|אוטונומיה
+diplomacy|דיפלומטיה
+partisan|מפלגתי
+boycott|חרם
+ratify|לאשרר
+enact|לחוקק
+amend|לתקן חוק
+authorize|להסמיך
+polarize|לקטב
+rebellion|מרד
+conspiracy|קנוניה
+surveillance|מעקב
+segregation|הפרדה
+unanimous|פה אחד
+convene|להתכנס
+uphold|לשמור על
+# law and justice
+prohibit|לאסור
+suspend|להשעות
+property|רכוש
+restrict|להגביל
+procedure|הליך
+attorney|עורך דין
+offense|עבירה
+confiscate|להחרים
+allegation|האשמה
+testify|להעיד
+detain|לעצור לחקירה
+lenient|מקל
+impartial|לא משוחד
+negligent|רשלן
+liability|אחריות משפטית
+exempt|פטור
+mandatory|מחייב
+compulsory|חובה
+precedent|תקדים
+entitle|לזכות ב
+juvenile|קטין
+revoke|לשלול
+prosecute|להעמיד לדין
+# economy and business
+profit|רווח
+revenue|הכנסות ממכירות
+supply|אספקה
+resource|משאב
+stake|הימור
+sector|מגזר
+investment|השקעה
+expenditure|הוצאה
+bankruptcy|פשיטת רגל
+incentive|תמריץ
+shortage|מחסור
+infrastructure|תשתית
+prosper|לשגשג
+lavish|ראוותני
+extravagant|בזבזני
+accessible|נגיש
+# society and people
+resident|תושב
+senior|בכיר
+suburb|פרבר
+rural|כפרי
+status|מעמד
+rival|מתחרה
+diversity|גיוון
+elite|עילית
+integration|שילוב
+isolation|בידוד
+nationality|לאום
+adolescent|מתבגר
+adolescence|גיל ההתבגרות
+bystander|עובר אורח
+indigenous|ילידי
+assimilate|להיטמע
+bilingual|דו לשוני
+plight|מצוקה
+grievance|תלונה
+conform|לציית לנורמות
+novice|טירון
+predecessor|קודם בתפקיד
+commitment|מחויבות
+dedication|התמסרות
+# science and research
+simulate|לדמות
+sphere|כדור
+solid|מוצק
+surface|משטח
+sequence|רצף
+structure|מבנה
+segment|מקטע
+psychology|פסיכולוגיה
+nucleus|גרעין
+electron|אלקטרון
+precise|מדויק
+accuracy|דיוק
+correlation|מתאם
+replicate|לשכפל
+hypothetical|היפותטי
+rigorous|יסודי
+validate|לתקף
+magnify|להגדיל
+dormant|רדום
+decay|ריקבון
+induce|לגרום
+# medicine and health
+disability|מוגבלות
+remedy|תרופה
+impair|לפגוע ב
+lethal|קטלני
+susceptible|פגיע
+alleviate|לשכך
+precaution|אמצעי זהירות
+soothe|להרגיע
+reassure|להסיר דאגה
+onset|תחילת מחלה
+prone|נוטה ל
+# environment and nature
+slope|מדרון
+region|אזור
+remote|מרוחק
+extinction|הכחדה
+sustainable|בר קיימא
+coastal|חופי
+tropical|טרופי
+debris|פסולת
+deplete|לדלדל
+eradicate|למגר
+sparse|דליל
+inhabit|לגור ב
+sanctuary|מקלט
+tranquil|שליו
+catastrophe|אסון
+devastate|להרוס כליל
+ascend|לטפס מעלה
+descend|לרדת
+# history and culture
+monarch|מונרך
+settlement|התיישבות
+exile|גלות
+holocaust|שואה
+ritual|טקס חוזר
+aftermath|תוצאות
+upheaval|תהפוכה
+turmoil|מהומה
+chaos|תוהו ובוהו
+renowned|מפורסם
+eminent|דגול
+# religion, values and ethics
+sacred|קדוש
+spiritual|רוחני
+religion|דת
+sacrifice|הקרבה
+worship|פולחן
+pilgrimage|עלייה לרגל
+secular|חילוני
+orthodox|אורתודוקסי
+prophet|נביא
+divine|אלוהי
+soul|נשמה
+morality|מוסר
+virtue|מידה טובה
+conscience|מצפון
+superstition|אמונה תפלה
+vow|נדר
+# media and communication
+publish|לפרסם
+statement|הצהרה
+signal|אות
+commercial|פרסומת
+quote|לצטט
+reception|קבלת פנים
+reputation|מוניטין
+anecdote|אנקדוטה
+# thinking and ideas
+rational|הגיוני
+speculate|לשער
+recall|להיזכר
+reflect|להשתקף
+regard|להתייחס
+realistic|ריאלי
+sensible|הגיוני ושקול
+assumption|הנחה
+curiosity|סקרנות
+misconception|תפיסה שגויה
+ponder|להרהר
+nuance|ניואנס
+envision|לדמיין
+foresee|לחזות
+essence|מהות
+inclination|נטייה
+intrinsic|פנימי
+innate|מולד
+irrelevant|לא רלוונטי
+relevance|רלוונטיות
+literal|מילולי
+coherent|קוהרנטי
+ambivalent|אמביוולנטי
+apathy|אדישות
+pragmatic|פרגמטי
+scrutiny|בדיקה מדוקדקת
+# argument and debate
+proposal|הצעה
+recommend|להמליץ
+refer|להפנות
+reject|לדחות
+respond|להגיב
+emphasize|להדגיש
+refute|להפריך
+compromise|פשרה
+objection|התנגדות
+concede|להודות
+advocate|לצדד ב
+denial|הכחשה
+articulate|לנסח
+reiterate|לחזור ולומר
+denounce|להוקיע
+endorse|לתמוך רשמית
+contend|לטעון
+concise|תמציתי
+candid|גלוי לב
+credible|מהימן
+blunt|בוטה
+commend|לשבח
+# education and academic work
+revise|לתקן טקסט
+review|ביקורת
+register|להירשם
+submit|להגיש
+thesis|עבודת גמר
+lecturer|מרצה
+plagiarism|גניבה ספרותית
+bibliography|ביבליוגרפיה
+footnote|הערת שוליים
+excerpt|קטע
+assessment|הערכה
+matriculation|בגרות
+seminar|סמינריון
+appendix|נספח
+# personality and behavior
+reluctant|מסויג
+sensitive|רגיש
+spontaneous|ספונטני
+ambitious|שאפתני
+persistent|מתמיד
+sincere|כן
+obedient|צייתן
+competent|כשיר
+assertive|אסרטיבי
+prudent|נבון
+punctual|דייקן
+discreet|דיסקרטי
+complacent|שאנן
+keen|להוט
+benevolent|טוב לב
+wary|חשדן
+agile|זריז
+proficient|בקיא
+persevere|להתמיד
+solitary|בודד
+apprehensive|חושש
+accustomed|רגיל ל
+indulge|לפנק
+meticulous|קפדני
+tenacious|עיקש
+# feelings and attitudes
+regret|חרטה
+relief|הקלה
+sympathy|אהדה
+frustration|תסכול
+humiliation|השפלה
+optimism|אופטימיות
+pessimism|פסימיות
+guilt|אשמה
+admiration|הערצה
+embarrassment|מבוכה
+hostility|עוינות
+devotion|מסירות
+astonish|להדהים
+aspiration|שאיפה
+outrage|זעם ציבורי
+# conflict and security
+surrender|להיכנע
+secure|מאובטח
+provoke|לעורר
+invasion|פלישה
+hostage|בן ערובה
+terrorism|טרור
+casualty|נפגע
+retreat|נסיגה
+tension|מתיחות
+aggression|תוקפנות
+triumph|ניצחון
+espionage|ריגול
+deter|להרתיע
+adversary|יריב
+retaliate|לנקום
+escalate|להסלים
+bombard|להפציץ
+animosity|איבה
+inflict|להסב נזק
+defy|להתריס
+vigilant|ערני
+avert|למנוע
+incite|להסית
+brutal|אכזרי
+setback|כישלון זמני
+withstand|לעמוד בפני
+# change and development
+shift|תזוזה
+shrink|להתכווץ
+renew|לחדש
+restore|לשחזר
+reverse|הפוך
+reaction|תגובה
+expansion|התרחבות
+abolish|לבטל
+revive|להחיות
+alter|לשנות
+flourish|לפרוח
+stagnant|קופא על שמריו
+breakthrough|פריצת דרך
+cease|לחדול
+commence|להתחיל
+initiate|ליזום
+prolong|להאריך
+curtail|לקצץ
+curb|לרסן
+refine|לשכלל
+drastic|דרסטי
+abrupt|פתאומי
+collapse|קריסה
+stagnation|קיפאון
+vanish|להיעלם
+fragment|שבר
+unprecedented|חסר תקדים
+deviate|לסטות
+distort|לעוות
+momentum|תנופה
+mitigate|למתן
+exacerbate|להחמיר
+dismantle|לפרק
+# amount, degree and time
+range|טווח
+rate|שיעור
+proportion|יחס
+scope|היקף
+reduce|להפחית
+slight|קל ביותר
+scarce|דל
 spare|רזרבי
+subsequent|עוקב
+significant|משמעותי
+standard|תקן
+excessive|מופרז
+negligible|זניח
+minimal|מינימלי
+simultaneous|בו זמני
+prior|קודם
+occasional|מזדמן
+contemporary|בן זמננו
+abundance|שפע
+substantial|ניכר
+cumulative|מצטבר
+consecutive|רצוף
+perpetual|נצחי
+preliminary|מקדים
+provisional|זמני
+imminent|ממשמש ובא
+proximity|קרבה
+equivalent|שווה ערך
+optimal|אופטימלי
+prevalent|נפוץ
+widespread|נרחב
+dominant|שולט
+# verbs: academic actions
+proceed|להמשיך הלאה
+record|לתעד
+relate|לקשר
+render|להפוך
+represent|לייצג
+require|לדרוש
+retain|לשמר בידיו
+sustain|לקיים
+stimulate|לגרות
+attribute|לייחס
+constitute|להוות
+undergo|לעבור
+categorize|לסווג
+consult|להתייעץ
+attain|להשיג
+comprise|לכלול
+incorporate|לשלב
+depict|לתאר
+designate|לייעד
+devise|להמציא
+precede|לקדום
+supplement|תוסף
+retrieve|לאחזר
+embark|לצאת לדרך
+evoke|לעורר רגש
+embody|לגלם
+# verbs: people and society
+promote|לקדם
+release|לשחרר
+rely|לסמוך
+resemble|להידמות
+retire|לפרוש
+seek|לבקש
+settle|להתיישב
+split|לפצל
+scatter|לפזר
+pursue|לרדוף
+intervene|להתערב
+reconcile|להשלים
+cherish|להוקיר
+tolerate|לסבול
+compensate|לפצות
+deceive|לרמות
+condemn|לגנות
+collaborate|לשתף פעולה
+compel|לכפות
+deprive|לקפח
+empower|להעצים
+embrace|לחבק
+obstruct|לחסום
+hamper|להפריע
+jeopardize|לסכן
+resolve|לפתור
+confide|לגלות סוד
+prevail|לגבור
+surpass|לעלות על
+abstain|להימנע
+# describing words
+proper|ראוי
 specific|ספציפי
 spectacular|מרהיב
-speculate|לשער
-sphere|כדור
-spiritual|רוחני
-split|לפצל
-spontaneous|ספונטני
+sophisticated|מתוחכם
 stable|יציב
-stage|במה
-stake|הימור
-standard|תקן
-statement|הצהרה
-status|מעמד
-stimulate|לגרות
-strategy|אסטרטגיה
-stress|מתח
-strict|קפדני
-structure|מבנה
-struggle|מאבק
-submit|להגיש
-subsequent|עוקב
-substitute|תחליף
-suburb|פרבר
-suggest|להציע
-summary|סיכום
+severe|חמור
 superior|עליון
-supply|אספקה
-support|תמיכה
-suppress|לדכא
-surface|משטח
-surgeon|מנתח
-surrender|להיכנע
-survive|לשרוד
-suspect|חשוד
-suspend|להשעות
-sustain|לקיים
-symbol|סמל
-sympathy|אהדה
+ridiculous|מגוחך
+radical|קיצוני מאוד
+reliable|אמין
+prompt|מיידי ומהיר
+marginal|שולי
+notorious|ידוע לשמצה
+obscure|לא ברור
+versatile|רב גוני
+inherent|מובנה
+prominent|בולט
+tedious|מייגע
+controversial|שנוי במחלוקת
+durable|עמיד
+intricate|מורכב
+elusive|חמקמק
+formidable|אדיר
+futile|חסר תועלת
+generic|כללי
+harsh|קשוח
+intact|שלם ולא פגוע
+mundane|שגרתי
+innovative|חדשני
+transparent|שקוף
+vivid|חי וצבעוני
+volatile|הפכפך
+viable|בר ביצוע
+tentative|מהוסס
+relentless|בלתי פוסק
+conventional|מקובל
+conspicuous|מושך תשומת לב
+benign|שפיר
+adverse|שלילי
+decisive|מכריע
+incompatible|לא תואם
+reciprocal|הדדי
+verbal|בעל פה
+deceased|נפטר
+vigorous|נמרץ
+stringent|מחמיר
+detrimental|מזיק
+indispensable|הכרחי
+mediocre|בינוני
+arduous|מפרך
+transient|חולף
+# linking words and adverbs
+thereby|בכך
+albeit|אם כי
+predominantly|בעיקר
+thoroughly|ביסודיות
+nonetheless|עם זאת
+seemingly|לכאורה
+arguably|אפשר לטעון
+solely|אך ורק
+notably|במיוחד
+# general nouns
+prospect|סיכוי עתידי
+role|תפקיד
+site|אתר
+strategy|אסטרטגיה
+substitute|תחליף
+paradigm|פרדיגמה
+threshold|סף
+rationale|הצדקה
+discrepancy|אי התאמה
+disparity|פער
+hierarchy|היררכיה
+implication|השלכה
+predicament|מצב ביש

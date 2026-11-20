@@ -269,6 +269,73 @@
             box-shadow: 0 4px 6px rgba(50,130,206,0.3);
         }
 
+
+        /* ---- 📚 learning path: each level's categories in order; finish one to open the next ---- */
+        #start-screen > #panel-category { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+        #start-screen.cat-mode .list-only { display: none !important; }
+        .path-head { display: flex; gap: 10px; align-items: center; justify-content: center; margin: 2px 0 8px; }
+        .path-title { font-weight: bold; color: #553c9a; font-size: 1.05rem; }
+        #path-progress { font-weight: bold; color: #2b6cb0; font-size: 0.95rem; white-space: nowrap; }
+        #cat-list { flex: 1 1 auto; min-height: 96px; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 4px 8px 12px; }
+        .cat-step {
+            display: flex; align-items: center; gap: 12px; flex: none;
+            width: 100%; padding: 10px 14px;
+            border: none; border-radius: 18px;
+            font-family: inherit; text-align: right; color: #fff;
+            cursor: pointer; touch-action: manipulation;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        }
+        .cat-step .cat-emoji {
+            flex: none; width: 2.7rem; height: 2.7rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; line-height: 1;
+            background: rgba(255,255,255,0.35); border-radius: 50%;
+        }
+        .cat-step .cat-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .cat-step .cat-name { font-size: 1.05rem; font-weight: bold; }
+        .cat-step .cat-meta { font-size: 0.8rem; opacity: 0.9; }
+        .cat-step .cat-state { flex: none; font-size: 1.4rem; }
+        .cat-step.done { background: linear-gradient(135deg, #38a169, #68d391); }
+        .cat-step.current { background: linear-gradient(135deg, #dd6b20, #f6ad55); animation: stepPulse 1.4s ease-in-out infinite; }
+        .cat-step.locked { background: #edf2f7; color: #a0aec0; box-shadow: none; cursor: not-allowed; }
+        .cat-step.locked .cat-emoji { filter: grayscale(1); opacity: 0.5; }
+        @keyframes stepPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+
+        /* learning cards: the English word, tap to flip and see the Hebrew */
+        #learn-screen { flex-direction: column; }
+        .learn-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+        #learn-title { flex: 1; min-width: 0; font-weight: bold; color: #4a5568; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #learn-count { font-weight: bold; color: #2b6cb0; white-space: nowrap; }
+        .learn-bar { height: 12px; background: #edf2f7; border-radius: 6px; overflow: hidden; margin-bottom: clamp(10px, 3vh, 24px); }
+        #learn-bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, #f6ad55, #38a169); border-radius: 6px; transition: width 0.3s; }
+        .flip-card { perspective: 1000px; height: clamp(200px, 44vh, 330px); cursor: pointer; touch-action: manipulation; }
+        .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+        .flip-card.no-anim .flip-inner { transition: none; }
+        .flip-face {
+            position: absolute; inset: 0;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px; border-radius: 24px; color: #fff;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+        }
+        .flip-front { background: linear-gradient(135deg, #667eea, #9f7aea); }
+        .flip-back { background: linear-gradient(135deg, #38b2ac, #48bb78); transform: rotateY(180deg); }
+        .learn-emoji { font-size: clamp(2rem, 7vh, 3.2rem); line-height: 1; }
+        #learn-word, #learn-meaning { font-size: clamp(1.8rem, 6vh, 2.6rem); font-weight: bold; line-height: 1.2; overflow-wrap: anywhere; }
+        #learn-word-back { font-size: 1.15rem; opacity: 0.9; }
+        .learn-hint { font-size: 0.9rem; opacity: 0.9; }
+        #learn-speak { width: 52px; height: 52px; font-size: 1.6rem; line-height: 1; background: rgba(255,255,255,0.25); border: none; border-radius: 50%; cursor: pointer; }
+        .learn-nav { display: flex; gap: 10px; margin-top: clamp(12px, 3vh, 24px); }
+        .learn-nav button {
+            flex: 1; padding: 14px 8px;
+            font-family: inherit; font-size: 1.15rem; font-weight: bold; color: #fff;
+            border: none; border-radius: 14px; cursor: pointer; touch-action: manipulation;
+        }
+        #learn-prev { flex: 0 0 34%; background: #a0aec0; }
+        #learn-next { background: #3182ce; box-shadow: 0 4px 0 #2c5282; }
+        .learn-nav button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
         /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
         @media (max-width: 360px) {
             .game-container { padding: 14px; }
@@ -305,7 +372,8 @@
                 <div id="menu-streak-count" title="שלב האימוג׳י" style="font-weight:bold;color:#2b6cb0;"></div>
             </div>
             <div class="tabs" role="tablist">
-                <button type="button" role="tab" id="tab-random" class="tab-btn" aria-selected="true" onclick="setMode('random')">🎲 מילים אקראיות</button>
+                <button type="button" role="tab" id="tab-random" class="tab-btn" aria-selected="true" onclick="setMode('random')">🎲 אקראי</button>
+                <button type="button" role="tab" id="tab-category" class="tab-btn" aria-selected="false" onclick="setMode('category')">📚 לימוד</button>
                 <button type="button" role="tab" id="tab-picture" class="tab-btn" aria-selected="false" onclick="setMode('picture')">📷 מתמונה</button>
             </div>
             <div id="panel-random" role="tabpanel">
@@ -323,19 +391,28 @@
                 <button type="button" id="photo-btn" class="action-btn" onclick="document.getElementById('photo-input').click()" style="margin:4px 0;">📷 קריאת מילים מתמונה</button>
                 <div id="photo-status" style="margin:4px 0 4px;font-size:0.9rem;color:#2b6cb0;"></div>
             </div>
-            <p style="margin:6px 0;">בכל שורה: מילה באנגלית ופירוש.</p>
+            <div id="panel-category" role="tabpanel" style="display:none;">
+                <div class="path-head">
+                    <span class="path-title">🗺️ המסלול שלי</span>
+                    <select id="cat-level-select" aria-label="רמה" onchange="saveLevel(this)" style="padding:7px 6px;font-size:0.95rem;border:1px solid #cbd5e0;border-radius:8px;background:#fff;color:#2d3748;"></select>
+                    <span id="path-progress"></span>
+                </div>
+                <div id="cat-status" style="font-size:0.9rem;color:#c53030;"></div>
+                <div id="cat-list"></div>
+            </div>
+            <p class="list-only" style="margin:6px 0;">בכל שורה: מילה באנגלית ופירוש.</p>
             <textarea id="words-input" hidden></textarea>
-            <div id="words-count" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
-            <div id="words-hint" style="margin:0 0 4px;font-size:0.8rem;color:#975a16;"></div>
-            <div class="words-box" style="border:2px solid #ccc;border-radius:10px;">
+            <div id="words-count" class="list-only" style="margin:10px 0 4px;font-size:0.9rem;color:#4a5568;min-height:1.3em;"></div>
+            <div id="words-hint" class="list-only" style="margin:0 0 4px;font-size:0.8rem;color:#975a16;"></div>
+            <div class="words-box list-only" style="border:2px solid #ccc;border-radius:10px;">
                 <table id="words-table" style="width:100%;table-layout:fixed;border-collapse:collapse;direction:ltr;"></table>
             </div>
-            <div style="margin:8px 0;display:flex;gap:8px;justify-content:center;">
+            <div class="list-only" style="margin:8px 0;display:flex;gap:8px;justify-content:center;">
                 <button type="button" class="action-btn" onclick="addWordRow()" style="flex:1;">➕ הוספת מילה</button>
                 <button type="button" class="action-btn" onclick="clearWords()" style="flex:1;">🗑️ ניקוי המילים</button>
             </div>
-            <div id="start-error" style="color:#c53030;margin-top:6px;"></div>
-            <button class="btn-restart" id="start-btn" onclick="startFromInput()" style="margin-top:12px;">התחל משחק</button>
+            <div id="start-error" class="list-only" style="color:#c53030;margin-top:6px;"></div>
+            <button class="btn-restart list-only" id="start-btn" onclick="startFromInput()" style="margin-top:12px;">התחל משחק</button>
         </div>
 
         <div id="game-screen" style="display:none;">
@@ -356,6 +433,43 @@
                 <div id="streak-emoji" aria-hidden="true"></div>
             </div>
             <div class="answers-grid" id="answers-container"></div>
+        </div>
+
+        <div id="learn-screen" style="display:none;">
+            <div class="learn-head">
+                <button type="button" id="learn-back" class="action-btn" onclick="showStart()" aria-label="חזרה למסלול" style="padding:5px 10px;font-size:0.9rem;">→ מסלול</button>
+                <div id="learn-title"></div>
+                <div id="learn-count"></div>
+            </div>
+            <div class="learn-bar"><div id="learn-bar-fill"></div></div>
+            <div class="flip-card" id="learn-card" onclick="flipCard()">
+                <div class="flip-inner">
+                    <div class="flip-face flip-front">
+                        <div class="learn-emoji" id="learn-emoji"></div>
+                        <div id="learn-word" dir="ltr"></div>
+                        <button type="button" id="learn-speak" onclick="event.stopPropagation(); speakText(learnWord().en)" aria-label="השמעת המילה" title="השמעת המילה">🔊</button>
+                        <div class="learn-hint">👆 לחצו על הכרטיס כדי לגלות מה זה בעברית</div>
+                    </div>
+                    <div class="flip-face flip-back">
+                        <div id="learn-word-back" dir="ltr"></div>
+                        <div id="learn-meaning"></div>
+                        <div class="learn-hint">👆 לחצו שוב כדי לראות באנגלית</div>
+                    </div>
+                </div>
+            </div>
+            <div class="learn-nav">
+                <button type="button" id="learn-prev" onclick="learnStep(-1)">→ הקודם</button>
+                <button type="button" id="learn-next" onclick="learnStep(1)">הבא ←</button>
+            </div>
+        </div>
+
+        <div id="learn-done-screen" style="display:none;">
+            <div class="emoji-animation">🎉</div>
+            <div class="result-title">כל הכבוד!</div>
+            <p id="learn-done-text" style="font-size:1.2rem;margin:8px 0;"></p>
+            <p id="learn-unlock" style="font-size:1.1rem;font-weight:bold;color:#2f855a;margin:8px 0;"></p>
+            <button class="btn-restart" id="learn-next-cat" onclick="nextLearnCategory()"></button>
+            <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="showStart()">🗺️ חזרה למסלול</button>
         </div>
 
         <div id="summary-screen" class="summary-screen">
@@ -386,11 +500,12 @@
         const MODE_KEY = 'englishquiz-mode';
         const LIST_KEYS = { random: 'englishquiz-words-random', picture: 'englishquiz-words' };
         let mode = 'random';
-        try { const m = localStorage.getItem(MODE_KEY); if (m === 'random' || m === 'picture') mode = m; } catch (e) {}
-        const storeKey = () => LIST_KEYS[mode];
+        try { const m = localStorage.getItem(MODE_KEY); if (m === 'random' || m === 'picture' || m === 'category') mode = m; } catch (e) {}
+        // the learning tab ('category') has no word list of its own; the hidden list area keeps the random list
+        const storeKey = () => LIST_KEYS[mode] || LIST_KEYS.random;
         function readList(m) {
             let t = "";
-            try { t = localStorage.getItem(LIST_KEYS[m]) || (m === "picture" ? localStorage.getItem('englishpractice-words') : "") || ""; } catch (e) {}
+            try { t = localStorage.getItem(LIST_KEYS[m] || LIST_KEYS.random) || (m === "picture" ? localStorage.getItem('englishpractice-words') : "") || ""; } catch (e) {}
             return t.replace(/\s*[\(\[（][^)\]）]*[\)\]）]/g, "");
         }
 
@@ -817,8 +932,8 @@
             wrap.scrollTop = wrap.scrollHeight;
         }
 
-        function speakWord() {
-            const word = document.getElementById("question-word").innerText.trim();
+        function speakWord() { speakText(document.getElementById("question-word").innerText.trim()); }
+        function speakText(word) {
             if (!word || !("speechSynthesis" in window)) return;
             speechSynthesis.cancel();
             const u = new SpeechSynthesisUtterance(word);
@@ -828,12 +943,12 @@
             if (v) u.voice = v;
             speechSynthesis.speak(u);
         }
-        if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { const b = document.getElementById("speak-btn"); if (b) b.style.display = "none"; });
+        if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { for (const id of ["speak-btn", "learn-speak"]) { const b = document.getElementById(id); if (b) b.style.display = "none"; } });
 
         function showStart() {
-            document.getElementById("summary-screen").style.display = "none";
-            document.getElementById("game-screen").style.display = "none";
+            for (const id of ["summary-screen", "game-screen", "learn-screen", "learn-done-screen"]) document.getElementById(id).style.display = "none";
             document.getElementById("start-screen").style.display = "flex";
+            if (mode === "category") renderPath();
         }
 
         let ocrWorker = null;
@@ -1359,14 +1474,22 @@
             const res = await fetch(`wordbank/level-${level}.txt`);
             if (!res.ok) throw new Error("לא נטען");
             const text = new TextDecoder("utf-8").decode(await res.arrayBuffer());
-            const words = text.split(/\r?\n/).map(l => l.split("|"))
-                .filter(p => p.length >= 2 && p[0].trim() && p[1].trim())
-                .map(p => ({ en: p[0].trim(), he: p[1].trim() }));
+            const words = [];
+            let cat = "";   // '# name' lines start a category; the words under it belong to it
+            for (const line of text.split(/\r?\n/)) {
+                if (line.startsWith("#")) { cat = line.slice(1).trim(); continue; }
+                const p = line.split("|");
+                if (p.length >= 2 && p[0].trim() && p[1].trim()) words.push({ en: p[0].trim(), he: p[1].trim(), cat });
+            }
             return (levelCache[level] = words);
         }
 
-        function saveLevel() {
-            try { localStorage.setItem(LEVEL_KEY, document.getElementById("level-select").value); } catch (e) {}
+        // the random tab and the learning tab share one chosen level
+        function saveLevel(from) {
+            const v = (from || document.getElementById("level-select")).value;
+            for (const id of ["level-select", "cat-level-select"]) document.getElementById(id).value = v;
+            try { localStorage.setItem(LEVEL_KEY, v); } catch (e) {}
+            if (from && from.id === "cat-level-select") renderPath();
         }
 
         // Puts 20 random words of the chosen level into the table (the student can still edit before starting).
@@ -1387,7 +1510,9 @@
             status.textContent = `נבחרו ${picked.length} מילים מרמה ${level}. לחצו "התחל משחק".`;
         }
 
+        document.getElementById("cat-level-select").innerHTML = document.getElementById("level-select").innerHTML;
         try { const lv = localStorage.getItem(LEVEL_KEY); if (lv) document.getElementById("level-select").value = lv; } catch (e) {}
+        document.getElementById("cat-level-select").value = document.getElementById("level-select").value;
         // once, in the background: fetch all levels so the service worker keeps them for offline use
         window.addEventListener("load", () => setTimeout(() => {
             try { if (localStorage.getItem("englishquiz-bank-cached-v2") === "1") return; } catch (e) {}
@@ -1443,16 +1568,169 @@
             e.target.value = "";
         });
 
-        // ---- Tabs: random words / picture. Each tab has its own list. ----
-        function applyModeUI() {
-            for (const m of ["random", "picture"]) {
-                document.getElementById("tab-" + m).setAttribute("aria-selected", String(m === mode));
-                document.getElementById("panel-" + m).style.display = m === mode ? "" : "none";
+
+        // ---- 📚 Learning path. Each level's categories in file order; a big category is split into parts of
+        // up to 15 words. Learning = flash cards: the English word (read aloud), tap to flip to the Hebrew.
+        // The "next" button works only after the card was flipped. Finishing a part opens the next one;
+        // finished parts can be learned again any time.
+        const LEARN_KEY = "englishquiz-learn-progress";   // { level: how many parts are finished, in order }
+        const PART_MAX = 15;
+        let learnProgress = {};
+        try { learnProgress = JSON.parse(localStorage.getItem(LEARN_KEY)) || {}; } catch (e) {}
+        const CAT_EMOJIS = [
+            [/מקצועות לימוד|בית ספר|בית הספר|חינוך|למידה|קריאה וכתיבה/, "🏫"], [/ברכות/, "👋"], [/מספרים/, "🔢"],
+            [/צבעים/, "🎨"], [/משפחה/, "👨‍👩‍👧"], [/חיות מחמד/, "🐶"], [/חיות בר/, "🦁"], [/צמחים/, "🌱"], [/בעלי חיים/, "🐾"],
+            [/פירות/, "🍓"], [/ירקות/, "🥕"], [/משקאות/, "🥤"], [/אוכל|בישול/, "🍕"], [/בגדים/, "👕"], [/צעצועים/, "🧸"],
+            [/תחבורה/, "🚗"], [/מזג אוויר/, "🌦️"], [/כדור הארץ/, "🌍"], [/סביבה/, "♻️"], [/טבע/, "🌳"], [/אגדות|קסמים|סיפורים/, "🧚"],
+            [/מילות מקום|איפה/, "📍"], [/מקומות|העיר|עיר|קהילה/, "🏙️"], [/חפצים בבית|הבית|בבית|בית ומטבח|בית וחיי/, "🏠"],
+            [/ימים|זמן/, "⏰"], [/מקצועות|עבודה|קריירה/, "👷"], [/ספורט/, "⚽"], [/רגשות|מצבי רוח/, "😊"], [/מוזיקה|חגיגות|אירועים/, "🎉"],
+            [/טיולים/, "🧳"], [/מחשבים|טכנולוגיה/, "💻"], [/מדיה|תקשורת/, "📰"], [/כסף|כלכלה|עסקים|קניות/, "💰"], [/החלל/, "🚀"],
+            [/מדע|מחקר/, "🔬"], [/מתמטיקה|צורות|כמות/, "📐"], [/בריאות|רפואה|הגוף|גוף/, "🩺"], [/היסטוריה/, "🏛️"], [/חוק|משפט/, "⚖️"],
+            [/ממשל|פוליטיקה|בחירות/, "🗳️"], [/ספרות|אמנות|תרבות/, "🎭"], [/חשיבה|רעיונות|גילוי|טיעון/, "💡"], [/אופי|אישיות|התנהגות|ערכים/, "🌟"],
+            [/מלחמה|ביטחון|עימותים/, "🛡️"], [/חברה|אנשים|יחסים/, "🤝"], [/דת/, "🕊️"], [/שינוי/, "🔄"], [/חומרים/, "🧰"],
+            [/מילות קישור/, "🔗"], [/פעלים|פעולות|עושים/, "🏃"], [/תיאור/, "✨"], [/מילים קטנות|שמות עצם/, "🔤"],
+        ];
+        function catEmoji(name) { for (const [re, e] of CAT_EMOJIS) if (re.test(name)) return e; return "📘"; }
+
+        function learnSteps(words) {
+            const cats = [];
+            for (const w of words) {
+                if (!cats.length || cats[cats.length - 1].key !== w.cat) cats.push({ key: w.cat, name: w.cat || "מילים", words: [] });
+                cats[cats.length - 1].words.push(w);
+            }
+            const steps = [];
+            for (const c of cats) {
+                const parts = Math.ceil(c.words.length / PART_MAX), size = Math.ceil(c.words.length / parts);
+                for (let p = 0; p < parts; p++) steps.push({ name: c.name, part: parts > 1 ? p + 1 : 0, parts, words: c.words.slice(p * size, (p + 1) * size) });
+            }
+            return steps;
+        }
+        const stepLabel = s => s.name + (s.part ? ` (${s.part}/${s.parts})` : "");
+
+        let pathToken = 0;
+        async function renderPath() {
+            const level = +document.getElementById("cat-level-select").value, token = ++pathToken;
+            const list = document.getElementById("cat-list"), status = document.getElementById("cat-status");
+            status.textContent = "";
+            let words;
+            try { words = await loadLevel(level); }
+            catch (e) { if (token === pathToken) { list.innerHTML = ""; status.textContent = "לא הצלחנו לטעון את מאגר המילים – בדקו את החיבור לאינטרנט."; } return; }
+            if (token !== pathToken) return;   // the level was changed meanwhile
+            const steps = learnSteps(words), done = Math.min(learnProgress[level] || 0, steps.length);
+            list.innerHTML = "";
+            steps.forEach((s, i) => {
+                const state = i < done ? "done" : i === done ? "current" : "locked";
+                const b = document.createElement("button");
+                b.type = "button";
+                b.className = "cat-step " + state;
+                b.disabled = state === "locked";
+                b.innerHTML = '<span class="cat-emoji"></span><span class="cat-text"><span class="cat-name"></span><span class="cat-meta"></span></span><span class="cat-state"></span>';
+                b.querySelector(".cat-emoji").textContent = catEmoji(s.name);
+                b.querySelector(".cat-name").textContent = `${i + 1}. ${s.name}`;
+                b.querySelector(".cat-meta").textContent = (s.part ? `חלק ${s.part} מתוך ${s.parts} · ` : "") + `${s.words.length} מילים`;
+                b.querySelector(".cat-state").textContent = state === "done" ? "✅" : state === "current" ? "▶️" : "🔒";
+                b.onclick = () => startLearning(level, i);
+                list.appendChild(b);
+            });
+            document.getElementById("path-progress").textContent = `⭐ ${done}/${steps.length}`;
+            const cur = list.children[Math.min(done, steps.length - 1)];
+            if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.offsetTop - list.clientHeight / 3);   // the open step in view
+        }
+
+        let learn = null;   // { level, index, steps, step, i, seen }
+        const learnWord = () => learn.step.words[learn.i];
+        async function startLearning(level, index) {
+            let words;
+            try { words = await loadLevel(level); } catch (e) { return; }
+            const steps = learnSteps(words);
+            if (!steps[index]) return;
+            learn = { level, index, steps, step: steps[index], i: 0, seen: new Set() };
+            for (const id of ["start-screen", "learn-done-screen", "summary-screen", "game-screen"]) document.getElementById(id).style.display = "none";
+            document.getElementById("learn-screen").style.display = "flex";
+            showCard();
+        }
+
+        function updateLearnNav() {
+            const n = learn.step.words.length, last = learn.i === n - 1;
+            document.getElementById("learn-prev").disabled = learn.i === 0;
+            const next = document.getElementById("learn-next");
+            next.disabled = !learn.seen.has(learn.i);
+            next.textContent = last ? "🏁 סיום" : "הבא ←";
+            document.getElementById("learn-bar-fill").style.width = `${(learn.seen.size / n) * 100}%`;
+        }
+
+        function showCard() {
+            const s = learn.step, w = learnWord(), card = document.getElementById("learn-card");
+            card.classList.add("no-anim");   // turn back to the English side at once, so the next meaning never flashes
+            card.classList.remove("flipped");
+            void card.offsetWidth;
+            card.classList.remove("no-anim");
+            document.getElementById("learn-title").textContent = `${catEmoji(s.name)} ${stepLabel(s)}`;
+            document.getElementById("learn-count").textContent = `${learn.i + 1}/${s.words.length}`;
+            document.getElementById("learn-emoji").textContent = catEmoji(s.name);
+            document.getElementById("learn-word").textContent = w.en;
+            document.getElementById("learn-word-back").textContent = w.en;
+            document.getElementById("learn-meaning").textContent = chosen[w.en.toLowerCase()] || w.he;
+            updateLearnNav();
+            speakText(w.en);
+        }
+
+        function flipCard() {
+            const card = document.getElementById("learn-card");
+            card.classList.toggle("flipped");
+            if (card.classList.contains("flipped")) learn.seen.add(learn.i);
+            updateLearnNav();
+        }
+
+        function learnStep(d) {
+            if (d > 0 && !learn.seen.has(learn.i)) return;
+            if (d > 0 && learn.i === learn.step.words.length - 1) return finishLearning();
+            learn.i = Math.max(0, Math.min(learn.step.words.length - 1, learn.i + d));
+            showCard();
+        }
+
+        function finishLearning() {
+            const { level, index, steps } = learn, before = learnProgress[level] || 0;
+            if (before <= index) {
+                learnProgress[level] = index + 1;
+                try { localStorage.setItem(LEARN_KEY, JSON.stringify(learnProgress)); } catch (e) {}
+            }
+            try { speechSynthesis.cancel(); } catch (e) {}
+            document.getElementById("learn-screen").style.display = "none";
+            document.getElementById("learn-done-screen").style.display = "block";
+            document.getElementById("learn-done-text").textContent = `סיימתם ללמוד: ${catEmoji(steps[index].name)} ${stepLabel(steps[index])}`;
+            const next = steps[index + 1], btn = document.getElementById("learn-next-cat"), unlock = document.getElementById("learn-unlock");
+            if (next) {
+                unlock.textContent = before === index ? `🔓 נפתח נושא חדש: ${catEmoji(next.name)} ${stepLabel(next)}` : "";
+                btn.textContent = "▶ לנושא הבא";
+                btn.style.display = "";
+            } else {
+                unlock.textContent = `🏆 סיימתם את כל הנושאים ברמה ${level}!`;
+                btn.textContent = `▶ לרמה ${level + 1}`;
+                btn.style.display = level < LEVEL_COUNT ? "" : "none";
             }
         }
 
+        function nextLearnCategory() {
+            if (learn.index + 1 < learn.steps.length) return startLearning(learn.level, learn.index + 1);
+            const sel = document.getElementById("cat-level-select");
+            sel.value = String(learn.level + 1);
+            saveLevel(sel);
+            showStart();
+        }
+
+        // ---- Tabs: random words / learning / picture. Random and picture each have their own list. ----
+        function applyModeUI() {
+            for (const m of ["random", "category", "picture"]) {
+                document.getElementById("tab-" + m).setAttribute("aria-selected", String(m === mode));
+                document.getElementById("panel-" + m).style.display = m === mode ? "" : "none";
+            }
+            document.getElementById("start-screen").classList.toggle("cat-mode", mode === "category");
+            if (mode === "category") renderPath();
+        }
+
         function setMode(m) {
-            if (m !== "random" && m !== "picture") return;
+            if (m !== "random" && m !== "picture" && m !== "category") return;
             saveRows();   // the list we are leaving stays saved under its own key
             mode = m;
             try { localStorage.setItem(MODE_KEY, m); } catch (e) {}

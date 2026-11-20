@@ -332,6 +332,12 @@
         #box-open { flex: none; padding: 8px 14px; border: none; border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: bold;
                     color: #fff; background: linear-gradient(135deg, #dd6b20, #e53e3e); box-shadow: 0 3px 0 rgba(0,0,0,0.15); cursor: pointer; }
         #box-open:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+        /* the streak faces reached so far (from the first to the current one); the next ones stay hidden as ❓ */
+        #faces-count { font-size: 0.85rem; color: #718096; }
+        #shop-faces { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 8px; }
+        .face { font-size: 1.5rem; line-height: 1; padding: 6px 0; border-radius: 10px; background: #fffff0; box-shadow: 0 2px 0 rgba(0,0,0,0.08); }
+        .face.missing { background: #edf2f7; font-size: 1rem; padding: 10px 0; opacity: 0.55; box-shadow: none; }
+        .face.current { background: #c6f6d5; outline: 3px solid #38a169; }
         #shop-awards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px; }
         .award { position: relative; font-size: 1.8rem; line-height: 1; padding: 8px 0; border-radius: 12px; background: #fffff0; box-shadow: 0 2px 0 rgba(0,0,0,0.08); }
         .award.missing { background: #edf2f7; font-size: 1.2rem; padding: 13px 0; opacity: 0.6; }
@@ -523,6 +529,8 @@
                     <div class="box-info"><div id="box-count"></div><div id="box-hint"></div></div>
                     <button type="button" id="box-open" onclick="openBox()">פתיחה</button>
                 </div>
+                <div class="shop-section">😊 הפרצופים שלי <span id="faces-count"></span></div>
+                <div id="shop-faces"></div>
                 <div class="shop-section">🏆 הגביעים שלי</div>
                 <div id="shop-awards"></div>
                 <div class="shop-section">🧸 דמויות</div>
@@ -2035,6 +2043,15 @@
             document.getElementById("box-hint").textContent = streak < BOX_START
                 ? `מגיעים ל${STREAK_EMOJIS[STREAK_EMOJIS.length - 1]} ועוד ${BOX_EVERY} נכונות ברצף = קופסה`
                 : `עוד ${BOX_GOAL - streak} נכונות ברצף לקופסה!`;
+            const stage = streakStage(streak), faces = document.getElementById("shop-faces");   // faces 1..current stage
+            faces.innerHTML = "";
+            STREAK_EMOJIS.forEach((e, i) => {
+                const d = document.createElement("div");
+                d.className = "face" + (i < stage ? (i === stage - 1 ? " current" : "") : " missing");
+                d.textContent = i < stage ? e : "❓";
+                faces.appendChild(d);
+            });
+            document.getElementById("faces-count").textContent = `(${stage}/${STREAK_EMOJIS.length})`;
             const aw = document.getElementById("shop-awards"), mine = shop.awards || {};   // the collection; missing ones as ❓
             aw.innerHTML = "";
             for (const a of SHOP_AWARDS) {

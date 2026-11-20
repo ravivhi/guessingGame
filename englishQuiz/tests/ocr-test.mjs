@@ -1075,6 +1075,15 @@ async function testBox() {
   await page.click('#shop-btn');
   check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('👑'), 'the shop has a mystery box section: no box yet, and it says how to get one');
   check((await page.$$('#shop-awards .award.missing')).length === 10, 'the trophy collection shows 10 ❓ (none found yet)');
+  const faces = () => page.$$eval('#shop-faces .face', fs => fs.map(f => (f.classList.contains('current') ? '*' : '') + f.textContent));
+  check((await faces()).length === 30 && (await faces()).every(f => f === '❓'), 'the faces: 30 hidden ❓ before the first one is reached');
+  await page.evaluate(() => { streak = 25; updateStreakEmoji(); renderShop(); });
+  let fc = await faces();
+  check(fc.slice(0, 5).join('') === '🙂😊😄😆*😎' && fc.slice(5).every(f => f === '❓') && (await text('faces-count')) === '(5/30)', `a streak of 25: the first 5 faces, the 5th marked as the current one, the rest hidden (${fc.slice(0, 6).join(' ')})`);
+  await page.evaluate(() => { streak = 300; updateStreakEmoji(); renderShop(); });
+  fc = await faces();
+  check(fc.filter(f => f !== '❓').length === 30 && fc[29] === '*👑', 'at the last emoji all 30 faces show');
+  await page.evaluate(() => { streak = 0; updateStreakEmoji(); renderShop(); });
   await page.evaluate(() => showStart());
 
   await page.evaluate(() => { localStorage.setItem('englishQuizStreak', '318'); });
@@ -1092,6 +1101,9 @@ async function testBox() {
   check(!(await page.$eval('#streak-emoji', e => e.classList.contains('on'))) && (await text('menu-streak')) === '', 'the big emoji goes away, the faces start over');
   await page.evaluate(() => showStart());
   check((await page.$eval('#shop-btn', e => e.dataset.boxes)) === '1', 'the shop button shows a red 1');
+  await page.click('#shop-btn');
+  check((await page.$$('#shop-faces .face.missing')).length === 30, 'after the box the faces start over too (all hidden again)');
+  await page.evaluate(() => showStart());
 
   // opening: a trophy or medal you don't have yet
   await page.click('#shop-btn');

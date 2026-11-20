@@ -1704,6 +1704,29 @@
             beginGame(game);
         }
 
+        // A short happy jingle (made in the browser, no sound file, works offline): four rising notes, then a sparkle.
+        let audioCtx = null;
+        function playUnlockSound() {
+            try {
+                audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === "suspended") audioCtx.resume();
+                const t0 = audioCtx.currentTime + 0.05;
+                const note = (freq, start, dur, vol = 0.22) => {
+                    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                    o.type = "triangle";
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0.0001, start);
+                    g.gain.exponentialRampToValueAtTime(vol, start + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+                    o.connect(g).connect(audioCtx.destination);
+                    o.start(start);
+                    o.stop(start + dur + 0.05);
+                };
+                [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => note(f, t0 + i * 0.11, 0.2));   // C E G C
+                note(1046.5, t0 + 0.48, 0.6, 0.18); note(1318.5, t0 + 0.48, 0.6, 0.14); note(1568, t0 + 0.56, 0.5, 0.1);   // sparkle
+            } catch (e) {}
+        }
+
         // called by showSummary: in a step's quiz, a full round with no mistakes opens the next step
         function stepQuizResult(rate, fullRound) {
             const res = document.getElementById("step-result"), nextBtn = document.getElementById("next-step-btn");
@@ -1715,6 +1738,7 @@
             if (passed && before <= index) {
                 learnProgress[level] = index + 1;
                 try { localStorage.setItem(LEARN_KEY, JSON.stringify(learnProgress)); } catch (e) {}
+                playUnlockSound();   // a new step (or the next level) just opened
             }
             const next = steps[index + 1];
             res.style.display = "";

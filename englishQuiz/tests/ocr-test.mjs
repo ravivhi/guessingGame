@@ -811,7 +811,7 @@ async function eachFixture(kind, run) {
 }
 
 // The 📚 learning tab: each level's categories as a path of steps (big categories split into parts of up to 15).
-// Only the first unfinished step is open; learning = flash cards (flip to see the Hebrew) and finishing a step opens the next.
+// Only the first unfinished step is open; learning = cards with the English word and the Hebrew together; finishing a step opens the next.
 async function testLearn() {
   console.log('\n[learn] learning path by category');
   const page = await openPage();
@@ -824,7 +824,7 @@ async function testLearn() {
   };
   const steps = () => page.$$eval('#cat-list .cat-step', bs => bs.map(b => ({ cls: b.className.replace('cat-step ', ''), name: b.querySelector('.cat-name').textContent, meta: b.querySelector('.cat-meta').textContent, disabled: b.disabled })));
   const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
-  const finishStep = () => page.evaluate(() => { for (let i = 0; i < learn.step.words.length; i++) { learn.seen.add(learn.i); learnStep(1); } });
+  const finishStep = () => page.evaluate(() => { for (let i = 0; i < learn.step.words.length; i++) learnStep(1); });
   const progress = () => page.evaluate(() => JSON.parse(localStorage.getItem('englishquiz-learn-progress')));
   await page.select('#level-select', '1');
   await page.click('#tab-category');
@@ -842,18 +842,14 @@ async function testLearn() {
   check(await vis('learn-screen') && !(await vis('start-screen')), 'tapping the open step shows the learning cards');
   const first = await page.evaluate(() => ({ en: document.getElementById('learn-word').textContent, he: document.getElementById('learn-meaning').textContent, n: learn.step.words.length }));
   const l1 = Object.fromEntries(fs.readFileSync(path.join(root, 'wordbank', 'level-1.txt'), 'utf8').split(/\r?\n/).filter(l => l.includes('|')).map(l => l.split('|')));
-  check(first.n === want[0].n && l1[first.en] === first.he, `the card shows a word of the step with its Hebrew meaning on the back (${first.en} = ${first.he})`);
-  check(await page.$eval('#learn-next', e => e.disabled) && await page.$eval('#learn-prev', e => e.disabled), 'before the card is flipped "next" does not work (and there is no previous card)');
+  const both = await page.evaluate(() => { const v = id => { const r = document.getElementById(id).getBoundingClientRect(); return r.height > 0 && r.top >= 0 && r.bottom <= innerHeight; }; return v('learn-word') && v('learn-meaning'); });
+  check(first.n === want[0].n && l1[first.en] === first.he && both, `the card shows a word of the step and its Hebrew meaning together, both in view (${first.en} = ${first.he})`);
+  check(!(await page.$eval('#learn-next', e => e.disabled)) && await page.$eval('#learn-prev', e => e.disabled), '"next" works right away (and there is no previous card)');
   await page.click('#learn-next');
-  check((await page.$eval('#learn-count', e => e.textContent)) === `1/${first.n}`, 'tapping the disabled "next" stays on the first card');
-  await page.click('#learn-card');
-  check(await page.$eval('#learn-card', e => e.classList.contains('flipped')) && !(await page.$eval('#learn-next', e => e.disabled)), 'tapping the card flips it and "next" works');
-  await page.click('#learn-next');
-  check((await page.$eval('#learn-count', e => e.textContent)) === `2/${first.n}` && !(await page.$eval('#learn-card', e => e.classList.contains('flipped'))), 'next shows the 2nd card, on its English side');
+  check((await page.$eval('#learn-count', e => e.textContent)) === `2/${first.n}`, 'next shows the 2nd card');
   await page.click('#learn-prev');
-  check((await page.$eval('#learn-count', e => e.textContent)) === `1/${first.n}` && !(await page.$eval('#learn-next', e => e.disabled)), 'previous goes back, and a card seen before needs no new flip');
+  check((await page.$eval('#learn-count', e => e.textContent)) === `1/${first.n}`, 'previous goes back');
   for (let i = 0; i < first.n; i++) {
-    if (await page.$eval('#learn-next', e => e.disabled)) await page.click('#learn-card');
     if (i === first.n - 1) check((await page.$eval('#learn-next', e => e.textContent)).includes('סיום'), 'on the last card the button says finish');
     await page.click('#learn-next');
   }

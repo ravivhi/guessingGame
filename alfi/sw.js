@@ -1,4 +1,4 @@
-const CACHE = 'alfi-v2';
+const CACHE = 'alfi-v3';
 const CORE = [
     './',
     'index.html',

@@ -37,7 +37,7 @@ custody|משמורת
 # פוליטיקה ובחירות
 coalition|קואליציה
 opposition|אופוזיציה
-ballot|פתק הצבעה
+ballot|פתק הצבעה|🗳️
 referendum|משאל עם
 citizenship|אזרחות
 delegate|נציג
@@ -63,7 +63,7 @@ discrimination|אפליה
 racism|גזענות
 tolerance|סובלנות
 welfare|רווחה
-elderly|קשיש
+elderly|קשיש|🧓
 prestige|יוקרה
 stereotype|סטריאוטיפ
 etiquette|כללי נימוס
@@ -83,7 +83,7 @@ worship|פולחן
 soul|נשמה
 sacred|קדוש
 humanitarian|הומניטרי
-metropolis|מטרופולין
+metropolis|מטרופולין|🏙️
 # כלכלה וכסף
 pension|פנסיה
 margin|שוליים
@@ -131,7 +131,7 @@ particle|חלקיק
 compound|תרכובת
 organism|אורגניזם
 species|מין ביולוגי
-radiation|קרינה
+radiation|קרינה|☢️
 velocity|מהירות
 variable|משתנה
 observation|תצפית

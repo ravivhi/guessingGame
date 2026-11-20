@@ -9,29 +9,29 @@ grandson|נכד
 granddaughter|נכדה
 member|חבר בקבוצה
 # מקצועות
-judge|שופט
+judge|שופט|🧑‍⚖️
 lawyer|עורך דין
 engineer|מהנדס
 musician|נגן
 cashier|קופאי
 carpenter|נגר
 gardener|גנן
-fisherman|דייג
+fisherman|דייג|🎣
 hunter|צייד
 captain|קפטן
 sailor|מלח
 photographer|צלם
 athlete|ספורטאי
 shopkeeper|חנווני
-mechanic|מכונאי
+mechanic|מכונאי|🧑‍🔧
 librarian|ספרן
 butcher|קצב
 tailor|חייט
-barber|ספר
+barber|ספר|💈
 hairdresser|מעצב שיער
 secretary|מזכיר
-painter|צייר
-chef|שף
+painter|צייר|🧑‍🎨
+chef|שף|🧑‍🍳
 lifeguard|מציל
 babysitter|בייביסיטר
 # בית ומטבח
@@ -42,23 +42,23 @@ dishwasher|מדיח כלים
 microwave|מיקרוגל
 stove|כיריים
 kettle|קומקום
-pan|מחבת
-dish|כלי אוכל
+pan|מחבת|🍳
+dish|כלי אוכל|🍽️
 napkin|מפית
 lid|מכסה
-sponge|ספוג
-trash|זבל
+sponge|ספוג|🧽
+trash|זבל|🗑️
 cupboard|ארון מטבח
 closet|ארון
 hanger|קולב
 armchair|כורסה
 sheet|סדין
 bunk bed|מיטת קומותיים
-bathtub|אמבטיה
+bathtub|אמבטיה|🛁
 vase|אגרטל
 air conditioner|מזגן
 heater|תנור חימום
-light bulb|נורה
+light bulb|נורה|💡
 switch|מתג
 doorbell|פעמון דלת
 hallway|מסדרון
@@ -66,20 +66,20 @@ basement|מרתף
 attic|עליית גג
 ceiling|תקרה
 chimney|ארובה
-needle|מחט
+needle|מחט|🪡
 zipper|רוכסן
-saw|מסור
+saw|מסור|🪚
 drill|מקדחה
-screwdriver|מברג
-alarm clock|שעון מעורר
+screwdriver|מברג|🪛
+alarm clock|שעון מעורר|⏰
 # אוכל ובישול
-cereal|דגני בוקר
+cereal|דגני בוקר|🥣
 flour|קמח
 dough|בצק
 crumb|פירור
 raisin|צימוק
 apricot|משמש
-blueberry|אוכמנית
+blueberry|אוכמנית|🫐
 almond|שקד
 spinach|תרד
 celery|סלרי
@@ -93,7 +93,7 @@ lentil|עדשה
 tahini|טחינה
 meatball|קציצה
 salmon|סלמון
-pretzel|בייגלה
+pretzel|בייגלה|🥨
 sauce|רוטב
 mustard|חרדל
 mayonnaise|מיונז
@@ -104,17 +104,17 @@ vanilla|וניל
 peel|קליפה
 pomegranate|רימון
 grapefruit|אשכולית
-tangerine|קלמנטינה
-eggplant|חציל
+tangerine|קלמנטינה|🍊
+eggplant|חציל|🍆
 cabbage|כרוב
-garlic|שום
-lettuce|חסה
+garlic|שום|🧄
+lettuce|חסה|🥬
 # גוף ובריאות
 hip|ירך
 heel|עקב
 eyelash|ריס
-muscle|שריר
-brain|מוח
+muscle|שריר|💪
+brain|מוח|🧠
 ankle|קרסול
 forehead|מצח
 headache|כאב ראש
@@ -124,16 +124,16 @@ earache|כאב אוזניים
 cough|שיעול
 flu|שפעת
 scar|צלקת
-bandage|פלסטר
+bandage|פלסטר|🩹
 hiccups|שיהוק
 sunburn|כוויית שמש
 freckles|נמשים
-ambulance|אמבולנס
-pill|גלולה
+ambulance|אמבולנס|🚑
+pill|גלולה|💊
 pain|כאב
 # רגשות ואופי
-afraid|מפחד
-glad|שמח
+afraid|מפחד|😨
+glad|שמח|😊
 pleased|מרוצה
 upset|נסער
 nervous|עצבני
@@ -148,7 +148,7 @@ stupid|טיפש
 principal|מנהל בית ספר
 timetable|מערכת שעות
 quiz|חידון
-question|שאלה
+question|שאלה|❓
 grade|ציון
 chapter|פרק
 sentence|משפט
@@ -166,82 +166,82 @@ blackboard|לוח
 sharpener|מחדד
 stapler|שדכן
 calculator|מחשבון
-schoolbag|ילקוט
+schoolbag|ילקוט|🎒
 gym|אולם ספורט
 absent|נעדר
-idea|רעיון
+idea|רעיון|💡
 plan|תוכנית
 problem|בעיה
 solution|פתרון
 reason|סיבה
 glue stick|דבק סטיק
-pupil|תלמיד
+pupil|תלמיד|🧑‍🎓
 classmate|חבר לכיתה
 diary|יומן
 poem|שיר
-bookmark|סימנייה
+bookmark|סימנייה|🔖
 whiteboard|לוח מחיק
 crossword|תשבץ
 # ספורט ומשחקים
 player|שחקן
 coach|מאמן
 goalkeeper|שוער כדורגל
-medal|מדליה
+medal|מדליה|🏅
 score|ניקוד
 level|רמה
 rule|כלל
-gymnastics|התעמלות
-cycling|רכיבה על אופניים
-hockey|הוקי
-judo|ג'ודו
-ping-pong|טניס שולחן
-bowling|באולינג
-yoga|יוגה
-boxing|אגרוף
-jogging|ריצה קלה
-surfing|גלישה
-sailing|שיט
-diving|צלילה
-fishing|דיג
-camping|קמפינג
-skateboard|סקייטבורד
+gymnastics|התעמלות|🤸
+cycling|רכיבה על אופניים|🚴
+hockey|הוקי|🏒
+judo|ג'ודו|🥋
+ping-pong|טניס שולחן|🏓
+bowling|באולינג|🎳
+yoga|יוגה|🧘
+boxing|אגרוף|🥊
+jogging|ריצה קלה|🏃
+surfing|גלישה|🏄
+sailing|שיט|⛵
+diving|צלילה|🤿
+fishing|דיג|🎣
+camping|קמפינג|🏕️
+skateboard|סקייטבורד|🛹
 racket|מחבט
 net|רשת
 whistle|משרוקית
 helmet|קסדה
-dice|קוביית משחק
+dice|קוביית משחק|🎲
 marbles|גולות
 # מוזיקה וחגיגות
 band|להקה
 flute|חליל
-trumpet|חצוצרה
-accordion|אקורדיון
-saxophone|סקסופון
-microphone|מיקרופון
+trumpet|חצוצרה|🎺
+accordion|אקורדיון|🪗
+saxophone|סקסופון|🎷
+microphone|מיקרופון|🎤
 tune|מנגינה
 drawing|ציור
-paintbrush|מכחול
+paintbrush|מכחול|🖌️
 invitation|הזמנה
-celebration|חגיגה
+celebration|חגיגה|🎉
 decoration|קישוט
-fireworks|זיקוקים
-Hanukkah|חנוכה
+fireworks|זיקוקים|🎆
+Hanukkah|חנוכה|🕎
 Passover|פסח
 Purim|פורים
 # סיפורים והרפתקאות
 adventure|הרפתקה
 riddle|חידה
 knight|אביר
-shield|מגן
-palace|ארמון
+shield|מגן|🛡️
+palace|ארמון|🏰
 tower|מגדל
-elf|שדון
+elf|שדון|🧝
 dwarf|גמד
-wand|שרביט
+wand|שרביט|🪄
 potion|שיקוי
-alien|חייזר
+alien|חייזר|👽
 villain|נבל
-detective|בלש
+detective|בלש|🕵️
 thief|גנב
 joke|בדיחה
 comic|קומיקס
@@ -249,31 +249,31 @@ comic|קומיקס
 community center|מתנ"ס
 mall|קניון
 pharmacy|בית מרקחת
-factory|מפעל
+factory|מפעל|🏭
 center|מרכז
 address|כתובת
 kiosk|קיוסק
-fountain|מזרקה
+fountain|מזרקה|⛲
 bench|ספסל
 skyscraper|גורד שחקים
 sidewalk|מדרכה
 path|שביל
 tunnel|מנהרה
 crowd|קהל
-traffic|תנועה
+traffic|תנועה|🚦
 crossing|מעבר חציה
 roundabout|כיכר
 sign|שלט
-parking|חניה
+parking|חניה|🅿️
 van|טנדר
 garbage truck|משאית זבל
-subway|רכבת תחתית
+subway|רכבת תחתית|🚇
 harbor|נמל
 engine|מנוע
 wheel|גלגל
 tire|צמיג
-seat|מושב
-amusement park|לונה פארק
+seat|מושב|💺
+amusement park|לונה פארק|🎡
 aquarium|אקווריום
 fire station|תחנת כיבוי
 # טיולים וחופשות
@@ -281,123 +281,123 @@ tourist|תייר
 guide|מדריך
 passport|דרכון
 passenger|נוסע
-luggage|כבודה
+luggage|כבודה|🧳
 journey|מסע
 hike|טיול רגלי
-camp|מחנה
+camp|מחנה|⛺
 sleeping bag|שק שינה
-flashlight|פנס
-compass|מצפן
+flashlight|פנס|🔦
+compass|מצפן|🧭
 picnic|פיקניק
 sunscreen|קרם הגנה
 postcard|גלויה
 view|נוף
-astronaut|אסטרונאוט
+astronaut|אסטרונאוט|🧑‍🚀
 north|צפון
 south|דרום
 east|מזרח
 west|מערב
 # מזג אוויר וטבע
 season|עונה
-sunrise|זריחה
-sunset|שקיעה
+sunrise|זריחה|🌅
+sunset|שקיעה|🌇
 heat|חום
 warm|חמים
-sunny|שמשי
-cloudy|מעונן
-rainy|גשום
-windy|עם רוח
-stormy|סוער
-snowy|מושלג
-freezing|קפוא
+sunny|שמשי|☀️
+cloudy|מעונן|☁️
+rainy|גשום|🌧️
+windy|עם רוח|🌬️
+stormy|סוער|⛈️
+snowy|מושלג|🌨️
+freezing|קפוא|🥶
 humid|לח
 breeze|בריזה
 thunder|רעם
-lightning|ברק
-fog|ערפל
+lightning|ברק|⚡
+fog|ערפל|🌫️
 hail|ברד
 frost|כפור
 dew|טל
 shade|צל
 waterfall|מפל
-volcano|הר געש
+volcano|הר געש|🌋
 valley|עמק
-shore|חוף
+shore|חוף|🏖️
 pond|בריכת מים
 stream|פלג
 root|שורש
 petal|עלה כותרת
 thorn|קוץ
-blossom|פריחה
-cactus|קקטוס
+blossom|פריחה|🌸
+cactus|קקטוס|🌵
 anemone|כלנית
 weed|עשב שוטה
-pine|אורן
+pine|אורן|🌲
 oak|אלון
 foggy|ערפילי
 muddy|בוצי
 dusty|מאובק
 # בעלי חיים
-feather|נוצה
+feather|נוצה|🪶
 beak|מקור
 claw|טופר
-paw|כפה
+paw|כפה|🐾
 hoof|פרסה
 mane|רעמה
-mosquito|יתוש
+mosquito|יתוש|🦟
 grasshopper|חגב
-beetle|חיפושית
-cockroach|ג'וק
-scorpion|עקרב
-lizard|לטאה
-hedgehog|קיפוד
+beetle|חיפושית|🪲
+cockroach|ג'וק|🪳
+scorpion|עקרב|🦂
+lizard|לטאה|🦎
+hedgehog|קיפוד|🦔
 porcupine|דורבן
 mole|חפרפרת
-rat|חולדה
-turkey|תרנגול הודו
-swan|ברבור
+rat|חולדה|🐀
+turkey|תרנגול הודו|🦃
+swan|ברבור|🦢
 stork|חסידה
 seagull|שחף
 woodpecker|נקר
 cheetah|ברדלס
 gazelle|צבי
 hyena|צבוע
-gorilla|גורילה
-raccoon|רקון
-llama|לאמה
-octopus|תמנון
+gorilla|גורילה|🦍
+raccoon|רקון|🦝
+llama|לאמה|🦙
+octopus|תמנון|🐙
 jellyfish|מדוזה
 seahorse|סוסון ים
-lobster|לובסטר
+lobster|לובסטר|🦞
 # בגדים ואביזרים
 vest|וסט
 hoodie|קפוצ'ון
 tracksuit|טרנינג
 leggings|טייץ
 tights|גרביונים
-flip-flops|כפכפים
+flip-flops|כפכפים|🩴
 collar|צווארון
 sleeve|שרוול
 hood|ברדס
-handbag|תיק יד
-purse|ארנק
-wristwatch|שעון יד
+handbag|תיק יד|👜
+purse|ארנק|👛
+wristwatch|שעון יד|⌚
 jewelry|תכשיטים
 bracelet|צמיד
 earrings|עגילים
 # טכנולוגיה ומדיה
 tablet|טאבלט
-headphones|אוזניות
-speaker|רמקול
-battery|סוללה
-keyboard|מקלדת
+headphones|אוזניות|🎧
+speaker|רמקול|🔊
+battery|סוללה|🔋
+keyboard|מקלדת|⌨️
 website|אתר
 password|סיסמה
-folder|תיקייה
-video game|משחק מחשב
-emoji|אימוג'י
-envelope|מעטפה
-printer|מדפסת
+folder|תיקייה|📁
+video game|משחק מחשב|🎮
+emoji|אימוג'י|😀
+envelope|מעטפה|✉️
+printer|מדפסת|🖨️
 click|ללחוץ
 type|להקליד
 print|להדפיס
@@ -407,13 +407,13 @@ download|להוריד
 turn on|להדליק
 turn off|לכבות
 # קניות וחפצים
-shopping|קניות
+shopping|קניות|🛍️
 cheap|זול
 expensive|יקר
 sale|מבצע
 bill|חשבון
 list|רשימה
-cart|עגלה
+cart|עגלה|🛒
 spend|להוציא כסף
 metal|מתכת
 plastic|פלסטיק
@@ -422,7 +422,7 @@ pocket money|דמי כיס
 piggy bank|קופת חיסכון
 rubber|גומי
 cotton|כותנה
-wool|צמר
+wool|צמר|🧶
 cardboard|קרטון
 # צורות ומידות
 shape|צורה
@@ -440,9 +440,9 @@ pair|זוג
 edge|קצה
 rectangle|מלבן
 oval|אליפסה
-diamond|מעוין
-plus|פלוס
-minus|מינוס
+diamond|מעוין|🔷
+plus|פלוס|➕
+minus|מינוס|➖
 # פעלים: פעולות יומיומיות
 get up|לקום
 die|למות
@@ -496,10 +496,10 @@ giggle|לצחקק
 # מילות תיאור
 fresh|טרי
 raw|נא
-spicy|חריף
+spicy|חריף|🌶️
 juicy|עסיסי
 crispy|פריך
-delicious|טעים
+delicious|טעים|😋
 fluffy|פרוותי
 smooth|חלק
 shiny|מבריק

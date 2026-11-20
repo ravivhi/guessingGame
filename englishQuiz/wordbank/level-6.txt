@@ -1,6 +1,6 @@
 # בית ספר ולמידה
 academic|אקדמי
-diploma|תעודה
+diploma|תעודה|📜
 discipline|משמעת
 educate|לחנך
 absence|היעדרות
@@ -84,7 +84,7 @@ signal|אות
 # רגשות ואופי
 anxiety|חרדה
 ambition|שאיפה
-cheerful|עליז
+cheerful|עליז|😄
 desire|תשוקה
 desperate|נואש
 delight|תענוג
@@ -92,10 +92,10 @@ dignity|כבוד
 cautious|זהיר
 admire|להעריץ
 appreciate|להעריך
-depressed|מדוכא
+depressed|מדוכא|😞
 personality|אישיות
 tense|מתוח
-anxious|מודאג
+anxious|מודאג|😟
 bold|נועז
 pleasure|הנאה
 thrill|ריגוש
@@ -113,9 +113,9 @@ frank|גלוי לב
 graceful|חינני
 strict|קפדני
 grateful|אסיר תודה
-furious|זועם
+furious|זועם|😡
 disappointment|אכזבה
-evil|רשע
+evil|רשע|😈
 charming|מקסים
 dishonest|לא ישר
 quarrel|ריב
@@ -123,9 +123,9 @@ patient|סבלני
 courageous|אמיץ
 pressure|לחץ
 regret|חרטה
-relief|הקלה
+relief|הקלה|😌
 guilt|אשמה
-embarrassment|מבוכה
+embarrassment|מבוכה|😳
 curiosity|סקרנות
 # אנשים ויחסים
 adult|בוגר
@@ -134,7 +134,7 @@ critic|מבקר
 owner|בעלים
 individual|יחיד
 assistant|עוזר
-engagement|אירוסין
+engagement|אירוסין|💍
 mankind|האנושות
 acquaintance|מכר
 amateur|חובב
@@ -175,9 +175,9 @@ poverty|עוני
 defend|להגן
 appeal|ערעור
 contract|חוזה
-document|מסמך
+document|מסמך|📄
 deposit|פיקדון
-barrier|מחסום
+barrier|מחסום|🚧
 endanger|לסכן
 illegal|לא חוקי
 innocent|חף מפשע
@@ -200,7 +200,7 @@ cargo|מטען
 affordable|במחיר סביר
 tip|טיפ
 bonus|בונוס
-shipment|משלוח
+shipment|משלוח|📦
 bank account|חשבון בנק
 # עבודה ומקצועות
 career|קריירה
@@ -210,9 +210,9 @@ deadline|מועד אחרון
 apply|להגיש מועמדות
 accountant|רואה חשבון
 crew|צוות
-construction|בנייה
+construction|בנייה|🏗️
 assemble|להרכיב
-award|פרס
+award|פרס|🏆
 apprentice|שוליה
 technician|טכנאי
 guideline|הנחיה
@@ -224,19 +224,19 @@ data|נתונים
 display|תצוגה
 artificial|מלאכותי
 application|בקשה
-chart|תרשים
+chart|תרשים|📊
 edit|לערוך
 code|קוד
 content|תוכן
 browse|לגלוש
 scan|לסרוק
 profile|פרופיל
-mobile|נייד
-volume|עוצמת קול
-antenna|אנטנה
+mobile|נייד|📱
+volume|עוצמת קול|🔊
+antenna|אנטנה|📡
 subtitle|כתובית
 radar|מכ"ם
-capsule|כמוסה
+capsule|כמוסה|💊
 insert|להכניס
 viral|ויראלי
 headline|כותרת
@@ -244,7 +244,7 @@ hacker|האקר
 browser|דפדפן
 install|להתקין
 recharge|להטעין
-graph|גרף
+graph|גרף|📈
 # מדע וטבע
 absorb|לספוג
 atmosphere|אטמוספרה
@@ -257,9 +257,9 @@ scientific|מדעי
 lens|עדשה
 vibrate|לרטוט
 laser|לייזר
-bloom|לפרוח
+bloom|לפרוח|🌸
 beam|קרן
-bacteria|חיידקים
+bacteria|חיידקים|🦠
 gravity|כוח משיכה
 habitat|בית גידול
 surface|משטח
@@ -267,16 +267,16 @@ solid|מוצק
 # כדור הארץ וסביבה
 coast|קו חוף
 countryside|אזור כפרי
-dawn|שחר
+dawn|שחר|🌅
 steam|אדים
-wheat|חיטה
+wheat|חיטה|🌾
 orchard|מטע
 meadow|אחו
 canal|תעלה
 forecast|תחזית
 surroundings|סביבה
 zone|אזור
-erupt|להתפרץ
+erupt|להתפרץ|🌋
 drought|בצורת
 glacier|קרחון
 endangered|בסכנת הכחדה
@@ -284,7 +284,7 @@ harvest|קציר
 shallow|רדוד
 # בריאות וגוף
 disabled|נכה
-dairy|מוצרי חלב
+dairy|מוצרי חלב|🥛
 liver|כבד
 joint|מפרק
 sore|כואב
@@ -298,9 +298,9 @@ symptom|תסמין
 overweight|עודף משקל
 heart attack|התקף לב
 calorie|קלוריה
-injury|פציעה
-faint|להתעלף
-vaccine|חיסון
+injury|פציעה|🤕
+faint|להתעלף|😵
+vaccine|חיסון|💉
 surgeon|מנתח
 stress|מתח
 recover|להחלים
@@ -332,12 +332,12 @@ comedian|קומיקאי
 opera|אופרה
 fable|משל
 craft|מלאכת יד
-pottery|קדרות
-temple|מקדש
-prayer|תפילה
+pottery|קדרות|🏺
+temple|מקדש|🛕
+prayer|תפילה|🙏
 romantic|רומנטי
 verse|בית בשיר
-jewel|תכשיט
+jewel|תכשיט|💎
 perfume|בושם
 silk|משי
 canvas|קנבס
@@ -358,8 +358,8 @@ gallery|גלריה
 rehearsal|חזרה
 composer|מלחין
 # טיולים ותחבורה
-departure|יציאה
-arrival|הגעה
+departure|יציאה|🛫
+arrival|הגעה|🛬
 navigate|לנווט
 crash|להתרסק
 underground|תת קרקעי
@@ -373,7 +373,7 @@ wagon|עגלה
 dock|רציף
 pedal|דוושה
 scenery|נוף
-arena|זירה
+arena|זירה|🏟️
 lobby|לובי
 paradise|גן עדן
 # זמן ומקום
@@ -385,7 +385,7 @@ nearby|בסביבה
 throughout|לאורך
 towards|לכיוון
 overnight|במשך הלילה
-dusk|בין ערביים
+dusk|בין ערביים|🌆
 prehistoric|פרהיסטורי
 millennium|אלף שנים
 worldwide|עולמי
@@ -434,7 +434,7 @@ spoil|לקלקל
 tempt|לפתות
 amuse|לשעשע
 annoy|להרגיז
-disguise|להתחפש
+disguise|להתחפש|🥸
 pause|להשהות
 suffer|לסבול
 supervise|לפקח
@@ -486,12 +486,12 @@ weave|לארוג
 soak|להשרות
 starve|לרעוב
 fasten|להדק
-frown|להזעיף פנים
+frown|להזעיף פנים|🙁
 gather|להתאסף
 glow|לזהור
 shatter|לנפץ
-sparkle|לנצנץ
-wrestle|להיאבק
+sparkle|לנצנץ|✨
+wrestle|להיאבק|🤼
 polish|ללטש
 # שמות עצם שימושיים
 addition|תוספת
@@ -511,9 +511,9 @@ option|אפשרות
 object|חפץ
 maximum|מקסימום
 minimum|מינימום
-label|תווית
+label|תווית|🏷️
 excuse|תירוץ
-frame|מסגרת
+frame|מסגרת|🖼️
 mixture|תערובת
 # מילות תיאור
 absolute|מוחלט

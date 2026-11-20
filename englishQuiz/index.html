@@ -1478,7 +1478,8 @@
             for (const line of text.split(/\r?\n/)) {
                 if (line.startsWith("#")) { cat = line.slice(1).trim(); continue; }
                 const p = line.split("|");
-                if (p.length >= 2 && p[0].trim() && p[1].trim()) words.push({ en: p[0].trim(), he: p[1].trim(), cat });
+                // an optional 3rd field is a picture (emoji) for the word, shown on its learning card
+                if (p.length >= 2 && p[0].trim() && p[1].trim()) words.push({ en: p[0].trim(), he: p[1].trim(), cat, pic: (p[2] || "").trim() });
             }
             return (levelCache[level] = words);
         }
@@ -1661,7 +1662,7 @@
             card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");   // a small pop for each new card
             document.getElementById("learn-title").textContent = `${catEmoji(s.name)} ${stepLabel(s)}`;
             document.getElementById("learn-count").textContent = `${learn.i + 1}/${s.words.length}`;
-            document.getElementById("learn-emoji").textContent = catEmoji(s.name);
+            document.getElementById("learn-emoji").textContent = w.pic || catEmoji(s.name);   // the word's own picture, else its category's
             document.getElementById("learn-word").textContent = w.en;
             document.getElementById("learn-meaning").textContent = chosen[w.en.toLowerCase()] || w.he;
             updateLearnNav();

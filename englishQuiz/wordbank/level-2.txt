@@ -19,18 +19,18 @@ September|ספטמבר
 October|אוקטובר
 November|נובמבר
 December|דצמבר
-summer|קיץ
-winter|חורף
-spring|אביב
-autumn|סתיו
+summer|קיץ|🏖️
+winter|חורף|⛄
+spring|אביב|🌸
+autumn|סתיו|🍂
 # זמן
 today|היום
 tomorrow|מחר
 yesterday|אתמול
-morning|בוקר
+morning|בוקר|🌅
 afternoon|אחר הצהריים
-evening|ערב
-night|לילה
+evening|ערב|🌆
+night|לילה|🌙
 day|יום
 week|שבוע
 month|חודש
@@ -38,7 +38,7 @@ year|שנה
 hour|שעה
 minute|דקה
 second|שנייה
-time|זמן
+time|זמן|⏰
 now|עכשיו
 soon|בקרוב
 always|תמיד
@@ -55,9 +55,9 @@ sixty|שישים
 seventy|שבעים
 eighty|שמונים
 ninety|תשעים
-hundred|מאה
+hundred|מאה|💯
 thousand|אלף
-first|ראשון
+first|ראשון|🥇
 third|שלישי
 last|אחרון
 next|הבא
@@ -65,125 +65,125 @@ half|חצי
 # מקצועות
 job|עבודה
 worker|עובד
-doctor|רופא
+doctor|רופא|🧑‍⚕️
 nurse|אחות
-dentist|רופא שיניים
+dentist|רופא שיניים|🦷
 vet|וטרינר
-farmer|חקלאי
+farmer|חקלאי|🧑‍🌾
 driver|נהג
-pilot|טייס
-police officer|שוטר
-firefighter|כבאי
+pilot|טייס|🧑‍✈️
+police officer|שוטר|👮
+firefighter|כבאי|🧑‍🚒
 baker|אופה
-singer|זמר
-dancer|רקדן
-artist|אמן
-actor|שחקן
-builder|בנאי
+singer|זמר|🧑‍🎤
+dancer|רקדן|💃
+artist|אמן|🧑‍🎨
+actor|שחקן|🎭
+builder|בנאי|👷
 waiter|מלצר
-scientist|מדען
+scientist|מדען|🧑‍🔬
 soldier|חייל
 postman|דוור
 # ספורט ותחביבים
 sport|ספורט
-football|כדורגל
-basketball|כדורסל
-tennis|טניס
-volleyball|כדורעף
-baseball|בייסבול
-swimming|שחייה
-running|ריצה
-skiing|סקי
-karate|קראטה
+football|כדורגל|⚽
+basketball|כדורסל|🏀
+tennis|טניס|🎾
+volleyball|כדורעף|🏐
+baseball|בייסבול|⚾
+swimming|שחייה|🏊
+running|ריצה|🏃
+skiing|סקי|⛷️
+karate|קראטה|🥋
 team|קבוצה
-race|מרוץ
-winner|מנצח
-goal|שער
+race|מרוץ|🏁
+winner|מנצח|🏆
+goal|שער|🥅
 hobby|תחביב
-guitar|גיטרה
-piano|פסנתר
-drum|תוף
-violin|כינור
-chess|שחמט
-cards|קלפים
-camera|מצלמה
+guitar|גיטרה|🎸
+piano|פסנתר|🎹
+drum|תוף|🥁
+violin|כינור|🎻
+chess|שחמט|♟️
+cards|קלפים|🃏
+camera|מצלמה|📷
 # העיר
 town|עיירה
-bank|בנק
-post office|דואר
-cinema|קולנוע
+bank|בנק|🏦
+post office|דואר|🏤
+cinema|קולנוע|🎬
 museum|מוזיאון
 restaurant|מסעדה
 bakery|מאפייה
 airport|שדה תעופה
-station|תחנה
-bridge|גשר
-traffic light|רמזור
+station|תחנה|🚉
+bridge|גשר|🌉
+traffic light|רמזור|🚦
 market|שוק
-synagogue|בית כנסת
+synagogue|בית כנסת|🕍
 police station|משטרה
-office|משרד
+office|משרד|🏢
 corner|פינה
-road|כביש
+road|כביש|🛣️
 village|כפר
 library|ספרייה
 # בעלי חיים
 insect|חרק
-worm|תולעת
-bat|עטלף
-seal|כלב ים
-bull|שור
-pigeon|יונה
-shell|קונכייה
+worm|תולעת|🪱
+bat|עטלף|🦇
+seal|כלב ים|🦭
+bull|שור|🐂
+pigeon|יונה|🕊️
+shell|קונכייה|🐚
 nest|קן
 wing|כנף
 tail|זנב
 fur|פרווה
 horn|קרן
 ostrich|יען
-peacock|טווס
+peacock|טווס|🦚
 goose|אווז
 calf|עגל
 # אוכל ושתייה
 breakfast|ארוחת בוקר
 lunch|ארוחת צהריים
 dinner|ארוחת ערב
-meal|ארוחה
+meal|ארוחה|🍽️
 dessert|קינוח
 menu|תפריט
-noodles|אטריות
+noodles|אטריות|🍜
 ice lolly|קרטיב
-steak|סטייק
+steak|סטייק|🥩
 tuna|טונה
 jelly|ג'לי
 toast|טוסט
 oil|שמן
-pie|פשטידה
+pie|פשטידה|🥧
 cream|שמנת
 nut|אגוז
-peanut|בוטן
-olive|זית
+peanut|בוטן|🥜
+olive|זית|🫒
 pickle|מלפפון חמוץ
 slice|פרוסה
 bite|ביס
-coconut|קוקוס
-avocado|אבוקדו
-kiwi|קיווי
-omelet|חביתה
-pita|פיתה
+coconut|קוקוס|🥥
+avocado|אבוקדו|🥑
+kiwi|קיווי|🥝
+omelet|חביתה|🍳
+pita|פיתה|🥙
 schnitzel|שניצל
 muffin|מאפין
-waffle|ופל
+waffle|ופל|🧇
 # בריאות וגוף
-sick|חולה
+sick|חולה|🤒
 healthy|בריא
-hurt|כואב
-fever|חום
-medicine|תרופה
-bone|עצם
-blood|דם
-thumb|אגודל
-beard|זקן
+hurt|כואב|🤕
+fever|חום|🌡️
+medicine|תרופה|💊
+bone|עצם|🦴
+blood|דם|🩸
+thumb|אגודל|👍
+beard|זקן|🧔
 eyebrow|גבה
 stomach|קיבה
 chest|חזה
@@ -194,60 +194,60 @@ elbow|מרפק
 cheek|לחי
 skin|עור
 # רגשות
-excited|נרגש
-scared|מפוחד
-surprised|מופתע
+excited|נרגש|🤩
+scared|מפוחד|😨
+surprised|מופתע|😮
 bored|משועמם
 proud|גאה
-worried|מודאג
-shy|ביישן
-sleepy|ישנוני
-calm|רגוע
+worried|מודאג|😟
+shy|ביישן|😳
+sleepy|ישנוני|😴
+calm|רגוע|😌
 careful|זהיר
 brave|אמיץ
 # סיפורים וקסמים
 giant|ענק
-clown|ליצן
-wizard|קוסם
-hero|גיבור
-magic|קסם
+clown|ליצן|🤡
+wizard|קוסם|🧙
+hero|גיבור|🦸
+magic|קסם|🪄
 treasure|אוצר
-castle|טירה
-secret|סוד
-surprise|הפתעה
+castle|טירה|🏰
+secret|סוד|🤫
+surprise|הפתעה|🎁
 # פעולות
 bring|להביא
 carry|לשאת
 catch|לתפוס
 throw|לזרוק
 kick|לבעוט
-climb|לטפס
+climb|לטפס|🧗
 fall|ליפול
 push|לדחוף
 pull|למשוך
-wait|לחכות
+wait|לחכות|⏳
 ask|לשאול
 answer|לענות
 learn|ללמוד
 teach|ללמד
-think|לחשוב
+think|לחשוב|🤔
 know|לדעת
 remember|לזכור
 forget|לשכוח
 find|למצוא
 lose|לאבד
-call|להתקשר
-meet|לפגוש
+call|להתקשר|📞
+meet|לפגוש|🤝
 visit|לבקר
 travel|לטייל
 wake up|להתעורר
 brush|לצחצח
 build|לבנות
 break|לשבור
-fix|לתקן
-cut|לחתוך
-paint|לצבוע
-sweep|לטאטא
+fix|לתקן|🔧
+cut|לחתוך|✂️
+paint|לצבוע|🖌️
+sweep|לטאטא|🧹
 wear|ללבוש
 put|לשים
 turn|להסתובב
@@ -262,26 +262,26 @@ say|לומר
 speak|לדבר
 count|לספור
 ride|לרכוב
-drive|לנהוג
-shout|לצעוק
-smell|להריח
-taste|לטעום
+drive|לנהוג|🚗
+shout|לצעוק|📢
+smell|להריח|👃
+taste|לטעום|👅
 touch|לגעת
-hide|להסתתר
+hide|להסתתר|🙈
 share|לחלוק
 save|להציל
 hold|להחזיק
 pick|לקטוף
-plant|לטעת
+plant|לטעת|🌱
 grow|לגדול
 live|לגור
 send|לשלוח
 order|להזמין
-dream|לחלום
+dream|לחלום|💭
 stay|להישאר
 leave|לעזוב
-yawn|לפהק
-sneeze|להתעטש
+yawn|לפהק|🥱
+sneeze|להתעטש|🤧
 crawl|לזחול
 tickle|לדגדג
 # מילות תיאור
@@ -295,7 +295,7 @@ busy|עסוק
 lazy|עצלן
 kind|אדיב
 clever|חכם
-silly|מטופש
+silly|מטופש|🤪
 sweet|מתוק
 sour|חמוץ
 salty|מלוח
@@ -306,11 +306,11 @@ high|גבוה
 low|נמוך
 thin|רזה
 wide|רחב
-dark|חשוך
+dark|חשוך|🌑
 bright|בהיר
-lucky|בר מזל
-wrong|שגוי
-correct|נכון
+lucky|בר מזל|🍀
+wrong|שגוי|❌
+correct|נכון|✅
 same|זהה
 different|שונה
 special|מיוחד
@@ -322,9 +322,9 @@ sharp|חד
 tiny|זעיר
 huge|ענקי
 enough|מספיק
-broken|שבור
+broken|שבור|💔
 crazy|מטורף
-tasty|טעים
+tasty|טעים|😋
 boring|משעמם
 interesting|מעניין
 exciting|מרגש
@@ -332,7 +332,7 @@ sticky|דביק
 furry|פרוותי
 weak|חלש
 nice|נחמד
-cool|מגניב
+cool|מגניב|😎
 # איפה דברים נמצאים
 behind|מאחורי
 between|בין
@@ -350,8 +350,8 @@ with|עם
 without|בלי
 before|לפני
 after|אחרי
-left|שמאל
-right|ימין
+left|שמאל|⬅️
+right|ימין|➡️
 middle|אמצע
 top|חלק עליון
 bottom|תחתית
@@ -397,54 +397,54 @@ more|יותר
 less|פחות
 another|נוסף
 # טיולים וחופשות
-holiday|חופשה
+holiday|חופשה|🏖️
 trip|טיול
-hotel|מלון
-tent|אוהל
-map|מפה
-ticket|כרטיס
-suitcase|מזוודה
+hotel|מלון|🏨
+tent|אוהל|⛺
+map|מפה|🗺️
+ticket|כרטיס|🎫
+suitcase|מזוודה|🧳
 country|מדינה
-flag|דגל
-backpack|תרמיל
-swimsuit|בגד ים
-sunglasses|משקפי שמש
-campfire|מדורה
-island|אי
-desert|מדבר
-forest|יער
+flag|דגל|🚩
+backpack|תרמיל|🎒
+swimsuit|בגד ים|🩱
+sunglasses|משקפי שמש|🕶️
+campfire|מדורה|🔥
+island|אי|🏝️
+desert|מדבר|🏜️
+forest|יער|🌲
 lake|אגם
-ocean|אוקיינוס
+ocean|אוקיינוס|🌊
 cave|מערה
 jungle|ג'ונגל
 hill|גבעה
 field|שדה
-planet|כוכב לכת
-earth|כדור הארץ
+planet|כוכב לכת|🪐
+earth|כדור הארץ|🌍
 space|חלל
-rocket|טיל
+rocket|טיל|🚀
 world|עולם
 # טכנולוגיה ומדיה
-screen|מסך
+screen|מסך|🖥️
 internet|אינטרנט
-video|סרטון
-photo|תצלום
-message|הודעה
-email|אימייל
-radio|רדיו
-movie|סרט
+video|סרטון|📹
+photo|תצלום|📸
+message|הודעה|💬
+email|אימייל|📧
+radio|רדיו|📻
+movie|סרט|🎬
 cartoon|סרט מצויר
 news|חדשות
-newspaper|עיתון
+newspaper|עיתון|📰
 magazine|מגזין
-letter|מכתב
+letter|מכתב|✉️
 stamp|בול
 # בבית ומסביב
 balcony|מרפסת
-elevator|מעלית
+elevator|מעלית|🛗
 fridge|מקרר
 oven|תנור
-shower|מקלחת
+shower|מקלחת|🚿
 towel|מגבת
 blanket|שמיכה
 pillow|כרית
@@ -452,64 +452,64 @@ curtain|וילון
 toothbrush|מברשת שיניים
 toothpaste|משחת שיניים
 comb|מסרק
-bucket|דלי
-broom|מטאטא
-garbage|זבל
-ladder|סולם
+bucket|דלי|🪣
+broom|מטאטא|🧹
+garbage|זבל|🗑️
+ladder|סולם|🪜
 fence|גדר
 yard|חצר
-lock|מנעול
-candle|נר
+lock|מנעול|🔒
+candle|נר|🕯️
 tap|ברז
-hammer|פטיש
-tool|כלי עבודה
+hammer|פטיש|🔨
+tool|כלי עבודה|🔧
 rope|חבל
 button|כפתור
 pocket|כיס
 carpet|שטיח
 shelf|מדף
-basket|סל
+basket|סל|🧺
 tray|מגש
 glass|זכוכית
 # בגדים ואביזרים
 uniform|מדים
-ring|טבעת
+ring|טבעת|💍
 necklace|שרשרת
 wallet|ארנק
-jeans|ג'ינס
-tie|עניבה
-sandals|סנדלים
+jeans|ג'ינס|👖
+tie|עניבה|👔
+sandals|סנדלים|👡
 slippers|נעלי בית
 raincoat|מעיל גשם
 costume|תחפושת
-mask|מסכה
+mask|מסכה|🎭
 # טבע
-seed|זרע
+seed|זרע|🌱
 branch|ענף
 bush|שיח
-stone|אבן
+stone|אבן|🪨
 dust|אבק
 mud|בוץ
 puddle|שלולית
-wave|גל
+wave|גל|🌊
 shadow|צל
 smoke|עשן
 air|אוויר
-wood|עץ
-weather|מזג אוויר
+wood|עץ|🪵
+weather|מזג אוויר|🌦️
 # מקצועות לימוד ובית ספר
 homework|שיעורי בית
-exam|מבחן
-mistake|טעות
+exam|מבחן|📝
+mistake|טעות|❌
 word|מילה
 alphabet|אלפבית
-page|עמוד
-story|סיפור
+page|עמוד|📄
+story|סיפור|📖
 subject|מקצוע
 math|חשבון
-science|מדעים
+science|מדעים|🔬
 history|היסטוריה
-art|אמנות
+art|אמנות|🎨
 recess|הפסקה
 language|שפה
 English|אנגלית
@@ -518,22 +518,22 @@ Arabic|ערבית
 chalk|גיר
 lesson|שיעור
 # כסף וקניות
-coin|מטבע
-money|כסף
-price|מחיר
-prize|פרס
-buy|לקנות
+coin|מטבע|🪙
+money|כסף|💰
+price|מחיר|🏷️
+prize|פרס|🏆
+buy|לקנות|🛒
 sell|למכור
-pay|לשלם
-rich|עשיר
+pay|לשלם|💳
+rich|עשיר|🤑
 poor|עני
 # משפחה ואנשים
-mother|אמא
-father|אבא
-grandmother|סבתא
-grandfather|סבא
+mother|אמא|👩
+father|אבא|👨
+grandmother|סבתא|👵
+grandfather|סבא|👴
 parents|הורים
-child|ילד/ה
+child|ילד/ה|🧒
 cousin|בן דוד
 twin|תאום
 neighbor|שכן

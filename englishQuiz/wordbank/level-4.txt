@@ -1,14 +1,14 @@
 # רגשות
 feeling|הרגשה
 emotion|רגש
-fear|פחד
+fear|פחד|😨
 hope|תקווה
-joy|שמחה
-anger|כעס
+joy|שמחה|😄
+anger|כעס|😠
 pride|גאווה
 shame|בושה
 worry|דאגה
-sadness|עצב
+sadness|עצב|😢
 happiness|אושר
 excitement|התלהבות
 jealousy|קנאה
@@ -18,12 +18,12 @@ confidence|ביטחון עצמי
 thrilled|נלהב
 puzzled|מבולבל
 delighted|שמח מאוד
-unhappy|לא מאושר
+unhappy|לא מאושר|☹️
 fearless|חסר פחד
 restless|חסר מנוחה
-heartbroken|שבור לב
+heartbroken|שבור לב|💔
 speechless|בלי מילים
-shocked|בהלם
+shocked|בהלם|😲
 insulted|נעלב
 # אופי וערכים
 trust|אמון
@@ -43,7 +43,7 @@ energetic|נמרץ
 outgoing|חברותי
 unkind|לא נחמד
 bossy|שתלטן
-liar|שקרן
+liar|שקרן|🤥
 show-off|רברבן
 role model|מודל לחיקוי
 rude|גס רוח
@@ -51,7 +51,7 @@ curious|סקרן
 friendship|חברות
 bully|בריון
 # חיים ורעיונות
-luck|מזל
+luck|מזל|🍀
 success|הצלחה
 failure|כישלון
 effort|מאמץ
@@ -83,9 +83,9 @@ high school|תיכון
 middle school|חטיבת ביניים
 protractor|מד זווית
 locker|לוקר
-projector|מקרן
+projector|מקרן|📽️
 binder|קלסר
-paper clip|אטב משרדי
+paper clip|אטב משרדי|📎
 bulletin board|לוח מודעות
 detention|ריתוק
 contest|תחרות
@@ -101,7 +101,7 @@ verb|פועל
 adjective|שם תואר
 plural|רבים
 singular|יחיד
-question mark|סימן שאלה
+question mark|סימן שאלה|❓
 comma|פסיק
 capital letter|אות גדולה
 handwriting|כתב יד
@@ -126,7 +126,7 @@ polygon|מצולע
 perimeter|היקף
 diagonal|אלכסון
 straight line|קו ישר
-infinite|אינסופי
+infinite|אינסופי|♾️
 millimeter|מילימטר
 ton|טון
 sum|סכום
@@ -136,8 +136,8 @@ dozen|תריסר
 fraction|שבר
 height|גובה
 # מדע
-telescope|טלסקופ
-microscope|מיקרוסקופ
+telescope|טלסקופ|🔭
+microscope|מיקרוסקופ|🔬
 experiment|ניסוי
 research|מחקר
 gas|גז
@@ -148,10 +148,10 @@ echo|הד
 vibration|רטט
 electric|חשמלי
 generator|גנרטור
-test tube|מבחנה
+test tube|מבחנה|🧪
 funnel|משפך
-magnifying glass|זכוכית מגדלת
-magnet|מגנט
+magnifying glass|זכוכית מגדלת|🔍
+magnet|מגנט|🧲
 # גילוי וידיעה
 discover|לגלות
 invent|להמציא
@@ -163,12 +163,12 @@ lie|שקר
 proof|הוכחה
 information|מידע
 # הגוף
-lung|ריאה
+lung|ריאה|🫁
 throat|גרון
 waist|מותניים
 wrist|פרק כף היד
 kidney|כליה
-skull|גולגולת
+skull|גולגולת|💀
 jaw|לסת
 eyelid|עפעף
 palm|כף יד
@@ -184,14 +184,14 @@ rib|צלע
 nostril|נחיר
 skeleton|שלד
 # בריאות
-injection|זריקה
+injection|זריקה|💉
 wound|פצע
 illness|מחלה
 health|בריאות
 diet|דיאטה
 operation|ניתוח
 check-up|בדיקה רפואית
-stethoscope|סטטוסקופ
+stethoscope|סטטוסקופ|🩺
 syrup|סירופ
 ointment|משחה
 cast|גבס
@@ -210,33 +210,33 @@ poisonous|רעיל
 harmful|מזיק
 swallow|לבלוע
 itch|לגרד
-vomit|להקיא
-wheelchair|כיסא גלגלים
-thermometer|מדחום
+vomit|להקיא|🤮
+wheelchair|כיסא גלגלים|🦽
+thermometer|מדחום|🌡️
 blind|עיוור
-deaf|חירש
+deaf|חירש|🧏
 breathe|לנשום
 sweat|להזיע
 X-ray|צילום רנטגן
 # החלל
 space station|תחנת חלל
 spacesuit|חליפת חלל
-Milky Way|שביל החלב
+Milky Way|שביל החלב|🌌
 black hole|חור שחור
 Mercury|כוכב חמה
 Venus|נוגה
 Mars|מאדים
 Jupiter|צדק
-Saturn|שבתאי
+Saturn|שבתאי|🪐
 Uranus|אורנוס
 Neptune|נפטון
-spaceship|חללית
+spaceship|חללית|🚀
 solar system|מערכת השמש
-comet|שביט
+comet|שביט|☄️
 # צמחים ובעלי חיים
 stem|גבעול
 bud|ניצן
-sprout|נבט
+sprout|נבט|🌱
 pollen|אבקה
 moss|טחב
 fern|שרך
@@ -264,7 +264,7 @@ mammal|יונק
 reptile|זוחל
 # כדור הארץ וגאוגרפיה
 equator|קו המשווה
-globe|גלובוס
+globe|גלובוס|🌍
 North Pole|הקוטב הצפוני
 South Pole|הקוטב הדרומי
 border|גבול
@@ -278,7 +278,7 @@ bay|מפרץ
 reef|שונית
 lagoon|לגונה
 pebble|חלוק נחל
-gem|אבן חן
+gem|אבן חן|💎
 continent|יבשת
 cliff|צוק
 lava|לבה
@@ -286,15 +286,15 @@ iceberg|קרחון
 # מזג אוויר
 humidity|לחות
 drizzle|טפטוף
-thunderstorm|סופת רעמים
+thunderstorm|סופת רעמים|⛈️
 blizzard|סופת שלגים
 sandstorm|סופת חול
 damp|לח
 frozen|קפוא
-temperature|טמפרטורה
+temperature|טמפרטורה|🌡️
 # סביבה ואנרגיה
 waste|פסולת
-recycle|למחזר
+recycle|למחזר|♻️
 pollution|זיהום
 environment|סביבה
 nature|טבע
@@ -302,16 +302,16 @@ eco-friendly|ידידותי לסביבה
 nature reserve|שמורת טבע
 national park|פארק לאומי
 energy|אנרגיה
-electricity|חשמל
+electricity|חשמל|⚡
 power|כוח
-fuel|דלק
+fuel|דלק|⛽
 coal|פחם
 solar panel|לוח סולארי
 dam|סכר
 # חומרים וכלים
 machine|מכונה
 screw|בורג
-chain|שרשרת
+chain|שרשרת|⛓️
 iron|ברזל
 steel|פלדה
 copper|נחושת
@@ -324,12 +324,12 @@ plank|קרש
 wire|חוט חשמל
 pipe|צינור
 pump|משאבה
-crane|מנוף
+crane|מנוף|🏗️
 pulley|גלגלת
 tape measure|סרט מדידה
-wrench|מפתח ברגים
+wrench|מפתח ברגים|🔧
 pliers|צבת
-toolbox|ארגז כלים
+toolbox|ארגז כלים|🧰
 sandpaper|נייר זכוכית
 # מחשבים ומדיה
 scanner|סורק
@@ -337,12 +337,12 @@ webcam|מצלמת רשת
 touchscreen|מסך מגע
 smartwatch|שעון חכם
 socket|שקע
-joystick|ג'ויסטיק
-game console|קונסולת משחקים
+joystick|ג'ויסטיק|🕹️
+game console|קונסולת משחקים|🎮
 file|קובץ
 program|תוכנה
 coding|תכנות
-link|קישור
+link|קישור|🔗
 icon|אייקון
 cursor|סמן במחשב
 avatar|אווטאר
@@ -353,12 +353,12 @@ upload|להעלות
 connect|לחבר
 paste|להדביק
 chat|לשוחח
-laptop|מחשב נייד
+laptop|מחשב נייד|💻
 cable|כבל
-plug|תקע
+plug|תקע|🔌
 app|אפליקציה
-smartphone|טלפון חכם
-selfie|סלפי
+smartphone|טלפון חכם|📱
+selfie|סלפי|🤳
 charger|מטען
 copy|להעתיק
 scroll|לגלול
@@ -368,51 +368,51 @@ community|קהילה
 city hall|עירייה
 downtown|מרכז העיר
 bus station|תחנה מרכזית
-parking lot|חניון
+parking lot|חניון|🅿️
 crosswalk|מעבר חצייה
 street light|פנס רחוב
 recycling bin|פח מיחזור
 alley|סמטה
 avenue|שדרה
-church|כנסייה
-mosque|מסגד
+church|כנסייה|⛪
+mosque|מסגד|🕌
 planetarium|פלנטריום
 entrance|כניסה
 # תרבות ואמנות
 custom|מנהג
 tradition|מסורת
 culture|תרבות
-theater|תיאטרון
+theater|תיאטרון|🎭
 musical|מחזמר
-ballet|בלט
-painting|ציור
+ballet|בלט|🩰
+painting|ציור|🖼️
 cello|צ'לו
 harmonica|מפוחית
 drummer|מתופף
 violinist|כנר
 pianist|פסנתרן
-wedding|חתונה
+wedding|חתונה|💒
 parade|מצעד
 concert|קונצרט
 festival|פסטיבל
 fan|מעריץ
 # ספורט ותחביבים
 collection|אוסף
-archery|קשתות
-handball|כדוריד
-weightlifting|הרמת משקולות
-wrestling|היאבקות
+archery|קשתות|🏹
+handball|כדוריד|🤾
+weightlifting|הרמת משקולות|🏋️
+wrestling|היאבקות|🤼
 sit-up|כפיפת בטן
 push-up|שכיבת סמיכה
 warm-up|חימום
 lap|הקפה
-finish line|קו סיום
+finish line|קו סיום|🏁
 foul|עבירה
 scoreboard|לוח תוצאות
-bronze|ארד
-trophy|גביע
+bronze|ארד|🥉
+trophy|גביע|🏆
 champion|אלוף
-stadium|אצטדיון
+stadium|אצטדיון|🏟️
 teammate|חבר לקבוצה
 # מקצועות
 designer|מעצב
@@ -431,7 +431,7 @@ journalist|עיתונאי
 electrician|חשמלאי
 plumber|שרברב
 pharmacist|רוקח
-programmer|מתכנת
+programmer|מתכנת|🧑‍💻
 boss|בוס
 # ממשל וחוק
 government|ממשלה
@@ -454,7 +454,7 @@ steal|לגנוב
 escape|לברוח
 fight|להילחם
 enemy|אויב
-peace|שלום
+peace|שלום|🕊️
 protect|להגן
 attack|לתקוף
 # היסטוריה
@@ -473,20 +473,20 @@ pyramid|פירמידה
 # טיולים וקניות
 speed|מהירות
 detour|דרך עוקפת
-gas station|תחנת דלק
+gas station|תחנת דלק|⛽
 driver's license|רישיון נהיגה
-tram|רכבת קלה
-cable car|רכבל
+tram|רכבת קלה|🚊
+cable car|רכבל|🚡
 boarding pass|כרטיס עלייה
 lighthouse|מגדלור
-anchor|עוגן
+anchor|עוגן|⚓
 shekel|שקל
 buyer|קונה
 checkout|קופה
-shopping cart|עגלת קניות
-flight|טיסה
-cash|מזומן
-credit card|כרטיס אשראי
+shopping cart|עגלת קניות|🛒
+flight|טיסה|✈️
+cash|מזומן|💵
+credit card|כרטיס אשראי|💳
 customer|לקוח
 # פעלים: למידה ודיבור
 solve|לפתור
@@ -497,7 +497,7 @@ report|לדווח
 hum|לזמזם
 mumble|למלמל
 brag|להתרברב
-pray|להתפלל
+pray|להתפלל|🙏
 erase|למחוק
 agree|להסכים
 describe|לתאר
@@ -522,12 +522,12 @@ roast|לצלות
 stir|לבחוש
 rinse|לשטוף
 sharpen|לחדד
-sail|לשוט
+sail|לשוט|⛵
 fold|לקפל
-scream|לצרוח
+scream|לצרוח|😱
 knock|לדפוק
 wipe|לנגב
-wink|לקרוץ
+wink|לקרוץ|😉
 splash|להתיז
 sniff|לרחרח
 roar|לשאוג

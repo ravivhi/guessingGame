@@ -9,7 +9,7 @@ finance|מימון
 fund|קרן
 invest|להשקיע
 inflation|אינפלציה
-wealth|עושר
+wealth|עושר|💰
 inherit|לרשת
 interest rate|ריבית
 stock market|בורסה
@@ -39,7 +39,7 @@ supply|אספקה
 resource|משאב
 property|רכוש
 # עסקים ועבודה
-industry|תעשייה
+industry|תעשייה|🏭
 firm|חברה עסקית
 employ|להעסיק
 workforce|כוח עבודה
@@ -121,7 +121,7 @@ human rights|זכויות אדם
 equality|שוויון
 incident|תקרית
 investigation|חקירה
-ban|איסור
+ban|איסור|🚫
 permission|רשות
 smuggle|להבריח
 vandalism|ונדליזם
@@ -158,7 +158,7 @@ ceasefire|הפסקת אש
 territory|טריטוריה
 threat|איום
 threaten|לאיים
-explosion|פיצוץ
+explosion|פיצוץ|💥
 navy|חיל הים
 air force|חיל האוויר
 civilian|אזרחי
@@ -231,7 +231,7 @@ function|פונקציה
 interval|מרווח
 sample|דגימה
 observe|להתבונן
-atom|אטום
+atom|אטום|⚛️
 evolution|אבולוציה
 evolve|להתפתח
 accurate|מדויק
@@ -252,8 +252,8 @@ nutrient|חומר מזין
 universe|יקום
 asteroid|אסטרואיד
 eclipse|ליקוי
-spacecraft|חללית
-meteor|מטאור
+spacecraft|חללית|🚀
+meteor|מטאור|☄️
 constellation|קבוצת כוכבים
 mineral|מינרל
 orbit|מסלול
@@ -281,7 +281,7 @@ radius|רדיוס
 symmetry|סימטריה
 vertical|אנכי
 horizontal|אופקי
-infinity|אינסוף
+infinity|אינסוף|♾️
 square root|שורש ריבועי
 axis|ציר
 # טכנולוגיה
@@ -311,7 +311,7 @@ fracture|שבר בעצם
 cure|ריפוי
 psychologist|פסיכולוג
 dehydration|התייבשות
-nausea|בחילה
+nausea|בחילה|🤢
 stretcher|אלונקה
 transplant|השתלה
 donor|תורם
@@ -330,14 +330,14 @@ erosion|סחף
 agriculture|חקלאות
 crop|יבול
 livestock|משק חי
-toxic|רעיל
+toxic|רעיל|☠️
 carbon|פחמן
 fertilizer|דשן
-tsunami|צונאמי
+tsunami|צונאמי|🌊
 avalanche|מפולת שלגים
 coral reef|שונית אלמוגים
 peninsula|חצי אי
-landscape|נוף
+landscape|נוף|🏞️
 tide|גאות ושפל
 migrate|לנדוד
 region|אזור
@@ -346,7 +346,7 @@ coastal|חופי
 # חיי יומיום וטיולים
 fabric|בד
 furnish|לרהט
-grave|קבר
+grave|קבר|🪦
 grip|אחיזה
 appliance|מכשיר חשמלי
 tenant|דייר
@@ -363,7 +363,7 @@ enthusiasm|התלהבות
 embarrass|לביך
 frustrate|לתסכל
 grief|אבל
-horror|אימה
+horror|אימה|😱
 envy|קנאה
 offended|נעלב
 satisfaction|סיפוק
@@ -371,7 +371,7 @@ faith|אמונה
 hatred|שנאה
 affection|חיבה
 passion|תשוקה
-confusion|בלבול
+confusion|בלבול|😕
 emotional|רגשי
 irritated|מעוצבן
 pity|רחמנות
@@ -559,7 +559,7 @@ era|עידן
 memorial|אנדרטה
 mansion|אחוזה
 conquer|לכבוש
-fortress|מבצר
+fortress|מבצר|🏰
 # שמות עצם כלליים
 plenty|שפע
 praise|שבח

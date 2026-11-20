@@ -454,16 +454,18 @@ async function testWordbank() {
   check(Object.keys(bank).length === 9, 'there are 9 level files');
   const total = Object.values(bank).flat().length;
   check(Object.values(bank).every(a => a.length >= 100), `every level has at least 100 words (${Object.entries(bank).map(([l, a]) => `L${l}:${a.length}`).join(' ')}; ${total} in total)`);
-  const badFormat = [], badEn = [], badHe = [], longHe = [], dupEn = [];
+  const badFormat = [], badEn = [], badHe = [], longHe = [], dupEn = [], badPic = [];
   for (const [lv, arr] of Object.entries(bank)) for (const p of arr) {
-    const [en, he] = p;
-    if (p.length !== 2 || !en.trim() || !he.trim()) { badFormat.push(`L${lv} ${p.join('|')}`); continue; }
+    const [en, he, pic] = p;
+    if (p.length < 2 || p.length > 3 || !en.trim() || !he.trim()) { badFormat.push(`L${lv} ${p.join('|')}`); continue; }
+    if (p.length === 3 && !/^[0-9]\uFE0F\u20E3$/.test(pic) && !/^\p{Extended_Pictographic}(\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?|\p{Emoji_Modifier})*$/u.test(pic)) badPic.push(`L${lv} ${en}=${pic}`);
     if (!/^[A-Za-z][A-Za-z' -]*$/.test(en)) badEn.push(`L${lv} ${en}`);
     if (!/^[֐-׿][֐-׿ '"\-\/,]*$/.test(he) || /[֑-ׇ]/.test(he)) badHe.push(`L${lv} ${en}=${he}`);
     if (he.split(/\s+/).length > 3) longHe.push(`L${lv} ${en}=${he}`);
     const k = en.toLowerCase(); if (allEn.has(k)) dupEn.push(`${en} (L${allEn.get(k)} and L${lv})`); else allEn.set(k, lv);
   }
-  check(!badFormat.length, `every line is "english|hebrew" (${badFormat.slice(0, 3).join('; ') || 'ok'})`);
+  check(!badFormat.length, `every line is "english|hebrew" or "english|hebrew|emoji" (${badFormat.slice(0, 3).join('; ') || 'ok'})`);
+  check(!badPic.length, `a picture is a single emoji (${badPic.slice(0, 5).join(', ') || 'ok'})`);
   check(!badEn.length, `English words use plain letters only (${badEn.slice(0, 5).join(', ') || 'ok'})`);
   check(!badHe.length, `Hebrew uses Hebrew letters only, no vowel marks (${badHe.slice(0, 5).join(', ') || 'ok'})`);
   check(!longHe.length, `no Hebrew meaning is longer than 3 words (${longHe.slice(0, 5).join(', ') || 'ok'})`);

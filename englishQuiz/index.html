@@ -461,8 +461,8 @@
             <div class="emoji-animation">🎉</div>
             <div class="result-title">כל הכבוד!</div>
             <p id="learn-done-text" style="font-size:1.2rem;margin:8px 0;"></p>
-            <p id="learn-unlock" style="font-size:1.1rem;font-weight:bold;color:#2f855a;margin:8px 0;"></p>
-            <button class="btn-restart" id="learn-next-cat" onclick="nextLearnCategory()"></button>
+            <p id="learn-unlock" style="font-size:1.1rem;font-weight:bold;color:#553c9a;margin:8px 0;">עכשיו בוחן קצר על המילים 📝</p>
+            <button class="btn-restart" id="learn-quiz-btn" onclick="startStepQuiz()">📝 לבוחן</button>
             <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="showStart()">🗺️ חזרה למסלול</button>
         </div>
 
@@ -470,12 +470,14 @@
             <div class="emoji-animation" id="summary-emoji">🏆</div>
             <div class="result-title" id="summary-title">וואו! אתם פשוט אלופים!</div>
             <div id="bonus-container"></div>
+            <p id="step-result" style="display:none;font-size:1.1rem;font-weight:bold;margin:8px 0;"></p>
             <p style="font-size: 1.3rem; margin: 10px 0;" id="summary-stats">צדקתם ב-0 מתוך 0 מילים</p>
             <p style="font-size: 1.5rem; font-weight: bold; color: #2b6cb0;" id="summary-final-score">ציון סופי: 0</p>
             <button class="btn-restart" onclick="restartGame()">נסו שוב</button>
             <button class="btn-restart" id="practice-missed-btn" style="display:none;margin-top:10px;background:#dd6b20;" onclick="practiceMissed()">תרגול המילים שטעיתי</button>
             <button class="btn-restart" id="all-words-btn" style="display:none;margin-top:10px;background:#718096;" onclick="playAll()">כל המילים</button>
-            <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="showStart()">החלפת מילים</button>
+            <button class="btn-restart" id="next-step-btn" style="display:none;margin-top:10px;background:#38a169;" onclick="nextLearnCategory()"></button>
+            <button class="btn-restart" id="change-words-btn" style="margin-top:10px;background:#718096;" onclick="showStart()">החלפת מילים</button>
         </div>
     </div>
 
@@ -663,6 +665,7 @@
             practiceBtn.style.display = missed.length ? "" : "none";
             practiceBtn.innerText = `תרגול המילים שטעיתי (${missed.length})`;
             document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
+            stepQuizResult(successRate, wordsData === fullWords);
         }
 
         // "→ תפריט" in the middle of a quiz: back to the main menu. The round is abandoned, so its points
@@ -775,6 +778,7 @@
             renderWords();
             try { localStorage.setItem(storeKey(), document.getElementById("words-input").value); } catch (e) {}
             document.getElementById("start-error").innerText = "";
+            stepQuiz = null;
             beginGame(res.words);
         }
 
@@ -940,6 +944,7 @@
         if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { for (const id of ["speak-btn", "learn-speak"]) { const b = document.getElementById(id); if (b) b.style.display = "none"; } });
 
         function showStart() {
+            stepQuiz = null;
             for (const id of ["summary-screen", "game-screen", "learn-screen", "learn-done-screen"]) document.getElementById(id).style.display = "none";
             document.getElementById("start-screen").style.display = "flex";
             if (mode === "category") renderPath();
@@ -1564,9 +1569,9 @@
 
 
         // ---- 📚 Learning path. Each level's categories in file order; a big category is split into parts of
-        // up to 15 words. Learning = cards with the English word (read aloud) and its Hebrew meaning together.
-        // Going through all the cards of a part finishes it and opens the next one;
-        // finished parts can be learned again any time.
+        // up to 15 words. Learning = cards with the English word (read aloud) and its Hebrew meaning together,
+        // then a short quiz on those words; passing it (70%+) opens the next part.
+        // Finished parts can be learned again any time.
         const LEARN_KEY = "englishquiz-learn-progress";   // { level: how many parts are finished, in order }
         const PART_MAX = 15;
         let learnProgress = {};
@@ -1670,24 +1675,57 @@
         }
 
         function finishLearning() {
-            const { level, index, steps } = learn, before = learnProgress[level] || 0;
-            if (before <= index) {
-                learnProgress[level] = index + 1;
-                try { localStorage.setItem(LEARN_KEY, JSON.stringify(learnProgress)); } catch (e) {}
-            }
+            const { index, steps } = learn;
             try { speechSynthesis.cancel(); } catch (e) {}
             document.getElementById("learn-screen").style.display = "none";
             document.getElementById("learn-done-screen").style.display = "block";
             document.getElementById("learn-done-text").textContent = `סיימתם ללמוד: ${catEmoji(steps[index].name)} ${stepLabel(steps[index])}`;
-            const next = steps[index + 1], btn = document.getElementById("learn-next-cat"), unlock = document.getElementById("learn-unlock");
-            if (next) {
-                unlock.textContent = before === index ? `🔓 נפתח נושא חדש: ${catEmoji(next.name)} ${stepLabel(next)}` : "";
-                btn.textContent = "▶ לנושא הבא";
-                btn.style.display = "";
+        }
+
+        // ---- The quiz at the end of each step of the learning path: the step's words, wrong answers from the
+        // same category. At least 70% right on the first try opens the next step.
+        const STEP_PASS = 70;
+        let stepQuiz = null;   // { level, index, steps } while a step's quiz is played
+
+        function startStepQuiz() {
+            const { level, index, steps } = learn, step = steps[index];
+            const meaning = w => chosen[w.en.toLowerCase()] || w.he;
+            const catWords = steps.filter(s => s.name === step.name).flatMap(s => s.words);   // all parts of the category
+            const levelWords = steps.flatMap(s => s.words);
+            const game = step.words.map(w => {
+                const right = meaning(w), wrong = [];
+                for (const pool of [step.words, catWords, levelWords]) {   // closest first: this step, its category, the level
+                    for (const t of shuffle([...new Set(pool.map(meaning))])) if (wrong.length < 3 && t !== right && !wrong.includes(t)) wrong.push(t);
+                }
+                return { word: w.en, correct: right, dynamics: wrong };
+            });
+            stepQuiz = { level, index, steps };
+            document.getElementById("learn-done-screen").style.display = "none";
+            beginGame(game);
+        }
+
+        // called by showSummary: in a step's quiz, a full round with 70%+ opens the next step
+        function stepQuizResult(rate, fullRound) {
+            const res = document.getElementById("step-result"), nextBtn = document.getElementById("next-step-btn");
+            document.getElementById("change-words-btn").textContent = stepQuiz ? "🗺️ חזרה למסלול" : "החלפת מילים";
+            res.style.display = nextBtn.style.display = "none";
+            if (!stepQuiz) return;
+            const { level, index, steps } = stepQuiz, before = learnProgress[level] || 0, passed = fullRound && rate >= STEP_PASS;
+            learn = { level, index, steps, step: steps[index], i: 0 };   // so "next topic" knows where we are
+            if (passed && before <= index) {
+                learnProgress[level] = index + 1;
+                try { localStorage.setItem(LEARN_KEY, JSON.stringify(learnProgress)); } catch (e) {}
+            }
+            const next = steps[index + 1];
+            res.style.display = "";
+            if (passed || before > index) {
+                res.style.color = "#2f855a";
+                res.textContent = !passed ? "" : next ? (before === index ? `🔓 נפתח נושא חדש: ${catEmoji(next.name)} ${stepLabel(next)}` : "✅ עברתם את הבוחן!") : `🏆 סיימתם את כל הנושאים ברמה ${level}!`;
+                if (!res.textContent) res.style.display = "none";
+                if (next || level < LEVEL_COUNT) { nextBtn.textContent = next ? "▶ לנושא הבא" : `▶ לרמה ${level + 1}`; nextBtn.style.display = ""; }
             } else {
-                unlock.textContent = `🏆 סיימתם את כל הנושאים ברמה ${level}!`;
-                btn.textContent = `▶ לרמה ${level + 1}`;
-                btn.style.display = level < LEVEL_COUNT ? "" : "none";
+                res.style.color = "#c05621";
+                res.textContent = fullRound ? `כדי לפתוח את הנושא הבא צריך ${STEP_PASS}% נכון בניסיון ראשון – נסו שוב! 💪` : "עכשיו נסו את כל הבוחן שוב 💪";
             }
         }
 

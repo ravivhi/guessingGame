@@ -2041,7 +2041,7 @@
             const boxes = shop.boxes || 0;
             document.getElementById("box-count").textContent = boxes ? `יש לכם ${boxes} ${boxes === 1 ? "קופסה" : "קופסאות"}!` : "אין לכם קופסה עדיין";
             document.getElementById("box-hint").textContent = streak < BOX_START
-                ? `מגיעים ל${STREAK_EMOJIS[STREAK_EMOJIS.length - 1]} ועוד ${BOX_EVERY} נכונות ברצף = קופסה`
+                ? `מגיעים לפרצוף האחרון ועוד ${BOX_EVERY} נכונות ברצף = קופסה`
                 : `עוד ${BOX_GOAL - streak} נכונות ברצף לקופסה!`;
             const stage = streakStage(streak), faces = document.getElementById("shop-faces");   // faces 1..current stage
             faces.innerHTML = "";

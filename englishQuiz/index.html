@@ -301,31 +301,28 @@
         .cat-step.locked .cat-emoji { filter: grayscale(1); opacity: 0.5; }
         @keyframes stepPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
 
-        /* learning cards: the English word, tap to flip and see the Hebrew */
+        /* learning cards: the English word (read aloud) and its Hebrew meaning on one card */
         #learn-screen { flex-direction: column; }
         .learn-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
         #learn-title { flex: 1; min-width: 0; font-weight: bold; color: #4a5568; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         #learn-count { font-weight: bold; color: #2b6cb0; white-space: nowrap; }
         .learn-bar { height: 12px; background: #edf2f7; border-radius: 6px; overflow: hidden; margin-bottom: clamp(10px, 3vh, 24px); }
         #learn-bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, #f6ad55, #38a169); border-radius: 6px; transition: width 0.3s; }
-        .flip-card { perspective: 1000px; height: clamp(200px, 44vh, 330px); cursor: pointer; touch-action: manipulation; }
-        .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
-        .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
-        .flip-card.no-anim .flip-inner { transition: none; }
-        .flip-face {
-            position: absolute; inset: 0;
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-            padding: 12px; border-radius: 24px; color: #fff;
+        .learn-card {
+            height: clamp(200px, 44vh, 330px);
+            display: flex; flex-direction: column;
+            border-radius: 24px; overflow: hidden; color: #fff;
             box-shadow: 0 6px 0 rgba(0,0,0,0.15);
         }
-        .flip-front { background: linear-gradient(135deg, #667eea, #9f7aea); }
-        .flip-back { background: linear-gradient(135deg, #38b2ac, #48bb78); transform: rotateY(180deg); }
+        .learn-top, .learn-bottom { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(4px, 1.5vh, 10px); padding: 8px 12px; min-height: 0; }
+        .learn-top { flex: 1.25; background: linear-gradient(135deg, #667eea, #9f7aea); }
+        .learn-bottom { flex: 1; background: linear-gradient(135deg, #38b2ac, #48bb78); }
+        .learn-card.pop { animation: cardPop 0.35s ease-out; }
+        @keyframes cardPop { from { transform: scale(0.92); opacity: 0.4; } to { transform: scale(1); opacity: 1; } }
+        .learn-en { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%; }
         .learn-emoji { font-size: clamp(2rem, 7vh, 3.2rem); line-height: 1; }
         #learn-word, #learn-meaning { font-size: clamp(1.8rem, 6vh, 2.6rem); font-weight: bold; line-height: 1.2; overflow-wrap: anywhere; }
-        #learn-word-back { font-size: 1.15rem; opacity: 0.9; }
-        .learn-hint { font-size: 0.9rem; opacity: 0.9; }
-        #learn-speak { width: 52px; height: 52px; font-size: 1.6rem; line-height: 1; background: rgba(255,255,255,0.25); border: none; border-radius: 50%; cursor: pointer; }
+        #learn-speak { flex: none; width: 48px; height: 48px; font-size: 1.6rem; line-height: 1; background: rgba(255,255,255,0.25); border: none; border-radius: 50%; cursor: pointer; }
         .learn-nav { display: flex; gap: 10px; margin-top: clamp(12px, 3vh, 24px); }
         .learn-nav button {
             flex: 1; padding: 14px 8px;
@@ -442,19 +439,16 @@
                 <div id="learn-count"></div>
             </div>
             <div class="learn-bar"><div id="learn-bar-fill"></div></div>
-            <div class="flip-card" id="learn-card" onclick="flipCard()">
-                <div class="flip-inner">
-                    <div class="flip-face flip-front">
-                        <div class="learn-emoji" id="learn-emoji"></div>
+            <div class="learn-card" id="learn-card">
+                <div class="learn-top">
+                    <div class="learn-emoji" id="learn-emoji"></div>
+                    <div class="learn-en">
                         <div id="learn-word" dir="ltr"></div>
-                        <button type="button" id="learn-speak" onclick="event.stopPropagation(); speakText(learnWord().en)" aria-label="השמעת המילה" title="השמעת המילה">🔊</button>
-                        <div class="learn-hint">👆 לחצו על הכרטיס כדי לגלות מה זה בעברית</div>
+                        <button type="button" id="learn-speak" onclick="speakText(learnWord().en)" aria-label="השמעת המילה" title="השמעת המילה">🔊</button>
                     </div>
-                    <div class="flip-face flip-back">
-                        <div id="learn-word-back" dir="ltr"></div>
-                        <div id="learn-meaning"></div>
-                        <div class="learn-hint">👆 לחצו שוב כדי לראות באנגלית</div>
-                    </div>
+                </div>
+                <div class="learn-bottom">
+                    <div id="learn-meaning"></div>
                 </div>
             </div>
             <div class="learn-nav">
@@ -1471,7 +1465,7 @@
         const levelCache = {};
         async function loadLevel(level) {
             if (levelCache[level]) return levelCache[level];
-            const res = await fetch(`wordbank/level-${level}.txt`);
+            const res = await fetch(`wordbank/level-${level}.txt`, { cache: "no-cache" });   // never an old copy from the browser cache
             if (!res.ok) throw new Error("לא נטען");
             const text = new TextDecoder("utf-8").decode(await res.arrayBuffer());
             const words = [];
@@ -1570,8 +1564,8 @@
 
 
         // ---- 📚 Learning path. Each level's categories in file order; a big category is split into parts of
-        // up to 15 words. Learning = flash cards: the English word (read aloud), tap to flip to the Hebrew.
-        // The "next" button works only after the card was flipped. Finishing a part opens the next one;
+        // up to 15 words. Learning = cards with the English word (read aloud) and its Hebrew meaning together.
+        // Going through all the cards of a part finishes it and opens the next one;
         // finished parts can be learned again any time.
         const LEARN_KEY = "englishquiz-learn-progress";   // { level: how many parts are finished, in order }
         const PART_MAX = 15;
@@ -1637,14 +1631,14 @@
             if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.offsetTop - list.clientHeight / 3);   // the open step in view
         }
 
-        let learn = null;   // { level, index, steps, step, i, seen }
+        let learn = null;   // { level, index, steps, step, i }
         const learnWord = () => learn.step.words[learn.i];
         async function startLearning(level, index) {
             let words;
             try { words = await loadLevel(level); } catch (e) { return; }
             const steps = learnSteps(words);
             if (!steps[index]) return;
-            learn = { level, index, steps, step: steps[index], i: 0, seen: new Set() };
+            learn = { level, index, steps, step: steps[index], i: 0 };
             for (const id of ["start-screen", "learn-done-screen", "summary-screen", "game-screen"]) document.getElementById(id).style.display = "none";
             document.getElementById("learn-screen").style.display = "flex";
             showCard();
@@ -1653,37 +1647,23 @@
         function updateLearnNav() {
             const n = learn.step.words.length, last = learn.i === n - 1;
             document.getElementById("learn-prev").disabled = learn.i === 0;
-            const next = document.getElementById("learn-next");
-            next.disabled = !learn.seen.has(learn.i);
-            next.textContent = last ? "🏁 סיום" : "הבא ←";
-            document.getElementById("learn-bar-fill").style.width = `${(learn.seen.size / n) * 100}%`;
+            document.getElementById("learn-next").textContent = last ? "🏁 סיום" : "הבא ←";
+            document.getElementById("learn-bar-fill").style.width = `${((learn.i + 1) / n) * 100}%`;
         }
 
         function showCard() {
             const s = learn.step, w = learnWord(), card = document.getElementById("learn-card");
-            card.classList.add("no-anim");   // turn back to the English side at once, so the next meaning never flashes
-            card.classList.remove("flipped");
-            void card.offsetWidth;
-            card.classList.remove("no-anim");
+            card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");   // a small pop for each new card
             document.getElementById("learn-title").textContent = `${catEmoji(s.name)} ${stepLabel(s)}`;
             document.getElementById("learn-count").textContent = `${learn.i + 1}/${s.words.length}`;
             document.getElementById("learn-emoji").textContent = catEmoji(s.name);
             document.getElementById("learn-word").textContent = w.en;
-            document.getElementById("learn-word-back").textContent = w.en;
             document.getElementById("learn-meaning").textContent = chosen[w.en.toLowerCase()] || w.he;
             updateLearnNav();
             speakText(w.en);
         }
 
-        function flipCard() {
-            const card = document.getElementById("learn-card");
-            card.classList.toggle("flipped");
-            if (card.classList.contains("flipped")) learn.seen.add(learn.i);
-            updateLearnNav();
-        }
-
         function learnStep(d) {
-            if (d > 0 && !learn.seen.has(learn.i)) return;
             if (d > 0 && learn.i === learn.step.words.length - 1) return finishLearning();
             learn.i = Math.max(0, Math.min(learn.step.words.length - 1, learn.i + d));
             showCard();

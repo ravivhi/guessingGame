@@ -77,7 +77,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             font-size: 1.1rem;
             font-weight: bold;
             color: #4a5568;
@@ -108,7 +108,7 @@
         .instruction-text {
             font-size: 1rem;
             color: #718096;
-            margin-bottom: 20px;
+            margin-bottom: clamp(16px, 7vh, 60px);   /* grows with screen height, shrinks on short phones */
         }
 
         .answers-grid {
@@ -344,7 +344,7 @@
             </div>
             
             <div class="instruction-text">מה הפירוש הנכון של המילה:</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:clamp(20px, 11vh, 90px);">
                 <div class="question-text" id="question-word" dir="ltr">Word</div>
                 <button type="button" id="speak-btn" onclick="speakWord()" aria-label="השמעת המילה" title="השמעת המילה" style="font-size:1.6rem;line-height:1;padding:6px 10px;margin-bottom:5px;background:#e2e8f0;border:none;border-radius:50%;cursor:pointer;">🔊</button>
             </div>

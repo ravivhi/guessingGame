@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## alfi/ is generated — do not edit here
 
-`alfi/` (served at ravivh.com/alfi/) is synced from the separate public repo **ravivhi/alfi** (`web/` folder) by `.github/workflows/sync-alfi.yml` here, which runs every ~10 minutes and overwrites this folder. Make alfi changes in that repo. ravivhi/alfi deliberately holds no credentials for this repo (its collaborators must not be able to change anything else here), so keep it a pull, never a push. `.well-known/assetlinks.json` stays here because it must live at the domain root.
+`alfi/` (served at ravivh.com/alfi/) is synced from the separate public repo **ravivhi/alfi** (`web/` folder) by `.github/workflows/sync-alfi.yml` here, which the owner runs manually (Run workflow) after reviewing alfi changes, and which overwrites this folder. Make alfi changes in that repo. ravivhi/alfi deliberately holds no credentials for this repo (its collaborators must not be able to change anything else here), so keep it a pull, never a push. `.well-known/assetlinks.json` stays here because it must live at the domain root.
 
 ## Development
 

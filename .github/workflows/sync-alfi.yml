@@ -5,10 +5,11 @@
 # alfi collaborators can change only what ends up in alfi/, never anything else here.
 name: Sync alfi from ravivhi/alfi
 
+# Manual only: the owner reviews ravivhi/alfi changes, then publishes them with
+# Actions → "Sync alfi from ravivhi/alfi" → Run workflow. (alfi collaborators push
+# to its main without review, so this click is the approval step for the kids' app.)
 on:
-  schedule:
-    - cron: '*/10 * * * *'   # every ~10 min (GitHub may delay scheduled runs)
-  workflow_dispatch:          # "Run workflow" button for an immediate sync
+  workflow_dispatch:
 
 permissions:
   contents: write

@@ -1,4 +1,4 @@
-# money and economy
+# כסף וכלכלה
 economy|כלכלה
 economic|כלכלי
 earnings|רווחים
@@ -38,7 +38,7 @@ merchant|סוחר
 supply|אספקה
 resource|משאב
 property|רכוש
-# business and work
+# עסקים ועבודה
 industry|תעשייה
 firm|חברה עסקית
 employ|להעסיק
@@ -74,7 +74,7 @@ patent|פטנט
 staff|צוות עובדים
 overtime|שעות נוספות
 mission|שליחות
-# government and politics
+# ממשל ופוליטיקה
 govern|למשול
 institution|מוסד
 establish|להקים
@@ -110,7 +110,7 @@ oppose|להיות נגד
 minister|שר
 elect|לבחור בבחירות
 neutral|ניטרלי
-# law and justice
+# חוק ומשפט
 enforce|לאכוף
 fault|אשמה
 trial|משפט
@@ -130,7 +130,7 @@ suspect|חשוד
 alibi|אליבי
 guardian|אפוטרופוס
 justice|צדק
-# society and people
+# חברה ואנשים
 ethnic|אתני
 heritage|מורשת
 immigrant|מהגר
@@ -152,7 +152,7 @@ urban|עירוני
 spouse|בן זוג
 peer|בן אותו גיל
 religion|דת
-# war and security
+# מלחמה וביטחון
 invade|לפלוש
 ceasefire|הפסקת אש
 territory|טריטוריה
@@ -177,7 +177,7 @@ revolution|מהפכה
 hostage|בן ערובה
 terrorism|טרור
 tension|מתיחות
-# media and communication
+# מדיה ותקשורת
 highlight|להדגיש
 editor|עורך
 press|עיתונות
@@ -202,7 +202,7 @@ lecture|הרצאה
 subscriber|מנוי
 quote|לצטט
 commercial|פרסומת
-# education and learning
+# חינוך ולמידה
 essay|חיבור
 curriculum|תוכנית לימודים
 semester|סמסטר
@@ -224,7 +224,7 @@ archive|ארכיון
 record|לתעד
 revise|לתקן טקסט
 submit|להגיש
-# science and research
+# מדע ומחקר
 element|יסוד
 friction|חיכוך
 function|פונקציה
@@ -268,7 +268,7 @@ range|טווח
 rate|שיעור
 structure|מבנה
 reaction|תגובה
-# math
+# מתמטיקה
 formula|נוסחה
 equation|משוואה
 geometry|גאומטריה
@@ -284,7 +284,7 @@ horizontal|אופקי
 infinity|אינסוף
 square root|שורש ריבועי
 axis|ציר
-# technology
+# טכנולוגיה
 gadget|גאדג'ט
 hardware|חומרה
 encrypt|להצפין
@@ -300,7 +300,7 @@ network|רשת
 wireless|אלחוטי
 upgrade|לשדרג
 virtual|וירטואלי
-# health and medicine
+# בריאות ורפואה
 heal|לרפא
 injure|לפצוע
 exhaust|להתיש
@@ -321,7 +321,7 @@ organ|איבר
 pulse|דופק
 nerve|עצב
 hygiene|היגיינה
-# environment and nature
+# סביבה וטבע
 horizon|אופק
 grain|גרגר
 hazard|סיכון
@@ -343,7 +343,7 @@ migrate|לנדוד
 region|אזור
 tropical|טרופי
 coastal|חופי
-# everyday life and travel
+# חיי יומיום וטיולים
 fabric|בד
 furnish|לרהט
 grave|קבר
@@ -357,7 +357,7 @@ tourism|תיירות
 customs|מכס
 terminal|טרמינל
 itinerary|מסלול טיול
-# feelings
+# רגשות
 eager|להוט
 enthusiasm|התלהבות
 embarrass|לביך
@@ -375,7 +375,7 @@ confusion|בלבול
 emotional|רגשי
 irritated|מעוצבן
 pity|רחמנות
-# character and behavior
+# אופי והתנהגות
 humble|צנוע
 impolite|לא מנומס
 fierce|עז
@@ -387,7 +387,7 @@ witty|שנון
 responsible|אחראי
 optimistic|אופטימי
 pessimistic|פסימי
-# thinking and ideas
+# חשיבה ורעיונות
 emphasis|דגש
 feature|תכונה
 fundamental|יסודי
@@ -419,7 +419,7 @@ predict|לחזות
 standard|תקן
 recall|להיזכר
 realistic|מציאותי
-# describing words
+# מילות תיאור
 efficient|יעיל
 elaborate|מפורט
 extreme|קיצוני
@@ -469,7 +469,7 @@ stable|יציב
 superior|עליון
 proper|ראוי
 spectacular|מרהיב
-# linking words and adverbs
+# מילות קישור ותוארי פועל
 eventually|בסופו של דבר
 hardly|בקושי
 instant|מיידית
@@ -494,7 +494,7 @@ afterwards|אחר כך
 meanwhile|בינתיים
 literally|פשוטו כמשמעו
 approximately|בערך
-# verbs: change and processes
+# פעלים: שינוי ותהליכים
 eliminate|לחסל
 emerge|לצוץ
 expand|להתרחב
@@ -521,7 +521,7 @@ specialize|להתמחות
 evacuate|לפנות
 flee|לברוח
 immigrate|להגר
-# verbs: people and actions
+# פעלים: אנשים ופעולות
 encounter|להיתקל
 engage|לעסוק
 fulfill|להגשים
@@ -551,7 +551,7 @@ retire|לפרוש
 rely|לסמוך
 seek|לבקש
 restore|לשחזר
-# history
+# היסטוריה
 colony|מושבה
 ancestor|אב קדמון
 ruins|חורבות
@@ -560,7 +560,7 @@ memorial|אנדרטה
 mansion|אחוזה
 conquer|לכבוש
 fortress|מבצר
-# general nouns
+# שמות עצם כלליים
 plenty|שפע
 praise|שבח
 portion|מנה

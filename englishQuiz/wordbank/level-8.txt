@@ -1,4 +1,4 @@
-# government and law
+# ממשל וחוק
 jury|חבר מושבעים
 legal|חוקי
 liberty|חירות
@@ -34,7 +34,7 @@ warrant|צו
 reform|רפורמה
 acquittal|זיכוי
 custody|משמורת
-# politics and elections
+# פוליטיקה ובחירות
 coalition|קואליציה
 opposition|אופוזיציה
 ballot|פתק הצבעה
@@ -54,7 +54,7 @@ cabinet|קבינט
 compromise|פשרה
 proposal|הצעה
 allegiance|נאמנות
-# society and culture
+# חברה ותרבות
 norm|נורמה
 prejudice|דעה קדומה
 minor|קטין
@@ -84,7 +84,7 @@ soul|נשמה
 sacred|קדוש
 humanitarian|הומניטרי
 metropolis|מטרופולין
-# economy and money
+# כלכלה וכסף
 pension|פנסיה
 margin|שוליים
 taxation|מיסוי
@@ -109,7 +109,7 @@ commodity|מצרך
 quota|מכסה
 tariff|מכס
 dividend|דיבידנד
-# work and career
+# עבודה וקריירה
 recruit|לגייס
 qualification|הכשרה
 expertise|מומחיות
@@ -122,7 +122,7 @@ workload|עומס עבודה
 commute|נסיעה לעבודה
 pioneer|חלוץ
 lecturer|מרצה
-# science and research
+# מדע ומחקר
 nuclear|גרעיני
 phenomenon|תופעה
 hypothesis|השערה
@@ -147,7 +147,7 @@ sphere|כדור
 hormone|הורמון
 catalyst|זרז
 inertia|אינרציה
-# environment and nature
+# סביבה וטבע
 marine|ימי
 moisture|לחות
 ecology|אקולוגיה
@@ -168,7 +168,7 @@ pesticide|חומר הדברה
 slope|מדרון
 sediment|משקע
 monsoon|מונסון
-# health and medicine
+# בריאות ורפואה
 nutrition|תזונה
 diagnosis|אבחנה
 therapy|טיפול
@@ -190,7 +190,7 @@ psychiatrist|פסיכיאטר
 sanitation|תברואה
 antibiotic|אנטיביוטיקה
 carbohydrate|פחמימה
-# feelings and emotions
+# רגשות
 mercy|רחמים
 misery|אומללות
 compassion|חמלה
@@ -210,7 +210,7 @@ admiration|הערצה
 optimism|אופטימיות
 euphoria|אופוריה
 melancholy|מלנכוליה
-# personality and character
+# אישיות ואופי
 passive|פסיבי
 arrogant|יהיר
 modest|צנוע
@@ -228,7 +228,7 @@ indifferent|אדיש
 punctual|דייקן
 ambitious|שאפתני
 altruism|אלטרואיזם
-# thinking and ideas
+# חשיבה ורעיונות
 notion|תפיסה
 perspective|פרספקטיבה
 philosophy|פילוסופיה
@@ -258,7 +258,7 @@ denial|הכחשה
 connotation|משמעות נלווית
 premise|הנחת יסוד
 fallacy|כשל לוגי
-# verbs: thinking and judging
+# פעלים: חשיבה ושיפוט
 overlook|להחמיץ
 evaluate|להעריך
 perceive|לקלוט
@@ -277,7 +277,7 @@ formulate|לנסח
 derive|לנבוע
 regard|להתייחס
 emphasize|להדגיש
-# literature and the arts
+# ספרות ואמנות
 journal|יומן
 literature|ספרות
 narrative|נרטיב
@@ -299,7 +299,7 @@ sonnet|סונט
 anthology|אנתולוגיה
 antagonist|דמות יריבה
 symbolism|סמליות
-# media and communication
+# מדיה ותקשורת
 editorial|מאמר מערכת
 propaganda|תעמולה
 censorship|צנזורה
@@ -314,7 +314,7 @@ edition|מהדורה
 rhetoric|רטוריקה
 publish|לפרסם
 review|ביקורת
-# history and the past
+# היסטוריה ועבר
 medieval|של ימי הביניים
 revolt|מרד
 monarchy|מלוכה
@@ -329,7 +329,7 @@ invasion|פלישה
 surrender|להיכנע
 triumph|ניצחון
 chaos|תוהו ובוהו
-# technology
+# טכנולוגיה
 mechanical|מכני
 manual|ידני
 launch|לשגר
@@ -344,7 +344,7 @@ transmit|לשדר
 obsolete|מיושן
 compatible|תואם
 malfunction|תקלה
-# time and change
+# זמן ושינוי
 period|תקופה
 phase|שלב
 pace|קצב
@@ -360,7 +360,7 @@ transition|מעבר
 duration|משך זמן
 fluctuate|לתנוד
 expansion|התרחבות
-# linking words
+# מילות קישור
 likewise|כמו כן
 merely|בסך הכול
 furthermore|יתר על כן
@@ -373,7 +373,7 @@ accordingly|בהתאם
 presumably|כנראה
 seldom|לעיתים רחוקות
 virtually|כמעט לגמרי
-# verbs: actions and processes
+# פעלים: פעולות ותהליכים
 locate|לאתר
 maintain|לתחזק
 monitor|לנטר
@@ -422,7 +422,7 @@ represent|לייצג
 relate|לקשר
 promote|לקדם
 resemble|להידמות
-# describing words
+# מילות תיאור
 mighty|אדיר
 moderate|מתון
 mutual|הדדי
@@ -467,7 +467,7 @@ significant|משמעותי
 specific|ספציפי
 precise|מדויק
 remote|מרוחק
-# nouns: general
+# שמות עצם כלליים
 junction|צומת
 merit|הצטיינות
 obligation|חובה

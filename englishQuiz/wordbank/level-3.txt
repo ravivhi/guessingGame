@@ -1,4 +1,4 @@
-# family and people
+# משפחה ואנשים
 husband|בעל
 wife|אישה
 stranger|זר
@@ -8,7 +8,7 @@ niece|אחיינית
 grandson|נכד
 granddaughter|נכדה
 member|חבר בקבוצה
-# jobs
+# מקצועות
 judge|שופט
 lawyer|עורך דין
 engineer|מהנדס
@@ -34,7 +34,7 @@ painter|צייר
 chef|שף
 lifeguard|מציל
 babysitter|בייביסיטר
-# home and kitchen
+# בית ומטבח
 drawer|מגירה
 washing machine|מכונת כביסה
 freezer|מקפיא
@@ -72,7 +72,7 @@ saw|מסור
 drill|מקדחה
 screwdriver|מברג
 alarm clock|שעון מעורר
-# food and cooking
+# אוכל ובישול
 cereal|דגני בוקר
 flour|קמח
 dough|בצק
@@ -109,7 +109,7 @@ eggplant|חציל
 cabbage|כרוב
 garlic|שום
 lettuce|חסה
-# body and health
+# גוף ובריאות
 hip|ירך
 heel|עקב
 eyelash|ריס
@@ -131,7 +131,7 @@ freckles|נמשים
 ambulance|אמבולנס
 pill|גלולה
 pain|כאב
-# feelings and character
+# רגשות ואופי
 afraid|מפחד
 glad|שמח
 pleased|מרוצה
@@ -144,7 +144,7 @@ serious|רציני
 friendly|חברותי
 naughty|שובב
 stupid|טיפש
-# school and learning
+# בית ספר ולמידה
 principal|מנהל בית ספר
 timetable|מערכת שעות
 quiz|חידון
@@ -182,7 +182,7 @@ poem|שיר
 bookmark|סימנייה
 whiteboard|לוח מחיק
 crossword|תשבץ
-# sports and games
+# ספורט ומשחקים
 player|שחקן
 coach|מאמן
 goalkeeper|שוער כדורגל
@@ -211,7 +211,7 @@ whistle|משרוקית
 helmet|קסדה
 dice|קוביית משחק
 marbles|גולות
-# music and celebrations
+# מוזיקה וחגיגות
 band|להקה
 flute|חליל
 trumpet|חצוצרה
@@ -228,7 +228,7 @@ fireworks|זיקוקים
 Hanukkah|חנוכה
 Passover|פסח
 Purim|פורים
-# stories and adventure
+# סיפורים והרפתקאות
 adventure|הרפתקה
 riddle|חידה
 knight|אביר
@@ -245,7 +245,7 @@ detective|בלש
 thief|גנב
 joke|בדיחה
 comic|קומיקס
-# town and transport
+# עיר ותחבורה
 community center|מתנ"ס
 mall|קניון
 pharmacy|בית מרקחת
@@ -276,7 +276,7 @@ seat|מושב
 amusement park|לונה פארק
 aquarium|אקווריום
 fire station|תחנת כיבוי
-# travel and holidays
+# טיולים וחופשות
 tourist|תייר
 guide|מדריך
 passport|דרכון
@@ -297,7 +297,7 @@ north|צפון
 south|דרום
 east|מזרח
 west|מערב
-# weather and nature
+# מזג אוויר וטבע
 season|עונה
 sunrise|זריחה
 sunset|שקיעה
@@ -337,7 +337,7 @@ oak|אלון
 foggy|ערפילי
 muddy|בוצי
 dusty|מאובק
-# animals
+# בעלי חיים
 feather|נוצה
 beak|מקור
 claw|טופר
@@ -369,7 +369,7 @@ octopus|תמנון
 jellyfish|מדוזה
 seahorse|סוסון ים
 lobster|לובסטר
-# clothes and accessories
+# בגדים ואביזרים
 vest|וסט
 hoodie|קפוצ'ון
 tracksuit|טרנינג
@@ -385,7 +385,7 @@ wristwatch|שעון יד
 jewelry|תכשיטים
 bracelet|צמיד
 earrings|עגילים
-# technology and media
+# טכנולוגיה ומדיה
 tablet|טאבלט
 headphones|אוזניות
 speaker|רמקול
@@ -406,7 +406,7 @@ search|לחפש
 download|להוריד
 turn on|להדליק
 turn off|לכבות
-# shopping and things
+# קניות וחפצים
 shopping|קניות
 cheap|זול
 expensive|יקר
@@ -424,7 +424,7 @@ rubber|גומי
 cotton|כותנה
 wool|צמר
 cardboard|קרטון
-# shapes and measurements
+# צורות ומידות
 shape|צורה
 dot|נקודה
 size|גודל
@@ -443,7 +443,7 @@ oval|אליפסה
 diamond|מעוין
 plus|פלוס
 minus|מינוס
-# verbs: everyday actions
+# פעלים: פעולות יומיומיות
 get up|לקום
 die|למות
 invite|להזמין
@@ -479,7 +479,7 @@ chew|ללעוס
 enjoy|ליהנות
 fill|למלא
 snore|לנחור
-# verbs: talking and thinking
+# פעלים: דיבור וחשיבה
 believe|להאמין
 understand|להבין
 decide|להחליט
@@ -493,7 +493,7 @@ behave|להתנהג
 guess|לנחש
 repeat|לחזור על
 giggle|לצחקק
-# describing words
+# מילות תיאור
 fresh|טרי
 raw|נא
 spicy|חריף
@@ -523,7 +523,7 @@ wild|פראי
 striped|מפוספס
 spotted|מנוקד
 hairy|שעיר
-# small words
+# מילים קטנות
 there|שם
 since|מאז
 too|יותר מדי

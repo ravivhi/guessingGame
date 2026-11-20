@@ -1,4 +1,4 @@
-# days, months and seasons
+# ימים, חודשים ועונות
 Sunday|יום ראשון
 Monday|יום שני
 Tuesday|יום שלישי
@@ -23,7 +23,7 @@ summer|קיץ
 winter|חורף
 spring|אביב
 autumn|סתיו
-# time
+# זמן
 today|היום
 tomorrow|מחר
 yesterday|אתמול
@@ -47,7 +47,7 @@ sometimes|לפעמים
 often|הרבה פעמים
 early|מוקדם
 late|מאוחר
-# more numbers
+# מספרים גדולים
 thirty|שלושים
 forty|ארבעים
 fifty|חמישים
@@ -62,7 +62,7 @@ third|שלישי
 last|אחרון
 next|הבא
 half|חצי
-# jobs
+# מקצועות
 job|עבודה
 worker|עובד
 doctor|רופא
@@ -84,7 +84,7 @@ waiter|מלצר
 scientist|מדען
 soldier|חייל
 postman|דוור
-# sports and hobbies
+# ספורט ותחביבים
 sport|ספורט
 football|כדורגל
 basketball|כדורסל
@@ -107,7 +107,7 @@ violin|כינור
 chess|שחמט
 cards|קלפים
 camera|מצלמה
-# town
+# העיר
 town|עיירה
 bank|בנק
 post office|דואר
@@ -127,7 +127,7 @@ corner|פינה
 road|כביש
 village|כפר
 library|ספרייה
-# more animals
+# בעלי חיים
 insect|חרק
 worm|תולעת
 bat|עטלף
@@ -144,7 +144,7 @@ ostrich|יען
 peacock|טווס
 goose|אווז
 calf|עגל
-# more food and drink
+# אוכל ושתייה
 breakfast|ארוחת בוקר
 lunch|ארוחת צהריים
 dinner|ארוחת ערב
@@ -174,7 +174,7 @@ pita|פיתה
 schnitzel|שניצל
 muffin|מאפין
 waffle|ופל
-# health and body
+# בריאות וגוף
 sick|חולה
 healthy|בריא
 hurt|כואב
@@ -193,7 +193,7 @@ chin|סנטר
 elbow|מרפק
 cheek|לחי
 skin|עור
-# feelings
+# רגשות
 excited|נרגש
 scared|מפוחד
 surprised|מופתע
@@ -205,7 +205,7 @@ sleepy|ישנוני
 calm|רגוע
 careful|זהיר
 brave|אמיץ
-# stories and magic
+# סיפורים וקסמים
 giant|ענק
 clown|ליצן
 wizard|קוסם
@@ -215,7 +215,7 @@ treasure|אוצר
 castle|טירה
 secret|סוד
 surprise|הפתעה
-# more things we do
+# פעולות
 bring|להביא
 carry|לשאת
 catch|לתפוס
@@ -284,7 +284,7 @@ yawn|לפהק
 sneeze|להתעטש
 crawl|לזחול
 tickle|לדגדג
-# more describing words
+# מילות תיאור
 young|צעיר
 easy|קל
 difficult|מסובך
@@ -333,7 +333,7 @@ furry|פרוותי
 weak|חלש
 nice|נחמד
 cool|מגניב
-# where things are
+# איפה דברים נמצאים
 behind|מאחורי
 between|בין
 next to|ליד
@@ -357,7 +357,7 @@ top|חלק עליון
 bottom|תחתית
 side|צד
 away|הרחק
-# small words
+# מילים קטנות
 what|מה
 where|איפה
 when|מתי
@@ -396,7 +396,7 @@ many|הרבה
 more|יותר
 less|פחות
 another|נוסף
-# travel and holiday
+# טיולים וחופשות
 holiday|חופשה
 trip|טיול
 hotel|מלון
@@ -424,7 +424,7 @@ earth|כדור הארץ
 space|חלל
 rocket|טיל
 world|עולם
-# technology and media
+# טכנולוגיה ומדיה
 screen|מסך
 internet|אינטרנט
 video|סרטון
@@ -439,7 +439,7 @@ newspaper|עיתון
 magazine|מגזין
 letter|מכתב
 stamp|בול
-# around the house
+# בבית ומסביב
 balcony|מרפסת
 elevator|מעלית
 fridge|מקרר
@@ -471,7 +471,7 @@ shelf|מדף
 basket|סל
 tray|מגש
 glass|זכוכית
-# more clothes
+# בגדים ואביזרים
 uniform|מדים
 ring|טבעת
 necklace|שרשרת
@@ -483,7 +483,7 @@ slippers|נעלי בית
 raincoat|מעיל גשם
 costume|תחפושת
 mask|מסכה
-# nature
+# טבע
 seed|זרע
 branch|ענף
 bush|שיח
@@ -497,7 +497,7 @@ smoke|עשן
 air|אוויר
 wood|עץ
 weather|מזג אוויר
-# school subjects and words
+# מקצועות לימוד ובית ספר
 homework|שיעורי בית
 exam|מבחן
 mistake|טעות
@@ -517,7 +517,7 @@ Hebrew|עברית
 Arabic|ערבית
 chalk|גיר
 lesson|שיעור
-# money and shopping
+# כסף וקניות
 coin|מטבע
 money|כסף
 price|מחיר
@@ -527,7 +527,7 @@ sell|למכור
 pay|לשלם
 rich|עשיר
 poor|עני
-# family and people
+# משפחה ואנשים
 mother|אמא
 father|אבא
 grandmother|סבתא

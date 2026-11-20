@@ -108,7 +108,7 @@
         .instruction-text {
             font-size: 1rem;
             color: #718096;
-            margin-bottom: clamp(16px, 7vh, 60px);   /* grows with screen height, shrinks on short phones */
+            margin-bottom: clamp(3px, 1.5vh, 15px);   /* grows with screen height, shrinks on short phones */
         }
 
         .answers-grid {
@@ -204,7 +204,7 @@
         .tab-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* a big emoji at the top of the quiz: gets happier every 5 first-try answers in a row.
-           It takes no room until it appears, then it slides open above the header. */
+           It sits in the gap between the word and the answers, and slides open there when it appears. */
         #streak-emoji {
             width: fit-content;   /* only as wide as the emoji, so the pop animation can never widen the page */
             height: 0;
@@ -217,8 +217,10 @@
             transition: height 0.3s, margin 0.3s, opacity 0.35s;
             pointer-events: none;
             user-select: none;
+            position: relative;
+            top: -0.06em;   /* the emoji is drawn low in its line box: lift it so the space above and below it looks equal */
         }
-        #streak-emoji.on { height: 1.15em; margin: 0 auto 8px; opacity: 1; overflow: visible; }
+        #streak-emoji.on { height: 1.15em; margin: 4px auto 9px; opacity: 1; overflow: visible; }   /* 9px below = 4px + the word's 5px margin above, so both gaps match */
         #streak-emoji.pop { animation: streakPop 0.75s ease-out; }
         @keyframes streakPop {
             0%   { transform: scale(0.2) rotate(-15deg); }
@@ -300,6 +302,7 @@
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
                 <div id="menu-streak" aria-hidden="true" style="font-size:1.6rem;line-height:1.2;"></div>
+                <div id="menu-streak-count" title="שלב האימוג׳י" style="font-weight:bold;color:#2b6cb0;"></div>
             </div>
             <div class="tabs" role="tablist">
                 <button type="button" role="tab" id="tab-random" class="tab-btn" aria-selected="true" onclick="setMode('random')">🎲 מילים אקראיות</button>
@@ -336,19 +339,22 @@
         </div>
 
         <div id="game-screen" style="display:none;">
-            <div id="streak-emoji" aria-hidden="true"></div>
             <div class="header-info">
                 <button type="button" id="back-btn" class="action-btn" onclick="leaveGame()" aria-label="חזרה לתפריט הראשי" title="חזרה לתפריט הראשי" style="padding:5px 10px;font-size:0.9rem;">→ תפריט</button>
                 <div class="score-box">נקודות: <span id="score">0</span></div>
+                <div id="streak-next" title="תשובות נכונות ברצף עד האימוג׳י הבא" style="font-size:0.85rem;font-weight:normal;color:#718096;white-space:nowrap;"></div>
                 <div class="progress-box">שאלה: <span id="current-progress">1</span>/<span id="total-progress">0</span></div>
             </div>
             
             <div class="instruction-text">מה הפירוש הנכון של המילה:</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:clamp(20px, 11vh, 90px);">
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
                 <div class="question-text" id="question-word" dir="ltr">Word</div>
                 <button type="button" id="speak-btn" onclick="speakWord()" aria-label="השמעת המילה" title="השמעת המילה" style="font-size:1.6rem;line-height:1;padding:6px 10px;margin-bottom:5px;background:#e2e8f0;border:none;border-radius:50%;cursor:pointer;">🔊</button>
             </div>
-            
+            <!-- the gap between the word and the answers; the big streak emoji appears inside it -->
+            <div style="min-height:clamp(20px, 11vh, 90px);display:flex;align-items:center;justify-content:center;">
+                <div id="streak-emoji" aria-hidden="true"></div>
+            </div>
             <div class="answers-grid" id="answers-container"></div>
         </div>
 
@@ -404,7 +410,7 @@
 
         // A big emoji appears behind the quiz after 5 answers in a row that were right on the first try, and a
         // happier one every 5 more for the first 10 emojis, every 10 for emojis 11-20, every 15 for 21-30 (30 emojis
-        // = a streak of 300). One wrong first try halves the streak (rounded down).
+        // = a streak of 300). One wrong first try lowers the streak by 1.
         // The streak carries on into the next round and through the menu; only a wrong first try lowers it.
         // 30 emojis that look clearly different from each other (no near-twins like 😀 / 😃): faces from a slight
         // smile up to 😻 at 75, then 🤗 😉 😸 🤑 💯 and celebration symbols up to 👑 at a streak of 300.
@@ -427,6 +433,10 @@
             const stage = streakStage(streak);
             const menuEl = document.getElementById("menu-streak");   // small copy of the emoji on the main screen
             if (menuEl) menuEl.textContent = stage ? STREAK_EMOJIS[stage - 1] : "";
+            const countEl = document.getElementById("menu-streak-count");   // the emoji's stage (1-30), next to the small emoji
+            if (countEl) countEl.textContent = stage ? String(stage) : "";
+            const nextEl = document.getElementById("streak-next");   // in the game: how many more right answers to the next emoji
+            if (nextEl) nextEl.textContent = stage < STREAK_EMOJIS.length ? "עוד " + (streakThreshold(stage + 1) - streak) : "";
             if (stage === shownStage) return;
             shownStage = stage;
             if (stage === 0) { el.classList.remove("on", "pop"); return; }   // a mistake: the emoji fades away
@@ -493,7 +503,7 @@
             } else {
                 selectedButton.classList.add("wrong");
                 selectedButton.disabled = true;
-                if (wrongCount === 0) { totalScore -= 1; streak = Math.floor(streak / 2); updateStreakEmoji(); }
+                if (wrongCount === 0) { totalScore = Math.max(0, totalScore - 1); streak = Math.max(0, streak - 1); updateStreakEmoji(); }
                 wrongCount++;
                 document.getElementById("score").innerText = totalScore;
                 const cur = wordsData[currentIndex];

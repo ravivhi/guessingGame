@@ -335,10 +335,8 @@ glue|דבק
 crayon|עפרון צבעוני
 color|צבע
 board|לוח
-lesson|שיעור
 pencil case|קלמר
 sticker|מדבקה
-chalk|גיר
 # toys and games
 ball|כדור
 doll|בובה
@@ -403,7 +401,6 @@ leaf|עלה
 rock|סלע
 fire|אש
 ice|קרח
-weather|מזג אוויר
 snowflake|פתית שלג
 sunflower|חמנייה
 rose|ורד

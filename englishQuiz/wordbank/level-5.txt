@@ -5,8 +5,6 @@ volunteer|מתנדב
 rights|זכויות
 vote|להצביע
 mayor|ראש עיר
-president|נשיא
-leader|מנהיג
 public|ציבורי
 private|פרטי
 generation|דור
@@ -21,7 +19,6 @@ female|נקבה
 event|אירוע
 celebrate|לחגוג
 issue|סוגיה
-parade|מצעד
 organization|ארגון
 donate|לתרום
 unity|אחדות
@@ -31,21 +28,20 @@ kibbutz|קיבוץ
 society|חברה
 homeless|חסר בית
 charity|צדקה
+beginner|מתחיל
+genius|גאון
 # law, safety and conflict
 criminal|פושע
 arrest|לעצור
-steal|לגנוב
 witness|עד
 guilty|אשם
 victim|קורבן
 investigate|לערוך חקירה
 safety|בטיחות
 warn|להזהיר
-protect|להגן
 security|ביטחון
 cheat|לרמות
 guard|שומר
-escape|לברוח
 harm|פגיעה
 damage|נזק
 rob|לשדוד
@@ -54,14 +50,17 @@ forbid|לאסור
 seatbelt|חגורת בטיחות
 battle|קרב
 victory|ניצחון
-attack|לתקוף
-enemy|אויב
-fight|להילחם
 destroy|להרוס
-peace|שלום
 punish|להעניש
 shelter|מחסה
 poison|רעל
+alarm|אזעקה
+trap|מלכודת
+burglar|פורץ
+fingerprint|טביעת אצבע
+handcuffs|אזיקים
+spy|מרגל
+bomb|פצצה
 # media and communication
 media|תקשורת
 reporter|כתב
@@ -79,21 +78,29 @@ series|סדרה
 subscribe|להירשם כמנוי
 follower|עוקב
 livestream|שידור חי
+advice|עצה
+conversation|שיחה
+speech|נאום
+compliment|מחמאה
+viewer|צופה
+influencer|משפיען
+notification|התראה
 # technology
 technology|טכנולוגיה
 device|מכשיר
 update|עדכון
 virus|וירוס
-copy|להעתיק
 account|חשבון
 username|שם משתמש
 spam|דואר זבל
 inbox|תיבת דואר
 software|תוכנה
+remote control|שלט רחוק
+drone|רחפן
+logo|לוגו
 # environment and nature
 climate|אקלים
 global warming|התחממות עולמית
-temperature|טמפרטורה
 earthquake|רעידת אדמה
 natural|טבעי
 wildlife|חיות בר
@@ -113,14 +120,15 @@ smog|ערפיח
 acid rain|גשם חומצי
 sewage|ביוב
 landfill|מטמנה
+flood|שיטפון
+tornado|טורנדו
+hurricane|הוריקן
 # health and body
 disease|מחלה
 treatment|טיפול
 surgery|ניתוח
 clinic|מרפאה
 vitamin|ויטמין
-breathe|לנשום
-sweat|להזיע
 emergency|מקרה חירום
 weight|משקל
 balance|איזון
@@ -131,11 +139,17 @@ germ|חיידק
 crutches|קביים
 diabetes|סוכרת
 first aid|עזרה ראשונה
-X-ray|צילום רנטגן
+bleed|לדמם
+pale|חיוור
+dizzy|מסוחרר
+vegetarian|צמחוני
+allergy|אלרגיה
+protein|חלבון
+painkiller|משכך כאבים
+smoking|עישון
 # travel and transport
 destination|יעד
 abroad|בחו"ל
-flight|טיסה
 direction|כיוון
 distance|מרחק
 explore|לחקור
@@ -156,18 +170,22 @@ tour|סיור
 platform|רציף
 campsite|אתר קמפינג
 cruise|שייט
+parachute|מצנח
+shortcut|קיצור דרך
+landing|נחיתה
+traffic jam|פקק תנועה
+hostel|אכסניה
+pedestrian|הולך רגל
+backpacker|תרמילאי
 # money and shopping
 cost|עלות
 afford|להרשות לעצמו
 bargain|מציאה
 receipt|קבלה
-cash|מזומן
-credit card|כרטיס אשראי
 salary|משכורת
 earn|להרוויח
 savings|חסכונות
 wealthy|עשיר
-customer|לקוח
 product|מוצר
 brand|מותג
 purchase|רכישה
@@ -180,9 +198,10 @@ exchange|להחליף
 fortune|הון
 benefit|תועלת
 owe|להיות חייב
+discount|הנחה
+lottery|הגרלה
 # work and jobs
 employee|עובד
-boss|בוס
 manager|מנהל
 profession|מקצוע
 business|עסק
@@ -210,7 +229,6 @@ laboratory|מעבדה
 vocabulary|אוצר מילים
 grammar|דקדוק
 paragraph|פסקה
-university|אוניברסיטה
 college|מכללה
 certificate|תעודה
 graduate|לסיים לימודים
@@ -219,26 +237,24 @@ memorize|לשנן
 definition|הגדרה
 translate|לתרגם
 pronounce|לבטא
-spell|לאיית
 geography|גאוגרפיה
 biology|ביולוגיה
 chemistry|כימיה
 physics|פיזיקה
-textbook|ספר לימוד
 presentation|מצגת
 algebra|אלגברה
 underline|לסמן בקו
 skill|מיומנות
+professor|פרופסור
+tutor|מורה פרטי
+graduation|טקס סיום
 # history and the past
 ancient|עתיק
 century|מאה
-past|עבר
-future|עתיד
 kingdom|ממלכה
 noble|אציל
 monument|אנדרטה
 tribe|שבט
-pyramid|פירמידה
 emperor|קיסר
 pharaoh|פרעה
 slavery|עבדות
@@ -249,7 +265,6 @@ settler|מתיישב
 peasant|איכר
 # arts and entertainment
 exhibition|תערוכה
-concert|קונצרט
 performance|הופעה
 director|במאי
 character|דמות
@@ -260,14 +275,12 @@ fashion|אופנה
 design|עיצוב
 talent|כישרון
 creative|יצירתי
-festival|פסטיבל
 instrument|כלי נגינה
 orchestra|תזמורת
 comedy|קומדיה
 drama|דרמה
 entertainment|בידור
 celebrity|ידוען
-fan|מעריץ
 statue|פסל
 animation|אנימציה
 sketch|סקיצה
@@ -279,10 +292,16 @@ audition|אודישן
 soundtrack|פסקול
 sequel|סרט המשך
 legend|אגדה
+poet|משורר
+fantasy|פנטזיה
+album|אלבום
+jazz|ג'אז
+trailer|קדימון
+novel|רומן
+poetry|שירה
 # sports and competition
 championship|אליפות
 tournament|טורניר
-stadium|אצטדיון
 compete|להתחרות
 fitness|כושר
 practice|להתאמן
@@ -291,7 +310,6 @@ referee|שופט משחק
 finals|גמר
 olympics|אולימפיאדה
 marathon|מרתון
-teammate|חבר לקבוצה
 sprint|ריצה קצרה
 # feelings and personality
 mood|מצב רוח
@@ -303,7 +321,6 @@ disappointed|מאוכזב
 satisfied|מרוצה
 relaxed|רגוע
 honest|ישר
-rude|גס רוח
 selfish|אנוכי
 mature|בוגר
 wise|נבון
@@ -313,7 +330,6 @@ confused|מבולבל
 annoyed|מעוצבן
 brilliant|מבריק
 capable|מסוגל
-curious|סקרן
 generous|נדיב
 gentle|עדין
 independent|עצמאי
@@ -332,15 +348,21 @@ grumpy|רגזן
 jealous|קנאי
 loyal|נאמן
 panic|בהלה
+cruel|אכזרי
+handsome|נאה
+coward|פחדן
+greedy|חמדן
+stubborn|עקשן
+hopeful|מלא תקווה
+hopeless|חסר תקווה
+boredom|שעמום
+loneliness|בדידות
 # relationships
 relationship|מערכת יחסים
-friendship|חברות
 couple|זוג
 marriage|נישואים
 respect|כבוד
-promise|הבטחה
 betray|לבגוד
-bully|בריון
 greet|לברך
 companion|בן לוויה
 argue|להתווכח
@@ -354,6 +376,7 @@ nickname|כינוי
 teamwork|עבודת צוות
 tease|להקניט
 relative|קרוב משפחה
+sibling|אח או אחות
 # home and daily life
 chore|מטלה
 furniture|רהיטים
@@ -373,6 +396,8 @@ contain|להכיל
 staircase|גרם מדרגות
 landlord|בעל בית
 errand|סידור
+mattress|מזרן
+grocery|מכולת
 # time and quantity
 amount|כמות
 average|ממוצע
@@ -430,23 +455,15 @@ mistaken|טועה
 miracle|נס
 mystery|תעלומה
 # verbs: everyday actions
-borrow|לשאול
 lend|להשאיל
 pour|למזוג
 squeeze|לסחוט
 stretch|למתוח
 bend|לכופף
-lift|להרים
-wrap|לעטוף
-hang|לתלות
-blink|למצמץ
 stare|לבהות
 wander|לשוטט
 rush|למהר
-chase|לרדוף
-spill|לשפוך
 freeze|לקפוא
-boil|להרתיח
 scratch|לגרד
 avoid|להימנע
 chop|לקצוץ
@@ -455,12 +472,16 @@ rescue|הצלה
 survive|לשרוד
 pretend|להעמיד פנים
 prevent|למנוע
+decorate|לקשט
+dive|לצלול
+twist|לסובב
+explode|להתפוצץ
+grab|לחטוף
+prefer|להעדיף
 # verbs: communication
-agree|להסכים
 announce|להכריז
 complain|להתלונן
 convince|לשכנע
-describe|לתאר
 discuss|לדון
 debate|ויכוח
 explain|להסביר
@@ -474,6 +495,9 @@ criticize|לבקר
 beg|להתחנן
 boast|להתרברב
 reply|תשובה
+apologize|להתנצל
+sigh|לנאנח
+shrug|למשוך בכתפיים
 # verbs: change and progress
 achieve|להשיג
 attempt|ניסיון
@@ -502,7 +526,6 @@ join|להצטרף
 quit|להפסיק
 # describing words
 modern|מודרני
-normal|רגיל
 necessary|הכרחי
 excellent|מעולה
 complete|שלם
@@ -515,7 +538,6 @@ familiar|מוכר
 pleasant|נעים
 complicated|מסובך
 valuable|יקר ערך
-useful|שימושי
 useless|חסר תועלת
 tough|קשוח
 ordinary|שגרתי
@@ -532,6 +554,16 @@ ideal|אידיאלי
 rare|נדיר
 similar|דומה
 royal|מלכותי
+awful|נורא
+disgusting|מגעיל
+rotten|רקוב
+ripe|בשל
+slippery|חלקלק
+horrible|איום
+weird|מוזר
+wooden|עשוי עץ
+rusty|חלוד
+invisible|בלתי נראה
 # science
 theory|תיאוריה
 evidence|ראיה
@@ -546,3 +578,8 @@ vein|וריד
 intestines|מעיים
 liquid|נוזל
 galaxy|גלקסיה
+fossil|מאובן
+satellite|לוויין
+predator|טורף
+prey|טרף
+extinct|נכחד

@@ -1,15 +1,10 @@
 # government and politics
-reform|רפורמה
 regulation|תקנה
-revolution|מהפכה
 sovereign|ריבוני
-rebel|מורד
 protest|מחאה
-resign|להתפטר
 suppress|לדכא
 privilege|זכות
 liberal|ליברלי
-cabinet|קבינט
 autonomy|אוטונומיה
 diplomacy|דיפלומטיה
 partisan|מפלגתי
@@ -26,10 +21,15 @@ segregation|הפרדה
 unanimous|פה אחד
 convene|להתכנס
 uphold|לשמור על
+mandate|מנדט
+totalitarian|טוטליטרי
+colonialism|קולוניאליזם
+austerity|צנע
+tenure|כהונה
+legitimacy|לגיטימיות
 # law and justice
 prohibit|לאסור
 suspend|להשעות
-property|רכוש
 restrict|להגביל
 procedure|הליך
 attorney|עורך דין
@@ -50,11 +50,14 @@ entitle|לזכות ב
 juvenile|קטין
 revoke|לשלול
 prosecute|להעמיד לדין
+jurisdiction|סמכות שיפוט
+exonerate|לנקות מאשמה
+infringe|להפר
+implicate|לסבך
+stipulate|לקבוע כתנאי
 # economy and business
 profit|רווח
 revenue|הכנסות ממכירות
-supply|אספקה
-resource|משאב
 stake|הימור
 sector|מגזר
 investment|השקעה
@@ -67,13 +70,11 @@ prosper|לשגשג
 lavish|ראוותני
 extravagant|בזבזני
 accessible|נגיש
+exorbitant|מופקע
+philanthropy|פילנתרופיה
+nepotism|נפוטיזם
+benchmark|אמת מידה
 # society and people
-resident|תושב
-senior|בכיר
-suburb|פרבר
-rural|כפרי
-status|מעמד
-rival|מתחרה
 diversity|גיוון
 elite|עילית
 integration|שילוב
@@ -92,19 +93,17 @@ novice|טירון
 predecessor|קודם בתפקיד
 commitment|מחויבות
 dedication|התמסרות
+xenophobia|שנאת זרים
+egalitarian|שוויוני
+demographic|דמוגרפי
+stigma|סטיגמה
+cohesion|לכידות
+utopia|אוטופיה
 # science and research
 simulate|לדמות
-sphere|כדור
-solid|מוצק
-surface|משטח
-sequence|רצף
-structure|מבנה
 segment|מקטע
-psychology|פסיכולוגיה
 nucleus|גרעין
 electron|אלקטרון
-precise|מדויק
-accuracy|דיוק
 correlation|מתאם
 replicate|לשכפל
 hypothetical|היפותטי
@@ -114,8 +113,13 @@ magnify|להגדיל
 dormant|רדום
 decay|ריקבון
 induce|לגרום
+anomaly|חריגה
+synthesis|סינתזה
+corroborate|לאשש
+substantiate|לבסס
+entity|ישות
+anatomy|אנטומיה
 # medicine and health
-disability|מוגבלות
 remedy|תרופה
 impair|לפגוע ב
 lethal|קטלני
@@ -126,14 +130,14 @@ soothe|להרגיע
 reassure|להסיר דאגה
 onset|תחילת מחלה
 prone|נוטה ל
+placebo|פלצבו
+dementia|שיטיון
+prognosis|תחזית רפואית
+deficiency|ליקוי
+resilience|חוסן
 # environment and nature
-slope|מדרון
-region|אזור
-remote|מרוחק
 extinction|הכחדה
 sustainable|בר קיימא
-coastal|חופי
-tropical|טרופי
 debris|פסולת
 deplete|לדלדל
 eradicate|למגר
@@ -145,54 +149,48 @@ catastrophe|אסון
 devastate|להרוס כליל
 ascend|לטפס מעלה
 descend|לרדת
+arid|צחיח
+topography|טופוגרפיה
+precarious|רעוע
+proliferate|להתרבות
+subside|לשכוך
 # history and culture
 monarch|מונרך
-settlement|התיישבות
 exile|גלות
 holocaust|שואה
 ritual|טקס חוזר
 aftermath|תוצאות
 upheaval|תהפוכה
 turmoil|מהומה
-chaos|תוהו ובוהו
 renowned|מפורסם
 eminent|דגול
 # religion, values and ethics
-sacred|קדוש
 spiritual|רוחני
-religion|דת
 sacrifice|הקרבה
-worship|פולחן
 pilgrimage|עלייה לרגל
 secular|חילוני
 orthodox|אורתודוקסי
 prophet|נביא
 divine|אלוהי
-soul|נשמה
 morality|מוסר
 virtue|מידה טובה
 conscience|מצפון
 superstition|אמונה תפלה
 vow|נדר
 # media and communication
-publish|לפרסם
-statement|הצהרה
-signal|אות
-commercial|פרסומת
-quote|לצטט
 reception|קבלת פנים
 reputation|מוניטין
 anecdote|אנקדוטה
+discourse|שיח
+disinformation|דיסאינפורמציה
+sensationalism|סנסציוניות
+manifesto|מניפסט
+defamation|הוצאת דיבה
 # thinking and ideas
 rational|הגיוני
 speculate|לשער
-recall|להיזכר
 reflect|להשתקף
-regard|להתייחס
-realistic|ריאלי
 sensible|הגיוני ושקול
-assumption|הנחה
-curiosity|סקרנות
 misconception|תפיסה שגויה
 ponder|להרהר
 nuance|ניואנס
@@ -210,19 +208,18 @@ ambivalent|אמביוולנטי
 apathy|אדישות
 pragmatic|פרגמטי
 scrutiny|בדיקה מדוקדקת
+dichotomy|דיכוטומיה
+facet|היבט
+discretion|שיקול דעת
+lucid|בהיר
+pertinent|נוגע לעניין
+deem|להחשיב
+ascertain|לברר
+erroneous|שגוי
 # argument and debate
-proposal|הצעה
-recommend|להמליץ
-refer|להפנות
-reject|לדחות
-respond|להגיב
-emphasize|להדגיש
 refute|להפריך
-compromise|פשרה
-objection|התנגדות
 concede|להודות
 advocate|לצדד ב
-denial|הכחשה
 articulate|לנסח
 reiterate|לחזור ולומר
 denounce|להוקיע
@@ -233,13 +230,16 @@ candid|גלוי לב
 credible|מהימן
 blunt|בוטה
 commend|לשבח
+concur|להסכים
+dissent|אי הסכמה
+credibility|אמינות
+unequivocal|חד משמעי
+tenuous|קלוש
+allude|לרמוז
+exemplify|להדגים
+judicious|שקול
 # education and academic work
-revise|לתקן טקסט
-review|ביקורת
-register|להירשם
-submit|להגיש
 thesis|עבודת גמר
-lecturer|מרצה
 plagiarism|גניבה ספרותית
 bibliography|ביבליוגרפיה
 footnote|הערת שוליים
@@ -250,16 +250,13 @@ seminar|סמינריון
 appendix|נספח
 # personality and behavior
 reluctant|מסויג
-sensitive|רגיש
 spontaneous|ספונטני
-ambitious|שאפתני
 persistent|מתמיד
 sincere|כן
 obedient|צייתן
 competent|כשיר
 assertive|אסרטיבי
 prudent|נבון
-punctual|דייקן
 discreet|דיסקרטי
 complacent|שאנן
 keen|להוט
@@ -274,34 +271,24 @@ accustomed|רגיל ל
 indulge|לפנק
 meticulous|קפדני
 tenacious|עיקש
+austere|סגפני
+adhere|לדבוק
 # feelings and attitudes
-regret|חרטה
-relief|הקלה
-sympathy|אהדה
-frustration|תסכול
 humiliation|השפלה
-optimism|אופטימיות
 pessimism|פסימיות
-guilt|אשמה
-admiration|הערצה
-embarrassment|מבוכה
 hostility|עוינות
 devotion|מסירות
 astonish|להדהים
 aspiration|שאיפה
 outrage|זעם ציבורי
+contempt|בוז
+indignation|התמרמרות
 # conflict and security
-surrender|להיכנע
 secure|מאובטח
 provoke|לעורר
-invasion|פלישה
-hostage|בן ערובה
-terrorism|טרור
 casualty|נפגע
 retreat|נסיגה
-tension|מתיחות
 aggression|תוקפנות
-triumph|ניצחון
 espionage|ריגול
 deter|להרתיע
 adversary|יריב
@@ -319,12 +306,8 @@ setback|כישלון זמני
 withstand|לעמוד בפני
 # change and development
 shift|תזוזה
-shrink|להתכווץ
 renew|לחדש
-restore|לשחזר
 reverse|הפוך
-reaction|תגובה
-expansion|התרחבות
 abolish|לבטל
 revive|להחיות
 alter|לשנות
@@ -340,9 +323,7 @@ curb|לרסן
 refine|לשכלל
 drastic|דרסטי
 abrupt|פתאומי
-collapse|קריסה
 stagnation|קיפאון
-vanish|להיעלם
 fragment|שבר
 unprecedented|חסר תקדים
 deviate|לסטות
@@ -351,18 +332,20 @@ momentum|תנופה
 mitigate|למתן
 exacerbate|להחמיר
 dismantle|לפרק
+culminate|להגיע לשיא
+resurgence|התחדשות
+obliterate|למחוק כליל
+supersede|להחליף
+impetus|דחף
+thwart|לסכל
+inhibit|לבלום
 # amount, degree and time
-range|טווח
-rate|שיעור
 proportion|יחס
 scope|היקף
-reduce|להפחית
 slight|קל ביותר
 scarce|דל
 spare|רזרבי
 subsequent|עוקב
-significant|משמעותי
-standard|תקן
 excessive|מופרז
 negligible|זניח
 minimal|מינימלי
@@ -386,11 +369,7 @@ widespread|נרחב
 dominant|שולט
 # verbs: academic actions
 proceed|להמשיך הלאה
-record|לתעד
-relate|לקשר
 render|להפוך
-represent|לייצג
-require|לדרוש
 retain|לשמר בידיו
 sustain|לקיים
 stimulate|לגרות
@@ -411,15 +390,14 @@ retrieve|לאחזר
 embark|לצאת לדרך
 evoke|לעורר רגש
 embody|לגלם
+disseminate|להפיץ
+encompass|להקיף
+entail|להיות כרוך ב
+exert|להפעיל
+circumvent|לעקוף
+foster|לטפח
+rectify|לתקן טעות
 # verbs: people and society
-promote|לקדם
-release|לשחרר
-rely|לסמוך
-resemble|להידמות
-retire|לפרוש
-seek|לבקש
-settle|להתיישב
-split|לפצל
 scatter|לפזר
 pursue|לרדוף
 intervene|להתערב
@@ -442,17 +420,14 @@ confide|לגלות סוד
 prevail|לגבור
 surpass|לעלות על
 abstain|להימנע
+coerce|לאלץ
+condone|להעלים עין
+forgo|לוותר על
+reprimand|לנזוף
+impede|לעכב
 # describing words
-proper|ראוי
-specific|ספציפי
-spectacular|מרהיב
 sophisticated|מתוחכם
-stable|יציב
-severe|חמור
-superior|עליון
-ridiculous|מגוחך
 radical|קיצוני מאוד
-reliable|אמין
 prompt|מיידי ומהיר
 marginal|שולי
 notorious|ידוע לשמצה
@@ -494,6 +469,12 @@ indispensable|הכרחי
 mediocre|בינוני
 arduous|מפרך
 transient|חולף
+imperative|חיוני ביותר
+paramount|עליון
+redundant|מיותר
+cursory|שטחי
+meager|זעום
+inadvertent|לא מכוון
 # linking words and adverbs
 thereby|בכך
 albeit|אם כי
@@ -518,3 +499,4 @@ disparity|פער
 hierarchy|היררכיה
 implication|השלכה
 predicament|מצב ביש
+pinnacle|פסגה

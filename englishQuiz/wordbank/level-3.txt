@@ -33,6 +33,7 @@ secretary|מזכיר
 painter|צייר
 chef|שף
 lifeguard|מציל
+babysitter|בייביסיטר
 # home and kitchen
 drawer|מגירה
 washing machine|מכונת כביסה
@@ -179,6 +180,8 @@ classmate|חבר לכיתה
 diary|יומן
 poem|שיר
 bookmark|סימנייה
+whiteboard|לוח מחיק
+crossword|תשבץ
 # sports and games
 player|שחקן
 coach|מאמן
@@ -270,6 +273,9 @@ engine|מנוע
 wheel|גלגל
 tire|צמיג
 seat|מושב
+amusement park|לונה פארק
+aquarium|אקווריום
+fire station|תחנת כיבוי
 # travel and holidays
 tourist|תייר
 guide|מדריך
@@ -328,6 +334,9 @@ anemone|כלנית
 weed|עשב שוטה
 pine|אורן
 oak|אלון
+foggy|ערפילי
+muddy|בוצי
+dusty|מאובק
 # animals
 feather|נוצה
 beak|מקור
@@ -411,6 +420,10 @@ plastic|פלסטיק
 jar|צנצנת
 pocket money|דמי כיס
 piggy bank|קופת חיסכון
+rubber|גומי
+cotton|כותנה
+wool|צמר
+cardboard|קרטון
 # shapes and measurements
 shape|צורה
 dot|נקודה
@@ -428,6 +441,8 @@ edge|קצה
 rectangle|מלבן
 oval|אליפסה
 diamond|מעוין
+plus|פלוס
+minus|מינוס
 # verbs: everyday actions
 get up|לקום
 die|למות
@@ -463,6 +478,7 @@ lick|ללקק
 chew|ללעוס
 enjoy|ליהנות
 fill|למלא
+snore|לנחור
 # verbs: talking and thinking
 believe|להאמין
 understand|להבין
@@ -476,6 +492,7 @@ whisper|ללחוש
 behave|להתנהג
 guess|לנחש
 repeat|לחזור על
+giggle|לצחקק
 # describing words
 fresh|טרי
 raw|נא

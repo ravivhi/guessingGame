@@ -811,21 +811,34 @@ async function eachFixture(kind, run) {
 }
 
 // The 📚 learning tab: each level's categories as a path of steps (big categories split into parts of up to 15).
-// Only the first unfinished step is open; learning = cards with the English word and the Hebrew together; finishing a step opens the next.
+// Only the first unfinished step is open. A step = cards with the English word and the Hebrew together, then a short
+// quiz on those words; 70%+ right on the first try opens the next step.
 async function testLearn() {
-  console.log('\n[learn] learning path by category');
+  console.log('\n[learn] learning path by category, with a quiz at the end of each step');
   const page = await openPage();
   const bankSteps = lv => {   // the steps the page should build from the level file
     const cats = [];
     for (const l of fs.readFileSync(path.join(root, 'wordbank', `level-${lv}.txt`), 'utf8').split(/\r?\n/)) {
-      if (l.startsWith('#')) cats.push({ name: l.slice(1).trim(), n: 0 }); else if (l.includes('|')) cats[cats.length - 1].n++;
+      if (l.startsWith('#')) cats.push({ name: l.slice(1).trim(), n: 0, words: [] }); else if (l.includes('|')) { cats[cats.length - 1].n++; cats[cats.length - 1].words.push(l.split('|')); }
     }
-    return cats.flatMap(c => { const parts = Math.ceil(c.n / 15), size = Math.ceil(c.n / parts); return Array.from({ length: parts }, (_, p) => ({ name: c.name, n: Math.min(size, c.n - p * size) })); });
+    return cats.flatMap(c => { const parts = Math.ceil(c.n / 15), size = Math.ceil(c.n / parts); return Array.from({ length: parts }, (_, p) => ({ name: c.name, n: Math.min(size, c.n - p * size), catWords: c.words })); });
   };
   const steps = () => page.$$eval('#cat-list .cat-step', bs => bs.map(b => ({ cls: b.className.replace('cat-step ', ''), name: b.querySelector('.cat-name').textContent, meta: b.querySelector('.cat-meta').textContent, disabled: b.disabled })));
   const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
-  const finishStep = () => page.evaluate(() => { for (let i = 0; i < learn.step.words.length; i++) learnStep(1); });
+  const text = id => page.$eval('#' + id, e => e.textContent);
   const progress = () => page.evaluate(() => JSON.parse(localStorage.getItem('englishquiz-learn-progress')));
+  const finishCards = () => page.evaluate(() => { for (let i = 0; i < learn.step.words.length; i++) learnStep(1); });
+  // plays the open quiz to the end; the first `wrong` questions get a wrong answer first
+  const playQuiz = (wrong = 0) => page.evaluate(wrong => {
+    for (let k = 0; currentIndex < wordsData.length; k++) {
+      const c = wordsData[currentIndex].correct, bs = [...document.querySelectorAll('#answers-container button')];
+      if (k < wrong) bs.find(b => b.innerText !== c).click();
+      bs.find(b => b.innerText === c).click();
+      clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion();
+    }
+  }, wrong);
+  const doStep = async (wrong = 0) => { await finishCards(); await page.click('#learn-quiz-btn'); await playQuiz(wrong); };
+
   await page.select('#level-select', '1');
   await page.click('#tab-category');
   await page.waitForFunction(() => document.querySelectorAll('#cat-list .cat-step').length > 0, { timeout: 10000 });
@@ -837,36 +850,54 @@ async function testLearn() {
   check(!(await vis('words-count')) && !(await vis('start-btn')), 'the word list and the start button are hidden in the learning tab');
   check((await page.$eval('#cat-level-select', e => e.value)) === '1', 'the learning tab uses the chosen level');
 
-  // learn step 1
+  // the cards of step 1
   await page.click('.cat-step.current');
   check(await vis('learn-screen') && !(await vis('start-screen')), 'tapping the open step shows the learning cards');
-  const first = await page.evaluate(() => ({ en: document.getElementById('learn-word').textContent, he: document.getElementById('learn-meaning').textContent, n: learn.step.words.length }));
+  const first = await page.evaluate(() => ({ en: document.getElementById('learn-word').textContent, he: document.getElementById('learn-meaning').textContent, n: learn.step.words.length, words: learn.step.words.map(w => w.en) }));
   const l1 = Object.fromEntries(fs.readFileSync(path.join(root, 'wordbank', 'level-1.txt'), 'utf8').split(/\r?\n/).filter(l => l.includes('|')).map(l => l.split('|')));
   const both = await page.evaluate(() => { const v = id => { const r = document.getElementById(id).getBoundingClientRect(); return r.height > 0 && r.top >= 0 && r.bottom <= innerHeight; }; return v('learn-word') && v('learn-meaning'); });
   check(first.n === want[0].n && l1[first.en] === first.he && both, `the card shows a word of the step and its Hebrew meaning together, both in view (${first.en} = ${first.he})`);
   check(!(await page.$eval('#learn-next', e => e.disabled)) && await page.$eval('#learn-prev', e => e.disabled), '"next" works right away (and there is no previous card)');
   await page.click('#learn-next');
-  check((await page.$eval('#learn-count', e => e.textContent)) === `2/${first.n}`, 'next shows the 2nd card');
+  check((await text('learn-count')) === `2/${first.n}`, 'next shows the 2nd card');
   await page.click('#learn-prev');
-  check((await page.$eval('#learn-count', e => e.textContent)) === `1/${first.n}`, 'previous goes back');
+  check((await text('learn-count')) === `1/${first.n}`, 'previous goes back');
   for (let i = 0; i < first.n; i++) {
-    if (i === first.n - 1) check((await page.$eval('#learn-next', e => e.textContent)).includes('סיום'), 'on the last card the button says finish');
+    if (i === first.n - 1) check((await text('learn-next')).includes('סיום'), 'on the last card the button says finish');
     await page.click('#learn-next');
   }
-  check(await vis('learn-done-screen'), 'after the last card the well-done screen shows');
-  check((await page.$eval('#learn-unlock', e => e.textContent)).includes(want[1].name), `it says the next step is now open (${want[1].name})`);
+  check(await vis('learn-done-screen') && (await text('learn-unlock')).includes('בוחן'), 'after the last card: well done, now a short quiz');
+  check(!(await progress()), 'learning the cards alone does not open the next step yet');
+
+  // the quiz of step 1
+  await page.click('#learn-quiz-btn');
+  check(await vis('game-screen'), 'the quiz starts');
+  const quiz = await page.evaluate(() => wordsData.map(w => ({ word: w.word, correct: w.correct, dynamics: w.dynamics })));
+  const catHe = new Set(want[0].catWords.map(w => w[1]));
+  check(quiz.length === first.n && quiz.every(q => first.words.includes(q.word) && l1[q.word] === q.correct), `the quiz asks exactly the ${first.n} words of the step`);
+  check(quiz.every(q => q.dynamics.length === 3 && new Set([q.correct, ...q.dynamics]).size === 4 && q.dynamics.every(d => catHe.has(d))), 'every question has 4 different answers, the wrong ones from the same category');
+  const half = Math.ceil(first.n / 2);
+  await playQuiz(half);   // under 70% right on the first try
+  check(await vis('summary-screen') && (await text('step-result')).includes('70%') && !(await vis('next-step-btn')), `under 70% first-try right: the summary says 70% is needed and there is no "next topic" (${await text('step-result')})`);
+  check(!(await progress()), 'and the next step stays locked');
+  check((await text('change-words-btn')).includes('מסלול'), 'the summary offers a way back to the path');
+  await page.evaluate(() => restartGame());   // "try again"
+  await playQuiz(0);
+  check((await text('step-result')).includes(want[1].name) && await vis('next-step-btn'), `passing the quiz says the next step is open (${want[1].name})`);
   check((await progress())[1] === 1, 'the progress is saved on the device');
-  await page.click('#learn-next-cat');
-  check(await vis('learn-screen') && (await page.$eval('#learn-title', e => e.textContent)).includes(want[1].name), '"next topic" starts learning the next step');
+  await page.click('#next-step-btn');
+  check(await vis('learn-screen') && (await text('learn-title')).includes(want[1].name), '"next topic" starts learning the next step');
   await page.click('#learn-back');
   st = await steps();
   check(st[0].cls === 'done' && st[1].cls === 'current' && st[2].cls === 'locked', 'back on the path: step 1 is done, step 2 is open, step 3 still locked');
 
-  // a finished step can be learned again without changing the progress
+  // a finished step can be learned (and quizzed) again without changing the progress
   await page.click('.cat-step.done');
   check(await vis('learn-screen'), 'a finished step can be learned again');
-  await finishStep();
-  check((await page.$eval('#learn-unlock', e => e.textContent)) === '' && (await progress())[1] === 1, 'learning it again opens nothing new');
+  await doStep(0);
+  check(!(await text('step-result')).includes('🔓') && (await progress())[1] === 1, 'passing its quiz again opens nothing new');
+  await page.click('#change-words-btn');
+  check(await vis('start-screen') && await page.$eval('#tab-category', e => e.getAttribute('aria-selected')) === 'true', '"back to the path" from the summary shows the path');
 
   // survives a reload; levels are separate; the last step of a level offers the next level
   await page.reload();
@@ -882,11 +913,20 @@ async function testLearn() {
   await page.evaluate(n => { learnProgress = { 1: 1, 5: n - 1 }; localStorage.setItem('englishquiz-learn-progress', JSON.stringify(learnProgress)); renderPath(); }, n5);
   await page.waitForFunction(n => document.querySelectorAll('#cat-list .cat-step.done').length === n - 1, { timeout: 10000 }, n5);
   await page.click('.cat-step.current');
-  await finishStep();
-  check((await page.$eval('#learn-unlock', e => e.textContent)).includes('ברמה 5') && (await page.$eval('#learn-next-cat', e => e.textContent)).includes('לרמה 6'), 'finishing the last step of level 5 says so and offers level 6');
-  await page.click('#learn-next-cat');
+  await doStep(0);
+  check((await text('step-result')).includes('ברמה 5') && (await text('next-step-btn')).includes('לרמה 6'), 'passing the quiz of the last step of level 5 says so and offers level 6');
+  await page.click('#next-step-btn');
   await page.waitForFunction(() => document.getElementById('cat-level-select').value === '6' && document.querySelectorAll('#cat-list .cat-step.current').length === 1, { timeout: 10000 });
   check(await vis('start-screen'), 'which opens the level 6 path');
+
+  // a quiz from the random tab is not a step quiz
+  await page.click('#tab-random');
+  await page.evaluate(() => { document.getElementById('words-input').value = 'cat\tחתול\ndog\tכלב\nsun\tשמש\nmoon\tירח'; renderWords(); startFromInput(); });
+  await playQuiz(0);
+  check(!(await vis('step-result')) && !(await vis('next-step-btn')) && (await text('change-words-btn')) === 'החלפת מילים', 'a quiz from the random tab shows the usual summary');
+  await page.evaluate(() => showStart());
+  await page.click('#tab-category');
+  await page.waitForSelector('.cat-step.current');
 
   // every learning screen fits common phones without page scrolling
   for (const [w, h] of [[320, 568], [360, 640], [390, 844]]) {
@@ -897,9 +937,13 @@ async function testLearn() {
     const pathO = await over();
     await page.click('.cat-step.current');
     const cardO = await over();
-    await finishStep();
+    await finishCards();
     const doneO = await over();
-    check(Math.max(pathO, cardO, doneO) <= 0, `${w}x${h}: the path, the card and the well-done screen fit without page scrolling (${pathO}/${cardO}/${doneO}px)`);
+    await page.click('#learn-quiz-btn');
+    const quizO = await over();
+    await playQuiz(2);   // the busiest summary: missed words + "next topic"
+    const sumO = await over();
+    check(Math.max(pathO, cardO, doneO, quizO, sumO) <= 0, `${w}x${h}: the path, the card, the well-done screen, the quiz and its summary fit without page scrolling (${pathO}/${cardO}/${doneO}/${quizO}/${sumO}px)`);
   }
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();

@@ -295,6 +295,15 @@
         .cat-step .cat-name { font-size: 1.05rem; font-weight: bold; }
         .cat-step .cat-meta { font-size: 0.8rem; opacity: 0.9; }
         .cat-step .cat-state { flex: none; font-size: 1.4rem; }
+        .cat-row { display: flex; gap: 8px; align-items: stretch; }
+        .cat-row > .cat-step { flex: 1; min-width: 0; }
+        .cat-quiz-space { flex: none; width: 56px; }
+        .cat-quiz { flex: none; width: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+                    border: none; border-radius: 18px; color: #fff; font-family: inherit; font-size: 0.85rem; font-weight: bold; cursor: pointer;
+                    background: linear-gradient(135deg, #5a67d8, #9f7aea); box-shadow: 0 4px 0 rgba(0,0,0,0.15); }
+        .cat-quiz .cat-quiz-icon { font-size: 1.4rem; line-height: 1; }
+        @media (max-width: 360px) { .cat-quiz, .cat-quiz-space { width: 46px; } .cat-quiz { font-size: 0.75rem; border-radius: 14px; } .cat-row { gap: 6px; } }
+        .cat-quiz:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.15); }
         .cat-step.done { background: linear-gradient(135deg, #38a169, #68d391); }
         .cat-step.current { background: linear-gradient(135deg, #dd6b20, #f6ad55); animation: stepPulse 1.4s ease-in-out infinite; }
         .cat-step.locked { background: #edf2f7; color: #a0aec0; box-shadow: none; cursor: not-allowed; }
@@ -393,9 +402,6 @@
         }
         #learn-prev { flex: 0 0 34%; background: #a0aec0; }
         #learn-next { background: #3182ce; box-shadow: 0 4px 0 #2c5282; }
-        /* skip the cards and go straight to the step's quiz */
-        #learn-skip { margin: clamp(8px, 2vh, 14px) auto 0; padding: 6px 14px; border: 2px dashed #a0aec0; border-radius: 14px;
-                      background: transparent; color: #4a5568; font-family: inherit; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
         .learn-nav button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
         /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
@@ -549,7 +555,6 @@
                 <button type="button" id="learn-prev" onclick="learnStep(-1)">→ הקודם</button>
                 <button type="button" id="learn-next" onclick="learnStep(1)">הבא ←</button>
             </div>
-            <button type="button" id="learn-skip" onclick="skipToQuiz()">⏭ דילוג ישר לבוחן</button>
         </div>
 
         <div id="learn-done-screen" style="display:none;">
@@ -1730,7 +1735,19 @@
                 b.querySelector(".cat-meta").textContent = (s.part ? `חלק ${s.part} מתוך ${s.parts} · ` : "") + `${s.words.length} מילים`;
                 b.querySelector(".cat-state").textContent = state === "done" ? "✅" : state === "current" ? "▶️" : "🔒";
                 b.onclick = () => startLearning(level, i);
-                list.appendChild(b);
+                const row = document.createElement("div");
+                row.className = "cat-row";
+                row.appendChild(b);
+                if (state !== "locked") {
+                    const q = document.createElement("button");
+                    q.type = "button";
+                    q.className = "cat-quiz " + state;
+                    q.innerHTML = '<span class="cat-quiz-icon">📝</span><span>בוחן</span>';
+                    q.setAttribute("aria-label", `בוחן: ${s.name}`);
+                    q.onclick = () => quizStep(level, i);
+                    row.appendChild(q);
+                } else row.appendChild(Object.assign(document.createElement("span"), { className: "cat-quiz-space" }));   // keeps the rows aligned
+                list.appendChild(row);
             });
             document.getElementById("path-progress").textContent = `⭐ ${done}/${steps.length}`;
             const cur = list.children[Math.min(done, steps.length - 1)];
@@ -1788,10 +1805,14 @@
         const STEP_PASS = 100;
         let stepQuiz = null;   // { level, index, steps } while a step's quiz is played
 
-        // "skip straight to the quiz": leave the cards of this step and start its quiz (passing it opens the next step as usual)
-        function skipToQuiz() {
-            try { speechSynthesis.cancel(); } catch (e) {}
-            document.getElementById("learn-screen").style.display = "none";
+        // "📝 בוחן" next to an open step on the path: straight to its quiz, without the cards (passing it opens the next step as usual)
+        async function quizStep(level, index) {
+            let words;
+            try { words = await loadLevel(level); } catch (e) { return; }
+            const steps = learnSteps(words);
+            if (!steps[index]) return;
+            learn = { level, index, steps, step: steps[index], i: 0 };
+            document.getElementById("start-screen").style.display = "none";
             startStepQuiz();
         }
 

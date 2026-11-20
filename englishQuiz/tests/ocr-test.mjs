@@ -899,13 +899,13 @@ async function testLearn() {
   st = await steps();
   check(st[0].cls === 'done' && st[1].cls === 'current' && st[2].cls === 'locked', 'back on the path: step 1 is done, step 2 is open, step 3 still locked');
 
-  // skipping the cards: straight to the quiz of step 2, and passing it opens step 3
-  await page.click('.cat-step.current');
-  check(await vis('learn-skip'), 'the cards have a "skip straight to the quiz" button');
-  const step2 = await page.evaluate(() => learn.step.words.map(w => w.en));
-  await page.click('#learn-skip');
-  const quiz2 = await page.evaluate(() => wordsData.map(w => w.word));
-  check(await vis('game-screen') && !(await vis('learn-screen')) && quiz2.length === step2.length && quiz2.every(w => step2.includes(w)), `it starts the quiz of the step right away (${quiz2.length} words)`);
+  // the "📝 quiz" button beside a step on the path: straight to the quiz of step 2, and passing it opens step 3
+  check((await page.$$('#cat-list .cat-quiz')).length === 2 && (await page.$$('#cat-list .cat-row:nth-child(3) .cat-quiz')).length === 0, 'the done and the open step have a quiz button beside them, locked steps do not');
+  const step2 = bankSteps(1)[1];
+  await page.click('.cat-quiz.current');
+  await page.waitForFunction(() => document.getElementById('game-screen').style.display !== 'none' && wordsData.length > 0, { timeout: 10000 });
+  const quiz2 = await page.evaluate(() => wordsData.map(w => w.word)), words2 = step2.catWords.map(w => w[0]);
+  check(await vis('game-screen') && !(await vis('start-screen')) && !(await vis('learn-screen')) && quiz2.length === step2.n && quiz2.every(w => words2.includes(w)), `it starts the quiz of that step right away, without the cards (${quiz2.length} words)`);
   await playQuiz(0);
   check((await progress())[1] === 2 && await vis('next-step-btn'), 'passing the skipped-to quiz opens the next step');
   await page.click('#change-words-btn');

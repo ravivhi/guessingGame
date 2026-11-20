@@ -1,161 +1,547 @@
-abandon|לנטוש
-absence|היעדרות
-absolute|מוחלט
-absorb|לספוג
-abstract|מופשט
+# school and learning
 academic|אקדמי
-accept|לקבל
-accident|תאונה
-accompany|ללוות
-acquire|לרכוש
-adapt|להסתגל
-addition|תוספת
-adequate|הולם
-adjust|להתאים
-admire|להעריץ
-admit|להודות
-adopt|לאמץ
-adult|בוגר
-advance|התקדמות
-advantage|יתרון
-advice|עצה
-affect|להשפיע על
-agency|סוכנות
-agenda|סדר יום
-aim|מטרה
-alarm|אזעקה
-alert|דרוך
-alternative|חלופה
-ambition|שאיפה
-analyze|לנתח
-anxiety|חרדה
-apologize|להתנצל
-apparent|ברור לעין
-appeal|ערעור
-application|בקשה
-appoint|למנות
-appreciate|להעריך
-architect|אדריכל
-artificial|מלאכותי
-aspect|היבט
-assist|לסייע
-assume|להניח
-atmosphere|אווירה
-attach|לצרף
-attract|למשוך אליו
-authority|סמכות
-available|זמין
-awful|נורא
-background|רקע
-bare|חשוף
-basic|בסיסי
-beyond|מעבר
-bless|לברך
-broadcast|שידור
-budget|תקציב
-bury|לקבור
-campaign|קמפיין
-cancel|לבטל
-candidate|מועמד
-capacity|קיבולת
-career|קריירה
-cautious|זהיר
-ceremony|טקס
-chart|תרשים
-cheerful|עליז
-circumstance|נסיבות
-civil|אזרחי
-clarify|להבהיר
-classic|קלאסי
-clue|רמז
-coast|קו חוף
-colleague|עמית
-combine|לשלב
-comment|הערה
-commit|להתחייב
-common|נפוץ
-communicate|לתקשר
-competition|תחרות
-complex|מורכב
-concentrate|להתרכז
+diploma|תעודה
+discipline|משמעת
+educate|לחנך
+absence|היעדרות
+intelligent|נבון
+autobiography|אוטוביוגרפיה
+proverb|פתגם
+dormitory|מעונות
+mentor|חונך
+questionnaire|שאלון
+intermediate|בינוני
+summary|סיכום
+# thinking and ideas
+abstract|מופשט
 concept|מושג
+assume|להניח
+analyze|לנתח
+aspect|היבט
+context|הקשר
+contrast|ניגוד
+define|להגדיר
+determine|לקבוע
+dilemma|דילמה
 conclude|לסכם
-confirm|לאשר
-conflict|סכסוך
-confuse|לבלבל
-connection|קשר
 conscious|בהכרה
 consequence|השלכה
-conservative|שמרני
-constant|קבוע
-consume|לצרוך
-contact|מגע
-content|תוכן
-context|הקשר
-contract|חוזה
-contrast|ניגוד
-contribute|לתרום
+logical|הגיוני
+estimate|לאמוד
+process|תהליך
+factor|גורם
+point of view|נקודת מבט
+concern|דאגה
+illusion|אשליה
+vision|חזון
+unlikely|לא סביר
+unknown|לא ידוע
+motivation|מוטיבציה
+trend|מגמה
+version|גרסה
+forgetful|שכחן
+misunderstanding|אי הבנה
+uncertain|לא בטוח
+coincidence|צירוף מקרים
+trait|תכונה
+# communication
+comment|הערה
+communicate|לתקשר
 conversation|שיחה
-cooperate|לשתף פעולה
-corporation|תאגיד
-council|מועצה
-countryside|אזור כפרי
-crash|להתרסק
-credit|אשראי
-crisis|משבר
-critic|מבקר
-crucial|קריטי
-cruel|אכזרי
-cultural|תרבותי
-currency|מטבע
-current|נוכחי
-curve|עיקול
-cycle|מחזור
-dairy|מוצרי חלב
-dare|להעז
-data|נתונים
-dawn|שחר
-deadline|מועד אחרון
-debt|חוב
-decorate|לקשט
-dedicate|להקדיש
-defeat|להביס
-defend|להגן
-define|להגדיר
-definite|החלטי
-delight|תענוג
-democracy|דמוקרטיה
-demonstrate|להדגים
+dialogue|דיאלוג
+clarify|להבהיר
+apologize|להתנצל
+admit|להודות
 deny|להכחיש
-departure|יציאה
-deposit|פיקדון
-derive|לנבוע
+confirm|לאשר
+advice|עצה
+clue|רמז
+argument|ויכוח
+accent|מבטא
+signature|חתימה
+speech|נאום
+tone|טון
+gesture|מחווה
+discussion|דיון
+compliment|מחמאה
+sigh|לנאנח
+shrug|למשוך בכתפיים
+aloud|בקול רם
+scold|לנזוף
+motto|מוטו
+notify|להודיע
+idiom|ביטוי
+slang|סלנג
+declare|להכריז
+mock|ללעוג
+courtesy|נימוס
+gossip|רכילות
+rumor|שמועה
+# feelings and character
+anxiety|חרדה
+ambition|שאיפה
+cheerful|עליז
+cruel|אכזרי
 desire|תשוקה
 desperate|נואש
-detail|פרט
-determine|לקבוע
-dialogue|דיאלוג
-digital|דיגיטלי
+delight|תענוג
 dignity|כבוד
-dilemma|דילמה
-diploma|תעודה
-direct|ישיר
-disabled|נכה
-disagree|לא להסכים
-disaster|אסון
-discipline|משמעת
-discount|הנחה
-discourage|להרתיע
-discovery|תגלית
-disgusting|מגעיל
-dismiss|לפטר
-display|תצוגה
-distinct|מובחן
-distribute|להפיץ
+cautious|זהיר
+admire|להעריץ
+appreciate|להעריך
+depressed|מדוכא
+personality|אישיות
+tense|מתוח
+anxious|מודאג
+bold|נועז
+pleasure|הנאה
+thrill|ריגוש
+suspicious|חשדן
+faithful|נאמן
+devoted|מסור
+trustworthy|אמין
+rage|זעם
+mischievous|שובב
+foolish|אווילי
+sly|ערמומי
+attractive|מושך
+decent|הגון
+frank|גלוי לב
+graceful|חינני
+strict|קפדני
+handsome|נאה
+coward|פחדן
+greedy|חמדן
+stubborn|עקשן
+# people and relationships
+adult|בוגר
+colleague|עמית
+critic|מבקר
+owner|בעלים
+individual|יחיד
+assistant|עוזר
+engagement|אירוסין
+mankind|האנושות
+acquaintance|מכר
+amateur|חובב
+beginner|מתחיל
+spectator|צופה מהצד
+nomad|נווד
+servant|משרת
+monk|נזיר
+rabbi|רב
+offspring|צאצאים
+mob|אספסוף
+refugee|פליט
+sibling|אח או אחות
+genius|גאון
+# society and government
+authority|סמכות
+civil|אזרחי
+council|מועצה
+democracy|דמוקרטיה
 district|מחוז
-diverse|מגוון
+appoint|למנות
+campaign|קמפיין
+candidate|מועמד
+duty|חובה
+legacy|מורשת
+scandal|שערורייה
+slum|שכונת עוני
+outskirts|פאתי העיר
+empire|אימפריה
+# law and safety
+alarm|אזעקה
+defend|להגן
+appeal|ערעור
+contract|חוזה
 document|מסמך
-domestic|ביתי
-dominate|לשלוט
+deposit|פיקדון
+burglar|פורץ
+barrier|מחסום
+trap|מלכודת
+endanger|לסכן
+fingerprint|טביעת אצבע
+handcuffs|אזיקים
+spy|מרגל
+# money and business
+budget|תקציב
+credit|אשראי
+currency|מטבע
+debt|חוב
+discount|הנחה
+agency|סוכנות
+consume|לצרוך
+produce|לייצר
+trade|סחר
+saving|חיסכון
+acquire|לרכוש
+lottery|הגרלה
+fare|מחיר נסיעה
+precious|יקר ערך
+cargo|מטען
+affordable|במחיר סביר
+tip|טיפ
+bonus|בונוס
+shipment|משלוח
+# work and jobs
+career|קריירה
+architect|אדריכל
+dismiss|לפטר
+deadline|מועד אחרון
+apply|להגיש מועמדות
+accountant|רואה חשבון
+crew|צוות
+construction|בנייה
+assemble|להרכיב
+award|פרס
+apprentice|שוליה
+technician|טכנאי
+guideline|הנחיה
+# media and technology
+broadcast|שידור
+digital|דיגיטלי
+data|נתונים
+display|תצוגה
+artificial|מלאכותי
+application|בקשה
+chart|תרשים
+edit|לערוך
+code|קוד
+content|תוכן
+browse|לגלוש
+scan|לסרוק
+profile|פרופיל
+mobile|נייד
+volume|עוצמת קול
+antenna|אנטנה
+remote control|שלט רחוק
+subtitle|כתובית
+radar|מכ"ם
+capsule|כמוסה
+insert|להכניס
+logo|לוגו
+scroll|לגלול
+screenshot|צילום מסך
+drone|רחפן
+# science and nature
+absorb|לספוג
+atmosphere|אטמוספרה
+cycle|מחזור
+curve|עיקול
+discovery|תגלית
+substance|חומר
+cell|תא
+scientific|מדעי
+lens|עדשה
+vibrate|לרטוט
+laser|לייזר
+bloom|לפרוח
+beam|קרן
+satellite|לוויין
+fossil|מאובן
+extinct|נכחד
+bacteria|חיידקים
+gravity|כוח משיכה
+predator|טורף
+prey|טרף
+habitat|בית גידול
+# earth and environment
+coast|קו חוף
+countryside|אזור כפרי
+dawn|שחר
+steam|אדים
+wheat|חיטה
+orchard|מטע
+meadow|אחו
+canal|תעלה
+forecast|תחזית
+surroundings|סביבה
+zone|אזור
+erupt|להתפרץ
+drought|בצורת
+glacier|קרחון
+endangered|בסכנת הכחדה
+# health and body
+disabled|נכה
+bleed|לדמם
+dairy|מוצרי חלב
+liver|כבד
+joint|מפרק
+sore|כואב
+pale|חיוור
+dizzy|מסוחרר
+vegetarian|צמחוני
+unconscious|מחוסר הכרה
+diagnose|לאבחן
+rash|פריחה
+swollen|נפוח
+paralyzed|משותק
+allergy|אלרגיה
+infection|זיהום
+symptom|תסמין
+protein|חלבון
+# events and situations
+accident|תאונה
+crisis|משבר
+disaster|אסון
+ceremony|טקס
+competition|תחרות
+conflict|סכסוך
+circumstance|נסיבות
+opportunity|הזדמנות
+situation|מצב
+funeral|הלוויה
+anniversary|יום שנה
+expedition|משלחת
+reunion|מפגש מחזור
+clash|התנגשות
+feast|סעודה
+outbreak|התפרצות
+wreck|הריסות
+hardship|קושי
+# arts and culture
+classic|קלאסי
+cultural|תרבותי
 dramatic|דרמטי
+poet|משורר
+conductor|מנצח
+comedian|קומיקאי
+opera|אופרה
+fantasy|פנטזיה
+fable|משל
+craft|מלאכת יד
+pottery|קדרות
+temple|מקדש
+prayer|תפילה
+romantic|רומנטי
+verse|בית בשיר
+jewel|תכשיט
+perfume|בושם
+silk|משי
+canvas|קנבס
+carve|לגלף
+jazz|ג'אז
+album|אלבום
+chorus|פזמון
+spotlight|זרקור
+trailer|קדימון
+folk|עממי
+tale|מעשייה
+stage|במה
+novel|רומן
+poetry|שירה
+# travel and transport
+departure|יציאה
+arrival|הגעה
+navigate|לנווט
+crash|להתרסק
+underground|תת קרקעי
+parachute|מצנח
+fortress|מבצר
+cottage|בקתה
+via|דרך
+resort|אתר נופש
+jet lag|יעפת
+runway|מסלול המראה
+landing|נחיתה
+speed limit|הגבלת מהירות
+wagon|עגלה
+dock|רציף
+pedal|דוושה
+shortcut|קיצור דרך
+scenery|נוף
+arena|זירה
+lobby|לובי
+paradise|גן עדן
+hostel|אכסניה
+traffic jam|פקק תנועה
+pedestrian|הולך רגל
+# time and place
+background|רקע
+beyond|מעבר
+current|נוכחי
+daily|יומי
+nearby|בסביבה
+throughout|לאורך
+towards|לכיוון
+overnight|במשך הלילה
+dusk|בין ערביים
+prehistoric|פרהיסטורי
+millennium|אלף שנים
+worldwide|עולמי
+routine|שגרה
+decade|עשור
+# linking words
+whether|האם
+according to|לפי
+except|מלבד
+actually|בעצם
+certainly|בהחלט
+nearly|כמעט
+anyway|בכל מקרה
+unfortunately|לצערי
+unlike|בניגוד ל
+as well as|וגם
+even though|אף על פי
+in order to|כדי ל
+due to|עקב
+rather than|במקום
+similarly|באופן דומה
+mostly|בעיקר
+barely|בקושי
+whatever|מה שלא יהיה
+wherever|בכל מקום ש
+whenever|בכל פעם ש
+# verbs: actions and changes
+abandon|לנטוש
+accompany|ללוות
+adapt|להסתגל
+adjust|להתאים
+adopt|לאמץ
+attach|לצרף
+attract|למשוך אליו
+bury|לקבור
+cancel|לבטל
+combine|לשלב
+decorate|לקשט
+distribute|להפיץ
+remind|להזכיר
+vary|להשתנות
+weigh|לשקול
+perform|להופיע
+imitate|לחקות
+spoil|לקלקל
+tempt|לפתות
+amuse|לשעשע
+annoy|להרגיז
+disguise|להתחפש
+pause|להשהות
+suffer|לסבול
+supervise|לפקח
+surround|להקיף
+broaden|להרחיב
+distract|להסיח את הדעת
+enrich|להעשיר
+expire|לפוג
+# verbs: people and society
+accept|לקבל
+affect|להשפיע על
+assist|לסייע
+bless|לברך
+commit|להתחייב
+concentrate|להתרכז
+confuse|לבלבל
+contribute|לתרום
+cooperate|לשתף פעולה
+dare|להעז
+dedicate|להקדיש
+defeat|להביס
+demonstrate|להדגים
+disagree|לא להסכים
+discourage|להרתיע
+dominate|לשלוט
+organize|לארגן
+# verbs: movement and body
 drift|להיסחף
+explode|להתפוצץ
+lean|להישען
+tremble|לרעוד
+capture|ללכוד
+drag|לגרור
+dive|לצלול
+drown|לטבוע
+twist|לסובב
+weave|לארוג
+soak|להשרות
+starve|לרעוב
+fasten|להדק
+frown|להזעיף פנים
+gather|להתאסף
+glow|לזהור
+shatter|לנפץ
+sparkle|לנצנץ
+wrestle|להיאבק
+# useful nouns
+addition|תוספת
+advance|התקדמות
+advantage|יתרון
+aim|מטרה
+alternative|חלופה
+capacity|קיבולת
+connection|קשר
+contact|מגע
+detail|פרט
+flaw|פגם
+quality|איכות
+support|תמיכה
+risk|סיכון
+option|אפשרות
+object|חפץ
+maximum|מקסימום
+minimum|מינימום
+label|תווית
+mattress|מזרן
+grocery|מכולת
+# describing words
+absolute|מוחלט
+alert|דרוך
+apparent|ברור לעין
+available|זמין
+basic|בסיסי
+common|נפוץ
+complex|מורכב
+constant|קבוע
+crucial|קריטי
+definite|החלטי
+direct|ישיר
+diverse|מגוון
+domestic|ביתי
+convenient|נוח
+fortunate|בר מזל
+sudden|פתאומי
+urgent|דחוף
+willing|מוכן
+actual|ממשי
+casual|יומיומי
+thorough|יסודי
+unfair|לא הוגן
+beneficial|מועיל
+dynamic|דינמי
+positive|חיובי
+negative|שלילי
+# describing things
+awful|נורא
+bare|חשוף
+disgusting|מגעיל
+delicate|עדין
+elegant|אלגנטי
+endless|אינסופי
+fascinating|מרתק
+lively|תוסס
+portable|מטלטל
+ripe|בשל
+rotten|רקוב
+slippery|חלקלק
+steady|יציב
+tremendous|אדיר
+visual|חזותי
+waterproof|עמיד במים
+well-known|ידוע
+cozy|נעים
+dim|עמום
+exotic|אקזוטי
+extraordinary|יוצא מן הכלל
+horrible|איום
+impressive|מרשים
+mysterious|מסתורי
+neat|מסודר
+primitive|פרימיטיבי
+rusty|חלוד
+spacious|מרווח
+stiff|נוקשה
+vacant|פנוי
+weird|מוזר
+wooden|עשוי עץ
+compact|קומפקטי
+sturdy|חסון

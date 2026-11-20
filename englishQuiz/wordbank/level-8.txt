@@ -1,154 +1,515 @@
-jealous|קנאי
-journal|יומן
-junction|צומת
+# government and law
 jury|חבר מושבעים
 justice|צדק
-label|תווית
-landscape|נוף
-launch|לשגר
-lawn|מדשאה
-layer|שכבה
-league|ליגה
-leak|דליפה
-lecture|הרצאה
 legal|חוקי
-legend|אגדה
-leisure|פנאי
 liberty|חירות
 license|רישיון
-lifetime|תוחלת חיים
-likewise|כמו כן
-liquid|נוזל
-literally|פשוטו כמשמעו
-literature|ספרות
-loan|הלוואה
-locate|לאתר
-loyal|נאמן
-luxury|מותרות
-magnificent|מפואר
-maintain|לתחזק
-majority|רוב
-mansion|אחוזה
-manual|ידני
-margin|שוליים
-marine|ימי
-massive|מסיבי
-material|חומר
-maximum|מקסימום
-meanwhile|בינתיים
-mechanical|מכני
-medieval|של ימי הביניים
-mental|נפשי
-mercy|רחמים
-merely|בסך הכול
-merit|הצטיינות
-mighty|אדיר
-military|צבאי
-mineral|מינרל
-minimum|מינימום
-minor|קטין
-minority|מיעוט
-miracle|נס
-misery|אומללות
-mission|שליחות
-moderate|מתון
-moisture|לחות
-monitor|לנטר
-moral|מוסרי
-motion|תנועה
-motive|מניע
-mutual|הדדי
-mystery|תעלומה
-myth|מיתוס
-naked|עירום
-narrative|נרטיב
-negative|שלילי
-neglect|להזניח
-negotiate|לנהל משא ומתן
-network|רשת
-neutral|ניטרלי
-nonsense|שטויות
-norm|נורמה
-notion|תפיסה
-novel|רומן
-nuclear|גרעיני
-numerous|רבים
-nutrition|תזונה
-obey|לציית
-object|חפץ
-objective|אובייקטיבי
-obligation|חובה
-obstacle|מכשול
-obvious|מובן
-occur|לקרות
-odd|מוזר
-offensive|פוגעני
 official|פקיד
-ongoing|מתמשך
-operate|להפעיל
-opponent|יריב
+obey|לציית
+permit|להתיר
+negotiate|לנהל משא ומתן
+legislation|חקיקה
+constitution|חוקה
+parliament|פרלמנט
+verdict|פסק דין
+testimony|עדות
+prosecutor|תובע
+defendant|נאשם
+lawsuit|תביעה משפטית
+legitimate|לגיטימי
+amendment|תיקון לחוק
+sanction|סנקציה
+regime|משטר
+dictator|רודן
+bureaucracy|בירוקרטיה
+violation|הפרה
+violate|להפר
+comply|לעמוד בדרישות
+convict|להרשיע
+petition|עצומה
+corruption|שחיתות
+bribe|שוחד
+fraud|הונאה
+inquiry|חקירה
+eligible|זכאי
+negligence|רשלנות
+warrant|צו
+# politics and elections
+majority|רוב
+minority|מיעוט
+poll|סקר
 oppose|להתנגד
-optimistic|אופטימי
-option|אפשרות
-orbit|מסלול
-organ|איבר
-organize|לארגן
-origin|מקור
-outline|מתווה
-outstanding|בולט
-overcome|להתגבר
-overlook|להשקיף
-overseas|מעבר לים
-overwhelm|להציף
-pace|קצב
-panic|בהלה
-parallel|מקביל
-participate|להשתתף
-particular|מסוים
-partner|שותף
-passive|פסיבי
-patient|סבלני
-pattern|דפוס
-peak|פסגה
+neutral|ניטרלי
+coalition|קואליציה
+opposition|אופוזיציה
+minister|שר
+ballot|פתק הצבעה
+referendum|משאל עם
+citizenship|אזרחות
+delegate|נציג
+elect|לבחור בבחירות
+diplomat|דיפלומט
+embassy|שגרירות
+ambassador|שגריר
+treaty|אמנה
+alliance|ברית
+ally|בעל ברית
+census|מפקד אוכלוסין
+oppression|דיכוי
+# society and culture
+norm|נורמה
+prejudice|דעה קדומה
+privacy|פרטיות
+poverty|עוני
+minor|קטין
+inequality|אי-שוויון
+discrimination|אפליה
+racism|גזענות
+tolerance|סובלנות
+welfare|רווחה
+elderly|קשיש
+prestige|יוקרה
+stereotype|סטריאוטיפ
+etiquette|כללי נימוס
+globalization|גלובליזציה
+urban|עירוני
+civilization|ציוויליזציה
+descendant|צאצא
+spouse|בן זוג
+peer|בן אותו גיל
+illiterate|אנאלפבית
+hypocrisy|צביעות
+persecution|רדיפה
+mainstream|זרם מרכזי
+urbanization|עיור
+# economy and money
+loan|הלוואה
+luxury|מותרות
 pension|פנסיה
 percentage|אחוז
-period|תקופה
-permit|להתיר
-persist|להתמיד
-personal|אישי
-perspective|פרספקטיבה
-phase|שלב
-phenomenon|תופעה
-philosophy|פילוסופיה
-phrase|ביטוי
-physical|פיזי
+margin|שוליים
+consumer|צרכן
+merchant|סוחר
+taxation|מיסוי
+subsidy|סובסידיה
+monopoly|מונופול
+shareholder|בעל מניות
+bankrupt|פושט רגל
+recession|מיתון
+asset|נכס
+mortgage|משכנתא
+wage|שכר
+unemployment|אבטלה
+entrepreneur|יזם
+investor|משקיע
+commerce|מסחר
+auction|מכירה פומבית
+inventory|מלאי
+lucrative|רווחי
+affluent|אמיד
+prosperity|שגשוג
+deficit|גירעון
+surplus|עודף
+competitor|מתחרה
+commodity|מצרך
+quota|מכסה
+# work and career
+partner|שותף
+recruit|לגייס
+qualification|הכשרה
+expertise|מומחיות
+internship|התמחות
+supervisor|מפקח
+staff|צוות עובדים
+employer|מעסיק
+vacancy|משרה פנויה
+freelance|עצמאי
+overtime|שעות נוספות
+workload|עומס עבודה
+commute|נסיעה לעבודה
+mission|שליחות
 pioneer|חלוץ
+# science and research
+mineral|מינרל
+nuclear|גרעיני
+orbit|מסלול
+layer|שכבה
+phenomenon|תופעה
+material|חומר
+hypothesis|השערה
+molecule|מולקולה
+particle|חלקיק
+compound|תרכובת
+organism|אורגניזם
+species|מין ביולוגי
+magnetic|מגנטי
+radiation|קרינה
+velocity|מהירות
+variable|משתנה
+observation|תצפית
+chemical|כימי
+genetic|גנטי
+enzyme|אנזים
+astronomy|אסטרונומיה
+dissolve|להמיס
+evaporate|להתאדות
+empirical|אמפירי
+hereditary|תורשתי
+mutation|מוטציה
+# environment and nature
+landscape|נוף
+marine|ימי
+moisture|לחות
+ecology|אקולוגיה
+pollutant|מזהם
+contaminate|לזהם
+emission|פליטה
+deforestation|בירוא יערות
+renewable|מתחדש
+conservation|שמירת טבע
+biodiversity|מגוון ביולוגי
+tide|גאות ושפל
+terrain|פני שטח
+fertile|פורה
+vegetation|צמחייה
+migrate|לנדוד
+ecosystem|מערכת אקולוגית
+reservoir|מאגר מים
+irrigation|השקיה
+pesticide|חומר הדברה
+# health and medicine
+mental|נפשי
+physical|פיזי
+nutrition|תזונה
+organ|איבר
+diagnosis|אבחנה
+therapy|טיפול
+chronic|כרוני
+disorder|הפרעה
+immune|חסין
+prescription|מרשם
+dose|מינון
+fatigue|עייפות
+obesity|השמנה
+addiction|התמכרות
+epidemic|מגפה
+contagious|מדבק
+rehabilitation|שיקום
+hygiene|היגיינה
+pulse|דופק
+nerve|עצב
+depression|דיכאון
+metabolism|חילוף חומרים
+# feelings and emotions
+mercy|רחמים
+misery|אומללות
 pity|רחמנות
-plain|פשוט
-plenty|שפע
-plot|עלילה
-poetry|שירה
-poison|רעל
-polish|ללטש
-poll|סקר
-portion|מנה
-portrait|דיוקן
-pose|להצטלם
-positive|חיובי
-possess|להחזיק
+pressure|לחץ
+compassion|חמלה
+empathy|אמפתיה
+resentment|טינה
+gratitude|הכרת תודה
+remorse|חרטה
+nostalgia|נוסטלגיה
+despair|ייאוש
+sorrow|צער
+dread|אימה
+obsession|אובססיה
+temper|מזג
+# personality and character
+optimistic|אופטימי
+passive|פסיבי
+patient|סבלני
+arrogant|יהיר
+modest|צנוע
+courageous|אמיץ
+diligent|חרוץ
+naive|תמים
+reckless|פזיז
+cynical|ציני
+pessimistic|פסימי
+impulsive|אימפולסיבי
+integrity|יושרה
+hostile|עוין
+considerate|מתחשב
+resilient|בעל חוסן
+sarcastic|סרקסטי
+indifferent|אדיש
+# thinking and ideas
+notion|תפיסה
+perspective|פרספקטיבה
+philosophy|פילוסופיה
+principle|עיקרון
+objective|אובייקטיבי
+origin|מקור
+motive|מניע
 potential|פוטנציאל
-poverty|עוני
-practical|מעשי
-praise|שבח
+priority|עדיפות
+moral|מוסרי
+nonsense|שטויות
+pattern|דפוס
+logic|היגיון
+ideology|אידיאולוגיה
+paradox|פרדוקס
+contradiction|סתירה
+analogy|אנלוגיה
+insight|תובנה
+intuition|אינטואיציה
+bias|הטיה
+ethics|אתיקה
+skeptical|ספקן
+ignorance|בורות
+awareness|מודעות
+theoretical|תאורטי
+clarity|בהירות
+cognitive|קוגניטיבי
+# verbs: thinking and judging
 predict|לחזות
 prefer|להעדיף
-prejudice|דעה קדומה
-preserve|לשמר
-pressure|לחץ
-pretend|להעמיד פנים
-prevent|למנוע
+overlook|להחמיץ
+evaluate|להעריך
+perceive|לקלוט
+comprehend|להבין
+contemplate|להרהר
+distinguish|להבדיל
+deduce|להסיק
+justify|להצדיק
+verify|לאמת
+acknowledge|להכיר ב
+anticipate|לצפות מראש
+assert|לקבוע בתוקף
+cite|לציין מקור
+specify|לפרט
+formulate|לנסח
+derive|לנבוע
+# literature and the arts
+journal|יומן
+literature|ספרות
+myth|מיתוס
+narrative|נרטיב
+plot|עלילה
+portrait|דיוקן
+phrase|ביטוי
+metaphor|מטאפורה
+protagonist|דמות ראשית
+tragedy|טרגדיה
+genre|ז'אנר
+biography|ביוגרפיה
+sculpture|פסל
+masterpiece|יצירת מופת
+rhyme|חרוז
+fiction|סיפורת
+playwright|מחזאי
+rehearsal|חזרה
+composer|מלחין
+lyrics|מילות שיר
+gallery|גלריה
+aesthetic|אסתטי
+irony|אירוניה
+theme|נושא מרכזי
+climax|שיא
+narrator|מספר הסיפור
+manuscript|כתב יד
+satire|סאטירה
+allegory|אלגוריה
+# media and communication
+lecture|הרצאה
+editorial|מאמר מערכת
+propaganda|תעמולה
+censorship|צנזורה
+coverage|סיקור
+subscriber|מנוי
+publicity|פרסום
+slogan|סיסמה
+documentary|סרט תיעודי
+correspondent|כתב
+anonymous|אנונימי
+controversy|מחלוקת
+persuade|לשכנע
+eloquent|רהוט
+edition|מהדורה
+rhetoric|רטוריקה
+# history and the past
+medieval|של ימי הביניים
+mansion|אחוזה
+colony|מושבה
+conquer|לכבוש
+revolt|מרד
+monarchy|מלוכה
+era|עידן
+ancestor|אב קדמון
+archaeology|ארכאולוגיה
+artifact|ממצא ארכאולוגי
+ruins|חורבות
+troops|חיילים
+veteran|ותיק
+commemorate|להנציח
+memorial|אנדרטה
+military|צבאי
+dynasty|שושלת
+excavation|חפירה ארכאולוגית
+# technology
+network|רשת
+mechanical|מכני
+manual|ידני
+launch|לשגר
+innovation|חדשנות
+database|מסד נתונים
+algorithm|אלגוריתם
+automation|אוטומציה
+virtual|וירטואלי
+interface|ממשק
+prototype|אב טיפוס
+circuit|מעגל חשמלי
+wireless|אלחוטי
+transmit|לשדר
+obsolete|מיושן
+compatible|תואם
+malfunction|תקלה
+upgrade|לשדרג
+# time and change
+meanwhile|בינתיים
+period|תקופה
+phase|שלב
+pace|קצב
+peak|פסגה
+ongoing|מתמשך
 previous|קודם
+lifetime|משך החיים
+persist|להתמיד
+initially|בתחילה
+ultimately|בסופו של דבר
+simultaneously|בו זמנית
+temporary|זמני
+permanent|קבוע
+transition|מעבר
+duration|משך זמן
+fluctuate|לתנוד
+# linking words
+likewise|כמו כן
+literally|פשוטו כמשמעו
+merely|בסך הכול
+furthermore|יתר על כן
+nevertheless|למרות זאת
+whereas|בעוד ש
+hence|לפיכך
+moreover|נוסף על כך
+thus|לכן
+accordingly|בהתאם
+approximately|בערך
+presumably|כנראה
+seldom|לעיתים רחוקות
+virtually|כמעט לגמרי
+# verbs: actions and processes
+locate|לאתר
+maintain|לתחזק
+monitor|לנטר
+neglect|להזניח
+occur|לקרות
+operate|להפעיל
+overcome|להתגבר
+overwhelm|להציף
+polish|ללטש
+pose|להצטלם
+possess|להחזיק
+preserve|לשמר
+participate|להשתתף
+allocate|להקצות
+accumulate|לצבור
+confront|להתעמת
+convey|להעביר
+cultivate|לטפח
+deteriorate|להידרדר
+diminish|לפחות
+disrupt|לשבש
+endure|לסבול
+exploit|לנצל
+hinder|לעכב
+integrate|לשלב
+isolate|לבודד
+mimic|לחקות
+omit|להשמיט
+postpone|לדחות
+reinforce|לחזק
+terminate|לסיים
+transform|לשנות צורה
+trigger|לעורר
+utilize|להשתמש ב
+modify|לשנות
+undermine|לערער
+withdraw|לסגת
+yield|להניב
+facilitate|להקל על
+manipulate|לתמרן
+enhance|לשפר
+thrive|לשגשג
+conceal|להסתיר
+mediate|לתווך
+# describing words
+magnificent|מפואר
+massive|מסיבי
+mighty|אדיר
+moderate|מתון
+mutual|הדדי
+numerous|רבים
+obvious|מובן
+offensive|פוגעני
+outstanding|בולט
+parallel|מקביל
+particular|מסוים
+personal|אישי
+plain|פשוט
+practical|מעשי
 primary|ראשי
-principle|עיקרון
-priority|עדיפות
-privacy|פרטיות
+abundant|שופע
+adjacent|סמוך
+ambiguous|דו-משמעי
+arbitrary|שרירותי
+authentic|אותנטי
+comprehensive|מקיף
+considerable|ניכר
+deliberate|מכוון
+explicit|מפורש
+feasible|בר ביצוע
+immense|עצום
+implicit|מרומז
+inferior|נחות
+intense|עז
+notable|ראוי לציון
+plausible|סביר
+profound|עמוק
+rigid|נוקשה
+robust|חסון
+subtle|מעודן
+superficial|שטחי
+tangible|מוחשי
+trivial|זניח
+vague|מעורפל
+vast|נרחב
+vital|חיוני
+vulnerable|פגיע
+absurd|אבסורדי
+adequate|הולם
+distinct|מובחן
+# nouns: general
+leak|דליפה
+league|ליגה
+junction|צומת
+merit|הצטיינות
+obligation|חובה
+obstacle|מכשול
+outline|מתווה
+overseas|מעבר לים
+plenty|שפע
+portion|מנה
+praise|שבח
+motion|תנועה
+dimension|ממד
+consensus|הסכמה כללית
+dispute|סכסוך
+initiative|יוזמה
+outcome|תוצאה
+scenario|תרחיש
+venture|מיזם
+constraint|אילוץ
+intervention|התערבות

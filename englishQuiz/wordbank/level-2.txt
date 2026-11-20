@@ -1,4 +1,4 @@
-# days of the week
+# days, months and seasons
 Sunday|יום ראשון
 Monday|יום שני
 Tuesday|יום שלישי
@@ -7,7 +7,6 @@ Thursday|יום חמישי
 Friday|יום שישי
 Saturday|שבת
 weekend|סוף שבוע
-# months
 January|ינואר
 February|פברואר
 March|מרץ
@@ -20,7 +19,6 @@ September|ספטמבר
 October|אוקטובר
 November|נובמבר
 December|דצמבר
-# seasons
 summer|קיץ
 winter|חורף
 spring|אביב
@@ -86,10 +84,6 @@ waiter|מלצר
 scientist|מדען
 soldier|חייל
 postman|דוור
-mechanic|מכונאי
-photographer|צלם
-athlete|ספורטאי
-shopkeeper|חנווני
 # sports and hobbies
 sport|ספורט
 football|כדורגל
@@ -97,12 +91,9 @@ basketball|כדורסל
 tennis|טניס
 volleyball|כדורעף
 baseball|בייסבול
-hockey|הוקי
 swimming|שחייה
 running|ריצה
-cycling|רכיבה על אופניים
 skiing|סקי
-gymnastics|התעמלות
 karate|קראטה
 team|קבוצה
 race|מרוץ
@@ -130,42 +121,29 @@ bridge|גשר
 traffic light|רמזור
 market|שוק
 synagogue|בית כנסת
-pharmacy|בית מרקחת
 police station|משטרה
 office|משרד
-factory|מפעל
-center|מרכז
 corner|פינה
 road|כביש
-sidewalk|מדרכה
-address|כתובת
+village|כפר
+library|ספרייה
 # more animals
 insect|חרק
 worm|תולעת
 bat|עטלף
-dinosaur|דינוזאור
-lizard|לטאה
 seal|כלב ים
-hedgehog|קיפוד
-mosquito|יתוש
 bull|שור
-lamb|טלה
-chick|אפרוח
-ladybug|חיפושית
-octopus|תמנון
-jellyfish|מדוזה
-crab|סרטן
 pigeon|יונה
-stork|חסידה
-goldfish|דג זהב
-cheetah|ברדלס
 shell|קונכייה
 nest|קן
 wing|כנף
 tail|זנב
 fur|פרווה
-paw|כפה
 horn|קרן
+ostrich|יען
+peacock|טווס
+goose|אווז
+calf|עגל
 # more food and drink
 breakfast|ארוחת בוקר
 lunch|ארוחת צהריים
@@ -174,23 +152,16 @@ meal|ארוחה
 dessert|קינוח
 menu|תפריט
 noodles|אטריות
-yogurt|יוגורט
-ketchup|קטשופ
-popcorn|פופקורן
-pancake|פנקייק
 ice lolly|קרטיב
 steak|סטייק
 tuna|טונה
 jelly|ג'לי
-cereal|דגני בוקר
 toast|טוסט
-flour|קמח
 oil|שמן
 pie|פשטידה
 cream|שמנת
 nut|אגוז
 peanut|בוטן
-raisin|צימוק
 olive|זית
 pickle|מלפפון חמוץ
 slice|פרוסה
@@ -198,37 +169,30 @@ bite|ביס
 coconut|קוקוס
 avocado|אבוקדו
 kiwi|קיווי
-apricot|משמש
-spinach|תרד
-celery|סלרי
-beetroot|סלק
-cauliflower|כרובית
-zucchini|קישוא
-radish|צנונית
+omelet|חביתה
+pita|פיתה
+schnitzel|שניצל
+muffin|מאפין
+waffle|ופל
 # health and body
 sick|חולה
 healthy|בריא
 hurt|כואב
-headache|כאב ראש
-stomachache|כאב בטן
 fever|חום
 medicine|תרופה
-bandage|פלסטר
-cough|שיעול
-ambulance|אמבולנס
 bone|עצם
-brain|מוח
 blood|דם
-muscle|שריר
 thumb|אגודל
-ankle|קרסול
 beard|זקן
 eyebrow|גבה
-forehead|מצח
 stomach|קיבה
 chest|חזה
 voice|קול
 breath|נשימה
+chin|סנטר
+elbow|מרפק
+cheek|לחי
+skin|עור
 # feelings
 excited|נרגש
 scared|מפוחד
@@ -237,40 +201,21 @@ bored|משועמם
 proud|גאה
 worried|מודאג
 shy|ביישן
-lonely|בודד
-nervous|עצבני
 sleepy|ישנוני
 calm|רגוע
-upset|נסער
-pleased|מרוצה
 careful|זהיר
 brave|אמיץ
-# story characters
-neighbor|שכן
-king|מלך
-queen|מלכה
-prince|נסיך
-princess|נסיכה
-pirate|פיראט
-monster|מפלצת
+# stories and magic
 giant|ענק
-ghost|רוח רפאים
-witch|מכשפה
 clown|ליצן
 wizard|קוסם
-fairy|פיה
-dragon|דרקון
 hero|גיבור
 magic|קסם
 treasure|אוצר
 castle|טירה
-stranger|זר
-guest|אורח
-twin|תאום
-teenager|נער
+secret|סוד
+surprise|הפתעה
 # more things we do
-buy|לקנות
-sell|למכור
 bring|להביא
 carry|לשאת
 catch|לתפוס
@@ -318,70 +263,49 @@ speak|לדבר
 count|לספור
 ride|לרכוב
 drive|לנהוג
-cross|לחצות
 shout|לצעוק
-whisper|ללחוש
 smell|להריח
 taste|לטעום
 touch|לגעת
-hug|לחבק
-kiss|לנשק
 hide|להסתתר
 share|לחלוק
 save|להציל
-follow|לעקוב
 hold|להחזיק
 pick|לקטוף
 plant|לטעת
 grow|לגדול
 live|לגור
-pay|לשלם
 send|לשלוח
-receive|לקבל
 order|להזמין
 dream|לחלום
-hurry|למהר
-rest|לנוח
 stay|להישאר
 leave|לעזוב
-return|לחזור
-arrive|להגיע
-enter|להיכנס
-burn|לשרוף
-melt|להימס
-shine|לזרוח
-float|לצוף
-sink|לטבוע
+yawn|לפהק
+sneeze|להתעטש
+crawl|לזחול
+tickle|לדגדג
 # more describing words
 young|צעיר
-rich|עשיר
-poor|עני
 easy|קל
 difficult|מסובך
-famous|מפורסם
 important|חשוב
-dangerous|מסוכן
 safe|בטוח
 free|חופשי
 busy|עסוק
 lazy|עצלן
 kind|אדיב
-polite|מנומס
 clever|חכם
 silly|מטופש
 sweet|מתוק
 sour|חמוץ
 salty|מלוח
-bitter|מר
 round|עגול
 flat|שטוח
 deep|עמוק
 high|גבוה
 low|נמוך
 thin|רזה
-thick|עבה
 wide|רחב
-narrow|צר
 dark|חשוך
 bright|בהיר
 lucky|בר מזל
@@ -395,18 +319,20 @@ ready|מוכן
 alone|לבד
 together|ביחד
 sharp|חד
-smooth|חלק
-shiny|מבריק
 tiny|זעיר
 huge|ענקי
 enough|מספיק
-whole|שלם
 broken|שבור
 crazy|מטורף
 tasty|טעים
 boring|משעמם
 interesting|מעניין
 exciting|מרגש
+sticky|דביק
+furry|פרוותי
+weak|חלש
+nice|נחמד
+cool|מגניב
 # where things are
 behind|מאחורי
 between|בין
@@ -418,7 +344,6 @@ inside|בפנים
 outside|בחוץ
 above|מעל
 across|מעבר
-through|דרך
 around|מסביב
 from|מ
 with|עם
@@ -428,14 +353,10 @@ after|אחרי
 left|שמאל
 right|ימין
 middle|אמצע
-top|פסגה
+top|חלק עליון
 bottom|תחתית
 side|צד
-edge|קצה
 away|הרחק
-toward|לעבר
-until|עד
-during|במהלך
 # small words
 what|מה
 where|איפה
@@ -483,9 +404,6 @@ tent|אוהל
 map|מפה
 ticket|כרטיס
 suitcase|מזוודה
-passport|דרכון
-passenger|נוסע
-journey|מסע
 country|מדינה
 flag|דגל
 backpack|תרמיל
@@ -497,29 +415,22 @@ desert|מדבר
 forest|יער
 lake|אגם
 ocean|אוקיינוס
-volcano|הר געש
 cave|מערה
 jungle|ג'ונגל
-valley|עמק
 hill|גבעה
 field|שדה
 planet|כוכב לכת
 earth|כדור הארץ
 space|חלל
 rocket|טיל
-astronaut|אסטרונאוט
 world|עולם
 # technology and media
 screen|מסך
-keyboard|מקלדת
 internet|אינטרנט
 video|סרטון
 photo|תצלום
 message|הודעה
 email|אימייל
-website|אתר
-password|סיסמה
-battery|סוללה
 radio|רדיו
 movie|סרט
 cartoon|סרט מצויר
@@ -527,11 +438,9 @@ news|חדשות
 newspaper|עיתון
 magazine|מגזין
 letter|מכתב
-envelope|מעטפה
 stamp|בול
 # around the house
 balcony|מרפסת
-basement|מרתף
 elevator|מעלית
 fridge|מקרר
 oven|תנור
@@ -549,19 +458,19 @@ garbage|זבל
 ladder|סולם
 fence|גדר
 yard|חצר
-attic|עליית גג
-ceiling|תקרה
 lock|מנעול
 candle|נר
 tap|ברז
 hammer|פטיש
-saw|מסור
 tool|כלי עבודה
 rope|חבל
-needle|מחט
 button|כפתור
-zipper|רוכסן
 pocket|כיס
+carpet|שטיח
+shelf|מדף
+basket|סל
+tray|מגש
+glass|זכוכית
 # more clothes
 uniform|מדים
 ring|טבעת
@@ -571,58 +480,58 @@ jeans|ג'ינס
 tie|עניבה
 sandals|סנדלים
 slippers|נעלי בית
-bracelet|צמיד
-earrings|עגילים
 raincoat|מעיל גשם
 costume|תחפושת
 mask|מסכה
 # nature
 seed|זרע
 branch|ענף
-root|שורש
 bush|שיח
 stone|אבן
 dust|אבק
 mud|בוץ
 puddle|שלולית
-thunder|רעם
-lightning|ברק
-fog|ערפל
 wave|גל
 shadow|צל
 smoke|עשן
 air|אוויר
+wood|עץ
 # school subjects and words
 homework|שיעורי בית
 exam|מבחן
 mistake|טעות
 word|מילה
 alphabet|אלפבית
-sentence|משפט
 page|עמוד
 story|סיפור
-dictionary|מילון
 subject|מקצוע
 math|חשבון
 science|מדעים
 history|היסטוריה
 art|אמנות
 recess|הפסקה
-principal|מנהל
-project|פרויקט
 language|שפה
 English|אנגלית
 Hebrew|עברית
 Arabic|ערבית
-# money and things
+# money and shopping
 coin|מטבע
 money|כסף
 price|מחיר
 prize|פרס
-basket|סל
-tray|מגש
-jar|צנצנת
-glass|זכוכית
-plastic|פלסטיק
-wood|עץ
-metal|מתכת
+buy|לקנות
+sell|למכור
+pay|לשלם
+rich|עשיר
+poor|עני
+# family and people
+mother|אמא
+father|אבא
+grandmother|סבתא
+grandfather|סבא
+parents|הורים
+child|ילד/ה
+cousin|בן דוד
+twin|תאום
+neighbor|שכן
+guest|אורח

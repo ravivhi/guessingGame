@@ -1,143 +1,548 @@
-achieve|להשיג
-afford|להרשות לעצמו
-agree|להסכים
-allow|להרשות
-amount|כמות
-ancient|עתיק
-announce|להכריז
-appear|להופיע
-approach|גישה
-argue|להתווכח
-arrange|לסדר
+# society and community
+population|אוכלוסייה
+neighborhood|שכונה
+volunteer|מתנדב
+rights|זכויות
+vote|להצביע
+mayor|ראש עיר
+president|נשיא
+leader|מנהיג
+public|ציבורי
+private|פרטי
+generation|דור
+youth|נוער
+equal|שווה
+fair|הוגן
+global|עולמי
+local|מקומי
+foreign|זר
+male|זכר
+female|נקבה
+event|אירוע
+celebrate|לחגוג
+issue|סוגיה
+parade|מצעד
+organization|ארגון
+donate|לתרום
+unity|אחדות
+orphan|יתום
+landmark|ציון דרך
+kibbutz|קיבוץ
+society|חברה
+homeless|חסר בית
+charity|צדקה
+# law, safety and conflict
+criminal|פושע
+arrest|לעצור
+steal|לגנוב
+witness|עד
+guilty|אשם
+victim|קורבן
+investigate|לערוך חקירה
+safety|בטיחות
+warn|להזהיר
+protect|להגן
+security|ביטחון
+cheat|לרמות
+guard|שומר
+escape|לברוח
+harm|פגיעה
+damage|נזק
+rob|לשדוד
+jail|בית סוהר
+forbid|לאסור
+seatbelt|חגורת בטיחות
+battle|קרב
+victory|ניצחון
 attack|לתקוף
-attempt|ניסיון
-attention|תשומת לב
-attitude|יחס
-average|ממוצע
-avoid|להימנע
-aware|מודע
+enemy|אויב
+fight|להילחם
+destroy|להרוס
+peace|שלום
+punish|להעניש
+shelter|מחסה
+poison|רעל
+# media and communication
+media|תקשורת
+reporter|כתב
+interview|ראיון
+channel|ערוץ
+audience|קהל
+online|מקוון
+podcast|פודקאסט
+fake|מזויף
+false|כוזב
+source|מקור
+blog|בלוג
+episode|פרק בסדרה
+series|סדרה
+subscribe|להירשם כמנוי
+follower|עוקב
+livestream|שידור חי
+# technology
+technology|טכנולוגיה
+device|מכשיר
+update|עדכון
+virus|וירוס
+copy|להעתיק
+account|חשבון
+username|שם משתמש
+spam|דואר זבל
+inbox|תיבת דואר
+software|תוכנה
+# environment and nature
+climate|אקלים
+global warming|התחממות עולמית
+temperature|טמפרטורה
+earthquake|רעידת אדמה
+natural|טבעי
+wildlife|חיות בר
+oxygen|חמצן
+solar|סולארי
+soil|אדמה
+creature|יצור
+rainforest|יער גשם
+coral|אלמוג
+wildfire|שריפת יער
+polar|קוטבי
+organic|אורגני
+compost|קומפוסט
+heatwave|גל חום
+litter|לכלוך ברחוב
+smog|ערפיח
+acid rain|גשם חומצי
+sewage|ביוב
+landfill|מטמנה
+# health and body
+disease|מחלה
+treatment|טיפול
+surgery|ניתוח
+clinic|מרפאה
+vitamin|ויטמין
+breathe|לנשום
+sweat|להזיע
+emergency|מקרה חירום
+weight|משקל
 balance|איזון
+fit|מתאים
+condition|מצב
+bruise|חבורה
+germ|חיידק
+crutches|קביים
+diabetes|סוכרת
+first aid|עזרה ראשונה
+X-ray|צילום רנטגן
+# travel and transport
+destination|יעד
+abroad|בחו"ל
+flight|טיסה
+direction|כיוון
+distance|מרחק
+explore|לחקור
+reservation|הזמנה
+vehicle|כלי רכב
+intersection|צומת
+highway|כביש מהיר
+ferry|מעבורת
+transport|תחבורה
+depart|לצאת לדרך
+schedule|לוח זמנים
+souvenir|מזכרת
+visa|אשרה
+route|מסלול
+crowded|צפוף
+delay|עיכוב
+tour|סיור
+platform|רציף
+campsite|אתר קמפינג
+cruise|שייט
+# money and shopping
+cost|עלות
+afford|להרשות לעצמו
 bargain|מציאה
-behavior|התנהגות
+receipt|קבלה
+cash|מזומן
+credit card|כרטיס אשראי
+salary|משכורת
+earn|להרוויח
+savings|חסכונות
+wealthy|עשיר
+customer|לקוח
+product|מוצר
+brand|מותג
+purchase|רכישה
+refund|החזר כספי
+tax|מס
+value|ערך
+deal|עסקה
+charge|לחייב
+exchange|להחליף
+fortune|הון
 benefit|תועלת
-blame|להאשים
-bother|להטריד
+owe|להיות חייב
+# work and jobs
+employee|עובד
+boss|בוס
+manager|מנהל
+profession|מקצוע
+business|עסק
+meeting|פגישה
+task|משימה
+responsibility|אחריות
+unemployed|מובטל
+hire|להעסיק
+succeed|להצליח
+training|אימון
+manage|לנהל
+deliver|למסור
+handle|לטפל
+salesman|איש מכירות
+promotion|קידום
+applicant|מועמד
+achievement|הישג
+workshop|סדנה
+reward|גמול
+# school and learning
+education|חינוך
+degree|תואר
+knowledge|ידע
+laboratory|מעבדה
+vocabulary|אוצר מילים
+grammar|דקדוק
+paragraph|פסקה
+university|אוניברסיטה
+college|מכללה
+certificate|תעודה
+graduate|לסיים לימודים
+scholarship|מלגה
+memorize|לשנן
+definition|הגדרה
+translate|לתרגם
+pronounce|לבטא
+spell|לאיית
+geography|גאוגרפיה
+biology|ביולוגיה
+chemistry|כימיה
+physics|פיזיקה
+textbook|ספר לימוד
+presentation|מצגת
+algebra|אלגברה
+underline|לסמן בקו
+skill|מיומנות
+# history and the past
+ancient|עתיק
+century|מאה
+past|עבר
+future|עתיד
+kingdom|ממלכה
+noble|אציל
+monument|אנדרטה
+tribe|שבט
+pyramid|פירמידה
+emperor|קיסר
+pharaoh|פרעה
+slavery|עבדות
+explorer|מגלה ארצות
+voyage|הפלגה
+throne|כס מלכות
+settler|מתיישב
+peasant|איכר
+# arts and entertainment
+exhibition|תערוכה
+concert|קונצרט
+performance|הופעה
+director|במאי
+character|דמות
+scene|סצנה
+script|תסריט
+author|סופר
+fashion|אופנה
+design|עיצוב
+talent|כישרון
+creative|יצירתי
+festival|פסטיבל
+instrument|כלי נגינה
+orchestra|תזמורת
+comedy|קומדיה
+drama|דרמה
+entertainment|בידור
+celebrity|ידוען
+fan|מעריץ
+statue|פסל
+animation|אנימציה
+sketch|סקיצה
+rhythm|קצב
+melody|מנגינה
+choir|מקהלה
+applause|מחיאות כפיים
+audition|אודישן
+soundtrack|פסקול
+sequel|סרט המשך
+legend|אגדה
+# sports and competition
+championship|אליפות
+tournament|טורניר
+stadium|אצטדיון
+compete|להתחרות
+fitness|כושר
+practice|להתאמן
+challenge|אתגר
+referee|שופט משחק
+finals|גמר
+olympics|אולימפיאדה
+marathon|מרתון
+teammate|חבר לקבוצה
+sprint|ריצה קצרה
+# feelings and personality
+mood|מצב רוח
+attitude|יחס
+behavior|התנהגות
+confident|בטוח בעצמו
+embarrassed|נבוך
+disappointed|מאוכזב
+satisfied|מרוצה
+relaxed|רגוע
+honest|ישר
+rude|גס רוח
+selfish|אנוכי
+mature|בוגר
+wise|נבון
+miserable|אומלל
+amazed|נדהם
+confused|מבולבל
+annoyed|מעוצבן
 brilliant|מבריק
 capable|מסוגל
-cause|גורם
-celebrate|לחגוג
-century|מאה
-challenge|אתגר
-character|דמות
-charge|לחייב
-cheat|לרמות
-claim|לטעון
-collect|לאסוף
-comfortable|נוח
-compare|להשוות
-complain|להתלונן
-complete|שלם
-condition|מצב
-consider|לשקול
-contain|להכיל
-continue|להמשיך
-control|שליטה
-convince|לשכנע
-copy|להעתיק
-cost|עלות
-create|ליצור
-creature|יצור
 curious|סקרן
-damage|נזק
-deal|עסקה
-debate|ויכוח
-decrease|להקטין
-degree|תואר
-delay|עיכוב
-deliver|למסור
-demand|דרישה
-depend|להיות תלוי
-describe|לתאר
-design|עיצוב
-destroy|להרוס
-develop|לפתח
-difference|הבדל
-direction|כיוון
-disappear|להיעלם
-discuss|לדון
-distance|מרחק
-divide|לחלק
-double|כפול
-doubt|ספק
-earn|להרוויח
-education|חינוך
-effect|השפעה
-either|אחד משניים
-employee|עובד
-encourage|לעודד
-enemy|אויב
-enjoy|ליהנות
-equal|שווה
-escape|לברוח
-event|אירוע
-exact|מדויק
-excellent|מעולה
-exchange|להחליף
-expect|לצפות
-explain|להסביר
-explore|לחקור
-express|להביע
-extra|נוסף
-fail|להיכשל
-fair|הוגן
-false|כוזב
-fashion|אופנה
-female|נקבה
-fight|להילחם
-fit|מתאים
-flight|טיסה
-foreign|לועזי
-forgive|לסלוח
-fortune|הון
-frightened|מפוחד
-gain|לצבור
-general|כללי
 generous|נדיב
 gentle|עדין
-global|עולמי
-guard|שומר
-guess|לנחש
-handle|לטפל
-harm|פגיעה
-imagine|לדמיין
-improve|להשתפר
-include|לכלול
-increase|להגדיל
 independent|עצמאי
-influence|להשפיע
-inform|ליידע
-instead|במקום
-introduce|להציג
-involve|לערב
-issue|סוגיה
-joke|בדיחה
-knowledge|ידע
-likely|סביר
-limit|מגבלה
-local|מקומי
-male|זכר
-manage|לנהל
-manner|אופן
-mean|להתכוון
-measure|למדוד
-mention|להזכיר
-mind|מחשבה
-miss|לגעגע
-modern|מודרני
+aware|מודע
+comfortable|נוח
+ashamed|מתבייש
+impatient|חסר סבלנות
+careless|רשלן
+clumsy|מגושם
+terrified|מבועת
+homesick|מתגעגע הביתה
+gloomy|קודר
+cheeky|חצוף
+relieved|מרגיש הקלה
+grumpy|רגזן
+jealous|קנאי
+loyal|נאמן
+panic|בהלה
+# relationships
+relationship|מערכת יחסים
+friendship|חברות
+couple|זוג
+marriage|נישואים
+respect|כבוד
+promise|הבטחה
+betray|לבגוד
+bully|בריון
+greet|לברך
+companion|בן לוויה
+argue|להתווכח
+forgive|לסלוח
+blame|להאשים
+bother|להטריד
+miss|להתגעגע
+engaged|מאורס
+unite|לאחד
+nickname|כינוי
+teamwork|עבודת צוות
+tease|להקניט
+relative|קרוב משפחה
+# home and daily life
+chore|מטלה
+furniture|רהיטים
+laundry|כביסה
+rent|שכר דירה
+apartment|דירה
+repair|לתקן
+pack|לארוז
+recipe|מתכון
+ingredient|מרכיב
+appetite|תיאבון
+leftovers|שאריות
+garage|מוסך
+arrange|לסדר
+collect|לאסוף
+contain|להכיל
+staircase|גרם מדרגות
+landlord|בעל בית
+errand|סידור
+# time and quantity
+amount|כמות
+average|ממוצע
 moment|רגע
-mood|מצב רוח
-necessary|הכרחי
+double|כפול
+divide|לחלק
+measure|למדוד
+limit|מגבלה
+percent|אחוז
+quarter|רבע
+total|סך הכול
+several|כמה וכמה
+rarely|לעתים רחוקות
+occasionally|מדי פעם
+frequently|לעתים קרובות
+recently|לאחרונה
+immediately|מיד
+either|אחד משניים
 neither|אף אחד משניים
-noble|אציל
-normal|רגיל
+instead|במקום
+extra|נוסף
+nowadays|בימינו
+multiply|להכפיל
+subtract|לחסר
+# thinking and ideas
+approach|גישה
+attention|תשומת לב
+consider|לשקול
+doubt|ספק
+imagine|לדמיין
+mind|מחשבה
 notice|להבחין
+claim|לטעון
+mean|להתכוון
+expect|לצפות
+belief|אמונה
+cause|גורם
+effect|השפעה
+influence|להשפיע
+purpose|תכלית
+realize|לקלוט
+wonder|לתהות
+suppose|להניח
+prove|להוכיח
+probably|כנראה
+likely|סביר
+certain|ודאי
+difference|הבדל
+opposite|הפוך
+compare|להשוות
+hint|רמז
+meaning|משמעות
+possibility|אפשרות
+mistaken|טועה
+miracle|נס
+mystery|תעלומה
+# verbs: everyday actions
+borrow|לשאול
+lend|להשאיל
+pour|למזוג
+squeeze|לסחוט
+stretch|למתוח
+bend|לכופף
+lift|להרים
+wrap|לעטוף
+hang|לתלות
+blink|למצמץ
+stare|לבהות
+wander|לשוטט
+rush|למהר
+chase|לרדוף
+spill|לשפוך
+freeze|לקפוא
+boil|להרתיח
+scratch|לגרד
+avoid|להימנע
+chop|לקצוץ
+remove|להסיר
+rescue|הצלה
+survive|לשרוד
+pretend|להעמיד פנים
+prevent|למנוע
+# verbs: communication
+agree|להסכים
+announce|להכריז
+complain|להתלונן
+convince|לשכנע
+describe|לתאר
+discuss|לדון
+debate|ויכוח
+explain|להסביר
+express|להביע
+inform|ליידע
+introduce|להציג
+mention|להזכיר
+request|בקשה
+demand|דרישה
+criticize|לבקר
+beg|להתחנן
+boast|להתרברב
+reply|תשובה
+# verbs: change and progress
+achieve|להשיג
+attempt|ניסיון
+appear|להופיע
+disappear|להיעלם
+continue|להמשיך
+create|ליצור
+develop|לפתח
+improve|להשתפר
+increase|להגדיל
+decrease|להקטין
+gain|לצבור
+fail|להיכשל
+encourage|לעודד
+spread|להתפשט
+prepare|להכין
+include|לכלול
+involve|לערב
+depend|להיות תלוי
+allow|להרשות
+provide|לספק
+control|שליטה
+progress|התקדמות
+separate|להפריד
+join|להצטרף
+quit|להפסיק
+# describing words
+modern|מודרני
+normal|רגיל
+necessary|הכרחי
+excellent|מעולה
+complete|שלם
+exact|מדויק
+general|כללי
+typical|טיפוסי
+unusual|יוצא דופן
+silent|דומם
+familiar|מוכר
+pleasant|נעים
+complicated|מסובך
+valuable|יקר ערך
+useful|שימושי
+useless|חסר תועלת
+tough|קשוח
+ordinary|שגרתי
+awkward|מביך
+dull|משעמם
+fancy|מפואר
+loose|רופף
+tight|הדוק
+steep|תלול
+curved|מעוקל
+incredible|מדהים
+unique|ייחודי
+ideal|אידיאלי
+rare|נדיר
+similar|דומה
+royal|מלכותי
+# science
+theory|תיאוריה
+evidence|ראיה
+calcium|סידן
+amphibian|דו-חי
+nocturnal|לילי
+algae|אצות
+hemisphere|חצי כדור
+plateau|רמה
+artery|עורק
+vein|וריד
+intestines|מעיים
+liquid|נוזל
+galaxy|גלקסיה

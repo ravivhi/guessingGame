@@ -1,153 +1,530 @@
-eager|להוט
-earnings|הכנסות
+# money and economy
 economy|כלכלה
-efficient|יעיל
-elaborate|מפורט
-element|יסוד
-eliminate|לחסל
-embarrass|לביך
-emerge|לצוץ
-emphasis|דגש
-employ|להעסיק
-enable|לאפשר
-encounter|להיתקל
-enforce|לאכוף
-engage|לעסוק
-enormous|עצום
-ensure|להבטיח
-entertain|לבדר
-enthusiasm|התלהבות
-entrance|כניסה
-equipment|ציוד
-essay|חיבור
-essential|חיוני
-establish|להקים
-ethnic|אתני
-eventually|בסופו של דבר
-evident|ניכר
-evil|רשע
-evolve|להתפתח
-exaggerate|להגזים
-examine|לבדוק
-exceed|לחרוג
-exception|יוצא מן הכלל
-excess|עודף
-exclude|להוציא מכלל
-excuse|תירוץ
-execute|לבצע
-exhaust|לתשוש
-exhibit|תערוכה
-exist|להתקיים
-expand|להתרחב
+economic|כלכלי
+earnings|רווחים
+income|הכנסה
 expense|הוצאה
-expert|מומחה
-expose|לחשוף
-extend|להאריך
-extreme|קיצוני
-fabric|בד
-facility|מתקן
-faint|להתעלף
-faith|אמונה
-fame|תהילה
-fault|אשמה
-feature|תכונה
 fee|אגרה
-fierce|עז
 finance|מימון
+fund|קרן
+invest|להשקיע
+inflation|אינפלציה
+wealth|עושר
+inherit|לרשת
+interest rate|ריבית
+stock market|בורסה
+insurance|ביטוח
+taxpayer|משלם מסים
+guarantee|ערבות
+household|משק בית
+excess|עודף
+donation|תרומה
+cost of living|יוקר המחיה
+loss|הפסד
+exchange rate|שער חליפין
+economist|כלכלן
+bank account|חשבון בנק
+installment|תשלום חודשי
+worth|שווה
+stock|מניה
+growth|צמיחה
+# business and work
+industry|תעשייה
 firm|חברה עסקית
-flexible|גמיש
-flood|שיטפון
+employ|להעסיק
+workforce|כוח עבודה
+occupation|משלח יד
+headquarters|מטה
+executive|מנהל בכיר
+chairman|יושב ראש
+startup|סטארט-אפ
+import|לייבא
+export|לייצא
+manufacturer|יצרן
+supplier|ספק
+productivity|פריון
+facility|מתקן
+equipment|ציוד
+expert|מומחה
+client|לקוח
+partnership|שותפות
+warehouse|מחסן
+production|ייצור
+output|תפוקה
+labor|עבודה
+trade union|איגוד מקצועי
+strike|שביתה
+management|הנהלה
+marketing|שיווק
+advertise|לפרסם
+sponsor|נותן חסות
+professional|מקצועי
+corporation|תאגיד
+patent|פטנט
+# government and politics
+govern|למשול
+institution|מוסד
+establish|להקים
+impose|לכפות
+policy|מדיניות
+prime minister|ראש ממשלה
+voter|בוחר
+municipality|עירייה
+spokesman|דובר
+administration|ממשל
+governor|מושל
+republic|רפובליקה
+ministry|משרד ממשלתי
+politician|פוליטיקאי
+political|פוליטי
+politics|פוליטיקה
+national|לאומי
+international|בינלאומי
+patriot|פטריוט
+independence|עצמאות
+anthem|המנון
+summit|פסגה
+protester|מפגין
+riot|מהומות
+rally|עצרת
+activist|פעיל
+reign|שלטון
+agenda|סדר יום
+deputy|סגן
+conservative|שמרני
+# law and justice
+enforce|לאכוף
+illegal|לא חוקי
+innocent|חף מפשע
+fault|אשמה
+trial|משפט
+sue|לתבוע
+penalty|עונש
+theft|גניבה
+robbery|שוד
+accuse|להאשים
+human rights|זכויות אדם
+equality|שוויון
+incident|תקרית
+investigation|חקירה
+ban|איסור
+permission|רשות
+smuggle|להבריח
+vandalism|ונדליזם
+offender|עבריין
+suspect|חשוד
+alibi|אליבי
+guardian|אפוטרופוס
+# society and people
+ethnic|אתני
+heritage|מורשת
+immigrant|מהגר
+migration|הגירה
+identity|זהות
+gender|מגדר
+native|יליד
+social|חברתי
+host|מארח
+fame|תהילה
+glory|תפארת
+childhood|ילדות
+divorce|גירושים
+lifestyle|אורח חיים
+religious|דתי
+holy|קדוש
+social media|רשתות חברתיות
+mortal|בן תמותה
+# war and security
+invade|לפלוש
+ceasefire|הפסקת אש
+territory|טריטוריה
+threat|איום
+threaten|לאיים
+explosion|פיצוץ
+missile|טיל
+navy|חיל הים
+air force|חיל האוויר
+civilian|אזרחי
+intelligence|מודיעין
+bomb|פצצה
+terrorist|מחבל
+commander|מפקד
+officer|קצין
+warrior|לוחם
+armed|חמוש
+patrol|סיור
+defense|הגנה
+struggle|מאבק
+# media and communication
+headline|כותרת
+highlight|להדגיש
+editor|עורך
+press|עיתונות
+column|טור
+viewer|צופה
+influencer|משפיען
+viral|ויראלי
+fake news|חדשות כזב
+misleading|מטעה
+exaggerate|להגזים
+interrupt|להפריע
+insult|עלבון
+humor|הומור
+entertain|לבדר
+journalism|עיתונאות
+survey|סקר
+breaking news|מבזק חדשות
+notification|התראה
+feedback|משוב
+symbol|סמל
+dialect|ניב
+abbreviation|קיצור
+# education and learning
+essay|חיבור
+curriculum|תוכנית לימודים
+semester|סמסטר
+tuition|שכר לימוד
+assignment|מטלה
+faculty|פקולטה
+campus|קמפוס
+literacy|אוריינות
+enroll|להירשם
+tutor|מורה פרטי
+intellectual|אינטלקטואלי
 fluent|שוטף
-focus|מיקוד
-fold|לקפל
-formal|רשמי
+instruct|להורות
+illustrate|להמחיש
+professor|פרופסור
+attendance|נוכחות
+sociology|סוציולוגיה
+graduation|טקס סיום
+pronunciation|הגייה
+translation|תרגום
+archive|ארכיון
+# science and research
+element|יסוד
+friction|חיכוך
+function|פונקציה
+interval|מרווח
+sample|דגימה
+observe|להתבונן
+atom|אטום
+evolution|אבולוציה
+evolve|להתפתח
+graph|גרף
+accurate|מדויק
+method|שיטה
+technique|טכניקה
+conclusion|מסקנה
+analysis|ניתוח
+mixture|תערובת
+vapor|אדים
+acid|חומצה
+digest|לעכל
+instinct|אינסטינקט
+density|צפיפות
+mass|מסה
+hydrogen|מימן
+nitrogen|חנקן
+photosynthesis|פוטוסינתזה
+nutrient|חומר מזין
+# space
+universe|יקום
+comet|שביט
+asteroid|אסטרואיד
+eclipse|ליקוי
+solar system|מערכת השמש
+spacecraft|חללית
+meteor|מטאור
+constellation|קבוצת כוכבים
+# math
 formula|נוסחה
 fraction|שבר
-fragile|שביר
-frame|מסגרת
-frequent|תכוף
-friction|חיכוך
-frustrate|לתסכל
-fulfill|להגשים
-function|פונקציה
-fund|קרן
-fundamental|יסודי
-furious|זועם
-furnish|לרהט
+calculate|לחשב
+equation|משוואה
+geometry|גאומטריה
+statistics|סטטיסטיקה
+ratio|יחס
+diameter|קוטר
+probability|הסתברות
+decimal|עשרוני
+circumference|היקף
+radius|רדיוס
+symmetry|סימטריה
+vertical|אנכי
+horizontal|אופקי
+infinity|אינסוף
+square root|שורש ריבועי
+axis|ציר
+# technology
 gadget|גאדג'ט
-gap|פער
-generate|לייצר
-genius|גאון
-genuine|אמיתי
-glance|מבט
-glimpse|הצצה
-glory|תפארת
-govern|למשול
-grab|לחטוף
-gradual|הדרגתי
-grain|גרגר
-grateful|אסיר תודה
-grave|קבר
-grief|אבל
-grip|אחיזה
-grocery|מכולת
-guarantee|ערבות
-handsome|נאה
-hardly|בקושי
-harvest|קציר
-hazard|סיכון
-headline|כותרת
+install|להתקין
+hardware|חומרה
+encrypt|להצפין
+browser|דפדפן
+automatic|אוטומטי
+storage|אחסון
+hacker|האקר
+generate|להפיק
+electronic|אלקטרוני
+technical|טכני
+mechanism|מנגנון
+sensor|חיישן
+pixel|פיקסל
+recharge|להטעין
+# health and medicine
 heal|לרפא
-heap|ערימה
-height|גובה
-heritage|מורשת
-hesitate|להסס
-hidden|נסתר
-highlight|להדגיש
-hollow|חלול
-horizon|אופק
-horror|אימה
-host|מארח
-household|משק בית
-humble|צנוע
-humor|הומור
-identical|זהה
-identity|זהות
-ignore|להתעלם
-illegal|לא חוקי
-illustrate|להמחיש
-immediate|מיידי
-immigrant|מהגר
-implement|ליישם
-imply|לרמוז
-impolite|לא מנומס
-import|לייבא
-impose|לכפות
-impress|להרשים
-incident|תקרית
-income|הכנסה
-indicate|להצביע
-industry|תעשייה
-inevitable|בלתי נמנע
-inflation|אינפלציה
 injure|לפצוע
 injury|פציעה
-inner|פנימי
-innocent|חף מפשע
-insist|להתעקש
-inspect|לפקח
-inspire|לעורר השראה
-install|להתקין
+faint|להתעלף
+exhaust|להתיש
+side effect|תופעת לוואי
+pandemic|מגפה עולמית
+vaccine|חיסון
+blood pressure|לחץ דם
+heart attack|התקף לב
+painkiller|משכך כאבים
+fracture|שבר בעצם
+cure|ריפוי
+calorie|קלוריה
+psychologist|פסיכולוג
+smoking|עישון
+overweight|עודף משקל
+dehydration|התייבשות
+nausea|בחילה
+stretcher|אלונקה
+transplant|השתלה
+donor|תורם
+recover|להחלים
+surgeon|מנתח
+stress|מתח
+# environment and nature
+flood|שיטפון
+harvest|קציר
+horizon|אופק
+grain|גרגר
+hazard|סיכון
+heap|ערימה
+greenhouse|חממה
+erosion|סחף
+agriculture|חקלאות
+crop|יבול
+livestock|משק חי
+toxic|רעיל
+carbon|פחמן
+fertilizer|דשן
+hurricane|הוריקן
+tornado|טורנדו
+tsunami|צונאמי
+avalanche|מפולת שלגים
+coral reef|שונית אלמוגים
+peninsula|חצי אי
+shallow|רדוד
+# everyday life and travel
+fabric|בד
+frame|מסגרת
+entrance|כניסה
+furnish|לרהט
+grave|קבר
+grip|אחיזה
+gap|פער
+height|גובה
+excuse|תירוץ
+appliance|מכשיר חשמלי
+tenant|דייר
+disposable|חד פעמי
+reusable|רב פעמי
+accommodation|לינה
+tourism|תיירות
+customs|מכס
+terminal|טרמינל
+backpacker|תרמילאי
+itinerary|מסלול טיול
+# feelings
+eager|להוט
+enthusiasm|התלהבות
+embarrass|לביך
+frustrate|לתסכל
+furious|זועם
+grateful|אסיר תודה
+grief|אבל
+horror|אימה
+envy|קנאה
+offended|נעלב
+satisfaction|סיפוק
+faith|אמונה
+disappointment|אכזבה
+hatred|שנאה
+affection|חיבה
+passion|תשוקה
+boredom|שעמום
+loneliness|בדידות
+confusion|בלבול
+emotional|רגשי
+irritated|מעוצבן
+hopeful|מלא תקווה
+hopeless|חסר תקווה
+# character and behavior
+humble|צנוע
+evil|רשע
+impolite|לא מנומס
+fierce|עז
+tolerant|סובלני
+aggressive|תוקפני
+charming|מקסים
+sociable|חברותי
+dishonest|לא ישר
+rebellious|מרדן
+witty|שנון
+responsible|אחראי
+quarrel|ריב
+# thinking and ideas
+emphasis|דגש
+focus|מיקוד
+feature|תכונה
+fundamental|יסודי
+essential|חיוני
+evident|ניכר
+identical|זהה
 instance|מקרה
-instant|מיידית
-institution|מוסד
-instruct|להורות
-insult|עלבון
-intend|לתכנן
-interfere|להתערב
+exception|יוצא מן הכלל
+inevitable|בלתי נמנע
+perception|תפיסה
+judgment|שיקול דעת
+criticism|ביקורת
+contradict|לסתור
+consistent|עקבי
+relevant|רלוונטי
+wisdom|חוכמה
 interpret|לפרש
-interrupt|להפריע
-interval|מרווח
-invade|לפלוש
-invest|להשקיע
+imply|לרמוז
+examine|לבדוק
+inspect|לפקח
+ignore|להתעלם
+intend|להתכוון
+classify|למיין
+category|קטגוריה
+intention|כוונה
+imagination|דמיון
+underestimate|להמעיט בערך
+# describing words
+efficient|יעיל
+elaborate|מפורט
+enormous|עצום
+extreme|קיצוני
+flexible|גמיש
+formal|רשמי
+fragile|שביר
+frequent|תכוף
+genuine|אמיתי
+gradual|הדרגתי
+hollow|חלול
+hidden|נסתר
+inner|פנימי
+immediate|מיידי
 invisible|בלתי נראה
+external|חיצוני
+visible|נראה לעין
+brief|קצר
+ultimate|סופי
+initial|ראשוני
+annual|שנתי
+overall|כולל
+sufficient|מספיק
+rapid|מהיר
+appropriate|מתאים
+remarkable|יוצא דופן
+major|עיקרי
+valid|תקף
+reasonable|סביר
+mild|מתון
+outdated|מיושן
+former|לשעבר
+multiple|מרובה
+countless|אינספור
+entire|שלם
+partial|חלקי
+distant|רחוק
+dense|צפוף
+synthetic|סינתטי
+rough|מחוספס
+random|אקראי
+odd|מוזר
+confidential|סודי
+# linking words and adverbs
+eventually|בסופו של דבר
+hardly|בקושי
+instant|מיידית
+despite|למרות
+unless|אלא אם כן
+consequently|כתוצאה מכך
+apparently|כנראה
+relatively|יחסית
+otherwise|אחרת
+therefore|לכן
+however|אולם
+although|אף כי
+besides|חוץ מזה
+indeed|אכן
+regardless|בלי קשר
+previously|קודם לכן
+currently|כיום
+constantly|כל הזמן
+somewhat|במידה מסוימת
+beforehand|מראש
+afterwards|אחר כך
+# verbs: change and processes
+eliminate|לחסל
+emerge|לצוץ
+expand|להתרחב
+extend|להאריך
+exceed|לחרוג
+exclude|להוציא מכלל
+exist|להתקיים
+implement|ליישם
+execute|לבצע
+enable|לאפשר
+ensure|להבטיח
+indicate|לציין
+convert|להמיר
+accelerate|להאיץ
+decline|ירידה
+expose|לחשוף
+boost|להגביר
+strengthen|לחזק
+weaken|להחליש
+shorten|לקצר
+transfer|להעביר
+replace|להחליף
+demolish|להרוס בניין
+renovate|לשפץ
+specialize|להתמחות
+evacuate|לפנות
+flee|לברוח
+immigrate|להגר
+# verbs: people and actions
+encounter|להיתקל
+engage|לעסוק
+fulfill|להגשים
+glance|מבט
+glimpse|הצצה
+grab|לחטוף
+impress|להרשים
+inspire|לעורר השראה
+insist|להתעקש
+interfere|להתערב
+hesitate|להסס
+obtain|להשיג
+motivate|להניע
+deserve|להיות ראוי
+cope|להתמודד
+resist|להתנגד
+confess|להתוודות
+reveal|לגלות
+advise|לייעץ
+coordinate|לתאם
+congratulate|לברך
+recognize|להכיר
+remain|להישאר
+suggest|להציע
+refuse|לסרב

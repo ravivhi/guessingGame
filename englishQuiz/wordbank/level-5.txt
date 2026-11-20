@@ -1,4 +1,4 @@
-# society and community
+# חברה וקהילה
 population|אוכלוסייה
 neighborhood|שכונה
 volunteer|מתנדב
@@ -30,7 +30,7 @@ homeless|חסר בית
 charity|צדקה
 beginner|מתחיל
 genius|גאון
-# law, safety and conflict
+# חוק, ביטחון ועימותים
 criminal|פושע
 arrest|לעצור
 witness|עד
@@ -61,7 +61,7 @@ fingerprint|טביעת אצבע
 handcuffs|אזיקים
 spy|מרגל
 bomb|פצצה
-# media and communication
+# מדיה ותקשורת
 media|תקשורת
 reporter|כתב
 interview|ראיון
@@ -85,7 +85,7 @@ compliment|מחמאה
 viewer|צופה
 influencer|משפיען
 notification|התראה
-# technology
+# טכנולוגיה
 technology|טכנולוגיה
 device|מכשיר
 update|עדכון
@@ -98,7 +98,7 @@ software|תוכנה
 remote control|שלט רחוק
 drone|רחפן
 logo|לוגו
-# environment and nature
+# סביבה וטבע
 climate|אקלים
 global warming|התחממות עולמית
 earthquake|רעידת אדמה
@@ -123,7 +123,7 @@ landfill|מטמנה
 flood|שיטפון
 tornado|טורנדו
 hurricane|הוריקן
-# health and body
+# בריאות וגוף
 disease|מחלה
 treatment|טיפול
 surgery|ניתוח
@@ -147,7 +147,7 @@ allergy|אלרגיה
 protein|חלבון
 painkiller|משכך כאבים
 smoking|עישון
-# travel and transport
+# טיולים ותחבורה
 destination|יעד
 abroad|בחו"ל
 direction|כיוון
@@ -177,7 +177,7 @@ traffic jam|פקק תנועה
 hostel|אכסניה
 pedestrian|הולך רגל
 backpacker|תרמילאי
-# money and shopping
+# כסף וקניות
 cost|עלות
 afford|להרשות לעצמו
 bargain|מציאה
@@ -200,7 +200,7 @@ benefit|תועלת
 owe|להיות חייב
 discount|הנחה
 lottery|הגרלה
-# work and jobs
+# עבודה ומקצועות
 employee|עובד
 manager|מנהל
 profession|מקצוע
@@ -221,7 +221,7 @@ applicant|מועמד
 achievement|הישג
 workshop|סדנה
 reward|גמול
-# school and learning
+# בית ספר ולמידה
 education|חינוך
 degree|תואר
 knowledge|ידע
@@ -248,7 +248,7 @@ skill|מיומנות
 professor|פרופסור
 tutor|מורה פרטי
 graduation|טקס סיום
-# history and the past
+# היסטוריה ועבר
 ancient|עתיק
 century|מאה
 kingdom|ממלכה
@@ -263,7 +263,7 @@ voyage|הפלגה
 throne|כס מלכות
 settler|מתיישב
 peasant|איכר
-# arts and entertainment
+# אמנות ובידור
 exhibition|תערוכה
 performance|הופעה
 director|במאי
@@ -299,7 +299,7 @@ jazz|ג'אז
 trailer|קדימון
 novel|רומן
 poetry|שירה
-# sports and competition
+# ספורט ותחרות
 championship|אליפות
 tournament|טורניר
 compete|להתחרות
@@ -311,7 +311,7 @@ finals|גמר
 olympics|אולימפיאדה
 marathon|מרתון
 sprint|ריצה קצרה
-# feelings and personality
+# רגשות ואישיות
 mood|מצב רוח
 attitude|יחס
 behavior|התנהגות
@@ -357,7 +357,7 @@ hopeful|מלא תקווה
 hopeless|חסר תקווה
 boredom|שעמום
 loneliness|בדידות
-# relationships
+# יחסים בין אנשים
 relationship|מערכת יחסים
 couple|זוג
 marriage|נישואים
@@ -377,7 +377,7 @@ teamwork|עבודת צוות
 tease|להקניט
 relative|קרוב משפחה
 sibling|אח או אחות
-# home and daily life
+# בית וחיי יומיום
 chore|מטלה
 furniture|רהיטים
 laundry|כביסה
@@ -398,7 +398,7 @@ landlord|בעל בית
 errand|סידור
 mattress|מזרן
 grocery|מכולת
-# time and quantity
+# זמן וכמות
 amount|כמות
 average|ממוצע
 moment|רגע
@@ -422,7 +422,7 @@ extra|נוסף
 nowadays|בימינו
 multiply|להכפיל
 subtract|לחסר
-# thinking and ideas
+# חשיבה ורעיונות
 approach|גישה
 attention|תשומת לב
 consider|לשקול
@@ -454,7 +454,7 @@ possibility|אפשרות
 mistaken|טועה
 miracle|נס
 mystery|תעלומה
-# verbs: everyday actions
+# פעלים: פעולות יומיומיות
 lend|להשאיל
 pour|למזוג
 squeeze|לסחוט
@@ -478,7 +478,7 @@ twist|לסובב
 explode|להתפוצץ
 grab|לחטוף
 prefer|להעדיף
-# verbs: communication
+# פעלים: תקשורת
 announce|להכריז
 complain|להתלונן
 convince|לשכנע
@@ -498,7 +498,7 @@ reply|תשובה
 apologize|להתנצל
 sigh|לנאנח
 shrug|למשוך בכתפיים
-# verbs: change and progress
+# פעלים: שינוי והתקדמות
 achieve|להשיג
 attempt|ניסיון
 appear|להופיע
@@ -524,7 +524,7 @@ progress|התקדמות
 separate|להפריד
 join|להצטרף
 quit|להפסיק
-# describing words
+# מילות תיאור
 modern|מודרני
 necessary|הכרחי
 excellent|מעולה
@@ -564,7 +564,7 @@ weird|מוזר
 wooden|עשוי עץ
 rusty|חלוד
 invisible|בלתי נראה
-# science
+# מדע
 theory|תיאוריה
 evidence|ראיה
 calcium|סידן

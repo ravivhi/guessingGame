@@ -449,7 +449,7 @@ async function testWordbank() {
   for (let lv = 1; lv <= 9; lv++) {
     const f = path.join(root, 'wordbank', `level-${lv}.txt`);
     if (!fs.existsSync(f)) { check(false, `level-${lv}.txt exists`); continue; }
-    bank[lv] = fs.readFileSync(f, 'utf8').split(/\r?\n/).filter(l => l.trim() && !l.startsWith('#')).map(l => l.split('|'));   // '# topic' header lines group the words of levels 1-2
+    bank[lv] = fs.readFileSync(f, 'utf8').split(/\r?\n/).filter(l => l.trim() && !l.startsWith('#')).map(l => l.split('|'));   // '# category' header lines (in Hebrew) group the words of every level
   }
   check(Object.keys(bank).length === 9, 'there are 9 level files');
   const total = Object.values(bank).flat().length;

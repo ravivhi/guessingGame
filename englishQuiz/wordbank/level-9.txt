@@ -1,4 +1,4 @@
-# government and politics
+# ממשל ופוליטיקה
 regulation|תקנה
 sovereign|ריבוני
 protest|מחאה
@@ -27,7 +27,7 @@ colonialism|קולוניאליזם
 austerity|צנע
 tenure|כהונה
 legitimacy|לגיטימיות
-# law and justice
+# חוק ומשפט
 prohibit|לאסור
 suspend|להשעות
 restrict|להגביל
@@ -55,7 +55,7 @@ exonerate|לנקות מאשמה
 infringe|להפר
 implicate|לסבך
 stipulate|לקבוע כתנאי
-# economy and business
+# כלכלה ועסקים
 profit|רווח
 revenue|הכנסות ממכירות
 stake|הימור
@@ -74,7 +74,7 @@ exorbitant|מופקע
 philanthropy|פילנתרופיה
 nepotism|נפוטיזם
 benchmark|אמת מידה
-# society and people
+# חברה ואנשים
 diversity|גיוון
 elite|עילית
 integration|שילוב
@@ -99,7 +99,7 @@ demographic|דמוגרפי
 stigma|סטיגמה
 cohesion|לכידות
 utopia|אוטופיה
-# science and research
+# מדע ומחקר
 simulate|לדמות
 segment|מקטע
 nucleus|גרעין
@@ -119,7 +119,7 @@ corroborate|לאשש
 substantiate|לבסס
 entity|ישות
 anatomy|אנטומיה
-# medicine and health
+# רפואה ובריאות
 remedy|תרופה
 impair|לפגוע ב
 lethal|קטלני
@@ -135,7 +135,7 @@ dementia|שיטיון
 prognosis|תחזית רפואית
 deficiency|ליקוי
 resilience|חוסן
-# environment and nature
+# סביבה וטבע
 extinction|הכחדה
 sustainable|בר קיימא
 debris|פסולת
@@ -154,7 +154,7 @@ topography|טופוגרפיה
 precarious|רעוע
 proliferate|להתרבות
 subside|לשכוך
-# history and culture
+# היסטוריה ותרבות
 monarch|מונרך
 exile|גלות
 holocaust|שואה
@@ -164,7 +164,7 @@ upheaval|תהפוכה
 turmoil|מהומה
 renowned|מפורסם
 eminent|דגול
-# religion, values and ethics
+# דת, ערכים ומוסר
 spiritual|רוחני
 sacrifice|הקרבה
 pilgrimage|עלייה לרגל
@@ -177,7 +177,7 @@ virtue|מידה טובה
 conscience|מצפון
 superstition|אמונה תפלה
 vow|נדר
-# media and communication
+# מדיה ותקשורת
 reception|קבלת פנים
 reputation|מוניטין
 anecdote|אנקדוטה
@@ -186,7 +186,7 @@ disinformation|דיסאינפורמציה
 sensationalism|סנסציוניות
 manifesto|מניפסט
 defamation|הוצאת דיבה
-# thinking and ideas
+# חשיבה ורעיונות
 rational|הגיוני
 speculate|לשער
 reflect|להשתקף
@@ -216,7 +216,7 @@ pertinent|נוגע לעניין
 deem|להחשיב
 ascertain|לברר
 erroneous|שגוי
-# argument and debate
+# טיעון ודיון
 refute|להפריך
 concede|להודות
 advocate|לצדד ב
@@ -238,7 +238,7 @@ tenuous|קלוש
 allude|לרמוז
 exemplify|להדגים
 judicious|שקול
-# education and academic work
+# חינוך ועבודה אקדמית
 thesis|עבודת גמר
 plagiarism|גניבה ספרותית
 bibliography|ביבליוגרפיה
@@ -248,7 +248,7 @@ assessment|הערכה
 matriculation|בגרות
 seminar|סמינריון
 appendix|נספח
-# personality and behavior
+# אישיות והתנהגות
 reluctant|מסויג
 spontaneous|ספונטני
 persistent|מתמיד
@@ -273,7 +273,7 @@ meticulous|קפדני
 tenacious|עיקש
 austere|סגפני
 adhere|לדבוק
-# feelings and attitudes
+# רגשות ועמדות
 humiliation|השפלה
 pessimism|פסימיות
 hostility|עוינות
@@ -283,7 +283,7 @@ aspiration|שאיפה
 outrage|זעם ציבורי
 contempt|בוז
 indignation|התמרמרות
-# conflict and security
+# עימותים וביטחון
 secure|מאובטח
 provoke|לעורר
 casualty|נפגע
@@ -304,7 +304,7 @@ incite|להסית
 brutal|אכזרי
 setback|כישלון זמני
 withstand|לעמוד בפני
-# change and development
+# שינוי והתפתחות
 shift|תזוזה
 renew|לחדש
 reverse|הפוך
@@ -339,7 +339,7 @@ supersede|להחליף
 impetus|דחף
 thwart|לסכל
 inhibit|לבלום
-# amount, degree and time
+# כמות, מידה וזמן
 proportion|יחס
 scope|היקף
 slight|קל ביותר
@@ -367,7 +367,7 @@ optimal|אופטימלי
 prevalent|נפוץ
 widespread|נרחב
 dominant|שולט
-# verbs: academic actions
+# פעלים: פעולות אקדמיות
 proceed|להמשיך הלאה
 render|להפוך
 retain|לשמר בידיו
@@ -397,7 +397,7 @@ exert|להפעיל
 circumvent|לעקוף
 foster|לטפח
 rectify|לתקן טעות
-# verbs: people and society
+# פעלים: אנשים וחברה
 scatter|לפזר
 pursue|לרדוף
 intervene|להתערב
@@ -425,7 +425,7 @@ condone|להעלים עין
 forgo|לוותר על
 reprimand|לנזוף
 impede|לעכב
-# describing words
+# מילות תיאור
 sophisticated|מתוחכם
 radical|קיצוני מאוד
 prompt|מיידי ומהיר
@@ -475,7 +475,7 @@ redundant|מיותר
 cursory|שטחי
 meager|זעום
 inadvertent|לא מכוון
-# linking words and adverbs
+# מילות קישור ותוארי פועל
 thereby|בכך
 albeit|אם כי
 predominantly|בעיקר
@@ -485,7 +485,7 @@ seemingly|לכאורה
 arguably|אפשר לטעון
 solely|אך ורק
 notably|במיוחד
-# general nouns
+# שמות עצם כלליים
 prospect|סיכוי עתידי
 role|תפקיד
 site|אתר

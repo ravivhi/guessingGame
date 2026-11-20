@@ -1,4 +1,4 @@
-# greetings
+# ברכות ונימוסים
 hello|שלום
 hi|היי
 goodbye|להתראות
@@ -13,7 +13,7 @@ good morning|בוקר טוב
 good night|לילה טוב
 name|שם
 okay|בסדר
-# numbers
+# מספרים
 one|אחד
 two|שניים
 three|שלושה
@@ -35,7 +35,7 @@ eighteen|שמונה עשר
 nineteen|תשעה עשר
 twenty|עשרים
 zero|אפס
-# colors and shapes
+# צבעים וצורות
 circle|עיגול
 square|ריבוע
 triangle|משולש
@@ -56,7 +56,7 @@ gray|אפור
 gold|זהב
 silver|כסף
 light blue|תכלת
-# family and people
+# משפחה ואנשים
 mom|אמא
 dad|אבא
 baby|תינוק
@@ -76,7 +76,7 @@ kids|ילדים
 people|אנשים
 son|בן
 daughter|בת
-# body
+# הגוף
 head|ראש
 hair|שיער
 face|פנים
@@ -104,7 +104,7 @@ body|גוף
 lip|שפה
 nail|ציפורן
 belly button|פופיק
-# pets and farm animals
+# חיות מחמד וחיות משק
 animal|חיה
 dog|כלב
 puppy|כלבלב
@@ -130,7 +130,7 @@ bunny|ארנבון
 goldfish|דג זהב
 chick|אפרוח
 lamb|טלה
-# wild animals
+# חיות בר
 lion|אריה
 tiger|נמר
 elephant|פיל
@@ -170,7 +170,7 @@ starfish|כוכב ים
 dinosaur|דינוזאור
 ladybug|חיפושית
 crab|סרטן
-# food
+# אוכל
 food|אוכל
 bread|לחם
 cheese|גבינה
@@ -207,7 +207,7 @@ popcorn|פופקורן
 pancake|פנקייק
 yogurt|יוגורט
 ketchup|קטשופ
-# fruit
+# פירות
 fruit|פרי
 apple|תפוח
 banana|בננה
@@ -223,7 +223,7 @@ mango|מנגו
 melon|מלון
 plum|שזיף
 fig|תאנה
-# vegetables
+# ירקות
 vegetable|ירק
 carrot|גזר
 potato|תפוח אדמה
@@ -238,7 +238,7 @@ pumpkin|דלעת
 broccoli|ברוקולי
 mushroom|פטרייה
 sweet potato|בטטה
-# drinks
+# משקאות
 water|מים
 juice|מיץ
 tea|תה
@@ -248,7 +248,7 @@ soda|סודה
 cocoa|קקאו
 milk|חלב
 milkshake|מילקשייק
-# clothes
+# בגדים
 clothes|בגדים
 shirt|חולצה
 t-shirt|טישרט
@@ -272,7 +272,7 @@ umbrella|מטרייה
 bag|תיק
 belt|חגורה
 sneakers|נעלי ספורט
-# home
+# הבית
 house|בית
 room|חדר
 kitchen|מטבח
@@ -287,7 +287,7 @@ wall|קיר
 floor|רצפה
 stairs|מדרגות
 toilet|שירותים
-# things in the house
+# חפצים בבית
 bed|מיטה
 table|שולחן
 chair|כיסא
@@ -317,7 +317,7 @@ hairbrush|מברשת שיער
 pacifier|מוצץ
 diaper|חיתול
 lunchbox|קופסת אוכל
-# school
+# בית הספר
 school|בית ספר
 teacher|מורה
 student|תלמיד
@@ -337,7 +337,7 @@ color|צבע
 board|לוח
 pencil case|קלמר
 sticker|מדבקה
-# toys and games
+# צעצועים ומשחקים
 ball|כדור
 doll|בובה
 teddy bear|דובי
@@ -362,7 +362,7 @@ snowman|איש שלג
 sandcastle|ארמון חול
 play dough|פלסטלינה
 puppet|בובת יד
-# transport
+# כלי תחבורה
 car|מכונית
 bus|אוטובוס
 train|רכבת
@@ -379,7 +379,7 @@ tractor|טרקטור
 fire truck|כבאית
 police car|ניידת
 submarine|צוללת
-# nature and weather
+# טבע ומזג אוויר
 sun|שמש
 moon|ירח
 sky|שמיים
@@ -404,7 +404,7 @@ ice|קרח
 snowflake|פתית שלג
 sunflower|חמנייה
 rose|ורד
-# places
+# מקומות
 park|פארק
 zoo|גן חיות
 shop|חנות
@@ -416,7 +416,7 @@ supermarket|סופרמרקט
 playground|גן שעשועים
 pool|בריכה
 kindergarten|גן ילדים
-# things we do
+# דברים שאנחנו עושים
 go|ללכת
 come|לבוא
 run|לרוץ
@@ -459,7 +459,7 @@ blow|לנשוף
 spin|להסתובב
 hug|לחבק
 kiss|לנשק
-# describing words
+# מילות תיאור
 big|גדול
 small|קטן
 tall|גבוה
@@ -497,7 +497,7 @@ loud|רועש
 quiet|שקט
 cute|חמוד
 yummy|טעים
-# place words
+# מילות מקום
 up|למעלה
 down|למטה
 in|בתוך
@@ -506,7 +506,7 @@ under|מתחת
 here|כאן
 out|החוצה
 over|מעל
-# fairy tales
+# אגדות
 king|מלך
 queen|מלכה
 prince|נסיך

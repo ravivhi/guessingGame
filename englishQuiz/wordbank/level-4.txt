@@ -1,4 +1,4 @@
-# feelings
+# רגשות
 feeling|הרגשה
 emotion|רגש
 fear|פחד
@@ -14,7 +14,7 @@ excitement|התלהבות
 jealousy|קנאה
 comfort|נחמה
 confidence|ביטחון עצמי
-# moods
+# מצבי רוח
 thrilled|נלהב
 puzzled|מבולבל
 delighted|שמח מאוד
@@ -25,7 +25,7 @@ heartbroken|שבור לב
 speechless|בלי מילים
 shocked|בהלם
 insulted|נעלב
-# character and values
+# אופי וערכים
 trust|אמון
 courage|אומץ
 patience|סבלנות
@@ -50,7 +50,7 @@ rude|גס רוח
 curious|סקרן
 friendship|חברות
 bully|בריון
-# life and ideas
+# חיים ורעיונות
 luck|מזל
 success|הצלחה
 failure|כישלון
@@ -67,7 +67,7 @@ nightmare|סיוט
 past|עבר
 future|עתיד
 promise|הבטחה
-# school
+# בית הספר
 civics|אזרחות
 computer science|מדעי המחשב
 physical education|חינוך גופני
@@ -91,7 +91,7 @@ detention|ריתוק
 contest|תחרות
 textbook|ספר לימוד
 university|אוניברסיטה
-# reading and writing
+# קריאה וכתיבה
 explanation|הסבר
 punctuation|פיסוק
 illustration|איור
@@ -110,7 +110,7 @@ ending|סוף
 autograph|חתימה
 brochure|עלון
 spell|לאיית
-# math
+# מתמטיקה
 area|שטח
 million|מיליון
 billion|מיליארד
@@ -135,7 +135,7 @@ digit|ספרה
 dozen|תריסר
 fraction|שבר
 height|גובה
-# science
+# מדע
 telescope|טלסקופ
 microscope|מיקרוסקופ
 experiment|ניסוי
@@ -152,7 +152,7 @@ test tube|מבחנה
 funnel|משפך
 magnifying glass|זכוכית מגדלת
 magnet|מגנט
-# discovering and knowing
+# גילוי וידיעה
 discover|לגלות
 invent|להמציא
 invention|המצאה
@@ -162,7 +162,7 @@ truth|אמת
 lie|שקר
 proof|הוכחה
 information|מידע
-# the body
+# הגוף
 lung|ריאה
 throat|גרון
 waist|מותניים
@@ -183,7 +183,7 @@ spine|עמוד שדרה
 rib|צלע
 nostril|נחיר
 skeleton|שלד
-# health
+# בריאות
 injection|זריקה
 wound|פצע
 illness|מחלה
@@ -218,7 +218,7 @@ deaf|חירש
 breathe|לנשום
 sweat|להזיע
 X-ray|צילום רנטגן
-# space
+# החלל
 space station|תחנת חלל
 spacesuit|חליפת חלל
 Milky Way|שביל החלב
@@ -233,7 +233,7 @@ Neptune|נפטון
 spaceship|חללית
 solar system|מערכת השמש
 comet|שביט
-# plants and animals
+# צמחים ובעלי חיים
 stem|גבעול
 bud|ניצן
 sprout|נבט
@@ -262,7 +262,7 @@ hatch|לבקוע
 hibernate|לישון שנת חורף
 mammal|יונק
 reptile|זוחל
-# earth and geography
+# כדור הארץ וגאוגרפיה
 equator|קו המשווה
 globe|גלובוס
 North Pole|הקוטב הצפוני
@@ -283,7 +283,7 @@ continent|יבשת
 cliff|צוק
 lava|לבה
 iceberg|קרחון
-# weather
+# מזג אוויר
 humidity|לחות
 drizzle|טפטוף
 thunderstorm|סופת רעמים
@@ -292,7 +292,7 @@ sandstorm|סופת חול
 damp|לח
 frozen|קפוא
 temperature|טמפרטורה
-# environment and energy
+# סביבה ואנרגיה
 waste|פסולת
 recycle|למחזר
 pollution|זיהום
@@ -308,7 +308,7 @@ fuel|דלק
 coal|פחם
 solar panel|לוח סולארי
 dam|סכר
-# materials and tools
+# חומרים וכלים
 machine|מכונה
 screw|בורג
 chain|שרשרת
@@ -331,7 +331,7 @@ wrench|מפתח ברגים
 pliers|צבת
 toolbox|ארגז כלים
 sandpaper|נייר זכוכית
-# computers and media
+# מחשבים ומדיה
 scanner|סורק
 webcam|מצלמת רשת
 touchscreen|מסך מגע
@@ -363,7 +363,7 @@ charger|מטען
 copy|להעתיק
 scroll|לגלול
 screenshot|צילום מסך
-# community and town
+# קהילה ועיר
 community|קהילה
 city hall|עירייה
 downtown|מרכז העיר
@@ -378,7 +378,7 @@ church|כנסייה
 mosque|מסגד
 planetarium|פלנטריום
 entrance|כניסה
-# culture and the arts
+# תרבות ואמנות
 custom|מנהג
 tradition|מסורת
 culture|תרבות
@@ -396,7 +396,7 @@ parade|מצעד
 concert|קונצרט
 festival|פסטיבל
 fan|מעריץ
-# sports and hobbies
+# ספורט ותחביבים
 collection|אוסף
 archery|קשתות
 handball|כדוריד
@@ -414,7 +414,7 @@ trophy|גביע
 champion|אלוף
 stadium|אצטדיון
 teammate|חבר לקבוצה
-# jobs
+# מקצועות
 designer|מעצב
 translator|מתרגם
 receptionist|פקיד קבלה
@@ -433,7 +433,7 @@ plumber|שרברב
 pharmacist|רוקח
 programmer|מתכנת
 boss|בוס
-# government and law
+# ממשל וחוק
 government|ממשלה
 law|חוק
 election|בחירות
@@ -457,7 +457,7 @@ enemy|אויב
 peace|שלום
 protect|להגן
 attack|לתקוף
-# history
+# היסטוריה
 Stone Age|תקופת האבן
 Middle Ages|ימי הביניים
 archaeologist|ארכיאולוג
@@ -470,7 +470,7 @@ spear|חנית
 cannon|תותח
 sword|חרב
 pyramid|פירמידה
-# travel and shopping
+# טיולים וקניות
 speed|מהירות
 detour|דרך עוקפת
 gas station|תחנת דלק
@@ -488,7 +488,7 @@ flight|טיסה
 cash|מזומן
 credit card|כרטיס אשראי
 customer|לקוח
-# verbs: learning and talking
+# פעלים: למידה ודיבור
 solve|לפתור
 summarize|לסכם
 sort|למיין
@@ -501,7 +501,7 @@ pray|להתפלל
 erase|למחוק
 agree|להסכים
 describe|לתאר
-# verbs: actions
+# פעלים: פעולות
 lead|להוביל
 hunt|לצוד
 sneak|להתגנב
@@ -539,7 +539,7 @@ blink|למצמץ
 chase|לרדוף
 spill|לשפוך
 boil|להרתיח
-# describing words
+# מילות תיאור
 possible|אפשרי
 impossible|בלתי אפשרי
 clear|ברור
@@ -571,7 +571,7 @@ magical|קסום
 haunted|רדוף רוחות
 normal|רגיל
 useful|שימושי
-# small useful words
+# מילים קטנות ושימושיות
 especially|במיוחד
 forever|לנצח
 against|נגד

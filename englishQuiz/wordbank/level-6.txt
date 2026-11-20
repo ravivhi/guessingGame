@@ -1,4 +1,4 @@
-# school and learning
+# בית ספר ולמידה
 academic|אקדמי
 diploma|תעודה
 discipline|משמעת
@@ -14,7 +14,7 @@ intermediate|בינוני
 summary|סיכום
 decimal|עשרוני
 calculate|לחשב
-# thinking and ideas
+# חשיבה ורעיונות
 abstract|מופשט
 concept|מושג
 assume|להניח
@@ -50,7 +50,7 @@ category|קטגוריה
 ignore|להתעלם
 focus|מיקוד
 imagination|דמיון
-# communication
+# תקשורת
 comment|הערה
 communicate|לתקשר
 dialogue|דיאלוג
@@ -81,7 +81,7 @@ insult|עלבון
 nonsense|שטויות
 statement|הצהרה
 signal|אות
-# feelings and character
+# רגשות ואופי
 anxiety|חרדה
 ambition|שאיפה
 cheerful|עליז
@@ -127,7 +127,7 @@ relief|הקלה
 guilt|אשמה
 embarrassment|מבוכה
 curiosity|סקרנות
-# people and relationships
+# אנשים ויחסים
 adult|בוגר
 colleague|עמית
 critic|מבקר
@@ -150,7 +150,7 @@ childhood|ילדות
 divorce|גירושים
 resident|תושב
 rival|מתחרה
-# society and government
+# חברה וממשל
 authority|סמכות
 civil|אזרחי
 council|מועצה
@@ -171,7 +171,7 @@ national|לאומי
 international|בינלאומי
 anthem|המנון
 poverty|עוני
-# law and safety
+# חוק וביטחון
 defend|להגן
 appeal|ערעור
 contract|חוזה
@@ -183,7 +183,7 @@ illegal|לא חוקי
 innocent|חף מפשע
 robbery|שוד
 theft|גניבה
-# money and business
+# כסף ועסקים
 budget|תקציב
 credit|אשראי
 currency|מטבע
@@ -202,7 +202,7 @@ tip|טיפ
 bonus|בונוס
 shipment|משלוח
 bank account|חשבון בנק
-# work and jobs
+# עבודה ומקצועות
 career|קריירה
 architect|אדריכל
 dismiss|לפטר
@@ -217,7 +217,7 @@ apprentice|שוליה
 technician|טכנאי
 guideline|הנחיה
 partner|שותף
-# media and technology
+# מדיה וטכנולוגיה
 broadcast|שידור
 digital|דיגיטלי
 data|נתונים
@@ -245,7 +245,7 @@ browser|דפדפן
 install|להתקין
 recharge|להטעין
 graph|גרף
-# science and nature
+# מדע וטבע
 absorb|לספוג
 atmosphere|אטמוספרה
 cycle|מחזור
@@ -264,7 +264,7 @@ gravity|כוח משיכה
 habitat|בית גידול
 surface|משטח
 solid|מוצק
-# earth and environment
+# כדור הארץ וסביבה
 coast|קו חוף
 countryside|אזור כפרי
 dawn|שחר
@@ -282,7 +282,7 @@ glacier|קרחון
 endangered|בסכנת הכחדה
 harvest|קציר
 shallow|רדוד
-# health and body
+# בריאות וגוף
 disabled|נכה
 dairy|מוצרי חלב
 liver|כבד
@@ -304,7 +304,7 @@ vaccine|חיסון
 surgeon|מנתח
 stress|מתח
 recover|להחלים
-# events and situations
+# אירועים ומצבים
 accident|תאונה
 crisis|משבר
 disaster|אסון
@@ -323,7 +323,7 @@ feast|סעודה
 outbreak|התפרצות
 wreck|הריסות
 hardship|קושי
-# arts and culture
+# אמנות ותרבות
 classic|קלאסי
 cultural|תרבותי
 dramatic|דרמטי
@@ -357,7 +357,7 @@ lyrics|מילות שיר
 gallery|גלריה
 rehearsal|חזרה
 composer|מלחין
-# travel and transport
+# טיולים ותחבורה
 departure|יציאה
 arrival|הגעה
 navigate|לנווט
@@ -376,7 +376,7 @@ scenery|נוף
 arena|זירה
 lobby|לובי
 paradise|גן עדן
-# time and place
+# זמן ומקום
 background|רקע
 beyond|מעבר
 current|נוכחי
@@ -392,7 +392,7 @@ worldwide|עולמי
 routine|שגרה
 decade|עשור
 temporary|זמני
-# linking words
+# מילות קישור
 whether|האם
 according to|לפי
 except|מלבד
@@ -413,7 +413,7 @@ barely|בקושי
 whatever|מה שלא יהיה
 wherever|בכל מקום ש
 whenever|בכל פעם ש
-# verbs: actions and changes
+# פעלים: פעולות ושינויים
 abandon|לנטוש
 accompany|ללוות
 adapt|להסתגל
@@ -452,7 +452,7 @@ recommend|להמליץ
 collapse|קריסה
 vanish|להיעלם
 shrink|להתכווץ
-# verbs: people and society
+# פעלים: אנשים וחברה
 accept|לקבל
 affect|להשפיע על
 assist|לסייע
@@ -475,7 +475,7 @@ remain|להישאר
 suggest|להציע
 refuse|לסרב
 obey|לציית
-# verbs: movement and body
+# פעלים: תנועה וגוף
 drift|להיסחף
 lean|להישען
 tremble|לרעוד
@@ -493,7 +493,7 @@ shatter|לנפץ
 sparkle|לנצנץ
 wrestle|להיאבק
 polish|ללטש
-# useful nouns
+# שמות עצם שימושיים
 addition|תוספת
 advance|התקדמות
 advantage|יתרון
@@ -515,7 +515,7 @@ label|תווית
 excuse|תירוץ
 frame|מסגרת
 mixture|תערובת
-# describing words
+# מילות תיאור
 absolute|מוחלט
 alert|דרוך
 apparent|ברור לעין
@@ -545,7 +545,7 @@ negative|שלילי
 ridiculous|מגוחך
 severe|חמור
 sensitive|רגיש
-# describing things
+# תיאור חפצים ומצבים
 bare|חשוף
 delicate|עדין
 elegant|אלגנטי

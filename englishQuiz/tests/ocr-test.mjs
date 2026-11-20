@@ -1080,7 +1080,7 @@ async function testBox() {
   }, right);
 
   await page.click('#shop-btn');
-  check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('👑'), 'the shop has a mystery box section: no box yet, and it says how to get one');
+  check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('לפרצוף האחרון'), 'the shop has a mystery box section: no box yet, and it says how to get one');
   check((await page.$$('#shop-awards .award.missing')).length === 10, 'the trophy collection shows 10 ❓ (none found yet)');
   const faces = () => page.$$eval('#shop-faces .face', fs => fs.map(f => (f.classList.contains('current') ? '*' : '') + f.textContent));
   check((await faces()).length === 30 && (await faces()).every(f => f === '❓'), 'the faces: 30 hidden ❓ before the first one is reached');

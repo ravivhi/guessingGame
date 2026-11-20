@@ -21,7 +21,6 @@ signing-key-info.txt
 *.idsig
 *.stackdump
 
-PLAY_PUBLISHING.md
 
 # local-only test photos (copyrighted workbook pages) and test deps
 /englishQuiz/tests/fixtures/

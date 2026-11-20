@@ -12,6 +12,8 @@ mentor|חונך
 questionnaire|שאלון
 intermediate|בינוני
 summary|סיכום
+decimal|עשרוני
+calculate|לחשב
 # thinking and ideas
 abstract|מופשט
 concept|מושג
@@ -44,28 +46,25 @@ misunderstanding|אי הבנה
 uncertain|לא בטוח
 coincidence|צירוף מקרים
 trait|תכונה
+category|קטגוריה
+ignore|להתעלם
+focus|מיקוד
+imagination|דמיון
 # communication
 comment|הערה
 communicate|לתקשר
-conversation|שיחה
 dialogue|דיאלוג
 clarify|להבהיר
-apologize|להתנצל
 admit|להודות
 deny|להכחיש
 confirm|לאשר
-advice|עצה
 clue|רמז
 argument|ויכוח
 accent|מבטא
 signature|חתימה
-speech|נאום
 tone|טון
 gesture|מחווה
 discussion|דיון
-compliment|מחמאה
-sigh|לנאנח
-shrug|למשוך בכתפיים
 aloud|בקול רם
 scold|לנזוף
 motto|מוטו
@@ -77,11 +76,15 @@ mock|ללעוג
 courtesy|נימוס
 gossip|רכילות
 rumor|שמועה
+humor|הומור
+insult|עלבון
+nonsense|שטויות
+statement|הצהרה
+signal|אות
 # feelings and character
 anxiety|חרדה
 ambition|שאיפה
 cheerful|עליז
-cruel|אכזרי
 desire|תשוקה
 desperate|נואש
 delight|תענוג
@@ -109,10 +112,21 @@ decent|הגון
 frank|גלוי לב
 graceful|חינני
 strict|קפדני
-handsome|נאה
-coward|פחדן
-greedy|חמדן
-stubborn|עקשן
+grateful|אסיר תודה
+furious|זועם
+disappointment|אכזבה
+evil|רשע
+charming|מקסים
+dishonest|לא ישר
+quarrel|ריב
+patient|סבלני
+courageous|אמיץ
+pressure|לחץ
+regret|חרטה
+relief|הקלה
+guilt|אשמה
+embarrassment|מבוכה
+curiosity|סקרנות
 # people and relationships
 adult|בוגר
 colleague|עמית
@@ -124,7 +138,6 @@ engagement|אירוסין
 mankind|האנושות
 acquaintance|מכר
 amateur|חובב
-beginner|מתחיל
 spectator|צופה מהצד
 nomad|נווד
 servant|משרת
@@ -133,8 +146,10 @@ rabbi|רב
 offspring|צאצאים
 mob|אספסוף
 refugee|פליט
-sibling|אח או אחות
-genius|גאון
+childhood|ילדות
+divorce|גירושים
+resident|תושב
+rival|מתחרה
 # society and government
 authority|סמכות
 civil|אזרחי
@@ -150,33 +165,35 @@ scandal|שערורייה
 slum|שכונת עוני
 outskirts|פאתי העיר
 empire|אימפריה
+missile|טיל
+warrior|לוחם
+national|לאומי
+international|בינלאומי
+anthem|המנון
+poverty|עוני
 # law and safety
-alarm|אזעקה
 defend|להגן
 appeal|ערעור
 contract|חוזה
 document|מסמך
 deposit|פיקדון
-burglar|פורץ
 barrier|מחסום
-trap|מלכודת
 endanger|לסכן
-fingerprint|טביעת אצבע
-handcuffs|אזיקים
-spy|מרגל
+illegal|לא חוקי
+innocent|חף מפשע
+robbery|שוד
+theft|גניבה
 # money and business
 budget|תקציב
 credit|אשראי
 currency|מטבע
 debt|חוב
-discount|הנחה
 agency|סוכנות
 consume|לצרוך
 produce|לייצר
 trade|סחר
 saving|חיסכון
 acquire|לרכוש
-lottery|הגרלה
 fare|מחיר נסיעה
 precious|יקר ערך
 cargo|מטען
@@ -184,6 +201,7 @@ affordable|במחיר סביר
 tip|טיפ
 bonus|בונוס
 shipment|משלוח
+bank account|חשבון בנק
 # work and jobs
 career|קריירה
 architect|אדריכל
@@ -198,6 +216,7 @@ award|פרס
 apprentice|שוליה
 technician|טכנאי
 guideline|הנחיה
+partner|שותף
 # media and technology
 broadcast|שידור
 digital|דיגיטלי
@@ -215,15 +234,17 @@ profile|פרופיל
 mobile|נייד
 volume|עוצמת קול
 antenna|אנטנה
-remote control|שלט רחוק
 subtitle|כתובית
 radar|מכ"ם
 capsule|כמוסה
 insert|להכניס
-logo|לוגו
-scroll|לגלול
-screenshot|צילום מסך
-drone|רחפן
+viral|ויראלי
+headline|כותרת
+hacker|האקר
+browser|דפדפן
+install|להתקין
+recharge|להטעין
+graph|גרף
 # science and nature
 absorb|לספוג
 atmosphere|אטמוספרה
@@ -238,14 +259,11 @@ vibrate|לרטוט
 laser|לייזר
 bloom|לפרוח
 beam|קרן
-satellite|לוויין
-fossil|מאובן
-extinct|נכחד
 bacteria|חיידקים
 gravity|כוח משיכה
-predator|טורף
-prey|טרף
 habitat|בית גידול
+surface|משטח
+solid|מוצק
 # earth and environment
 coast|קו חוף
 countryside|אזור כפרי
@@ -262,25 +280,30 @@ erupt|להתפרץ
 drought|בצורת
 glacier|קרחון
 endangered|בסכנת הכחדה
+harvest|קציר
+shallow|רדוד
 # health and body
 disabled|נכה
-bleed|לדמם
 dairy|מוצרי חלב
 liver|כבד
 joint|מפרק
 sore|כואב
-pale|חיוור
-dizzy|מסוחרר
-vegetarian|צמחוני
 unconscious|מחוסר הכרה
 diagnose|לאבחן
 rash|פריחה
 swollen|נפוח
 paralyzed|משותק
-allergy|אלרגיה
 infection|זיהום
 symptom|תסמין
-protein|חלבון
+overweight|עודף משקל
+heart attack|התקף לב
+calorie|קלוריה
+injury|פציעה
+faint|להתעלף
+vaccine|חיסון
+surgeon|מנתח
+stress|מתח
+recover|להחלים
 # events and situations
 accident|תאונה
 crisis|משבר
@@ -304,11 +327,9 @@ hardship|קושי
 classic|קלאסי
 cultural|תרבותי
 dramatic|דרמטי
-poet|משורר
 conductor|מנצח
 comedian|קומיקאי
 opera|אופרה
-fantasy|פנטזיה
 fable|משל
 craft|מלאכת יד
 pottery|קדרות
@@ -321,42 +342,40 @@ perfume|בושם
 silk|משי
 canvas|קנבס
 carve|לגלף
-jazz|ג'אז
-album|אלבום
 chorus|פזמון
 spotlight|זרקור
-trailer|קדימון
 folk|עממי
 tale|מעשייה
 stage|במה
-novel|רומן
-poetry|שירה
+plot|עלילה
+portrait|דיוקן
+myth|מיתוס
+sculpture|פסל
+rhyme|חרוז
+fiction|סיפורת
+lyrics|מילות שיר
+gallery|גלריה
+rehearsal|חזרה
+composer|מלחין
 # travel and transport
 departure|יציאה
 arrival|הגעה
 navigate|לנווט
 crash|להתרסק
 underground|תת קרקעי
-parachute|מצנח
-fortress|מבצר
 cottage|בקתה
 via|דרך
 resort|אתר נופש
 jet lag|יעפת
 runway|מסלול המראה
-landing|נחיתה
 speed limit|הגבלת מהירות
 wagon|עגלה
 dock|רציף
 pedal|דוושה
-shortcut|קיצור דרך
 scenery|נוף
 arena|זירה
 lobby|לובי
 paradise|גן עדן
-hostel|אכסניה
-traffic jam|פקק תנועה
-pedestrian|הולך רגל
 # time and place
 background|רקע
 beyond|מעבר
@@ -372,6 +391,7 @@ millennium|אלף שנים
 worldwide|עולמי
 routine|שגרה
 decade|עשור
+temporary|זמני
 # linking words
 whether|האם
 according to|לפי
@@ -404,7 +424,6 @@ attract|למשוך אליו
 bury|לקבור
 cancel|לבטל
 combine|לשלב
-decorate|לקשט
 distribute|להפיץ
 remind|להזכיר
 vary|להשתנות
@@ -424,6 +443,15 @@ broaden|להרחיב
 distract|להסיח את הדעת
 enrich|להעשיר
 expire|לפוג
+replace|להחליף
+shorten|לקצר
+reduce|להפחית
+reject|לדחות
+respond|להגיב
+recommend|להמליץ
+collapse|קריסה
+vanish|להיעלם
+shrink|להתכווץ
 # verbs: people and society
 accept|לקבל
 affect|להשפיע על
@@ -442,16 +470,18 @@ disagree|לא להסכים
 discourage|להרתיע
 dominate|לשלוט
 organize|לארגן
+recognize|להכיר
+remain|להישאר
+suggest|להציע
+refuse|לסרב
+obey|לציית
 # verbs: movement and body
 drift|להיסחף
-explode|להתפוצץ
 lean|להישען
 tremble|לרעוד
 capture|ללכוד
 drag|לגרור
-dive|לצלול
 drown|לטבוע
-twist|לסובב
 weave|לארוג
 soak|להשרות
 starve|לרעוב
@@ -462,6 +492,7 @@ glow|לזהור
 shatter|לנפץ
 sparkle|לנצנץ
 wrestle|להיאבק
+polish|ללטש
 # useful nouns
 addition|תוספת
 advance|התקדמות
@@ -481,8 +512,9 @@ object|חפץ
 maximum|מקסימום
 minimum|מינימום
 label|תווית
-mattress|מזרן
-grocery|מכולת
+excuse|תירוץ
+frame|מסגרת
+mixture|תערובת
 # describing words
 absolute|מוחלט
 alert|דרוך
@@ -510,19 +542,17 @@ beneficial|מועיל
 dynamic|דינמי
 positive|חיובי
 negative|שלילי
+ridiculous|מגוחך
+severe|חמור
+sensitive|רגיש
 # describing things
-awful|נורא
 bare|חשוף
-disgusting|מגעיל
 delicate|עדין
 elegant|אלגנטי
 endless|אינסופי
 fascinating|מרתק
 lively|תוסס
 portable|מטלטל
-ripe|בשל
-rotten|רקוב
-slippery|חלקלק
 steady|יציב
 tremendous|אדיר
 visual|חזותי
@@ -532,16 +562,16 @@ cozy|נעים
 dim|עמום
 exotic|אקזוטי
 extraordinary|יוצא מן הכלל
-horrible|איום
 impressive|מרשים
 mysterious|מסתורי
 neat|מסודר
 primitive|פרימיטיבי
-rusty|חלוד
 spacious|מרווח
 stiff|נוקשה
 vacant|פנוי
-weird|מוזר
-wooden|עשוי עץ
 compact|קומפקטי
 sturdy|חסון
+hidden|נסתר
+enormous|עצום
+visible|נראה לעין
+distant|רחוק

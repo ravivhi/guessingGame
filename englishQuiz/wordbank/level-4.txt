@@ -46,6 +46,10 @@ bossy|שתלטן
 liar|שקרן
 show-off|רברבן
 role model|מודל לחיקוי
+rude|גס רוח
+curious|סקרן
+friendship|חברות
+bully|בריון
 # life and ideas
 luck|מזל
 success|הצלחה
@@ -60,6 +64,9 @@ memory|זיכרון
 habit|הרגל
 danger|סכנה
 nightmare|סיוט
+past|עבר
+future|עתיד
+promise|הבטחה
 # school
 civics|אזרחות
 computer science|מדעי המחשב
@@ -76,14 +83,14 @@ high school|תיכון
 middle school|חטיבת ביניים
 protractor|מד זווית
 locker|לוקר
-whiteboard|לוח מחיק
 projector|מקרן
 binder|קלסר
 paper clip|אטב משרדי
 bulletin board|לוח מודעות
 detention|ריתוק
 contest|תחרות
-crossword|תשבץ
+textbook|ספר לימוד
+university|אוניברסיטה
 # reading and writing
 explanation|הסבר
 punctuation|פיסוק
@@ -102,6 +109,7 @@ draft|טיוטה
 ending|סוף
 autograph|חתימה
 brochure|עלון
+spell|לאיית
 # math
 area|שטח
 million|מיליון
@@ -109,8 +117,6 @@ billion|מיליארד
 multiplication|כפל
 division|חילוק
 subtraction|חיסור
-minus|מינוס
-plus|פלוס
 remainder|שארית
 quantity|כמות
 cube|קובייה
@@ -127,6 +133,8 @@ sum|סכום
 angle|זווית
 digit|ספרה
 dozen|תריסר
+fraction|שבר
+height|גובה
 # science
 telescope|טלסקופ
 microscope|מיקרוסקופ
@@ -207,6 +215,9 @@ wheelchair|כיסא גלגלים
 thermometer|מדחום
 blind|עיוור
 deaf|חירש
+breathe|לנשום
+sweat|להזיע
+X-ray|צילום רנטגן
 # space
 space station|תחנת חלל
 spacesuit|חליפת חלל
@@ -220,6 +231,8 @@ Saturn|שבתאי
 Uranus|אורנוס
 Neptune|נפטון
 spaceship|חללית
+solar system|מערכת השמש
+comet|שביט
 # plants and animals
 stem|גבעול
 bud|ניצן
@@ -276,11 +289,9 @@ drizzle|טפטוף
 thunderstorm|סופת רעמים
 blizzard|סופת שלגים
 sandstorm|סופת חול
-foggy|ערפילי
-muddy|בוצי
-dusty|מאובק
 damp|לח
 frozen|קפוא
+temperature|טמפרטורה
 # environment and energy
 waste|פסולת
 recycle|למחזר
@@ -305,14 +316,10 @@ iron|ברזל
 steel|פלדה
 copper|נחושת
 aluminum|אלומיניום
-rubber|גומי
-cotton|כותנה
-wool|צמר
 leather|עור
 concrete|בטון
 marble|שיש
 clay|חימר
-cardboard|קרטון
 plank|קרש
 wire|חוט חשמל
 pipe|צינור
@@ -353,11 +360,13 @@ app|אפליקציה
 smartphone|טלפון חכם
 selfie|סלפי
 charger|מטען
+copy|להעתיק
+scroll|לגלול
+screenshot|צילום מסך
 # community and town
 community|קהילה
 city hall|עירייה
 downtown|מרכז העיר
-fire station|תחנת כיבוי
 bus station|תחנה מרכזית
 parking lot|חניון
 crosswalk|מעבר חצייה
@@ -367,9 +376,8 @@ alley|סמטה
 avenue|שדרה
 church|כנסייה
 mosque|מסגד
-aquarium|אקווריום
 planetarium|פלנטריום
-amusement park|לונה פארק
+entrance|כניסה
 # culture and the arts
 custom|מנהג
 tradition|מסורת
@@ -384,6 +392,10 @@ drummer|מתופף
 violinist|כנר
 pianist|פסנתרן
 wedding|חתונה
+parade|מצעד
+concert|קונצרט
+festival|פסטיבל
+fan|מעריץ
 # sports and hobbies
 collection|אוסף
 archery|קשתות
@@ -400,13 +412,14 @@ scoreboard|לוח תוצאות
 bronze|ארד
 trophy|גביע
 champion|אלוף
+stadium|אצטדיון
+teammate|חבר לקבוצה
 # jobs
 designer|מעצב
 translator|מתרגם
 receptionist|פקיד קבלה
 businessman|איש עסקים
 banker|בנקאי
-babysitter|בייביסיטר
 janitor|שרת
 cleaner|מנקה
 courier|שליח
@@ -419,6 +432,7 @@ electrician|חשמלאי
 plumber|שרברב
 pharmacist|רוקח
 programmer|מתכנת
+boss|בוס
 # government and law
 government|ממשלה
 law|חוק
@@ -434,6 +448,15 @@ punishment|עונש
 army|צבא
 weapon|נשק
 war|מלחמה
+president|נשיא
+leader|מנהיג
+steal|לגנוב
+escape|לברוח
+fight|להילחם
+enemy|אויב
+peace|שלום
+protect|להגן
+attack|לתקוף
 # history
 Stone Age|תקופת האבן
 Middle Ages|ימי הביניים
@@ -446,6 +469,7 @@ armor|שריון
 spear|חנית
 cannon|תותח
 sword|חרב
+pyramid|פירמידה
 # travel and shopping
 speed|מהירות
 detour|דרך עוקפת
@@ -460,18 +484,23 @@ shekel|שקל
 buyer|קונה
 checkout|קופה
 shopping cart|עגלת קניות
+flight|טיסה
+cash|מזומן
+credit card|כרטיס אשראי
+customer|לקוח
 # verbs: learning and talking
 solve|לפתור
 summarize|לסכם
 sort|למיין
 mark|לסמן
 report|לדווח
-giggle|לצחקק
 hum|לזמזם
 mumble|למלמל
 brag|להתרברב
 pray|להתפלל
 erase|למחוק
+agree|להסכים
+describe|לתאר
 # verbs: actions
 lead|להוביל
 hunt|לצוד
@@ -481,7 +510,6 @@ stumble|למעוד
 kneel|לכרוע
 shiver|לרעוד
 hiccup|לשהק
-snore|לנחור
 pinch|לצבוט
 rub|לשפשף
 tear|לקרוע
@@ -503,6 +531,14 @@ wink|לקרוץ
 splash|להתיז
 sniff|לרחרח
 roar|לשאוג
+borrow|לשאול
+lift|להרים
+wrap|לעטוף
+hang|לתלות
+blink|למצמץ
+chase|לרדוף
+spill|לשפוך
+boil|להרתיח
 # describing words
 possible|אפשרי
 impossible|בלתי אפשרי
@@ -533,6 +569,8 @@ fantastic|נהדר
 strange|מוזר
 magical|קסום
 haunted|רדוף רוחות
+normal|רגיל
+useful|שימושי
 # small useful words
 especially|במיוחד
 forever|לנצח

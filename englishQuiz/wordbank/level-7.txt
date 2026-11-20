@@ -23,11 +23,21 @@ cost of living|יוקר המחיה
 loss|הפסד
 exchange rate|שער חליפין
 economist|כלכלן
-bank account|חשבון בנק
 installment|תשלום חודשי
 worth|שווה
 stock|מניה
 growth|צמיחה
+loan|הלוואה
+luxury|מותרות
+percentage|אחוז
+consumer|צרכן
+wage|שכר
+unemployment|אבטלה
+competitor|מתחרה
+merchant|סוחר
+supply|אספקה
+resource|משאב
+property|רכוש
 # business and work
 industry|תעשייה
 firm|חברה עסקית
@@ -61,6 +71,9 @@ sponsor|נותן חסות
 professional|מקצועי
 corporation|תאגיד
 patent|פטנט
+staff|צוות עובדים
+overtime|שעות נוספות
+mission|שליחות
 # government and politics
 govern|למשול
 institution|מוסד
@@ -78,11 +91,8 @@ ministry|משרד ממשלתי
 politician|פוליטיקאי
 political|פוליטי
 politics|פוליטיקה
-national|לאומי
-international|בינלאומי
 patriot|פטריוט
 independence|עצמאות
-anthem|המנון
 summit|פסגה
 protester|מפגין
 riot|מהומות
@@ -92,16 +102,20 @@ reign|שלטון
 agenda|סדר יום
 deputy|סגן
 conservative|שמרני
+official|פקיד
+majority|רוב
+minority|מיעוט
+poll|סקר דעת קהל
+oppose|להיות נגד
+minister|שר
+elect|לבחור בבחירות
+neutral|ניטרלי
 # law and justice
 enforce|לאכוף
-illegal|לא חוקי
-innocent|חף מפשע
 fault|אשמה
 trial|משפט
 sue|לתבוע
 penalty|עונש
-theft|גניבה
-robbery|שוד
 accuse|להאשים
 human rights|זכויות אדם
 equality|שוויון
@@ -115,6 +129,7 @@ offender|עבריין
 suspect|חשוד
 alibi|אליבי
 guardian|אפוטרופוס
+justice|צדק
 # society and people
 ethnic|אתני
 heritage|מורשת
@@ -127,13 +142,16 @@ social|חברתי
 host|מארח
 fame|תהילה
 glory|תפארת
-childhood|ילדות
-divorce|גירושים
 lifestyle|אורח חיים
 religious|דתי
 holy|קדוש
 social media|רשתות חברתיות
 mortal|בן תמותה
+privacy|פרטיות
+urban|עירוני
+spouse|בן זוג
+peer|בן אותו גיל
+religion|דת
 # war and security
 invade|לפלוש
 ceasefire|הפסקת אש
@@ -141,44 +159,49 @@ territory|טריטוריה
 threat|איום
 threaten|לאיים
 explosion|פיצוץ
-missile|טיל
 navy|חיל הים
 air force|חיל האוויר
 civilian|אזרחי
 intelligence|מודיעין
-bomb|פצצה
 terrorist|מחבל
 commander|מפקד
 officer|קצין
-warrior|לוחם
 armed|חמוש
 patrol|סיור
 defense|הגנה
 struggle|מאבק
+troops|חיילים
+military|צבאי
+rebel|מורד
+revolution|מהפכה
+hostage|בן ערובה
+terrorism|טרור
+tension|מתיחות
 # media and communication
-headline|כותרת
 highlight|להדגיש
 editor|עורך
 press|עיתונות
 column|טור
-viewer|צופה
-influencer|משפיען
-viral|ויראלי
 fake news|חדשות כזב
 misleading|מטעה
 exaggerate|להגזים
 interrupt|להפריע
-insult|עלבון
-humor|הומור
 entertain|לבדר
 journalism|עיתונאות
 survey|סקר
 breaking news|מבזק חדשות
-notification|התראה
 feedback|משוב
 symbol|סמל
 dialect|ניב
 abbreviation|קיצור
+biography|ביוגרפיה
+tragedy|טרגדיה
+slogan|סיסמה
+documentary|סרט תיעודי
+lecture|הרצאה
+subscriber|מנוי
+quote|לצטט
+commercial|פרסומת
 # education and learning
 essay|חיבור
 curriculum|תוכנית לימודים
@@ -189,18 +212,18 @@ faculty|פקולטה
 campus|קמפוס
 literacy|אוריינות
 enroll|להירשם
-tutor|מורה פרטי
 intellectual|אינטלקטואלי
 fluent|שוטף
 instruct|להורות
 illustrate|להמחיש
-professor|פרופסור
 attendance|נוכחות
 sociology|סוציולוגיה
-graduation|טקס סיום
 pronunciation|הגייה
 translation|תרגום
 archive|ארכיון
+record|לתעד
+revise|לתקן טקסט
+submit|להגיש
 # science and research
 element|יסוד
 friction|חיכוך
@@ -211,13 +234,11 @@ observe|להתבונן
 atom|אטום
 evolution|אבולוציה
 evolve|להתפתח
-graph|גרף
 accurate|מדויק
 method|שיטה
 technique|טכניקה
 conclusion|מסקנה
 analysis|ניתוח
-mixture|תערובת
 vapor|אדים
 acid|חומצה
 digest|לעכל
@@ -228,26 +249,33 @@ hydrogen|מימן
 nitrogen|חנקן
 photosynthesis|פוטוסינתזה
 nutrient|חומר מזין
-# space
 universe|יקום
-comet|שביט
 asteroid|אסטרואיד
 eclipse|ליקוי
-solar system|מערכת השמש
 spacecraft|חללית
 meteor|מטאור
 constellation|קבוצת כוכבים
+mineral|מינרל
+orbit|מסלול
+layer|שכבה
+material|חומר
+magnetic|מגנטי
+chemical|כימי
+evaporate|להתאדות
+dissolve|להמיס
+astronomy|אסטרונומיה
+range|טווח
+rate|שיעור
+structure|מבנה
+reaction|תגובה
 # math
 formula|נוסחה
-fraction|שבר
-calculate|לחשב
 equation|משוואה
 geometry|גאומטריה
 statistics|סטטיסטיקה
 ratio|יחס
 diameter|קוטר
 probability|הסתברות
-decimal|עשרוני
 circumference|היקף
 radius|רדיוס
 symmetry|סימטריה
@@ -258,53 +286,45 @@ square root|שורש ריבועי
 axis|ציר
 # technology
 gadget|גאדג'ט
-install|להתקין
 hardware|חומרה
 encrypt|להצפין
-browser|דפדפן
 automatic|אוטומטי
 storage|אחסון
-hacker|האקר
 generate|להפיק
 electronic|אלקטרוני
 technical|טכני
 mechanism|מנגנון
 sensor|חיישן
 pixel|פיקסל
-recharge|להטעין
+network|רשת
+wireless|אלחוטי
+upgrade|לשדרג
+virtual|וירטואלי
 # health and medicine
 heal|לרפא
 injure|לפצוע
-injury|פציעה
-faint|להתעלף
 exhaust|להתיש
 side effect|תופעת לוואי
 pandemic|מגפה עולמית
-vaccine|חיסון
 blood pressure|לחץ דם
-heart attack|התקף לב
-painkiller|משכך כאבים
 fracture|שבר בעצם
 cure|ריפוי
-calorie|קלוריה
 psychologist|פסיכולוג
-smoking|עישון
-overweight|עודף משקל
 dehydration|התייבשות
 nausea|בחילה
 stretcher|אלונקה
 transplant|השתלה
 donor|תורם
-recover|להחלים
-surgeon|מנתח
-stress|מתח
+physical|פיזי
+mental|נפשי
+organ|איבר
+pulse|דופק
+nerve|עצב
+hygiene|היגיינה
 # environment and nature
-flood|שיטפון
-harvest|קציר
 horizon|אופק
 grain|גרגר
 hazard|סיכון
-heap|ערימה
 greenhouse|חממה
 erosion|סחף
 agriculture|חקלאות
@@ -313,23 +333,21 @@ livestock|משק חי
 toxic|רעיל
 carbon|פחמן
 fertilizer|דשן
-hurricane|הוריקן
-tornado|טורנדו
 tsunami|צונאמי
 avalanche|מפולת שלגים
 coral reef|שונית אלמוגים
 peninsula|חצי אי
-shallow|רדוד
+landscape|נוף
+tide|גאות ושפל
+migrate|לנדוד
+region|אזור
+tropical|טרופי
+coastal|חופי
 # everyday life and travel
 fabric|בד
-frame|מסגרת
-entrance|כניסה
 furnish|לרהט
 grave|קבר
 grip|אחיזה
-gap|פער
-height|גובה
-excuse|תירוץ
 appliance|מכשיר חשמלי
 tenant|דייר
 disposable|חד פעמי
@@ -338,49 +356,39 @@ accommodation|לינה
 tourism|תיירות
 customs|מכס
 terminal|טרמינל
-backpacker|תרמילאי
 itinerary|מסלול טיול
 # feelings
 eager|להוט
 enthusiasm|התלהבות
 embarrass|לביך
 frustrate|לתסכל
-furious|זועם
-grateful|אסיר תודה
 grief|אבל
 horror|אימה
 envy|קנאה
 offended|נעלב
 satisfaction|סיפוק
 faith|אמונה
-disappointment|אכזבה
 hatred|שנאה
 affection|חיבה
 passion|תשוקה
-boredom|שעמום
-loneliness|בדידות
 confusion|בלבול
 emotional|רגשי
 irritated|מעוצבן
-hopeful|מלא תקווה
-hopeless|חסר תקווה
+pity|רחמנות
 # character and behavior
 humble|צנוע
-evil|רשע
 impolite|לא מנומס
 fierce|עז
 tolerant|סובלני
 aggressive|תוקפני
-charming|מקסים
 sociable|חברותי
-dishonest|לא ישר
 rebellious|מרדן
 witty|שנון
 responsible|אחראי
-quarrel|ריב
+optimistic|אופטימי
+pessimistic|פסימי
 # thinking and ideas
 emphasis|דגש
-focus|מיקוד
 feature|תכונה
 fundamental|יסודי
 essential|חיוני
@@ -400,17 +408,20 @@ interpret|לפרש
 imply|לרמוז
 examine|לבדוק
 inspect|לפקח
-ignore|להתעלם
 intend|להתכוון
 classify|למיין
-category|קטגוריה
 intention|כוונה
-imagination|דמיון
 underestimate|להמעיט בערך
+pattern|דפוס
+origin|מקור
+moral|מוסרי
+predict|לחזות
+standard|תקן
+recall|להיזכר
+realistic|מציאותי
 # describing words
 efficient|יעיל
 elaborate|מפורט
-enormous|עצום
 extreme|קיצוני
 flexible|גמיש
 formal|רשמי
@@ -419,12 +430,9 @@ frequent|תכוף
 genuine|אמיתי
 gradual|הדרגתי
 hollow|חלול
-hidden|נסתר
 inner|פנימי
 immediate|מיידי
-invisible|בלתי נראה
 external|חיצוני
-visible|נראה לעין
 brief|קצר
 ultimate|סופי
 initial|ראשוני
@@ -444,13 +452,23 @@ multiple|מרובה
 countless|אינספור
 entire|שלם
 partial|חלקי
-distant|רחוק
 dense|צפוף
 synthetic|סינתטי
 rough|מחוספס
 random|אקראי
 odd|מוזר
 confidential|סודי
+personal|אישי
+practical|מעשי
+obvious|מובן
+massive|מסיבי
+magnificent|מפואר
+permanent|קבוע
+reliable|אמין
+stable|יציב
+superior|עליון
+proper|ראוי
+spectacular|מרהיב
 # linking words and adverbs
 eventually|בסופו של דבר
 hardly|בקושי
@@ -473,6 +491,9 @@ constantly|כל הזמן
 somewhat|במידה מסוימת
 beforehand|מראש
 afterwards|אחר כך
+meanwhile|בינתיים
+literally|פשוטו כמשמעו
+approximately|בערך
 # verbs: change and processes
 eliminate|לחסל
 emerge|לצוץ
@@ -493,9 +514,7 @@ expose|לחשוף
 boost|להגביר
 strengthen|לחזק
 weaken|להחליש
-shorten|לקצר
 transfer|להעביר
-replace|להחליף
 demolish|להרוס בניין
 renovate|לשפץ
 specialize|להתמחות
@@ -508,7 +527,6 @@ engage|לעסוק
 fulfill|להגשים
 glance|מבט
 glimpse|הצצה
-grab|לחטוף
 impress|להרשים
 inspire|לעורר השראה
 insist|להתעקש
@@ -524,7 +542,30 @@ reveal|לגלות
 advise|לייעץ
 coordinate|לתאם
 congratulate|לברך
-recognize|להכיר
-remain|להישאר
-suggest|להציע
-refuse|לסרב
+participate|להשתתף
+operate|להפעיל
+settle|להתיישב
+split|לפצל
+release|לשחרר
+retire|לפרוש
+rely|לסמוך
+seek|לבקש
+restore|לשחזר
+# history
+colony|מושבה
+ancestor|אב קדמון
+ruins|חורבות
+era|עידן
+memorial|אנדרטה
+mansion|אחוזה
+conquer|לכבוש
+fortress|מבצר
+# general nouns
+plenty|שפע
+praise|שבח
+portion|מנה
+league|ליגה
+leak|דליפה
+obstacle|מכשול
+heap|ערימה
+gap|פער

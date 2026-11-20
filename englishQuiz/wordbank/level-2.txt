@@ -496,6 +496,7 @@ shadow|צל
 smoke|עשן
 air|אוויר
 wood|עץ
+weather|מזג אוויר
 # school subjects and words
 homework|שיעורי בית
 exam|מבחן
@@ -514,6 +515,8 @@ language|שפה
 English|אנגלית
 Hebrew|עברית
 Arabic|ערבית
+chalk|גיר
+lesson|שיעור
 # money and shopping
 coin|מטבע
 money|כסף

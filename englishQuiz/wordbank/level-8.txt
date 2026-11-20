@@ -1,11 +1,8 @@
 # government and law
 jury|חבר מושבעים
-justice|צדק
 legal|חוקי
 liberty|חירות
 license|רישיון
-official|פקיד
-obey|לציית
 permit|להתיר
 negotiate|לנהל משא ומתן
 legislation|חקיקה
@@ -34,20 +31,16 @@ inquiry|חקירה
 eligible|זכאי
 negligence|רשלנות
 warrant|צו
+reform|רפורמה
+acquittal|זיכוי
+custody|משמורת
 # politics and elections
-majority|רוב
-minority|מיעוט
-poll|סקר
-oppose|להתנגד
-neutral|ניטרלי
 coalition|קואליציה
 opposition|אופוזיציה
-minister|שר
 ballot|פתק הצבעה
 referendum|משאל עם
 citizenship|אזרחות
 delegate|נציג
-elect|לבחור בבחירות
 diplomat|דיפלומט
 embassy|שגרירות
 ambassador|שגריר
@@ -56,11 +49,14 @@ alliance|ברית
 ally|בעל ברית
 census|מפקד אוכלוסין
 oppression|דיכוי
+resign|להתפטר
+cabinet|קבינט
+compromise|פשרה
+proposal|הצעה
+allegiance|נאמנות
 # society and culture
 norm|נורמה
 prejudice|דעה קדומה
-privacy|פרטיות
-poverty|עוני
 minor|קטין
 inequality|אי-שוויון
 discrimination|אפליה
@@ -72,24 +68,25 @@ prestige|יוקרה
 stereotype|סטריאוטיפ
 etiquette|כללי נימוס
 globalization|גלובליזציה
-urban|עירוני
 civilization|ציוויליזציה
 descendant|צאצא
-spouse|בן זוג
-peer|בן אותו גיל
 illiterate|אנאלפבית
 hypocrisy|צביעות
 persecution|רדיפה
 mainstream|זרם מרכזי
 urbanization|עיור
+suburb|פרבר
+rural|כפרי
+senior|בכיר
+status|מעמד
+worship|פולחן
+soul|נשמה
+sacred|קדוש
+humanitarian|הומניטרי
+metropolis|מטרופולין
 # economy and money
-loan|הלוואה
-luxury|מותרות
 pension|פנסיה
-percentage|אחוז
 margin|שוליים
-consumer|צרכן
-merchant|סוחר
 taxation|מיסוי
 subsidy|סובסידיה
 monopoly|מונופול
@@ -98,8 +95,6 @@ bankrupt|פושט רגל
 recession|מיתון
 asset|נכס
 mortgage|משכנתא
-wage|שכר
-unemployment|אבטלה
 entrepreneur|יזם
 investor|משקיע
 commerce|מסחר
@@ -110,54 +105,49 @@ affluent|אמיד
 prosperity|שגשוג
 deficit|גירעון
 surplus|עודף
-competitor|מתחרה
 commodity|מצרך
 quota|מכסה
+tariff|מכס
+dividend|דיבידנד
 # work and career
-partner|שותף
 recruit|לגייס
 qualification|הכשרה
 expertise|מומחיות
 internship|התמחות
 supervisor|מפקח
-staff|צוות עובדים
 employer|מעסיק
 vacancy|משרה פנויה
 freelance|עצמאי
-overtime|שעות נוספות
 workload|עומס עבודה
 commute|נסיעה לעבודה
-mission|שליחות
 pioneer|חלוץ
+lecturer|מרצה
 # science and research
-mineral|מינרל
 nuclear|גרעיני
-orbit|מסלול
-layer|שכבה
 phenomenon|תופעה
-material|חומר
 hypothesis|השערה
 molecule|מולקולה
 particle|חלקיק
 compound|תרכובת
 organism|אורגניזם
 species|מין ביולוגי
-magnetic|מגנטי
 radiation|קרינה
 velocity|מהירות
 variable|משתנה
 observation|תצפית
-chemical|כימי
 genetic|גנטי
 enzyme|אנזים
-astronomy|אסטרונומיה
-dissolve|להמיס
-evaporate|להתאדות
 empirical|אמפירי
 hereditary|תורשתי
 mutation|מוטציה
+psychology|פסיכולוגיה
+accuracy|דיוק
+sequence|רצף
+sphere|כדור
+hormone|הורמון
+catalyst|זרז
+inertia|אינרציה
 # environment and nature
-landscape|נוף
 marine|ימי
 moisture|לחות
 ecology|אקולוגיה
@@ -168,20 +158,18 @@ deforestation|בירוא יערות
 renewable|מתחדש
 conservation|שמירת טבע
 biodiversity|מגוון ביולוגי
-tide|גאות ושפל
 terrain|פני שטח
 fertile|פורה
 vegetation|צמחייה
-migrate|לנדוד
 ecosystem|מערכת אקולוגית
 reservoir|מאגר מים
 irrigation|השקיה
 pesticide|חומר הדברה
+slope|מדרון
+sediment|משקע
+monsoon|מונסון
 # health and medicine
-mental|נפשי
-physical|פיזי
 nutrition|תזונה
-organ|איבר
 diagnosis|אבחנה
 therapy|טיפול
 chronic|כרוני
@@ -195,16 +183,16 @@ addiction|התמכרות
 epidemic|מגפה
 contagious|מדבק
 rehabilitation|שיקום
-hygiene|היגיינה
-pulse|דופק
-nerve|עצב
 depression|דיכאון
 metabolism|חילוף חומרים
+disability|מוגבלות
+psychiatrist|פסיכיאטר
+sanitation|תברואה
+antibiotic|אנטיביוטיקה
+carbohydrate|פחמימה
 # feelings and emotions
 mercy|רחמים
 misery|אומללות
-pity|רחמנות
-pressure|לחץ
 compassion|חמלה
 empathy|אמפתיה
 resentment|טינה
@@ -216,18 +204,20 @@ sorrow|צער
 dread|אימה
 obsession|אובססיה
 temper|מזג
+frustration|תסכול
+sympathy|אהדה
+admiration|הערצה
+optimism|אופטימיות
+euphoria|אופוריה
+melancholy|מלנכוליה
 # personality and character
-optimistic|אופטימי
 passive|פסיבי
-patient|סבלני
 arrogant|יהיר
 modest|צנוע
-courageous|אמיץ
 diligent|חרוץ
 naive|תמים
 reckless|פזיז
 cynical|ציני
-pessimistic|פסימי
 impulsive|אימפולסיבי
 integrity|יושרה
 hostile|עוין
@@ -235,19 +225,18 @@ considerate|מתחשב
 resilient|בעל חוסן
 sarcastic|סרקסטי
 indifferent|אדיש
+punctual|דייקן
+ambitious|שאפתני
+altruism|אלטרואיזם
 # thinking and ideas
 notion|תפיסה
 perspective|פרספקטיבה
 philosophy|פילוסופיה
 principle|עיקרון
 objective|אובייקטיבי
-origin|מקור
 motive|מניע
 potential|פוטנציאל
 priority|עדיפות
-moral|מוסרי
-nonsense|שטויות
-pattern|דפוס
 logic|היגיון
 ideology|אידיאולוגיה
 paradox|פרדוקס
@@ -263,9 +252,13 @@ awareness|מודעות
 theoretical|תאורטי
 clarity|בהירות
 cognitive|קוגניטיבי
+assumption|הנחה
+objection|התנגדות
+denial|הכחשה
+connotation|משמעות נלווית
+premise|הנחת יסוד
+fallacy|כשל לוגי
 # verbs: thinking and judging
-predict|לחזות
-prefer|להעדיף
 overlook|להחמיץ
 evaluate|להעריך
 perceive|לקלוט
@@ -282,28 +275,18 @@ cite|לציין מקור
 specify|לפרט
 formulate|לנסח
 derive|לנבוע
+regard|להתייחס
+emphasize|להדגיש
 # literature and the arts
 journal|יומן
 literature|ספרות
-myth|מיתוס
 narrative|נרטיב
-plot|עלילה
-portrait|דיוקן
 phrase|ביטוי
 metaphor|מטאפורה
 protagonist|דמות ראשית
-tragedy|טרגדיה
 genre|ז'אנר
-biography|ביוגרפיה
-sculpture|פסל
 masterpiece|יצירת מופת
-rhyme|חרוז
-fiction|סיפורת
 playwright|מחזאי
-rehearsal|חזרה
-composer|מלחין
-lyrics|מילות שיר
-gallery|גלריה
 aesthetic|אסתטי
 irony|אירוניה
 theme|נושא מרכזי
@@ -312,16 +295,16 @@ narrator|מספר הסיפור
 manuscript|כתב יד
 satire|סאטירה
 allegory|אלגוריה
+sonnet|סונט
+anthology|אנתולוגיה
+antagonist|דמות יריבה
+symbolism|סמליות
 # media and communication
-lecture|הרצאה
 editorial|מאמר מערכת
 propaganda|תעמולה
 censorship|צנזורה
 coverage|סיקור
-subscriber|מנוי
 publicity|פרסום
-slogan|סיסמה
-documentary|סרט תיעודי
 correspondent|כתב
 anonymous|אנונימי
 controversy|מחלוקת
@@ -329,27 +312,24 @@ persuade|לשכנע
 eloquent|רהוט
 edition|מהדורה
 rhetoric|רטוריקה
+publish|לפרסם
+review|ביקורת
 # history and the past
 medieval|של ימי הביניים
-mansion|אחוזה
-colony|מושבה
-conquer|לכבוש
 revolt|מרד
 monarchy|מלוכה
-era|עידן
-ancestor|אב קדמון
 archaeology|ארכאולוגיה
 artifact|ממצא ארכאולוגי
-ruins|חורבות
-troops|חיילים
 veteran|ותיק
 commemorate|להנציח
-memorial|אנדרטה
-military|צבאי
 dynasty|שושלת
 excavation|חפירה ארכאולוגית
+settlement|התיישבות
+invasion|פלישה
+surrender|להיכנע
+triumph|ניצחון
+chaos|תוהו ובוהו
 # technology
-network|רשת
 mechanical|מכני
 manual|ידני
 launch|לשגר
@@ -357,18 +337,14 @@ innovation|חדשנות
 database|מסד נתונים
 algorithm|אלגוריתם
 automation|אוטומציה
-virtual|וירטואלי
 interface|ממשק
 prototype|אב טיפוס
 circuit|מעגל חשמלי
-wireless|אלחוטי
 transmit|לשדר
 obsolete|מיושן
 compatible|תואם
 malfunction|תקלה
-upgrade|לשדרג
 # time and change
-meanwhile|בינתיים
 period|תקופה
 phase|שלב
 pace|קצב
@@ -380,14 +356,12 @@ persist|להתמיד
 initially|בתחילה
 ultimately|בסופו של דבר
 simultaneously|בו זמנית
-temporary|זמני
-permanent|קבוע
 transition|מעבר
 duration|משך זמן
 fluctuate|לתנוד
+expansion|התרחבות
 # linking words
 likewise|כמו כן
-literally|פשוטו כמשמעו
 merely|בסך הכול
 furthermore|יתר על כן
 nevertheless|למרות זאת
@@ -396,7 +370,6 @@ hence|לפיכך
 moreover|נוסף על כך
 thus|לכן
 accordingly|בהתאם
-approximately|בערך
 presumably|כנראה
 seldom|לעיתים רחוקות
 virtually|כמעט לגמרי
@@ -406,14 +379,11 @@ maintain|לתחזק
 monitor|לנטר
 neglect|להזניח
 occur|לקרות
-operate|להפעיל
 overcome|להתגבר
 overwhelm|להציף
-polish|ללטש
 pose|להצטלם
 possess|להחזיק
 preserve|לשמר
-participate|להשתתף
 allocate|להקצות
 accumulate|לצבור
 confront|להתעמת
@@ -445,21 +415,23 @@ enhance|לשפר
 thrive|לשגשג
 conceal|להסתיר
 mediate|לתווך
+register|להירשם
+refer|להפנות
+require|לדרוש
+represent|לייצג
+relate|לקשר
+promote|לקדם
+resemble|להידמות
 # describing words
-magnificent|מפואר
-massive|מסיבי
 mighty|אדיר
 moderate|מתון
 mutual|הדדי
 numerous|רבים
-obvious|מובן
 offensive|פוגעני
 outstanding|בולט
 parallel|מקביל
 particular|מסוים
-personal|אישי
 plain|פשוט
-practical|מעשי
 primary|ראשי
 abundant|שופע
 adjacent|סמוך
@@ -491,18 +463,16 @@ vulnerable|פגיע
 absurd|אבסורדי
 adequate|הולם
 distinct|מובחן
+significant|משמעותי
+specific|ספציפי
+precise|מדויק
+remote|מרוחק
 # nouns: general
-leak|דליפה
-league|ליגה
 junction|צומת
 merit|הצטיינות
 obligation|חובה
-obstacle|מכשול
 outline|מתווה
 overseas|מעבר לים
-plenty|שפע
-portion|מנה
-praise|שבח
 motion|תנועה
 dimension|ממד
 consensus|הסכמה כללית

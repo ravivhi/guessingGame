@@ -603,7 +603,7 @@
         //   picture - words typed by hand or read from a photo (keeps the old key, so an older saved list shows up here)
         const MODE_KEY = 'englishquiz-mode';
         const LIST_KEYS = { random: 'englishquiz-words-random', picture: 'englishquiz-words' };
-        let mode = 'random';
+        let mode = 'category';   // new users start on the 📚 learning tab
         try { const m = localStorage.getItem(MODE_KEY); if (m === 'random' || m === 'picture' || m === 'category') mode = m; } catch (e) {}
         // the learning tab ('category') has no word list of its own; the hidden list area keeps the random list
         const storeKey = () => LIST_KEYS[mode] || LIST_KEYS.random;

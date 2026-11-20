@@ -138,7 +138,7 @@ const browser = await puppeteer.launch({ executablePath: chromePath, headless: '
 
 // Opens the page with both translation services stubbed (Google first, MyMemory as fallback).
 // mode(n, service) decides per request: 'ok' | 'fail'   (n counts all translation requests, service = 'google' | 'mm').
-async function openPage(mode = () => 'ok') {
+async function openPage(mode = () => 'ok', { fresh = false } = {}) {
   const ctx = await browser.createBrowserContext();       // fresh storage per test (the page saves the word list)
   const page = await ctx.newPage();
   const closePage = page.close.bind(page);
@@ -176,6 +176,9 @@ async function openPage(mode = () => 'ok') {
     if (!/^https:\/\/(cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com)\//.test(u) || !res.ok() || fs.existsSync(f)) return;
     try { const body = await res.buffer(); fs.mkdirSync(cdnCache, { recursive: true }); fs.writeFileSync(f, body); } catch (e) {}
   });
+  // New users start on the learning tab; most tests are about the word list, so they start on the random tab
+  // (as a returning user who picked it). { fresh: true } opens the page as a brand-new user.
+  if (!fresh) await page.evaluateOnNewDocument(() => { try { if (!localStorage.getItem('englishquiz-mode')) localStorage.setItem('englishquiz-mode', 'random'); } catch (e) {} });
   await page.goto(url, { waitUntil: 'load' });
   return page;
 }
@@ -817,6 +820,10 @@ async function eachFixture(kind, run) {
 // quiz on those words; only a quiz with no mistakes opens the next step.
 async function testLearn() {
   console.log('\n[learn] learning path by category, with a quiz at the end of each step');
+  const newbie = await openPage(undefined, { fresh: true });
+  await newbie.waitForFunction(() => document.querySelectorAll('#cat-list .cat-step').length > 0, { timeout: 10000 });
+  check(await newbie.$eval('#tab-category', e => e.getAttribute('aria-selected')) === 'true' && await newbie.$eval('#panel-category', e => getComputedStyle(e).display !== 'none'), 'a new user starts on the learning tab, with the path shown');
+  await newbie.close();
   const page = await openPage();
   const bankSteps = lv => {   // the steps the page should build from the level file
     const cats = [];

@@ -1081,7 +1081,7 @@ async function testBox() {
 
   await page.click('#shop-btn');
   check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('לפרצוף האחרון'), 'the shop has a mystery box section: no box yet, and it says how to get one');
-  check((await page.$$('#shop-awards .award.missing')).length === 10, 'the trophy collection shows 10 ❓ (none found yet)');
+  check((await page.$$('#shop-awards .award.missing')).length === 5, 'the prizes: 5 ❓ (none found yet)');
   const faces = () => page.$$eval('#shop-faces .face', fs => fs.map(f => (f.classList.contains('current') ? '*' : '') + f.textContent));
   check((await faces()).length === 30 && (await faces()).every(f => f === '❓'), 'the faces: 30 hidden ❓ before the first one is reached');
   await page.evaluate(() => { streak = 25; updateStreakEmoji(); renderShop(); });
@@ -1122,7 +1122,7 @@ async function testBox() {
   check((await saved()).boxes === 0 && (await saved()).awards[first.id] === 1, `opening the box gives a trophy / medal (${first.pic} ${first.name})`);
   check((await text('box-pic')) === first.pic && (await text('shop-msg')).includes(first.name) && (await page.evaluate(() => window.unlockSounds)) === 2, 'the box shows what was inside, with the happy sound');
   check(await page.$eval('#box-open', e => e.disabled) && (await page.$eval('#shop-btn', e => e.dataset.boxes)) === undefined, 'no boxes left: the button is off and the red count is gone');
-  check((await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.className)) === 'award' && (await page.$$('#shop-awards .award.missing')).length === 9, 'it shows in the collection (9 still missing)');
+  check((await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.className)) === 'award' && (await page.$$('#shop-awards .award.missing')).length === 4, 'it shows with the prizes (4 still missing)');
   // the next box gives a new one; after all 10, doubles
   await page.evaluate(() => { shop.boxes = 1; saveShop(); renderShop(); });
   await page.click('#box-open');
@@ -1131,7 +1131,7 @@ async function testBox() {
   await page.evaluate(() => { for (const a of SHOP_AWARDS) shop.awards[a.id] = 1; shop.boxes = 1; saveShop(); renderShop(); });
   await page.click('#box-open');
   await new Promise(r => setTimeout(r, 900));
-  check((await saved()).awards[first.id] === 2 && (await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.textContent)).includes('×2'), 'with the whole collection, a box gives a second one (×2)');
+  check((await saved()).awards[first.id] === 2 && (await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.textContent)).includes('×2'), 'with all 5 prizes, a box gives a second one (×2)');
   await page.reload();
   await page.click('#shop-btn');
   check((await page.$$('#shop-awards .award.missing')).length === 0, 'the collection is saved on the device');

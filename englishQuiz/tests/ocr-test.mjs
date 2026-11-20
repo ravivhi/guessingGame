@@ -839,6 +839,8 @@ async function testLearn() {
   }, wrong);
   const doStep = async (wrong = 0) => { await finishCards(); await page.click('#learn-quiz-btn'); await playQuiz(wrong); };
 
+  await page.evaluate(() => { window.unlockSounds = 0; playUnlockSound = () => window.unlockSounds++; });   // count the jingle instead of playing it
+  const sounds = () => page.evaluate(() => window.unlockSounds);
   await page.select('#level-select', '1');
   await page.click('#tab-category');
   await page.waitForFunction(() => document.querySelectorAll('#cat-list .cat-step').length > 0, { timeout: 10000 });
@@ -878,7 +880,7 @@ async function testLearn() {
   check(quiz.every(q => q.dynamics.length === 3 && new Set([q.correct, ...q.dynamics]).size === 4 && q.dynamics.every(d => catHe.has(d))), 'every question has 4 different answers, the wrong ones from the same category');
   await playQuiz(1);   // one mistake
   check(await vis('summary-screen') && (await text('step-result')).includes('בלי טעויות') && !(await vis('next-step-btn')), `one mistake: the summary says the quiz must be done with no mistakes, and there is no "next topic" (${await text('step-result')})`);
-  check(!(await progress()), 'and the next step stays locked');
+  check(!(await progress()) && await sounds() === 0, 'and the next step stays locked (no unlock sound)');
   await page.evaluate(() => practiceMissed());
   await playQuiz(0);
   check(!(await vis('next-step-btn')) && !(await progress()), 'practising only the missed words does not open it either');
@@ -888,6 +890,7 @@ async function testLearn() {
   await playQuiz(0);
   check((await text('step-result')).includes(want[1].name) && await vis('next-step-btn'), `passing the quiz says the next step is open (${want[1].name})`);
   check((await progress())[1] === 1, 'the progress is saved on the device');
+  check(await sounds() === 1, 'the unlock sound plays once');
   await page.click('#next-step-btn');
   check(await vis('learn-screen') && (await text('learn-title')).includes(want[1].name), '"next topic" starts learning the next step');
   await page.click('#learn-back');
@@ -898,7 +901,7 @@ async function testLearn() {
   await page.click('.cat-step.done');
   check(await vis('learn-screen'), 'a finished step can be learned again');
   await doStep(0);
-  check(!(await text('step-result')).includes('🔓') && (await progress())[1] === 1, 'passing its quiz again opens nothing new');
+  check(!(await text('step-result')).includes('🔓') && (await progress())[1] === 1 && await sounds() === 1, 'passing its quiz again opens nothing new (and no sound)');
   await page.click('#change-words-btn');
   check(await vis('start-screen') && await page.$eval('#tab-category', e => e.getAttribute('aria-selected')) === 'true', '"back to the path" from the summary shows the path');
 

@@ -1570,7 +1570,7 @@
 
         // ---- 📚 Learning path. Each level's categories in file order; a big category is split into parts of
         // up to 15 words. Learning = cards with the English word (read aloud) and its Hebrew meaning together,
-        // then a short quiz on those words; passing it (70%+) opens the next part.
+        // then a short quiz on those words; finishing it with no mistakes opens the next part.
         // Finished parts can be learned again any time.
         const LEARN_KEY = "englishquiz-learn-progress";   // { level: how many parts are finished, in order }
         const PART_MAX = 15;
@@ -1683,8 +1683,8 @@
         }
 
         // ---- The quiz at the end of each step of the learning path: the step's words, wrong answers from the
-        // same category. At least 70% right on the first try opens the next step.
-        const STEP_PASS = 70;
+        // same category. Only a quiz with no mistakes (every word right on the first try) opens the next step.
+        const STEP_PASS = 100;
         let stepQuiz = null;   // { level, index, steps } while a step's quiz is played
 
         function startStepQuiz() {
@@ -1704,7 +1704,7 @@
             beginGame(game);
         }
 
-        // called by showSummary: in a step's quiz, a full round with 70%+ opens the next step
+        // called by showSummary: in a step's quiz, a full round with no mistakes opens the next step
         function stepQuizResult(rate, fullRound) {
             const res = document.getElementById("step-result"), nextBtn = document.getElementById("next-step-btn");
             document.getElementById("change-words-btn").textContent = stepQuiz ? "🗺️ חזרה למסלול" : "החלפת מילים";
@@ -1725,7 +1725,7 @@
                 if (next || level < LEVEL_COUNT) { nextBtn.textContent = next ? "▶ לנושא הבא" : `▶ לרמה ${level + 1}`; nextBtn.style.display = ""; }
             } else {
                 res.style.color = "#c05621";
-                res.textContent = fullRound ? `כדי לפתוח את הנושא הבא צריך ${STEP_PASS}% נכון בניסיון ראשון – נסו שוב! 💪` : "עכשיו נסו את כל הבוחן שוב 💪";
+                res.textContent = fullRound ? "כדי לפתוח את הנושא הבא צריך לענות על כל הבוחן בלי טעויות – נסו שוב! 💪" : "עכשיו נסו את כל הבוחן שוב 💪";
             }
         }
 

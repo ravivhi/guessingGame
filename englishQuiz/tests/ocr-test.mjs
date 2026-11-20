@@ -812,7 +812,7 @@ async function eachFixture(kind, run) {
 
 // The 📚 learning tab: each level's categories as a path of steps (big categories split into parts of up to 15).
 // Only the first unfinished step is open. A step = cards with the English word and the Hebrew together, then a short
-// quiz on those words; 70%+ right on the first try opens the next step.
+// quiz on those words; only a quiz with no mistakes opens the next step.
 async function testLearn() {
   console.log('\n[learn] learning path by category, with a quiz at the end of each step');
   const page = await openPage();
@@ -876,12 +876,15 @@ async function testLearn() {
   const catHe = new Set(want[0].catWords.map(w => w[1]));
   check(quiz.length === first.n && quiz.every(q => first.words.includes(q.word) && l1[q.word] === q.correct), `the quiz asks exactly the ${first.n} words of the step`);
   check(quiz.every(q => q.dynamics.length === 3 && new Set([q.correct, ...q.dynamics]).size === 4 && q.dynamics.every(d => catHe.has(d))), 'every question has 4 different answers, the wrong ones from the same category');
-  const half = Math.ceil(first.n / 2);
-  await playQuiz(half);   // under 70% right on the first try
-  check(await vis('summary-screen') && (await text('step-result')).includes('70%') && !(await vis('next-step-btn')), `under 70% first-try right: the summary says 70% is needed and there is no "next topic" (${await text('step-result')})`);
+  await playQuiz(1);   // one mistake
+  check(await vis('summary-screen') && (await text('step-result')).includes('בלי טעויות') && !(await vis('next-step-btn')), `one mistake: the summary says the quiz must be done with no mistakes, and there is no "next topic" (${await text('step-result')})`);
   check(!(await progress()), 'and the next step stays locked');
+  await page.evaluate(() => practiceMissed());
+  await playQuiz(0);
+  check(!(await vis('next-step-btn')) && !(await progress()), 'practising only the missed words does not open it either');
   check((await text('change-words-btn')).includes('מסלול'), 'the summary offers a way back to the path');
-  await page.evaluate(() => restartGame());   // "try again"
+  check(await vis('all-words-btn'), 'after practising, "all the words" brings back the full quiz');
+  await page.evaluate(() => playAll());
   await playQuiz(0);
   check((await text('step-result')).includes(want[1].name) && await vis('next-step-btn'), `passing the quiz says the next step is open (${want[1].name})`);
   check((await progress())[1] === 1, 'the progress is saved on the device');
@@ -941,9 +944,12 @@ async function testLearn() {
     const doneO = await over();
     await page.click('#learn-quiz-btn');
     const quizO = await over();
-    await playQuiz(2);   // the busiest summary: missed words + "next topic"
+    await playQuiz(2);   // a summary with missed words
     const sumO = await over();
-    check(Math.max(pathO, cardO, doneO, quizO, sumO) <= 0, `${w}x${h}: the path, the card, the well-done screen, the quiz and its summary fit without page scrolling (${pathO}/${cardO}/${doneO}/${quizO}/${sumO}px)`);
+    await page.evaluate(() => restartGame());
+    await playQuiz(0);   // a summary with the bonus badge, the unlock and "next topic"
+    const sum2O = await over();
+    check(Math.max(pathO, cardO, doneO, quizO, sumO, sum2O) <= 0, `${w}x${h}: the path, the card, the well-done screen, the quiz and both summaries fit without page scrolling (${pathO}/${cardO}/${doneO}/${quizO}/${sumO}/${sum2O}px)`);
   }
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();

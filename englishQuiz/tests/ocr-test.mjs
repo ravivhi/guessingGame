@@ -960,7 +960,76 @@ async function testLearn() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn };
+// The 🛒 shop: the total points buy a character (shown next to the title) and a background. Buying takes two taps,
+// bought items stay bought and switching between them is free.
+async function testShop() {
+  console.log('\n[shop] spending the points on a character and a background');
+  const page = await openPage();
+  const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
+  const text = id => page.$eval('#' + id, e => e.textContent);
+  const item = (box, id) => `#${box} .shop-item[data-id="${id}"]`;
+  const cls = (box, id) => page.$eval(item(box, id), e => e.className);
+  const total = () => page.evaluate(() => +localStorage.getItem('englishquiz-total-points') || 0);
+
+  check(await vis('shop-btn'), 'the main screen has a shop button');
+  await page.click('#shop-btn');
+  check(await vis('shop-screen') && !(await vis('start-screen')), 'it opens the shop');
+  check((await page.$$('#shop-avatars .shop-item')).length >= 10 && (await page.$$('#shop-themes .shop-item')).length >= 5, 'the shop has characters and backgrounds');
+  check((await text('shop-balance')).includes('0') && (await cls('shop-avatars', 'dog')).includes('poor'), 'with 0 points everything costs more than you have');
+  await page.click(item('shop-avatars', 'dog'));
+  check((await text('shop-msg')).includes('חסרות') && (await total()) === 0, 'tapping an item you cannot afford says how many points are missing and buys nothing');
+  check((await cls('shop-themes', 'purple')).includes('active'), 'the purple background is free and in use');
+
+  // 50 points
+  await page.evaluate(() => { localStorage.setItem('englishquiz-total-points', '50'); });
+  await page.reload();
+  await page.click('#shop-btn');
+  check((await text('shop-balance')).includes('50'), 'the shop shows the points (50)');
+  await page.evaluate(() => { window.__sounds = 0; playUnlockSound = () => window.__sounds++; });
+  await page.click(item('shop-avatars', 'dog'));
+  check((await cls('shop-avatars', 'dog')).includes('confirm') && (await total()) === 50, 'the first tap asks "buy?" and buys nothing yet');
+  await page.click(item('shop-avatars', 'dog'));
+  check((await total()) === 40 && (await cls('shop-avatars', 'dog')).includes('active') && (await text('shop-balance')).includes('40'), 'the second tap buys the dog: 40 points left, and the dog is in use');
+  check((await page.evaluate(() => window.__sounds)) === 1 && (await text('shop-msg')).includes('קניתם'), 'buying plays the happy sound and says so');
+  check((await text('menu-avatar')) === '🐶', 'the dog shows next to the title on the main screen');
+  await page.click(item('shop-themes', 'ocean'));
+  await page.click(item('shop-themes', 'ocean'));
+  const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);
+  check((await total()) === 10 && bg.includes('0, 82, 212'), `buying the sea background changes the page background (${bg.slice(0, 60)}...)`);
+  await page.click(item('shop-avatars', 'cat'));
+  await page.click(item('shop-avatars', 'cat'));
+  await page.click(item('shop-avatars', 'dog'));
+  check((await total()) === 0 && (await text('menu-avatar')) === '🐶', 'switching back to a character you own is free');
+  await page.click(item('shop-avatars', 'dog'));
+  check((await text('menu-avatar')) === '', 'tapping the character in use takes it off');
+  await page.click(item('shop-themes', 'purple'));
+  check((await page.evaluate(() => getComputedStyle(document.body).backgroundImage)).includes('74, 0, 224'), 'back to the purple background, for free');
+  await page.click(item('shop-themes', 'ocean'));
+  await page.click(item('shop-avatars', 'cat'));
+
+  // saved on the device
+  await page.reload();
+  check((await text('menu-avatar')) === '🐱' && (await page.evaluate(() => getComputedStyle(document.body).backgroundImage)).includes('0, 82, 212'), 'after a reload the cat and the sea background are still there');
+  await page.click('#shop-btn');
+  check((await cls('shop-avatars', 'dog')).includes('owned') && (await cls('shop-themes', 'ocean')).includes('active'), 'and the bought items are still yours');
+  await page.click('#shop-back');
+  check(await vis('start-screen') && !(await vis('shop-screen')), 'the back button returns to the main screen');
+
+  // fits common phones without page scrolling
+  for (const [w, h] of [[320, 568], [360, 640], [390, 844]]) {
+    await page.setViewport({ width: w, height: h });
+    const over = () => page.evaluate(() => Math.max(document.documentElement.scrollHeight - innerHeight, document.documentElement.scrollWidth - innerWidth));
+    await page.evaluate(() => showStart());
+    const mainO = await over();
+    await page.click('#shop-btn');
+    const shopO = await over();
+    check(Math.max(mainO, shopO) <= 0, `${w}x${h}: the main screen and the shop fit without page scrolling (${mainO}/${shopO}px)`);
+  }
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

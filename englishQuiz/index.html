@@ -36,7 +36,7 @@
         body {
             margin: 0;
             padding: 10px;
-            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            background: var(--bg, linear-gradient(135deg, #4a00e0, #8e2de2));   /* a background bought in the shop */
             display: flex;
             height: 100vh;
             height: 100dvh;
@@ -301,6 +301,35 @@
         .cat-step.locked .cat-emoji { filter: grayscale(1); opacity: 0.5; }
         @keyframes stepPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
 
+        /* 🛒 the shop: points buy a character (shown on the main screen) and a background */
+        #start-screen { position: relative; }
+        /* the shop: a round store button in the top-left corner of the main screen */
+        #shop-btn { position: absolute; top: -8px; left: -8px; width: 46px; height: 46px; padding: 0; border: none; border-radius: 50%;
+                    font-size: 1.55rem; line-height: 46px; cursor: pointer; background: linear-gradient(135deg, #f6ad55, #ed8936);
+                    box-shadow: 0 3px 0 rgba(0,0,0,0.18); animation: shopWiggle 4s ease-in-out infinite; }
+        #shop-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.18); }
+        @keyframes shopWiggle { 0%, 88%, 100% { transform: rotate(0); } 92% { transform: rotate(-12deg); } 96% { transform: rotate(12deg); } }
+        #menu-avatar { font-size: 1.15em; margin-inline-start: 6px; }
+        #shop-screen { flex-direction: column; flex: 1 1 auto; min-height: 0; }
+        #shop-title { flex: 1; font-weight: bold; color: #4a5568; font-size: 1.15rem; }
+        #shop-balance { font-weight: bold; color: #2b6cb0; white-space: nowrap; }
+        #shop-msg { min-height: 1.3em; font-size: 0.95rem; font-weight: bold; margin: 0 0 4px; }
+        .shop-body { flex: 1 1 auto; min-height: 0; overflow: auto; }
+        .shop-section { font-weight: bold; color: #553c9a; text-align: start; margin: 6px 2px 6px; }
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; margin-bottom: 8px; }
+        .shop-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; border: 3px solid transparent;
+                     border-radius: 16px; background: #f7fafc; cursor: pointer; font-family: inherit; color: #2d3748; box-shadow: 0 3px 0 rgba(0,0,0,0.08); }
+        .shop-item .shop-pic { font-size: 2rem; line-height: 1.2; }
+        .shop-item .shop-swatch { width: 52px; height: 34px; border-radius: 10px; }
+        .shop-item .shop-name { font-size: 0.85rem; font-weight: bold; }
+        .shop-item .shop-price { font-size: 0.8rem; font-weight: bold; padding: 2px 8px; border-radius: 10px; background: #fefcbf; color: #975a16; }
+        .shop-item.owned .shop-price { background: #c6f6d5; color: #276749; }
+        .shop-item.active { border-color: #38a169; background: #f0fff4; }
+        .shop-item.active .shop-price { background: #38a169; color: #fff; }
+        .shop-item.poor { opacity: 0.55; }
+        .shop-item.confirm { border-color: #dd6b20; background: #fffaf0; }
+        .shop-item.confirm .shop-price { background: #dd6b20; color: #fff; }
+
         /* learning cards: the English word (read aloud) and its Hebrew meaning on one card */
         #learn-screen { flex-direction: column; }
         .learn-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
@@ -335,6 +364,7 @@
 
         /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
         @media (max-width: 360px) {
+            #shop-btn { width: 36px; height: 36px; line-height: 36px; font-size: 1.2rem; top: -10px; left: -10px; }
             .game-container { padding: 14px; }
             /* narrow phones: slightly smaller buttons (all of them, so they keep one look) so the longer
                random-words label still shares a line with the level picker and the tab names stay on one line */
@@ -362,7 +392,8 @@
 
     <div class="game-container">
         <div id="start-screen">
-            <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
+            <button type="button" id="shop-btn" onclick="openShop()" aria-label="חנות" title="חנות">🏪</button>
+            <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית<span id="menu-avatar" aria-hidden="true"></span></div>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
                 <div id="menu-streak" aria-hidden="true" style="font-size:1.6rem;line-height:1.2;"></div>
@@ -430,6 +461,21 @@
                 <div id="streak-emoji" aria-hidden="true"></div>
             </div>
             <div class="answers-grid" id="answers-container"></div>
+        </div>
+
+        <div id="shop-screen" style="display:none;">
+            <div class="learn-head">
+                <button type="button" id="shop-back" class="action-btn" onclick="showStart()" aria-label="חזרה" style="padding:5px 10px;font-size:0.9rem;">→ חזרה</button>
+                <div id="shop-title">🛒 החנות</div>
+                <div id="shop-balance"></div>
+            </div>
+            <p id="shop-msg"></p>
+            <div class="shop-body">
+                <div class="shop-section">🧸 דמויות</div>
+                <div class="shop-grid" id="shop-avatars"></div>
+                <div class="shop-section">🎨 רקעים</div>
+                <div class="shop-grid" id="shop-themes"></div>
+            </div>
         </div>
 
         <div id="learn-screen" style="display:none;">
@@ -945,7 +991,7 @@
 
         function showStart() {
             stepQuiz = null;
-            for (const id of ["summary-screen", "game-screen", "learn-screen", "learn-done-screen"]) document.getElementById(id).style.display = "none";
+            for (const id of ["summary-screen", "game-screen", "learn-screen", "learn-done-screen", "shop-screen"]) document.getElementById(id).style.display = "none";
             document.getElementById("start-screen").style.display = "flex";
             if (mode === "category") renderPath();
         }
@@ -1782,6 +1828,109 @@
             renderWords();
             for (const id of ["start-error", "random-status", "photo-status"]) document.getElementById(id).textContent = "";
         }
+
+        // ---- 🛒 The shop: the total points (grandTotal) buy a character, shown next to the title on the main screen,
+        // and a background. Bought items stay bought (saved on the device) and can be switched any time for free.
+        // Buying takes two taps (tap = "לקנות?", tap again = buy), so a small child doesn't buy by mistake.
+        const SHOP_KEY = "englishquiz-shop";
+        const SHOP_AVATARS = [
+            { id: "dog", pic: "🐶", name: "כלבלב", price: 10 }, { id: "cat", pic: "🐱", name: "חתלתול", price: 10 },
+            { id: "rabbit", pic: "🐰", name: "ארנב", price: 15 }, { id: "frog", pic: "🐸", name: "צפרדע", price: 15 },
+            { id: "fox", pic: "🦊", name: "שועל", price: 20 }, { id: "panda", pic: "🐼", name: "פנדה", price: 25 },
+            { id: "penguin", pic: "🐧", name: "פינגווין", price: 25 }, { id: "monkey", pic: "🐵", name: "קוף", price: 30 },
+            { id: "tiger", pic: "🐯", name: "נמר", price: 35 }, { id: "lion", pic: "🦁", name: "אריה", price: 40 },
+            { id: "owl", pic: "🦉", name: "ינשוף", price: 45 }, { id: "robot", pic: "🤖", name: "רובוט", price: 60 },
+            { id: "alien", pic: "👽", name: "חייזר", price: 60 }, { id: "dino", pic: "🦖", name: "דינוזאור", price: 75 },
+            { id: "dragon", pic: "🐉", name: "דרקון", price: 100 }, { id: "unicorn", pic: "🦄", name: "חד-קרן", price: 120 },
+        ];
+        const SHOP_THEMES = [
+            { id: "purple", name: "סגול", price: 0, bg: "linear-gradient(135deg, #4a00e0, #8e2de2)" },
+            { id: "ocean", name: "ים", price: 30, bg: "linear-gradient(135deg, #0052d4, #4fc3f7)" },
+            { id: "forest", name: "יער", price: 40, bg: "linear-gradient(135deg, #134e5e, #71b280)" },
+            { id: "sunset", name: "שקיעה", price: 50, bg: "linear-gradient(135deg, #ff512f, #f09819)" },
+            { id: "candy", name: "סוכריה", price: 60, bg: "linear-gradient(135deg, #ec008c, #fc6767)" },
+            { id: "night", name: "לילה", price: 80, bg: "linear-gradient(135deg, #0f2027, #2c5364)" },
+            { id: "space", name: "חלל", price: 100, bg: "radial-gradient(circle at 30% 20%, #6a3093, #1a0b2e 70%)" },
+            { id: "rainbow", name: "קשת", price: 150, bg: "linear-gradient(135deg, #ff595e, #ffca3a, #8ac926, #1982c4, #6a4c93)" },
+        ];
+        let shop = { owned: ["purple"], avatar: null, theme: "purple" };
+        try { const v = JSON.parse(localStorage.getItem(SHOP_KEY)); if (v && Array.isArray(v.owned)) shop = { ...shop, ...v }; } catch (e) {}
+        if (!shop.owned.includes("purple")) shop.owned.push("purple");
+        let shopConfirm = null;   // the item waiting for the second tap
+
+        function saveShop() { try { localStorage.setItem(SHOP_KEY, JSON.stringify(shop)); } catch (e) {} }
+        function applyShop() {
+            const a = SHOP_AVATARS.find(x => x.id === shop.avatar), t = SHOP_THEMES.find(x => x.id === shop.theme) || SHOP_THEMES[0];
+            document.getElementById("menu-avatar").textContent = a ? a.pic : "";
+            document.body.style.setProperty("--bg", t.bg);
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute("content", t.bg.match(/#[0-9a-f]{6}/i)[0]);
+        }
+
+        function openShop() {
+            shopConfirm = null;
+            document.getElementById("shop-msg").textContent = "";
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("shop-screen").style.display = "flex";
+            renderShop();
+        }
+
+        function renderShop() {
+            document.getElementById("shop-balance").textContent = `⭐ ${grandTotal}`;
+            const fill = (boxId, items, kind) => {
+                const box = document.getElementById(boxId);
+                box.innerHTML = "";
+                for (const it of items) {
+                    const owned = shop.owned.includes(it.id), active = kind === "avatar" ? shop.avatar === it.id : shop.theme === it.id;
+                    const b = document.createElement("button");
+                    b.type = "button";
+                    b.className = "shop-item" + (active ? " active" : owned ? " owned" : grandTotal < it.price ? " poor" : "") + (shopConfirm === it.id ? " confirm" : "");
+                    b.dataset.id = it.id;
+                    const pic = document.createElement("div");
+                    if (kind === "avatar") { pic.className = "shop-pic"; pic.textContent = it.pic; }
+                    else { pic.className = "shop-swatch"; pic.style.background = it.bg; }
+                    const name = document.createElement("div");
+                    name.className = "shop-name"; name.textContent = it.name;
+                    const price = document.createElement("div");
+                    price.className = "shop-price";
+                    price.textContent = active ? "✔ בשימוש" : owned ? "שלי – לבחירה" : shopConfirm === it.id ? "לקנות? ✔" : `⭐ ${it.price}`;
+                    b.append(pic, name, price);
+                    b.onclick = () => shopTap(it, kind);
+                    box.appendChild(b);
+                }
+            };
+            fill("shop-avatars", SHOP_AVATARS, "avatar");
+            fill("shop-themes", SHOP_THEMES, "theme");
+        }
+
+        function shopTap(it, kind) {
+            const msg = document.getElementById("shop-msg");
+            const use = () => { if (kind === "avatar") shop.avatar = shop.avatar === it.id ? null : it.id; else shop.theme = it.id; };
+            if (shop.owned.includes(it.id)) {   // already mine: switch to it (tapping the character in use takes it off)
+                shopConfirm = null;
+                use(); saveShop(); applyShop();
+                msg.textContent = "";
+            } else if (grandTotal < it.price) {
+                shopConfirm = null;
+                msg.style.color = "#c05621";
+                msg.textContent = `חסרות עוד ${it.price - grandTotal} נקודות ל${it.name} – המשיכו לשחק! 💪`;
+            } else if (shopConfirm !== it.id) {   // first tap: ask
+                shopConfirm = it.id;
+                msg.style.color = "#c05621";
+                msg.textContent = `לקנות ${it.name} ב-${it.price} נקודות? לחצו שוב לאישור`;
+            } else {   // second tap: buy and use it
+                shopConfirm = null;
+                grandTotal -= it.price;
+                try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
+                shop.owned.push(it.id);
+                use(); saveShop(); applyShop(); showGrandTotal();
+                msg.style.color = "#2f855a";
+                msg.textContent = `🎉 קניתם ${it.name}!`;
+                playUnlockSound();
+            }
+            renderShop();
+        }
+        applyShop();
 
         showGrandTotal();
         document.getElementById("words-input").value = readList(mode);

@@ -1010,6 +1010,18 @@ async function testShop() {
   // saved on the device
   await page.reload();
   check((await text('menu-avatar')) === '🐱' && (await page.evaluate(() => getComputedStyle(document.body).backgroundImage)).includes('0, 82, 212'), 'after a reload the cat and the sea background are still there');
+  // the character in the game: it asks the question and hops on a right answer
+  await page.evaluate(() => { document.getElementById('words-input').value = 'cat\tחתול\ndog\tכלב\nsun\tשמש\nmoon\tירח'; renderWords(); startFromInput(); });
+  check(await vis('game-screen') && (await text('game-avatar')) === '🐱' && (await page.$eval('.instruction-text', e => e.textContent)).startsWith('🐱'), 'the cat shows in the game, before the question');
+  await page.evaluate(() => [...document.querySelectorAll('#answers-container button')].find(b => b.innerText === wordsData[currentIndex].correct).click());
+  check(await page.$eval('#game-avatar', e => e.classList.contains('hop')), 'and hops on a right answer');
+  for (const [w, h] of [[320, 568], [360, 640]]) {
+    await page.setViewport({ width: w, height: h });
+    const o = await page.evaluate(() => Math.max(document.documentElement.scrollHeight - innerHeight, document.documentElement.scrollWidth - innerWidth));
+    check(o <= 0, `${w}x${h}: the game with the character fits without page scrolling (${o}px)`);
+  }
+  await page.setViewport({ width: 360, height: 800 });
+  await page.evaluate(() => { clearTimeout(nextQuestionTimer); showStart(); });
   await page.click('#shop-btn');
   check((await cls('shop-avatars', 'dog')).includes('owned') && (await cls('shop-themes', 'ocean')).includes('active'), 'and the bought items are still yours');
   await page.click('#shop-back');

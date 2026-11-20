@@ -309,7 +309,16 @@
                     box-shadow: 0 3px 0 rgba(0,0,0,0.18); animation: shopWiggle 4s ease-in-out infinite; }
         #shop-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.18); }
         @keyframes shopWiggle { 0%, 88%, 100% { transform: rotate(0); } 92% { transform: rotate(-12deg); } 96% { transform: rotate(12deg); } }
-        #menu-avatar { font-size: 1.15em; margin-inline-start: 6px; }
+        /* the chosen character: a round badge in the top-right corner of the main screen (tap = the shop) */
+        #menu-avatar { position: absolute; top: -8px; right: -8px; width: 46px; height: 46px; padding: 0; border: 3px solid #f6ad55;
+                       border-radius: 50%; font-size: 1.6rem; line-height: 40px; cursor: pointer; background: #fffaf0;
+                       box-shadow: 0 3px 0 rgba(0,0,0,0.15); }
+        #menu-avatar:empty { display: none; }
+        /* the character asks the question in the game, and hops on every right answer */
+        #game-avatar { display: inline-block; font-size: 1.6rem; line-height: 1; vertical-align: middle; margin-inline-end: 6px; }
+        #game-avatar:empty { display: none; }
+        #game-avatar.hop { animation: avatarHop 0.45s ease-out; }
+        @keyframes avatarHop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px) scale(1.15); } }
         #shop-screen { flex-direction: column; flex: 1 1 auto; min-height: 0; }
         #shop-title { flex: 1; font-weight: bold; color: #4a5568; font-size: 1.15rem; }
         #shop-balance { font-weight: bold; color: #2b6cb0; white-space: nowrap; }
@@ -365,6 +374,7 @@
         /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
         @media (max-width: 360px) {
             #shop-btn { width: 36px; height: 36px; line-height: 36px; font-size: 1.2rem; top: -10px; left: -10px; }
+            #menu-avatar { width: 36px; height: 36px; line-height: 30px; font-size: 1.2rem; top: -10px; right: -10px; }
             .game-container { padding: 14px; }
             /* narrow phones: slightly smaller buttons (all of them, so they keep one look) so the longer
                random-words label still shares a line with the level picker and the tab names stay on one line */
@@ -393,7 +403,8 @@
     <div class="game-container">
         <div id="start-screen">
             <button type="button" id="shop-btn" onclick="openShop()" aria-label="חנות" title="חנות">🏪</button>
-            <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית<span id="menu-avatar" aria-hidden="true"></span></div>
+            <button type="button" id="menu-avatar" onclick="openShop()" aria-label="הדמות שלי" title="הדמות שלי"></button>
+            <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
                 <div id="menu-streak" aria-hidden="true" style="font-size:1.6rem;line-height:1.2;"></div>
@@ -451,7 +462,7 @@
                 <div class="progress-box">שאלה: <span id="current-progress">1</span>/<span id="total-progress">0</span></div>
             </div>
             
-            <div class="instruction-text">מה הפירוש הנכון של המילה:</div>
+            <div class="instruction-text"><span id="game-avatar" aria-hidden="true"></span>מה הפירוש הנכון של המילה:</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
                 <div class="question-text" id="question-word" dir="ltr">Word</div>
                 <button type="button" id="speak-btn" onclick="speakWord()" aria-label="השמעת המילה" title="השמעת המילה" style="font-size:1.6rem;line-height:1;padding:6px 10px;margin-bottom:5px;background:#e2e8f0;border:none;border-radius:50%;cursor:pointer;">🔊</button>
@@ -649,6 +660,8 @@
                 selectedButton.classList.add("correct");
 
                 if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; streak++; updateStreakEmoji(); }
+                const av = document.getElementById("game-avatar");
+                av.classList.remove("hop"); void av.offsetWidth; av.classList.add("hop");   // the character hops
                 document.getElementById("score").innerText = totalScore;
 
                 nextQuestionTimer = setTimeout(() => {
@@ -1862,6 +1875,7 @@
         function applyShop() {
             const a = SHOP_AVATARS.find(x => x.id === shop.avatar), t = SHOP_THEMES.find(x => x.id === shop.theme) || SHOP_THEMES[0];
             document.getElementById("menu-avatar").textContent = a ? a.pic : "";
+            document.getElementById("game-avatar").textContent = a ? a.pic : "";
             document.body.style.setProperty("--bg", t.bg);
             const meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute("content", t.bg.match(/#[0-9a-f]{6}/i)[0]);

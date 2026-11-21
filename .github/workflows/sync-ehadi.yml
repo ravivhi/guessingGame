@@ -30,7 +30,7 @@ jobs:
       - name: Copy app files into ehadi/ (no tests, android project, store assets or repo files)
         run: |
           rsync -a --delete \
-            --exclude '.git/' --exclude '.github/' --exclude 'tests/' --exclude 'android/' --exclude 'play-assets/' \
+            --exclude '.git/' --exclude '.github/' --exclude 'tests/' --exclude 'android/' --exclude 'play-assets/' --exclude 'tts-proxy/' \
             --exclude '.gitignore' --exclude '*.md' \
             ehadi-src/ site/ehadi/
 

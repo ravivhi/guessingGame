@@ -1,4 +1,4 @@
-const CACHE = 'ehadi-v1';
+const CACHE = 'ehadi-v2';
 const CORE = [
     "./",
     "index.html",

@@ -770,6 +770,41 @@ p { margin: 0 0 .7em; }
   .node .n-circle { width: 80px; height: 80px; font-size: 34px; }
   .trail-row:nth-child(4n+1) { padding-inline-start: 2%; }
   .trail-row:nth-child(4n+3) { padding-inline-end: 2%; }
+
+  /* game screen on phones: everything on one screen, check/next always reachable */
+  .shell-s.playing .s-main { padding-top: 10px; padding-bottom: 10px; }
+  .player { gap: 8px; min-height: calc(100dvh - 20px); }
+  .pl-top { gap: 8px; }
+  .pl-top .pl-exit { width: 46px; height: 46px; font-size: 20px; }
+  .pl-dots { gap: 4px; }
+  .pl-dots .dot { width: 12px; height: 12px; }
+  .pl-card { padding: 12px 12px 0; gap: 10px; }
+  .prompt { font-size: 1.15rem; }
+  .prompt-sub { margin-top: -4px; }
+  .visual svg { max-height: min(300px, 26dvh); }
+  .answer-area { gap: 10px; }
+  .ans-input { min-height: 56px; font-size: 1.7rem; }
+  .ans-input.sm { min-height: 48px; }
+  .numpad { gap: 8px; }
+  .numpad button { height: clamp(44px, 6.2dvh, 54px); }
+  .answered .numpad { display: none; }   /* answered: the pad isn't needed, make room for the feedback */
+  .frac-wrap svg { width: min(240px, 62vw); }
+  .feedback { padding: 8px 12px; gap: 10px; font-size: 1em; }
+  .feedback .fb-char { font-size: 34px; }
+  .feedback .fb-char svg { width: 44px; height: 44px; }
+  .pl-bottom { position: sticky; bottom: 0; z-index: 5; margin: 0 -12px; padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(rgba(255, 255, 255, 0), #fff 22%); border-radius: 0 0 24px 24px; }
+  .pl-bottom .btn-check, .pl-bottom .btn-next { min-height: 60px; }
+  .pl-bottom .btn-hint { min-height: 60px; }
+}
+/* short phones (e.g. 360x640, or the browser bar taking space) */
+@media (max-width: 640px) and (max-height: 760px) {
+  .s-top { padding-block: 6px; }
+  .pl-card { gap: 8px; }
+  .visual svg { max-height: 22dvh; }
+  .numpad button { height: clamp(40px, 5.8dvh, 50px); }
+  .opt { min-height: 56px; }
+  .opt.vis { min-height: 96px; }
+  .opt svg { max-height: 84px; }
 }
 
 /* ---------- accessibility modes ---------- */

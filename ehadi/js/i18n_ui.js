@@ -27,7 +27,7 @@
       fb_try: ["Not quite - let's try again!", 'Almost! Have another look.', "Good try! Let's think together.", 'Mistakes help us learn. Try again!', "Hmm, let's check that one more time."],
       fb_reveal: "Let's look at it together:", fb_next_easier: "Let's try one that warms us up.",
       hint_encourage: ['Take your time. What do you notice?', 'Read the question again slowly.', 'You can do this! What is the question asking?', 'Try picturing it in your head.'],
-      hint_label: 'Hint', hint_n: 'Hint {n}', hint_btn: 'Hint', hint_example: 'A similar example', read_aloud: 'Read aloud', speech_no_voice: 'This device has no voice for this language, so read-aloud may skip words. You can add one in the device speech settings.', check: 'Check', try_again: 'Try again',
+      hint_label: 'Hint', hint_n: 'Hint {n}', hint_btn: 'Hint', hint_example: 'A similar example', read_aloud: 'Read aloud', speech_no_voice: 'This device has no {lang} voice, so questions can’t be read aloud properly. You can add one for free:', voice_title: 'Add a voice for read-aloud', voice_step_install: 'Install or update "Speech Services by Google" from the Play Store.', voice_store_link: 'Open in Play Store', voice_step_engine: 'Open Settings, search for "Text-to-speech", and set the preferred engine to "Speech Services by Google".', voice_step_lang: 'Tap the gear next to it, then "Install voice data", and choose {lang}.', voice_other_device: 'Add a {lang} voice in the device’s speech (text-to-speech) settings.', voice_after: 'Then come back to the app. Read-aloud will use the new voice.', voice_dont_show: 'Don’t show again', check: 'Check', try_again: 'Try again',
       welcome_back: "Welcome back! Let's continue your adventure.", hi_name: 'Hi {name}!',
       sound_on: 'Sound on', sound_off: 'Sound off', exit: 'Exit',
       currency_ils: '₪', currency_usd: '$'
@@ -56,7 +56,7 @@
       fb_try: ['כמעט! בואו ננסה שוב.', 'כמעט! הסתכלו שוב.', 'ניסיון טוב! בואו נחשוב יחד.', 'טעויות עוזרות ללמוד. נסו שוב!', 'הממ, בואו נבדוק שוב.'],
       fb_reveal: 'בואו נראה יחד:', fb_next_easier: 'בואו נתחמם עם שאלה קצת אחרת.',
       hint_encourage: ['קחו את הזמן. מה אתם רואים?', 'קראו שוב את השאלה לאט.', 'אתם יכולים! על מה השאלה שואלת?', 'נסו לדמיין את זה בראש.'],
-      hint_label: 'רמז', hint_n: 'רמז {n}', hint_btn: 'רמז', hint_example: 'דוגמה דומה', read_aloud: 'הקראה', speech_no_voice: 'במכשיר הזה אין קול בשפה הזו, ולכן ההקראה עלולה לדלג על מילים. אפשר להוסיף קול בהגדרות הדיבור של המכשיר.', check: 'בדיקה', try_again: 'נסו שוב',
+      hint_label: 'רמז', hint_n: 'רמז {n}', hint_btn: 'רמז', hint_example: 'דוגמה דומה', read_aloud: 'הקראה', speech_no_voice: 'במכשיר הזה אין קול ב{lang}, ולכן אי אפשר להקריא את השאלות כמו שצריך. אפשר להוסיף קול בחינם:', voice_title: 'הוספת קול להקראה', voice_step_install: 'מתקינים או מעדכנים את שירותי הדיבור של Google מחנות Play.', voice_store_link: 'פתיחה בחנות Play', voice_step_engine: 'פותחים את ההגדרות של הטלפון, מחפשים "המרת טקסט לדיבור", ובוחרים במנוע המועדף של Google.', voice_step_lang: 'לוחצים על גלגל השיניים שלידו, אחר כך "התקנת נתוני קול", ובוחרים {lang}.', voice_other_device: 'אפשר להוסיף קול ב{lang} בהגדרות הדיבור (המרת טקסט לדיבור) של המכשיר.', voice_after: 'אחר כך חוזרים לאפליקציה, וההקראה תשתמש בקול החדש.', voice_dont_show: 'לא להציג שוב', check: 'בדיקה', try_again: 'נסו שוב',
       welcome_back: 'ברוכים השבים! ממשיכים בהרפתקה.', hi_name: 'היי {name}!',
       sound_on: 'צליל פועל', sound_off: 'צליל כבוי', exit: 'יציאה',
       currency_ils: '₪', currency_usd: '$'

@@ -16,7 +16,7 @@ permissions:
   pages: write
 
 concurrency:
-  group: sync-alfi
+  group: sync-site   # shared with other syncs so two never push at once
   cancel-in-progress: false
 
 jobs:

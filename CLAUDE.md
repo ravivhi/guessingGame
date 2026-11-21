@@ -10,6 +10,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `alfi/` (served at ravivh.com/alfi/) is synced from the separate public repo **ravivhi/alfi** (`web/` folder) by `.github/workflows/sync-alfi.yml` here, which the owner runs manually (Run workflow) after reviewing alfi changes, and which overwrites this folder. Make alfi changes in that repo. ravivhi/alfi deliberately holds no credentials for this repo (its collaborators must not be able to change anything else here), so keep it a pull, never a push. `.well-known/assetlinks.json` stays here because it must live at the domain root.
 
+## ehadi/ is generated too — do not edit here
+
+`ehadi/` (served at ravivh.com/ehadi/) is synced from the public repo **ravivhi/ehadi** by `.github/workflows/sync-ehadi.yml` (manual Run workflow; tests and repo files are excluded). Make ehadi changes in that repo. Same pull-only rule as alfi.
+
 ## Development
 
 No build step, no package manager, no dependencies. To develop:

@@ -1,0 +1,65 @@
+/* Shared UI strings (English + Hebrew). View modules add their own strings with MA.i18n.add().
+   Hebrew addresses children with gender-neutral plural imperatives (בחרו, גררו...). */
+(function (MA) {
+  'use strict';
+  MA.i18n.add({
+    en: {
+      app_name: 'Mathoria', app_tagline: 'Math adventures for Grades 1-6',
+      ok: 'OK', cancel: 'Cancel', close: 'Close', save: 'Save', saved: 'Saved', delete: 'Delete', edit: 'Edit', add: 'Add', back: 'Back',
+      next: 'Next', finish: 'Finish', start: 'Start', continue: 'Continue', yes: 'Yes', no: 'No', search: 'Search…', filter: 'Filter', all: 'All',
+      none: 'None', loading: 'Loading…', optional: 'optional', required: 'Required', are_you_sure: 'Are you sure?', copy: 'Copy', copied: 'Copied!',
+      print: 'Print', export: 'Export', import: 'Import', reset: 'Reset', create: 'Create', update: 'Update', preview: 'Preview', view: 'View',
+      details: 'Details', actions: 'Actions', status: 'Status', name: 'Name', language: 'Language',
+      grade: 'Grade', grade_n: 'Grade {n}', grades: 'Grades', title: 'Title', description: 'Description', date: 'Date', type: 'Type', skill: 'Skill', skills: 'Skills',
+      activity: 'Activity', activities: 'Activities', accuracy: 'Accuracy', time_spent: 'Time spent', progress: 'Progress', due: 'Due', score: 'Score',
+      today: 'Today', yesterday: 'Yesterday', days_ago: '{n} days ago', never: 'Never', min_n: { one: '1 min', other: '{n} min' }, h_min: '{h} h {m} min',
+      this_week: 'This week', last_week: 'Last week', this_month: 'This month', week_of: 'Week of {d}', of_n: '{a} of {b}',
+      settings: 'Settings', notifications: 'Notifications',
+      no_notifications: 'You are all caught up.', mark_all_read: 'Mark all as read', error_generic: 'Something went wrong. Please try again.',
+      forbidden: 'You do not have permission to do that.', go_home: 'Go to my home page',
+      local_note: 'Your data is saved privately in this browser on this device.',
+      st_not_started: 'Not started', st_learning: 'Learning', st_practicing: 'Practicing', st_developing: 'Developing', st_mastered: 'Mastered', st_challenge: 'Ready for challenge',
+      diff_1: 'Introduction', diff_2: 'Basic', diff_3: 'Intermediate', diff_4: 'Advanced', diff_5: 'Challenge', difficulty: 'Difficulty', level_n: 'Level {n}',
+      stage_1: 'Introduction', stage_2: 'Visual understanding', stage_3: 'Guided practice', stage_4: 'Independent practice', stage_5: 'Challenge', stage_6: 'Mastery check',
+      xp: 'XP', coins: 'Coins', level: 'Level', streak: 'Streak', streak_days: { one: '1 day', other: '{n} days' }, stars: 'Stars',
+      fb_correct: ['Amazing!', 'You got it!', 'Great thinking!', "You're getting stronger!", 'Fantastic strategy!', "Let's go!", 'Brilliant!', 'Super work!', 'Nailed it!', 'Wonderful!', 'High five!', 'Exactly right!'],
+      fb_correct_retry: ['You figured it out!', 'Great persistence!', 'You kept trying - and got it!', 'That is how we learn!'],
+      fb_try: ["Not quite - let's try again!", 'Almost! Have another look.', "Good try! Let's think together.", 'Mistakes help us learn. Try again!', "Hmm, let's check that one more time."],
+      fb_reveal: "Let's look at it together:", fb_next_easier: "Let's try one that warms us up.",
+      hint_encourage: ['Take your time. What do you notice?', 'Read the question again slowly.', 'You can do this! What is the question asking?', 'Try picturing it in your head.'],
+      hint_label: 'Hint', hint_n: 'Hint {n}', hint_btn: 'Hint', hint_example: 'A similar example', read_aloud: 'Read aloud', speech_no_voice: 'This device has no voice for this language, so read-aloud may skip words. You can add one in the device speech settings.', check: 'Check', try_again: 'Try again',
+      welcome_back: "Welcome back! Let's continue your adventure.", hi_name: 'Hi {name}!',
+      sound_on: 'Sound on', sound_off: 'Sound off', exit: 'Exit',
+      currency_ils: '₪', currency_usd: '$'
+    },
+    he: {
+      app_name: 'מתמטוריה', app_tagline: 'הרפתקאות חשבון לכיתות א׳-ו׳',
+      ok: 'אישור', cancel: 'ביטול', close: 'סגירה', save: 'שמירה', saved: 'נשמר', delete: 'מחיקה', edit: 'עריכה', add: 'הוספה', back: 'חזרה',
+      next: 'הבא', finish: 'סיום', start: 'התחלה', continue: 'המשך', yes: 'כן', no: 'לא', search: 'חיפוש…', filter: 'סינון', all: 'הכול',
+      none: 'אין', loading: 'טוען…', optional: 'רשות', required: 'חובה', are_you_sure: 'בטוח?', copy: 'העתקה', copied: 'הועתק!',
+      print: 'הדפסה', export: 'ייצוא', import: 'ייבוא', reset: 'איפוס', create: 'יצירה', update: 'עדכון', preview: 'תצוגה מקדימה', view: 'צפייה',
+      details: 'פרטים', actions: 'פעולות', status: 'סטטוס', name: 'שם', language: 'שפה',
+      grade: 'כיתה', grade_n: function (p) { return 'כיתה ' + (['', 'א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳'][p.n] || p.n); }, grades: 'כיתות', title: 'כותרת', description: 'תיאור', date: 'תאריך', type: 'סוג', skill: 'מיומנות', skills: 'מיומנויות',
+      activity: 'פעילות', activities: 'פעילויות', accuracy: 'דיוק', time_spent: 'זמן תרגול', progress: 'התקדמות', due: 'להגשה עד', score: 'ציון',
+      today: 'היום', yesterday: 'אתמול', days_ago: 'לפני {n} ימים', never: 'אף פעם', min_n: { one: 'דקה', other: '{n} דק׳' }, h_min: '{h} שע׳ {m} דק׳',
+      this_week: 'השבוע', last_week: 'שבוע שעבר', this_month: 'החודש', week_of: 'שבוע של {d}', of_n: '{a} מתוך {b}',
+      settings: 'הגדרות', notifications: 'התראות',
+      no_notifications: 'אין התראות חדשות.', mark_all_read: 'סימון הכול כנקרא', error_generic: 'משהו השתבש. נסו שוב.',
+      forbidden: 'אין לך הרשאה לפעולה הזו.', go_home: 'לדף הבית שלי',
+      local_note: 'הנתונים נשמרים באופן פרטי בדפדפן הזה במכשיר הזה.',
+      st_not_started: 'טרם התחיל', st_learning: 'בלמידה', st_practicing: 'בתרגול', st_developing: 'מתפתח', st_mastered: 'נשלט', st_challenge: 'מוכן לאתגר',
+      diff_1: 'היכרות', diff_2: 'בסיסי', diff_3: 'בינוני', diff_4: 'מתקדם', diff_5: 'אתגר', difficulty: 'רמת קושי', level_n: 'רמה {n}',
+      stage_1: 'היכרות', stage_2: 'הבנה חזותית', stage_3: 'תרגול מודרך', stage_4: 'תרגול עצמאי', stage_5: 'אתגר', stage_6: 'בדיקת שליטה',
+      xp: 'נקודות', coins: 'מטבעות', level: 'שלב', streak: 'רצף', streak_days: { one: 'יום אחד', two: 'יומיים', other: '{n} ימים' }, stars: 'כוכבים',
+      fb_correct: ['מדהים!', 'נכון מאוד!', 'חשיבה מעולה!', 'כל הכבוד!', 'אסטרטגיה מצוינת!', 'יאללה, ממשיכים!', 'מבריק!', 'עבודה נהדרת!', 'בול!', 'יופי של תשובה!', 'הצלחה גדולה!', 'בדיוק!'],
+      fb_correct_retry: ['פיצחתם את זה!', 'איזו התמדה!', 'המשכתם לנסות - והצלחתם!', 'ככה לומדים!'],
+      fb_try: ['כמעט! בואו ננסה שוב.', 'כמעט! הסתכלו שוב.', 'ניסיון טוב! בואו נחשוב יחד.', 'טעויות עוזרות ללמוד. נסו שוב!', 'הממ, בואו נבדוק שוב.'],
+      fb_reveal: 'בואו נראה יחד:', fb_next_easier: 'בואו נתחמם עם שאלה קצת אחרת.',
+      hint_encourage: ['קחו את הזמן. מה אתם רואים?', 'קראו שוב את השאלה לאט.', 'אתם יכולים! על מה השאלה שואלת?', 'נסו לדמיין את זה בראש.'],
+      hint_label: 'רמז', hint_n: 'רמז {n}', hint_btn: 'רמז', hint_example: 'דוגמה דומה', read_aloud: 'הקראה', speech_no_voice: 'במכשיר הזה אין קול בשפה הזו, ולכן ההקראה עלולה לדלג על מילים. אפשר להוסיף קול בהגדרות הדיבור של המכשיר.', check: 'בדיקה', try_again: 'נסו שוב',
+      welcome_back: 'ברוכים השבים! ממשיכים בהרפתקה.', hi_name: 'היי {name}!',
+      sound_on: 'צליל פועל', sound_off: 'צליל כבוי', exit: 'יציאה',
+      currency_ils: '₪', currency_usd: '$'
+    }
+  });
+})(window.MA = window.MA || {});

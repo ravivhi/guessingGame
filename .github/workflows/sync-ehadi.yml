@@ -1,0 +1,53 @@
+# Pulls the ehadi app from the public repo ravivhi/ehadi into ehadi/ here,
+# so it's served at https://ravivh.com/ehadi/.
+#
+# Pull model on purpose: ravivhi/ehadi holds NO credentials for this repo.
+# Manual only: review ehadi changes, then Actions → "Sync ehadi" → Run workflow.
+name: Sync ehadi from ravivhi/ehadi
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: sync-site   # shared with other syncs so two never push at once
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: site
+
+      - name: Fetch ravivhi/ehadi (public, read-only, no credentials)
+        run: git clone --depth 1 https://github.com/ravivhi/ehadi.git ehadi-src
+
+      - name: Copy app files into ehadi/ (no tests, no repo files)
+        run: |
+          rsync -a --delete \
+            --exclude '.git/' --exclude '.github/' --exclude 'tests/' \
+            --exclude '.gitignore' --exclude '*.md' \
+            ehadi-src/ site/ehadi/
+
+      - name: Commit, push and rebuild Pages if changed
+        working-directory: site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -A ehadi
+          if git diff --cached --quiet; then
+            echo "ehadi is up to date."
+            exit 0
+          fi
+          SRC_SHA=$(git -C ../ehadi-src rev-parse --short HEAD)
+          SRC_MSG=$(git -C ../ehadi-src log -1 --format=%B)
+          git config user.name "ehadi-sync[bot]"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "ehadi: sync ravivhi/ehadi@$SRC_SHA" -m "$SRC_MSG"
+          git push
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" || true

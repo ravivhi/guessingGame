@@ -1,4 +1,4 @@
-const CACHE = 'ehadi-v2';
+const CACHE = 'ehadi-v4';
 const CORE = [
     "./",
     "index.html",
@@ -43,13 +43,31 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
     e.waitUntil(
         caches.keys()
-            .then(keys => Promise.all(keys.filter(k => k.startsWith('ehadi-') && k !== CACHE).map(k => caches.delete(k))))
+            .then(keys => Promise.all(keys.filter(k => k.startsWith('ehadi-') && k !== CACHE && k !== TTS_CACHE).map(k => caches.delete(k))))
             .then(() => self.clients.claim())
     );
 });
 
+// Read-aloud audio from the speech proxy: cache-first by exact URL (the sentence is in the query string),
+// kept across app versions, and capped so it can't grow forever.
+const TTS_CACHE = 'ehadi-tts';
+const TTS_MAX = 1500;
+function isTts(req) { const u = new URL(req.url); return u.origin !== self.location.origin && u.searchParams.has('t') && u.searchParams.has('l'); }
+async function ttsFetch(req) {
+    const cache = await caches.open(TTS_CACHE);
+    const hit = await cache.match(req);
+    if (hit) return hit;
+    const res = await fetch(req);
+    if (res.ok) {
+        await cache.put(req, res.clone());
+        cache.keys().then(keys => { if (keys.length > TTS_MAX) keys.slice(0, keys.length - TTS_MAX + 200).forEach(k => cache.delete(k)); });
+    }
+    return res;
+}
+
 self.addEventListener('fetch', e => {
     if (e.request.method !== 'GET') return;
+    if (isTts(e.request)) { e.respondWith(ttsFetch(e.request)); return; }
     e.respondWith(
         fetch(e.request)
             .then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); return r; })

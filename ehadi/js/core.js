@@ -442,10 +442,90 @@
     sp.voices[lang] = mine[0] || null;
     return sp.voices[lang];
   }
+  /* ---- cloud voice: phones without a voice for the language (e.g. no Hebrew voice) get natural audio from
+     the speech proxy (see tts-proxy/). Only the sentence text is sent, never the child's name. Each sentence
+     is cached by the service worker, so repeats are free and work offline. Any failure falls back to the
+     phone's own voice. */
+  var TTS_URL = '';   /* the deployed speech proxy, e.g. 'https://ehadi-tts.<account>.workers.dev/'; empty = phone voices only */
+  var CLOUD = { downUntil: 0 };
+  Object.defineProperty(CLOUD, 'url', { get: function () { return MA.TTS_URL != null ? MA.TTS_URL : TTS_URL; } });
+  function cloudOn(lang) {
+    return !!CLOUD.url && hasDOM && typeof G.fetch === 'function' && typeof G.Audio === 'function'
+      && Date.now() > CLOUD.downUntil && (G.navigator.onLine !== false) && !voiceFor(lang);
+  }
+  function withoutName(text) {
+    var st = MA.svc && MA.svc.student && MA.svc.student(), name = st && st.name && String(st.name).trim();
+    if (!name) return text;
+    return text.split(name).join(' ').replace(/\s+([,.!?:;])/g, '$1').replace(/([.!?:;])(\s*,)+/g, '$1').replace(/,(\s*,)+/g, ',')
+      .replace(/^[\s,.!?:;]+/, '').replace(/\s{2,}/g, ' ').trim();
+  }
+  function cloudFetch(item) {
+    if (item.audio) return item.audio;
+    var text = withoutName(item.text);
+    if (!/[\p{L}\d]/u.test(text)) { item.audio = Promise.resolve(null); return item.audio; }
+    item.audio = G.fetch(CLOUD.url + '?l=' + encodeURIComponent(item.lang) + '&t=' + encodeURIComponent(text))
+      .then(function (r) { if (!r.ok) throw new Error('tts ' + r.status); return r.blob(); })
+      .then(function (b) { if (!b.size) throw new Error('tts empty'); return b; });
+    item.audio.catch(function () { /* handled where played */ });
+    return item.audio;
+  }
+  function playCloud(item, gen) {
+    var a = null, url = null, finished = false;
+    var done = function () {
+      if (finished) return; finished = true;
+      clearTimeout(sp.watchdog);
+      if (url) try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ }
+      if (sp.current === item) { sp.current = null; sp.audio = null; }
+      if (gen === sp.gen) setTimeout(pump, 40);
+    };
+    var fallback = function () {
+      if (finished || gen !== sp.gen) return;
+      finished = true; clearTimeout(sp.watchdog);
+      CLOUD.downUntil = Date.now() + 60000;            /* proxy unreachable: use the phone's voice for a minute */
+      if (sp.current === item) { sp.current = null; sp.audio = null; }
+      item.cloud = false; sp.queue.unshift(item); pump();
+    };
+    sp.current = item;
+    sp.watchdog = setTimeout(fallback, 8000);       /* slow network: don't leave the child waiting */
+    cloudFetch(item).then(function (blob) {
+      if (finished || gen !== sp.gen) return;
+      if (!blob) return done();
+      clearTimeout(sp.watchdog);
+      url = URL.createObjectURL(blob); a = new G.Audio(url); sp.audio = a;
+      a.onended = done; a.onerror = fallback;
+      sp.watchdog = setTimeout(done, 4000 + item.text.length * 150);
+      var p = a.play(); if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') done(); else fallback(); });
+    }, fallback);
+  }
+  /* No voice for this language on the device (e.g. Samsung's engine has no Hebrew): explain how to add one,
+     once per session, until the user says not to show it again. */
+  var HELP_OFF = 'mathoria:voiceHelpOff';
+  function voiceHelp(lang) {
+    var off = null; try { off = G.localStorage.getItem(HELP_OFF); } catch (e) { /* storage blocked */ }
+    if (off || !hasDOM || !document.getElementById('modal-root')) return;
+    var t = MA.t, he = /^(he|iw)/i.test(lang), heUI = MA.i18n.dir() === 'rtl', name = he ? (heUI ? 'עברית' : 'Hebrew') : (heUI ? 'אנגלית' : 'English');
+    var android = /Android/i.test(G.navigator.userAgent || '');
+    var body = h('div', { class: 'stack voice-help' }, h('p', null, t('speech_no_voice', { lang: name })),
+      android ? h('ol', null, h('li', null, t('voice_step_install'), ' ',
+          h('a', { href: 'https://play.google.com/store/apps/details?id=com.google.android.tts', target: '_blank', rel: 'noopener' }, t('voice_store_link'))),
+        h('li', null, t('voice_step_engine')), h('li', null, t('voice_step_lang', { lang: name })))
+        : h('p', null, t('voice_other_device', { lang: name })),
+      h('p', { class: 'muted' }, t('voice_after')));
+    MA.modal({ title: t('voice_title'), icon: '🔇', body: body, actions: [
+      { label: t('voice_dont_show'), cls: 'btn-ghost', onClick: function () { try { G.localStorage.setItem(HELP_OFF, '1'); } catch (e) { /* ignore */ } } },
+      { label: t('ok'), cls: 'btn-primary' }] });
+  }
   function pump() {
     if (sp.current || !sp.queue.length) return;
-    var item = sp.queue.shift(), gen = sp.gen, v = voiceFor(item.lang), ut;
-    if (!v && !sp.warned && (G.speechSynthesis.getVoices() || []).length) { sp.warned = true; MA.toast(MA.t('speech_no_voice'), { icon: '🔇', ms: 6000 }); }
+    var item = sp.queue[0];
+    if (item.cloud !== false && cloudOn(item.lang)) {
+      sp.queue.shift(); cloudFetch(item);
+      sp.queue.slice(0, 2).forEach(function (n) { if (n.cloud !== false) cloudFetch(n); });   /* fetch the next sentences while this one plays */
+      return playCloud(item, sp.gen);
+    }
+    item = sp.queue.shift();
+    var gen = sp.gen, v = voiceFor(item.lang), ut;
+    if (!v && !CLOUD.url && !sp.warned && (G.speechSynthesis.getVoices() || []).length) { sp.warned = true; voiceHelp(item.lang); }
     try {
       ut = new G.SpeechSynthesisUtterance(item.text);
       ut.lang = item.lang; if (v) ut.voice = v; ut.rate = .9;
@@ -464,6 +544,7 @@
   function stopSpeech() {
     sp.gen++; sp.queue = []; sp.current = null;
     clearTimeout(sp.watchdog); clearTimeout(sp.startTimer); sp.startTimer = null;
+    if (sp.audio) { try { sp.audio.pause(); } catch (e) { /* ignore */ } sp.audio = null; }
     try { G.speechSynthesis.cancel(); } catch (e) { /* ignore */ }
   }
   MA.speech = {

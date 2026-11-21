@@ -838,3 +838,5 @@ details > summary { cursor: pointer; }
   .print-only { display: block; }
   body { background: #fff; }
 }
+.voice-help ol { margin: 0; padding-inline-start: 1.4em; display: grid; gap: 8px; }
+.voice-help a { font-weight: 700; }

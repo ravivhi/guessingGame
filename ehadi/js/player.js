@@ -144,7 +144,7 @@
       if (!q) { MA.toast(t('pl_error_q'), { icon: '⚠️' }); st.results[st.i] = { skipped: true, firstTry: false }; st.i++; return show(); }
       var tries = 0, hintLevel = 0, shownAt = U.now(), answered = false, hintsAllowed = !slot.noHints && (stu.settings ? stu.settings.hints !== false : true);
       S.track('question_displayed', { skill: q.skillId, level: q.level, ui: q.ui });
-      U.clear(body);
+      U.clear(body); body.classList.remove('answered');
       if (slot.story) body.appendChild(h('div', { class: 'pl-story' }, h('span', { class: 'st-char', 'aria-hidden': 'true' }, slot.story.char), h('div', null, slot.story.text)));
       var promptEl = h('div', { class: 'prompt', id: 'q-prompt' }, q.prompt);
       var spoken = MA.gen.spoken(q, slot.story && slot.story.text), speakBtn = speakButton(function () { return spoken; });
@@ -187,6 +187,11 @@
         U.clear(fb).appendChild(h('div', { class: 'feedback fb-' + kind }, h('span', { class: 'fb-char', html: MA.svg.mascot(mood, 60) }), h('div', null, h('div', null, text), svg ? h('div', { html: svg, style: { marginTop: '8px' } }) : null)));
         MA.say(text);
         if (readOn()) MA.speech.say(text);
+        /* small screens: bring the feedback into view above the pinned check/next bar */
+        requestAnimationFrame(function () {
+          var r = fb.getBoundingClientRect(), lim = innerHeight - bottom.getBoundingClientRect().height;
+          if (r.height && r.bottom > lim) window.scrollBy({ top: r.bottom - lim + 8, behavior: 'smooth' });
+        });
       }
       function submit() {
         if (answered) return;
@@ -227,6 +232,7 @@
         st.results[st.i] = res;
         record(res, slot);
         checkBtn.disabled = true; if (hintBtn) hintBtn.disabled = true;
+        body.classList.add('answered');
         feedback(correct ? 'good' : revealed && !slot.timed ? 'show' : 'try', text, svg);
         renderDots();
         st.i++;

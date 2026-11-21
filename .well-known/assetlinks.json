@@ -36,5 +36,18 @@
         "C9:C2:BE:73:1E:F8:01:EF:D1:A9:2F:FE:96:88:C0:CA:08:81:9A:87:84:18:E1:1D:49:C7:E8:AE:1D:BC:31:9A"
       ]
     }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.raviv.ehadi",
+      "sha256_cert_fingerprints": [
+        "65:4F:4E:C6:30:28:7B:95:6E:5E:44:0F:FB:FB:EB:70:F7:EA:7D:D8:2D:FE:0D:F9:E4:2A:8F:0F:81:9F:C3:3B",
+        "31:F4:09:90:3F:38:6F:85:C4:3A:87:46:E2:AF:F5:15:A3:FF:C0:D6:9C:74:C6:E5:AD:9A:C7:4D:BB:C8:31:DC"
+      ]
+    }
   }
 ]

@@ -1654,10 +1654,15 @@ async function testFire() {
   r = await finishQuiz();
   check(r.badges.length === 0 && (await fire()) === '🔥 1' && (await saved()).days === 1, 'another quiz the same day adds nothing');
   for (let d = 1; d <= 8; d++) { await setDay(d); r = await finishQuiz(); }
+  const shopRow = () => page.evaluate(() => { openShop(); const o = { n: document.getElementById('shop-fire').textContent, info: document.getElementById('fire-info').textContent }; showStart(); return o; });
+  let sr = await shopRow();
+  check(sr.n === '🔥 × 9' && sr.info.includes('עוד 1 '), `the shop has a 🔥 row like the wands: 🔥 × 9, one more day to double points (${sr.info})`);
   check((await fire()) === '🔥 9' && r.points === 6, `9 days in a row: 🔥 9, points not doubled yet (${r.points})`);
   await setDay(9); r = await finishQuiz();
   check((await fire()) === '🔥 10 ×2' && r.points === 12 && r.badges.some(b => b.includes('כפולות')), `the 10th day: 🔥 10 ×2 and the quiz's points are doubled (6 → ${r.points}; ${r.badges.join(' | ')})`);
   await page.evaluate(() => openCoinBox()); await new Promise(res => setTimeout(res, 300));
+  sr = await shopRow();
+  check(sr.n === '🔥 × 10' && sr.info.includes('כפולות') && sr.info.includes('200'), `from 10 days the shop row says the points are doubled and the box may hold 200 (${sr.info})`);
   // the shop's surprise box: its coins are doubled too
   await page.evaluate(() => { shop.boxes = 1; saveShop(); Math.random = () => 0.6; });
   const t0 = await page.evaluate(() => grandTotal);

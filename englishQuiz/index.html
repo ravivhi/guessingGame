@@ -346,6 +346,9 @@
         .face.current { background: #c6f6d5; outline: 3px solid #38a169; }
         .wand-area { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 8px; border-radius: 14px; background: #faf5ff; border: 2px solid #d6bcfa; }
         #shop-wands { font-size: 1.6rem; font-weight: bold; color: #553c9a; white-space: nowrap; }
+        .fire-area { background: #fffaf0; border-color: #fbd38d; }
+        .fire-area .wand-info { color: #9c4221; }
+        #shop-fire { font-size: 1.6rem; font-weight: bold; color: #c05621; white-space: nowrap; }
         .wand-info { font-size: 0.85rem; color: #553c9a; text-align: start; }
         #box-toast { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 50; padding: 10px 16px; border-radius: 16px;
                      background: #fffaf0; border: 3px solid #f6ad55; color: #744210; font-weight: bold; box-shadow: 0 6px 16px rgba(0,0,0,0.2);
@@ -665,6 +668,11 @@
                     <div id="shop-wands"></div>
                     <div class="wand-info">מקבלים שרביט בקופסת ההפתעה. בבוחן לוחצים עליו והוא מראה את התשובה הנכונה!</div>
                 </div>
+                <div class="shop-section">🔥 ימים ברצף</div>
+                <div class="wand-area fire-area">
+                    <div id="shop-fire"></div>
+                    <div class="wand-info" id="fire-info"></div>
+                </div>
                 <div class="shop-section">🧸 דמויות</div>
                 <div class="shop-grid" id="shop-avatars"></div>
                 <div class="shop-section">🎨 רקעים</div>
@@ -791,6 +799,12 @@
         function showDaily() {
             const el = document.getElementById("menu-fire"), n = dailyDays();
             if (el) el.textContent = n ? `🔥 ${n}${n >= DAILY_DOUBLE ? " ×2" : ""}` : "";
+            // the shop's row: how many days, and what they give
+            const sh = document.getElementById("shop-fire"), info = document.getElementById("fire-info");
+            if (sh) sh.textContent = `🔥 × ${n}`;
+            if (info) info.textContent = n >= DAILY_DOUBLE
+                ? "נקודות כפולות, ובקופסה אפשר גם 200!"
+                : `בוחן כל יום מוסיף 🔥. עוד ${DAILY_DOUBLE - n} לנקודות כפולות!`;
         }
         // moves the waiting points into the total (returns how many). (Wands come only from the shop's surprise box.)
         function collectCoins() {
@@ -3198,6 +3212,7 @@
 
         function openShop() {
             shopConfirm = null;
+            showDaily();
             document.getElementById("shop-msg").textContent = "";
             document.getElementById("box-pic").textContent = "🎁";
             document.getElementById("start-screen").style.display = "none";

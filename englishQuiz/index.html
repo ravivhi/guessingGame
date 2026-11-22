@@ -623,6 +623,10 @@
     </div>
 
     <script>
+        // Keep the progress (points, shop, learning path... all in localStorage) safe: ask the browser to never clear
+        // this site's data on its own when the phone runs low on space. App updates never touch it anyway (the
+        // service worker only replaces its own file cache). Chrome decides without a prompt.
+        try { if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(p => p || navigator.storage.persist()).catch(() => {}); } catch (e) {}
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(() => {});
         }

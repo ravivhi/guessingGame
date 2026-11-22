@@ -1300,6 +1300,33 @@ async function testAvatar() {
   await page.close();
 }
 
+async function testKeep() {
+  console.log('\n[keep] progress survives app updates');
+  const ctx = await browser.createBrowserContext();
+  const page = await ctx.newPage();
+  page.pageErrors = [];
+  page.on('pageerror', e => page.pageErrors.push(e.message));
+  // count the requests for "persistent storage" (Chrome answers on its own; the mock says no, so it asks every load)
+  await page.evaluateOnNewDocument(() => { window.persistAsked = 0; if (navigator.storage) { navigator.storage.persisted = async () => false; navigator.storage.persist = async () => { window.persistAsked++; return true; }; } });
+  await page.goto(url, { waitUntil: "load" });
+  await page.waitForFunction(() => navigator.serviceWorker.controller, { timeout: 10000 }).catch(() => page.reload({ waitUntil: 'load' }));
+  check((await page.evaluate(() => window.persistAsked)) === 1, 'the app asks the browser to keep its data (never cleared when space runs low)');
+  // some progress: points, a character, a passed topic, a streak
+  const keys = ['englishquiz-total-points', 'englishquiz-shop', 'englishquiz-learn-progress', 'englishQuizStreak'];
+  await page.evaluate(() => { grandTotal = 321; localStorage.setItem(TOTAL_KEY, '321'); shop.owned.push('dog'); shop.avatar = 'dog'; saveShop();
+    localStorage.setItem(LEARN_KEY, JSON.stringify({ 1: [0, 2] })); localStorage.setItem(STREAK_KEY, localStorage.getItem(STREAK_KEY) || '0'); });
+  const before = await page.evaluate(k => k.map(x => localStorage.getItem(x)), keys);
+  // an app update = a new service worker: the old file cache is thrown away and the files are loaded again
+  await page.evaluate(async () => { for (const k of await caches.keys()) await caches.delete(k); for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); });
+  await page.reload({ waitUntil: 'load' });
+  await page.reload({ waitUntil: 'load' });
+  const after = await page.evaluate(k => k.map(x => localStorage.getItem(x)), keys);
+  check(JSON.stringify(after) === JSON.stringify(before) && before.every(v => v !== null), 'after an update (all files reloaded) the points, shop, learning path and streak are all still there');
+  check((await page.$eval('#grand-total', e => e.textContent)).includes('321') && (await page.$eval('#menu-avatar', e => e.textContent)) === '🐶', 'and the app shows them (321 points, the dog)');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await ctx.close();
+}
+
 async function testCelebrate() {
   console.log('\n[celebrate] the end of a test: a celebration as big as the score');
   const page = await openPage();
@@ -1398,7 +1425,7 @@ async function testCelebrate() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate };
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

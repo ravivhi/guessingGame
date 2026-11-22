@@ -569,7 +569,6 @@
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
                 <div id="menu-wands" title="שרביטי קסמים: בבוחן הם מראים את התשובה הנכונה" style="font-weight:bold;color:#6b46c1;white-space:nowrap;"></div>
                 <div id="menu-streak" aria-hidden="true" style="font-size:1.6rem;line-height:1.2;"></div>
-                <div id="menu-streak-count" title="שלב האימוג׳י" style="font-weight:bold;color:#2b6cb0;"></div>
             </div>
             <div class="tabs" role="tablist">
                 <button type="button" role="tab" id="tab-category" class="tab-btn" aria-selected="false" onclick="setMode('category')">📚 לימוד</button>
@@ -811,8 +810,6 @@
             const stage = streakStage(streak);
             const menuEl = document.getElementById("menu-streak");   // small copy of the emoji on the main screen
             if (menuEl) menuEl.textContent = stage ? STREAK_EMOJIS[stage - 1] : "";
-            const countEl = document.getElementById("menu-streak-count");   // the emoji's stage (1-30), next to the small emoji
-            if (countEl) countEl.textContent = stage ? String(stage) : "";
             const nextEl = document.getElementById("streak-next");   // in the game: how many more right answers to the next emoji
             if (nextEl) nextEl.textContent = stage >= STREAK_EMOJIS.length ? "" : (stage === STREAK_EMOJIS.length - 1 ? "🎁 עוד " : "עוד ") + (streakThreshold(stage + 1) - streak);   // the last face brings the box
             if (stage === shownStage || keepBig) return;

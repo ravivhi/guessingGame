@@ -791,10 +791,7 @@ async function testStreak() {
   await page.evaluate(() => { streak = 290; updateStreakEmoji(); });
   check(await nextText() === '🎁 עוד 10', `game: before the last emoji it counts down to it and the mystery box (${await nextText()})`);
   await page.evaluate(() => { streak = 11; updateStreakEmoji(); });
-  const count = () => page.$eval('#menu-streak-count', e => e.textContent);
-  check(await count() === '2', 'main screen: the emoji stage (11 in a row -> stage 2) is shown next to the small emoji');
-  await page.evaluate(() => { streak = 4; updateStreakEmoji(); });
-  check(await count() === '', 'main screen: no stage below 5 in a row');
+  check(!(await page.$('#menu-streak-count')), 'main screen: the small emoji has no stage number next to it');
   await page.evaluate(() => { streak = 11; updateStreakEmoji(); });
   await page.reload();
   check((await menu()).text === emojis[1] && (await menu()).visible, 'main screen: still there after a reload');

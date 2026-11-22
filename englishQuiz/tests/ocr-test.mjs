@@ -1341,12 +1341,34 @@ async function testCelebrate() {
   await page.waitForFunction(f => document.getElementById('summary-final-score').innerText === f, { timeout: 5000 }, final).catch(() => {});
   check((await score()) === final && (await page.evaluate(() => window.coins)) === Math.min(r.points, 25), `the points tick up to the final numbers with a ding each (${await score()})`);
 
+  // tapping the character: a funny gag (English + Hebrew in the bubble, said aloud), one at a time, never the same twice in a row
+  await page.waitForFunction(() => !summaryBusy, { timeout: 8000 });
+  const gags = await page.evaluate(() => SUMMARY_GAGS.map(g => g.say));
+  await page.evaluate(() => { window.spoken.length = 0; document.getElementById('avatar-fx').innerHTML = ''; });
+  await page.click('#summary-avatar');
+  const g1 = await page.$eval('#summary-say .ss-en', e => e.textContent.replace('🐶 ', ''));
+  check(gags.includes(g1) && (await page.$eval('#summary-say', e => e.classList.contains('on') && e.querySelector('.ss-he').textContent.length > 0)), `tapping the dog does a funny gag, in English and Hebrew ("${g1}")`);
+  check(await page.$eval('#summary-avatar', e => e.getAnimations().length > 0) && (await page.$$('#avatar-fx span')).length > 0, 'it moves and emojis burst out');
+  await page.click('#summary-avatar');
+  check((await page.$eval('#summary-say .ss-en', e => e.textContent.replace('🐶 ', ''))) === g1, 'a tap during the gag does nothing');
+  await page.waitForFunction(() => !summaryBusy, { timeout: 8000 });
+  check((await page.evaluate(() => window.spoken)).length === 1 && (await page.evaluate(() => window.spoken[0])).length > 0, 'the gag is said aloud once');
+  await page.click('#summary-avatar');
+  const g2 = await page.$eval('#summary-say .ss-en', e => e.textContent.replace('🐶 ', ''));
+  check(gags.includes(g2) && g2 !== g1, `the next tap is a different gag ("${g2}")`);
+  await page.waitForFunction(() => !summaryBusy, { timeout: 8000 });
+  await page.waitForFunction(() => !document.getElementById('summary-say').classList.contains('on'), { timeout: 5000 }).catch(() => {});
+  check(!(await page.$eval('#summary-say', e => e.classList.contains('on'))), 'the bubble closes a few seconds after the gag');
+
   // after a reload the result screen comes back with the final numbers and no new party
   await page.reload({ waitUntil: 'load' });
   await page.evaluate(() => { window.coins = 0; window.coinSound = () => window.coins++; });
   await new Promise(res => setTimeout(res, 800));
   check((await score()) === final && !(await canvas('fireworks')) && (await page.evaluate(() => window.coins)) === 0, 'reopening on the result screen shows the final numbers, without celebrating again');
   await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => { window.spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 300); }; speechSynthesis.cancel = () => {}; window.coinSound = () => window.coins++; });
+  await page.click('#summary-avatar');
+  check(await page.$eval('#summary-say', e => e.classList.contains('on')), 'after reopening, the character still does its gags');
+  await page.waitForFunction(() => !summaryBusy, { timeout: 8000 });
 
   // 2 of 10 wrong (80%): confetti and "Great job!"
   await clearFx();

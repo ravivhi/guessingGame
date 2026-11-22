@@ -363,11 +363,16 @@
         #avatar-bubble .ab-word { font-size: 1.5rem; font-weight: bold; color: #2b6cb0; margin-top: 2px; overflow-wrap: anywhere; }
         #avatar-bubble .ab-he { font-size: 1.1rem; margin-top: 2px; }
         #avatar-bubble .ab-hint { font-size: 0.7rem; color: #a0aec0; margin-top: 4px; }
-        /* end of a test: the character stands next to the trophy and celebrates (its words in a small bubble on the left) */
+        /* end of a test: the character stands next to the trophy and celebrates (its words in a bubble just under it, over the title for a moment) */
         #summary-top { position: relative; }
-        #summary-avatar { display: inline-block; font-size: 3rem; line-height: 1; vertical-align: bottom; margin: 0 8px 22px 0; }
+        #summary-say::before { content: ""; position: absolute; top: -12px; left: var(--tail, 30%); margin-left: -9px; border: 9px solid transparent; border-top: 0;
+                               border-bottom: 12px solid #f6ad55; }
+        #summary-avatar { display: inline-block; font-size: 3rem; line-height: 1; vertical-align: bottom; margin: 0 8px 22px 0; padding: 0;
+                          background: none; border: 0; cursor: pointer; font-family: inherit; touch-action: manipulation; }
+        #summary-say .ss-he { font-size: 0.8rem; color: #4a5568; margin-top: 2px; }
         #summary-avatar:empty { display: none; }
-        #summary-say { position: absolute; left: 0; top: 50%; transform: translateY(-50%); max-width: 32%; padding: 6px 10px; border-radius: 14px;
+        #summary-say { position: absolute; left: 0; right: 0; top: calc(100% - 16px); margin: 0 auto; width: max-content; max-width: 92%; box-sizing: border-box;
+                       z-index: 3; padding: 6px 12px; border-radius: 14px;
                        background: #fffaf0; border: 3px solid #f6ad55; color: #975a16; font-weight: bold; font-size: 0.9rem; line-height: 1.2;
                        box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; pointer-events: none; }
         #summary-say.on { display: block; animation: cardPop 0.3s ease-out; }
@@ -601,7 +606,7 @@
 
         <div id="summary-screen" class="summary-screen">
             <div id="summary-top">
-                <div class="emoji-animation" id="summary-emoji">🏆</div><span id="summary-avatar" aria-hidden="true"></span>
+                <div class="emoji-animation" id="summary-emoji">🏆</div><button type="button" id="summary-avatar" aria-label="הדמות שלי" onclick="summaryAvatarTap()"></button>
                 <div id="summary-say" dir="ltr" aria-hidden="true"></div>
             </div>
             <div class="result-title" id="summary-title">וואו! אתם פשוט אלופים!</div>
@@ -2046,6 +2051,68 @@
 
         // The end of a test: a celebration as big as the score (90%+ fireworks, 70%+ confetti, otherwise a small cheer),
         // the trophy pops in, the chosen character jumps in and cheers in English, and the points count up into the total.
+        // The result screen's bubble: English on top, Hebrew under it (optional). It closes 3 seconds after the character is done.
+        let summaryBusy = false, summarySayTimer = null, lastGag = -1;
+        function summarySay(en, he) {
+            const b = document.getElementById("summary-say");
+            b.innerHTML = '<div class="ss-en"></div>' + (he ? '<div class="ss-he" dir="rtl"></div>' : "");
+            b.querySelector(".ss-en").textContent = en;
+            if (he) b.querySelector(".ss-he").textContent = he;
+            clearTimeout(summarySayTimer);
+            b.classList.remove("on"); void b.offsetWidth; b.classList.add("on");
+            // the bubble's tail points up at the character
+            const a = document.getElementById("summary-avatar").getBoundingClientRect(), r = b.getBoundingClientRect();
+            b.style.setProperty("--tail", Math.max(16, Math.min(r.width - 16, a.left + a.width / 2 - r.left)) + "px");
+        }
+        function summarySayLater() {
+            clearTimeout(summarySayTimer);
+            summarySayTimer = setTimeout(() => document.getElementById("summary-say").classList.remove("on"), 3000);
+        }
+        // 😂 Tapping the character on the result screen: a funny gag each time (never the same one twice in a row)
+        const SUMMARY_GAGS = [
+            { say: "Hee hee! That tickles!", he: "הי הי! זה מדגדג!", fx: ["😂", "🤣"], ms: 1000,
+              keys: [0, -18, 18, -18, 18, -18, 18, -18, 18, 0].map(d => ({ transform: `rotate(${d}deg)` })) },
+            { say: "Ah... ah... ACHOO!", speak: "Ah... ah... achoo!", he: "אה... אה... אפצ'י!", fx: ["💦", "🤧"], ms: 1500,
+              keys: [{ transform: "scale(1)" }, { transform: "scale(1.15) rotate(-6deg)", offset: 0.3 }, { transform: "scale(1.35) rotate(-12deg)", offset: 0.65 },
+                     { transform: "scale(0.8) translateY(8px) rotate(10deg)", offset: 0.75 }, { transform: "scale(1.05)", offset: 0.88 }, { transform: "scale(1)" }] },
+            { say: "Ouch! I'm a pancake!", he: "איי! נהייתי פנקייק!", fx: ["🥞"], ms: 1500,
+              keys: [{ transform: "scale(1, 1)", transformOrigin: "50% 100%" }, { transform: "scale(1.6, 0.25)", transformOrigin: "50% 100%", offset: 0.15 },
+                     { transform: "scale(1.6, 0.25)", transformOrigin: "50% 100%", offset: 0.7 }, { transform: "scale(0.8, 1.3)", transformOrigin: "50% 100%", offset: 0.85 },
+                     { transform: "scale(1, 1)", transformOrigin: "50% 100%" }] },
+            { say: "Zzz... Huh? I'm awake!", he: "זזז... מה? אני ער!", fx: ["💤"], ms: 1800,
+              keys: [{ transform: "rotate(0)" }, { transform: "rotate(30deg) translateY(4px)", offset: 0.25 }, { transform: "rotate(34deg) translateY(5px)", offset: 0.7 },
+                     { transform: "rotate(-10deg) translateY(-12px)", offset: 0.8 }, { transform: "rotate(0)" }] },
+            { say: "Whoa! Everything is upside down!", he: "וואו! הכל הפוך!", fx: ["🙃"], ms: 1800,
+              keys: [{ transform: "rotate(0)" }, { transform: "rotate(180deg)", offset: 0.25 }, { transform: "rotate(180deg)", offset: 0.75 }, { transform: "rotate(360deg)" }] },
+            { say: "Hic! Hic! Oops!", he: "היק! היק! אופס!", fx: ["🫧"], ms: 1400,
+              keys: [{ transform: "translateY(0)" }, { transform: "translateY(-18px)", offset: 0.1 }, { transform: "translateY(0)", offset: 0.2 }, { transform: "translateY(0)", offset: 0.45 },
+                     { transform: "translateY(-22px) rotate(8deg)", offset: 0.55 }, { transform: "translateY(0)", offset: 0.65 }, { transform: "translateY(0)" }] },
+            { say: "Let's dance!", he: "בואו נרקוד!", fx: ["🎵", "🎶"], ms: 1600,
+              keys: [0, 1, 2, 3, 4, 5, 6, 7, 0].map((k, i, a) => ({ transform: i === a.length - 1 ? "none" : `translateX(${k % 2 ? 14 : -14}px) rotate(${k % 2 ? 12 : -12}deg) translateY(${k % 4 < 2 ? -8 : 0}px)` })) },
+            { say: "Hee hee, I'm shy!", he: "הי הי, אני מתבייש!", fx: ["😳", "💕"], ms: 1500,
+              keys: [{ transform: "scale(1)" }, { transform: "scale(0.55) translateY(14px)", offset: 0.2 }, { transform: "scale(0.55) translateY(14px) rotate(-8deg)", offset: 0.75 },
+                     { transform: "scale(1.15)", offset: 0.88 }, { transform: "scale(1)" }] },
+        ];
+        async function summaryAvatarTap() {
+            const av = SHOP_AVATARS.find(x => x.id === shop.avatar), el = document.getElementById("summary-avatar");
+            if (!av || summaryBusy) return;   // one gag at a time
+            summaryBusy = true;
+            try {
+                let k;
+                do { k = Math.floor(Math.random() * SUMMARY_GAGS.length); } while (k === lastGag);
+                lastGag = k;
+                const g = SUMMARY_GAGS[k];
+                el.getAnimations().forEach(x => x.cancel());
+                const anim = el.animate(g.keys, { duration: g.ms, easing: "ease-in-out" });
+                avatarBurst(g.fx, 8, el, true);
+                summarySay(`${av.pic} ${g.say}`, g.he);
+                await Promise.all([anim.finished.catch(() => {}), speakTexts([g.speak || g.say])]);
+            } finally {
+                summaryBusy = false;
+                summarySayLater();
+            }
+        }
+
         let celebrateRun = 0;
         function celebrate(rate, points, av) {
             const run = ++celebrateRun, here = () => run === celebrateRun && shownEl("summary-screen");
@@ -2059,6 +2126,7 @@
             else cheer();
 
             const el = document.getElementById("summary-avatar");
+            summaryBusy = !!av;   // taps on the character wait until it has finished cheering
             if (av) {
                 const fx = AVATAR_FX[av.id] || { move: "hop", fx: ["✨"] };
                 const say = tier === 3 ? "You're a champion!" : tier === 2 ? "Great job!" : "Nice try! Keep going!";
@@ -2069,11 +2137,9 @@
                     if (!here()) return;
                     el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: 900, easing: "ease-in-out" });
                     avatarBurst(fx.fx, tier * 5, el, true);
-                    const b = document.getElementById("summary-say");
-                    b.textContent = `${av.pic} ${say}`;
-                    b.classList.add("on");
-                    speakTexts([say]).then(() => setTimeout(() => { if (run === celebrateRun) b.classList.remove("on"); }, 2500));
-                  }).catch(() => {});
+                    summarySay(`${av.pic} ${say}`);
+                    return speakTexts([say]);
+                  }).catch(() => {}).finally(() => { if (run === celebrateRun) { summaryBusy = false; summarySayLater(); } });
             }
 
             if (points > 0) {   // the points tick up one by one into the total, with a ding each

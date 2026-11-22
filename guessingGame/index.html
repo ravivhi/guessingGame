@@ -1308,19 +1308,31 @@
                 .then(() => console.log('SW registered'))
                 .catch(err => console.log('SW failed:', err));
         }
-        // The phone's back button: one extra history entry catches it. Names → menu, round summary → menu
+        // The phone's back button: an extra history entry (the "trap") catches it. Names → menu, round summary → menu
         // (like its button). Ignored during a round, so a stray press can't spoil a player's turn.
-        // On the menu or the setup screen it leaves the app.
+        // The trap is there only on those screens, so on the menu or the setup screen back leaves the app at the
+        // first press. It is added when the user taps into one of them: Chrome's back button skips history entries
+        // a page adds before the user touched it, so an entry added at page load would let back close the app.
         history.replaceState({ gg: 0 }, '');
-        history.pushState({ gg: 1 }, '');
+        let backTrap = false, skipPops = 0;
+        const shownScreen = id => !document.getElementById(id).classList.contains('hidden');
+        function updateBackTrap() {
+            const need = ['names-screen', 'game-screen', 'summary-screen'].some(shownScreen);
+            if (need && !backTrap) { backTrap = true; history.pushState({ gg: 1 }, ''); }
+            else if (!need && backTrap) { backTrap = false; skipPops++; history.back(); }   // remove the unused trap
+        }
         window.addEventListener('popstate', () => {
-            const stay = () => history.pushState({ gg: 1 }, '');
-            const shown = id => !document.getElementById(id).classList.contains('hidden');
-            if (shown('names-screen')) { closeNamesScreen(); return stay(); }
-            if (shown('summary-screen')) { backToMenu(); return stay(); }
-            if (shown('game-screen')) return stay();
-            history.back();
+            if (skipPops) { skipPops--; return; }   // our own history.back() above
+            backTrap = false;                        // the back button used the trap up
+            if (shownScreen('names-screen')) closeNamesScreen();
+            else if (shownScreen('summary-screen')) backToMenu();
+            updateBackTrap();                        // still needed (e.g. during a round): set it again
         });
+        // any screen change updates the trap
+        const trapWatch = new MutationObserver(updateBackTrap);
+        for (const id of ['setup-screen', 'start-screen', 'names-screen', 'game-screen', 'summary-screen'])
+            trapWatch.observe(document.getElementById(id), { attributes: true, attributeFilter: ['class'] });
+        updateBackTrap();   // the page may open on a round or its summary
 
         </script>
 </body>

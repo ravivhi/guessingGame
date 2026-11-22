@@ -2204,22 +2204,32 @@
         }
 
         // a little "ding" for every point that is counted (higher and higher)
-        // a short coin "ka-ching" (about a quarter of a second), played once when the points are collected
+        // a short money sound, like a cash register: "cha" (a metallic click) + "ching" (a bright bell); about 0.4 s,
+        // played right when the surprise box is tapped
         function coinSound() {
             try {
                 audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === "suspended") audioCtx.resume();
                 const t = audioCtx.currentTime + 0.01;
-                [[988, 0, 0.08], [1319, 0.07, 0.18]].forEach(([f, at, dur]) => {   // B5, then E6
+                // "cha": a very short burst of filtered noise
+                const len = Math.floor(audioCtx.sampleRate * 0.05), buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate), d = buf.getChannelData(0);
+                for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+                const noise = audioCtx.createBufferSource(), hp = audioCtx.createBiquadFilter(), ng = audioCtx.createGain();
+                noise.buffer = buf; hp.type = "highpass"; hp.frequency.value = 3000; ng.gain.value = 0.35;
+                noise.connect(hp).connect(ng).connect(audioCtx.destination);
+                noise.start(t);
+                // "ching": a bell (a high note with metallic overtones), struck twice quickly
+                const bell = (at, base) => [[1, 0.22], [2.76, 0.08], [5.4, 0.04]].forEach(([m, vol]) => {
                     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-                    o.type = "triangle";
-                    o.frequency.value = f;
+                    o.type = "sine";
+                    o.frequency.value = base * m;
                     g.gain.setValueAtTime(0.0001, t + at);
-                    g.gain.exponentialRampToValueAtTime(0.2, t + at + 0.01);
-                    g.gain.exponentialRampToValueAtTime(0.0001, t + at + dur);
+                    g.gain.exponentialRampToValueAtTime(vol, t + at + 0.005);
+                    g.gain.exponentialRampToValueAtTime(0.0001, t + at + 0.32);
                     o.connect(g).connect(audioCtx.destination);
-                    o.start(t + at); o.stop(t + at + dur + 0.02);
+                    o.start(t + at); o.stop(t + at + 0.34);
                 });
+                bell(0.05, 1568); bell(0.12, 2093);   // G6, then C7
             } catch (e) {}
         }
 
@@ -2324,6 +2334,7 @@
             if (box.disabled) return;
             box.disabled = true;
             const points = totalScore, before = grandTotal;
+            coinSound();      // 💰 cha-ching, right on the tap
             collectCoins();   // saved at once; the rest is the show
             const run = celebrateRun, here = () => run === celebrateRun && shownEl("summary-screen");
             // the quiz's points stay; the total counts up to its new value, popping on every step
@@ -2336,7 +2347,6 @@
             pic.textContent = "💰";
             pic.animate([{ transform: "scale(0.4)" }, { transform: "scale(1.6)", offset: 0.6 }, { transform: "scale(1)" }], { duration: 450, easing: "ease-out" });
             avatarBurst(["💰", "⭐", "✨"], 16, pic, true);
-            coinSound();
             await new Promise(r => setTimeout(r, 650));
             if (!here()) return finish();
             box.style.display = "none";

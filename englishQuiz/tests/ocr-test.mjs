@@ -1288,14 +1288,14 @@ async function testAvatar() {
   let g = await gif();
   const dogGifs = await page.evaluate(() => AVATAR_GIFS.dog);
   const sceneSay = await page.evaluate(n => GIF_SCENES[n].say, g.scene);
-  check(dogGifs.includes(g.scene) && g.say.includes(sceneSay) && g.he && g.stage.includes('🐶') && g.stage.some(t => ['🦴', '🐾'].includes(t)) && g.moving > 0,
-        `tapping the dog opens one of its GIFs (${g.scene}): the dog with its bones / paws, moving, the cartoon's own line (${sceneSay}) and a Hebrew line (${g.he})`);
+  check(dogGifs.includes(g.scene) && g.say.includes('Woof woof! ' + sceneSay) && g.he && g.stage.includes('🐶') && g.stage.some(t => ['🦴', '🐾'].includes(t)) && g.moving > 0,
+        `tapping the dog opens one of its GIFs (${g.scene}): the dog with its bones / paws, moving, its own "Woof woof!" and the cartoon's own line (${sceneSay}) and a Hebrew line (${g.he})`);
   check(g.fits && await page.$eval('#gif-pop .gp-badge', e => e.textContent === 'GIF'), 'the GIF pop-up is fully on the screen');
   check(!(await page.$eval('#avatar-bubble', e => e.classList.contains('on'))) && !(await page.evaluate(() => typeof avatarWord !== 'undefined')), 'no word to learn any more');
   check(await page.$eval('#menu-avatar', e => e.disabled), 'while the GIF is open the character\'s button is off');
   await new Promise(r => setTimeout(r, 300));
-  check(JSON.stringify(await spoken()) === JSON.stringify([sceneSay]), `it says "${sceneSay}" aloud`);
-  await page.waitForFunction(() => !document.getElementById('gif-pop'), { timeout: 6000 });
+  check(JSON.stringify(await spoken()) === JSON.stringify(['Woof woof!', sceneSay]), `it says "Woof woof!" and "${sceneSay}" aloud`);
+  await page.waitForFunction(() => !document.getElementById('gif-pop'), { timeout: 8000 });
   await turnOver();
   check(true, 'the GIF closes by itself after a few seconds, and the button is on again');
   // the next taps: its other GIFs, in turn; a tap on the pop-up closes it at once
@@ -1341,7 +1341,7 @@ async function testAvatar() {
   await page.click('#menu-avatar');
   await page.waitForSelector('#gif-pop', { timeout: 5000 });
   g = await gif();
-  check(g.imgs > 0 && (await page.evaluate(() => AVATAR_GIFS.capybara)).includes(g.scene) && g.say.includes(await page.evaluate(n => GIF_SCENES[n].say, g.scene)), `the drawn capybara stars in its own GIF (${g.scene})`);
+  check(g.imgs > 0 && (await page.evaluate(() => AVATAR_GIFS.capybara)).includes(g.scene) && g.say.includes("I'm so chill! " + await page.evaluate(n => GIF_SCENES[n].say, g.scene)), `the drawn capybara stars in its own GIF (${g.scene})`);
   await page.setViewport({ width: 320, height: 568 });
   check((await gif()).fits, '320x568: the GIF fits on a small phone');
   await page.click('#gif-pop'); await turnOver();
@@ -1420,7 +1420,7 @@ async function testPictures() {
   await page.evaluate(() => { showStart(); speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 50); });
   await page.click('#menu-avatar');
   await page.waitForSelector('#gif-pop', { timeout: 10000 });
-  check((await page.$eval('#gif-pop', e => e.querySelector('.gp-say').textContent === GIF_SCENES[e.dataset.scene].say)) && !!(await page.$('#gif-pop .gp-stage img.pic-img')), "tapping the capybara: its drawing in a GIF, with that cartoon's own line");
+  check((await page.$eval('#gif-pop', e => e.querySelector('.gp-say').textContent === "I'm so chill! " + GIF_SCENES[e.dataset.scene].say)) && !!(await page.$('#gif-pop .gp-stage img.pic-img')), "tapping the capybara: its drawing in a GIF, with its own phrase and that cartoon's line");
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();
 }

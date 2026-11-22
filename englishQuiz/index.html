@@ -3129,8 +3129,8 @@
             if (!(a.id in gifNext)) gifNext[a.id] = Math.floor(Math.random() * gifs.length);
             const scene = gifs[gifNext[a.id]];
             gifNext[a.id] = (gifNext[a.id] + 1) % gifs.length;
-            const say = GIF_SCENES[scene].say;   // each cartoon has its own English line
-            await Promise.all([moved(move), openGif(a, scene, say), speakTexts([say])]);
+            const say = GIF_SCENES[scene].say;   // the character's own phrase, then the cartoon's own line
+            await Promise.all([moved(move), openGif(a, scene, fx.say + " " + say, 5000), speakTexts([fx.say, say])]);
         }
 
         function avatarBubbleTap() {

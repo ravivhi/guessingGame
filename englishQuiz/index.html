@@ -336,10 +336,9 @@
         .face { font-size: 1.5rem; line-height: 1; padding: 6px 0; border-radius: 10px; background: #fffff0; box-shadow: 0 2px 0 rgba(0,0,0,0.08); }
         .face.missing { background: #edf2f7; font-size: 1rem; padding: 10px 0; opacity: 0.55; box-shadow: none; }
         .face.current { background: #c6f6d5; outline: 3px solid #38a169; }
-        #shop-awards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px; }
-        .award { position: relative; font-size: 1.8rem; line-height: 1; padding: 8px 0; border-radius: 12px; background: #fffff0; box-shadow: 0 2px 0 rgba(0,0,0,0.08); }
-        .award.missing { background: #edf2f7; font-size: 1.2rem; padding: 13px 0; opacity: 0.6; }
-        .award-n { position: absolute; bottom: 1px; left: 3px; font-size: 0.7rem; font-weight: bold; color: #744210; }
+        .wand-area { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 8px; border-radius: 14px; background: #faf5ff; border: 2px solid #d6bcfa; }
+        #shop-wands { font-size: 1.6rem; font-weight: bold; color: #553c9a; white-space: nowrap; }
+        .wand-info { font-size: 0.85rem; color: #553c9a; text-align: start; }
         #box-toast { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 50; padding: 10px 16px; border-radius: 16px;
                      background: #fffaf0; border: 3px solid #f6ad55; color: #744210; font-weight: bold; box-shadow: 0 6px 16px rgba(0,0,0,0.2);
                      width: max-content; max-width: calc(100% - 28px); box-sizing: border-box; text-align: center; pointer-events: none; display: none; }
@@ -497,6 +496,7 @@
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
+                <div id="menu-wands" title="שרביטי קסמים: בבוחן הם מראים את התשובה הנכונה" style="font-weight:bold;color:#6b46c1;white-space:nowrap;"></div>
                 <div id="menu-streak" aria-hidden="true" style="font-size:1.6rem;line-height:1.2;"></div>
                 <div id="menu-streak-count" title="שלב האימוג׳י" style="font-weight:bold;color:#2b6cb0;"></div>
             </div>
@@ -563,7 +563,7 @@
             <!-- the gap between the word and the answers; the big streak emoji appears inside it -->
             <div style="min-height:clamp(20px, 11vh, 90px);position:relative;display:flex;align-items:center;justify-content:center;">
                 <div id="streak-emoji" aria-hidden="true"></div>
-                <button type="button" id="wand-btn" onclick="useWand()" aria-label="שרביט קסמים: מראה את התשובה הנכונה" title="שרביט קסמים: מראה את התשובה הנכונה" style="display:none;">🪄<span id="wand-count"></span></button>
+                <button type="button" id="wand-btn" onclick="useWand()" aria-label="שרביט קסמים: מראה את התשובה הנכונה" title="שרביט קסמים: מראה את התשובה הנכונה" disabled>🪄<span id="wand-count"></span></button>
             </div>
             <div class="answers-grid" id="answers-container"></div>
         </div>
@@ -584,8 +584,11 @@
                 </div>
                 <div class="shop-section">😊 הפרצופים שלי <span id="faces-count"></span></div>
                 <div id="shop-faces"></div>
-                <div class="shop-section">הפרסים מקופסאות ההפתעה</div>
-                <div id="shop-awards"></div>
+                <div class="shop-section">🪄 שרביטי הקסמים שלי</div>
+                <div class="wand-area">
+                    <div id="shop-wands"></div>
+                    <div class="wand-info">מקבלים שרביט בכל קופסה בסוף בוחן, ולפעמים גם בקופסת ההפתעה. בבוחן לוחצים עליו והוא מראה את התשובה הנכונה!</div>
+                </div>
                 <div class="shop-section">🧸 דמויות</div>
                 <div class="shop-grid" id="shop-avatars"></div>
                 <div class="shop-section">🎨 רקעים</div>
@@ -698,7 +701,7 @@
             shop.wands = (shop.wands || 0) + 1;
             pendingCoins = 0;
             try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
-            saveShop();
+            saveShop(); showWands();
             savePending();
             showGrandTotal();
             return n;
@@ -799,9 +802,15 @@
         // 🪄 The magic wand: one tap shows the right answer (it glows, the others fade). The word then gives no point
         // and takes none away, the streak stays as it is, and it goes to "practise the words I got wrong".
         let wandUsed = false;
+        // how many wands: on the main screen (next to the points, only once there are any) and in the shop
+        function showWands() {
+            const n = shop.wands || 0, menu = document.getElementById("menu-wands"), sh = document.getElementById("shop-wands");
+            if (menu) menu.textContent = n ? `🪄 ${n}` : "";
+            if (sh) sh.textContent = `🪄 × ${n}`;
+        }
         function updateWandBtn() {
             const b = document.getElementById("wand-btn"), n = shop.wands || 0;
-            b.style.display = n || wandUsed ? "" : "none";
+            b.style.display = "";
             document.getElementById("wand-count").textContent = n;
             b.disabled = wandUsed || !n;
         }
@@ -818,7 +827,7 @@
         function useWand() {
             if (!canAnswer || wandUsed || !(shop.wands > 0) || currentIndex >= wordsData.length) return;
             shop.wands--;
-            saveShop();
+            saveShop(); showWands();
             wandUsed = true;
             const cur = wordsData[currentIndex];
             if (!missed.includes(cur)) missed.push(cur);
@@ -2461,14 +2470,24 @@
             { id: "bronze", pic: "🥉", name: "מדליית ארד" }, { id: "silver", pic: "🥈", name: "מדליית כסף" },
             { id: "gold", pic: "🥇", name: "מדליית זהב" }, { id: "trophy", pic: "🏆", name: "גביע" }, { id: "crown", pic: "👑", name: "כתר" },
         ];
+        // What's inside: half the boxes hold a magic wand, a third 50 coins, a sixth 100 coins.
+        // (Medals / trophies from older boxes stay saved in shop.awards.)
         function openBox() {
             if (!(shop.boxes > 0)) return;
             shop.boxes--;
-            const awards = shop.awards || (shop.awards = {});
-            const fresh = SHOP_AWARDS.filter(a => !awards[a.id]), pool = fresh.length ? fresh : SHOP_AWARDS;
-            const it = pool[Math.min(pool.length - 1, Math.floor(Math.random() * pool.length))];
-            awards[it.id] = (awards[it.id] || 0) + 1;
-            saveShop(); applyShop();
+            const r = Math.random();
+            let it;
+            if (r < 0.5) {
+                shop.wands = (shop.wands || 0) + 1;
+                it = { id: "wand", pic: "🪄", name: "שרביט קסמים", wand: true };
+            } else {
+                const coins = r < 0.5 + 1 / 3 ? 50 : 100;
+                it = { id: "coins", pic: "💰", name: `${coins} נקודות`, coins };
+                grandTotal += coins;
+                try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
+                showGrandTotal();
+            }
+            saveShop(); applyShop(); showWands();
             shopConfirm = null;
             const box = document.getElementById("box-pic"), msg = document.getElementById("shop-msg"), btn = document.getElementById("box-open");
             btn.disabled = true;
@@ -2479,7 +2498,8 @@
                 box.classList.remove("shake");
                 box.textContent = it.pic;
                 msg.style.color = "#2f855a";
-                msg.textContent = `🎉 בקופסה: ${it.pic} ${it.name}!` + (awards[it.id] > 1 ? ` (עכשיו יש לכם ${awards[it.id]})` : "");
+                msg.textContent = `🎉 בקופסה: ${it.pic} ${it.name}!` + (it.wand ? ` (עכשיו יש לכם ${shop.wands})` : "");
+                avatarBurst(it.coins ? ["💰", "⭐", "✨"] : ["🪄", "✨", "⭐"], 14, box, true);
                 playUnlockSound();
                 renderShop();
             }, 650);
@@ -2587,6 +2607,7 @@
             const sb = document.getElementById("shop-btn");   // a red count on the shop button while boxes wait to be opened
             if (shop.boxes > 0) sb.dataset.boxes = shop.boxes; else delete sb.dataset.boxes;
             putPic(document.getElementById("game-avatar"), a);
+            showWands();
             document.body.style.setProperty("--bg", t.bg);   // (a picture background starts as its colors, the picture comes a moment later)
             document.body.classList.toggle("pic-theme", !!t.scene);
             if (t.scene) paintScene(t);
@@ -2743,7 +2764,7 @@
             document.getElementById("shop-balance").textContent = `⭐ ${grandTotal}`;
             const boxes = shop.boxes || 0;
             document.getElementById("box-count").textContent = boxes ? `יש לכם ${boxes} ${boxes === 1 ? "קופסה" : "קופסאות"}!` : "אין לכם קופסה עדיין";
-            document.getElementById("box-hint").textContent = `מגיעים לפרצוף האחרון = קופסה! עוד ${Math.max(0, BOX_GOAL - streak)} נכונות ברצף`;
+            document.getElementById("box-hint").textContent = `הקופסה מגיעה כשאוספים את כל הפרצופים! (עוד ${Math.max(0, BOX_GOAL - streak)} נכונות ברצף)`;
             const stage = streakStage(streak), faces = document.getElementById("shop-faces");   // faces 1..current stage
             faces.innerHTML = "";
             STREAK_EMOJIS.forEach((e, i) => {
@@ -2753,17 +2774,7 @@
                 faces.appendChild(d);
             });
             document.getElementById("faces-count").textContent = `(${stage}/${STREAK_EMOJIS.length})`;
-            const aw = document.getElementById("shop-awards"), mine = shop.awards || {};   // the collection; missing ones as ❓
-            aw.innerHTML = "";
-            for (const a of SHOP_AWARDS) {
-                const d = document.createElement("div");
-                d.className = "award" + (mine[a.id] ? "" : " missing");
-                d.dataset.id = a.id;
-                d.title = mine[a.id] ? a.name : "עוד לא נמצא";
-                d.textContent = mine[a.id] ? a.pic : "❓";
-                if (mine[a.id] > 1) { const n = document.createElement("span"); n.className = "award-n"; n.textContent = "×" + mine[a.id]; d.appendChild(n); }
-                aw.appendChild(d);
-            }
+            showWands();
             document.getElementById("box-open").disabled = !boxes;
             const fill = (boxId, items, kind) => {
                 const box = document.getElementById(boxId);

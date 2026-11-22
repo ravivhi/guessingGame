@@ -1099,8 +1099,11 @@ async function testBox() {
   }, right);
 
   await page.click('#shop-btn');
-  check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('לפרצוף האחרון'), 'the shop has a mystery box section: no box yet, and it says how to get one');
-  check((await page.$$('#shop-awards .award.missing')).length === 5, 'the prizes: 5 ❓ (none found yet)');
+  check((await text('box-count')).includes('אין') && await page.$eval('#box-open', e => e.disabled) && (await text('box-hint')).includes('כשאוספים את כל הפרצופים'), 'the shop has a mystery box section: no box yet, and it says how to get one');
+  check(!(await page.$('#shop-awards')) && (await text('shop-wands')) === '🪄 × 0' && (await text('menu-wands')) === '', 'instead of the prizes the shop shows the magic wands (0); the main screen shows none while there are none');
+  await page.evaluate(() => { shop.wands = 3; saveShop(); renderShop(); applyShop(); });
+  check((await text('shop-wands')) === '🪄 × 3' && (await text('menu-wands')) === '🪄 3', 'with 3 wands: 🪄 × 3 in the shop, 🪄 3 on the main screen next to the points');
+  await page.evaluate(() => { shop.wands = 0; saveShop(); renderShop(); applyShop(); });
   const faces = () => page.$$eval('#shop-faces .face', fs => fs.map(f => (f.classList.contains('current') ? '*' : '') + f.textContent));
   check((await faces()).length === 30 && (await faces()).every(f => f === '❓'), 'the faces: 30 hidden ❓ before the first one is reached');
   await page.evaluate(() => { streak = 25; updateStreakEmoji(); renderShop(); });
@@ -1133,29 +1136,35 @@ async function testBox() {
   check((await page.$$('#shop-faces .face.missing')).length === 30, 'after the box the faces start over too (all hidden again)');
   await page.evaluate(() => showStart());
 
-  // opening: a trophy or medal you don't have yet
+  // opening: half the boxes hold a magic wand, the rest 50 or 100 coins
   await page.click('#shop-btn');
   check((await text('box-count')).includes('1') && !(await page.$eval('#box-open', e => e.disabled)), 'the shop: 1 box to open');
   await page.evaluate(() => { Math.random = () => 0; });
   await page.click('#box-open');
   await new Promise(r => setTimeout(r, 900));
-  const first = await page.evaluate(() => SHOP_AWARDS[0]);
-  check((await saved()).boxes === 0 && (await saved()).awards[first.id] === 1, `opening the box gives a trophy / medal (${first.pic} ${first.name})`);
-  check((await text('box-pic')) === first.pic && (await text('shop-msg')).includes(first.name) && (await page.evaluate(() => window.unlockSounds)) === 2, 'the box shows what was inside, with the happy sound');
+  check((await saved()).boxes === 0 && (await saved()).wands === 1 && !Object.keys((await saved()).awards || {}).length, 'opening the box can give a magic wand (saved; no medal)');
+  check((await text('box-pic')) === '🪄' && (await text('shop-msg')).includes('שרביט קסמים') && (await page.evaluate(() => window.unlockSounds)) === 2, 'the box shows the wand, with the happy sound');
+  check((await text('shop-wands')) === '🪄 × 1' && (await text('menu-wands')) === '🪄 1', 'the wand counts go up (🪄 1)');
   check(await page.$eval('#box-open', e => e.disabled) && (await page.$eval('#shop-btn', e => e.dataset.boxes)) === undefined, 'no boxes left: the button is off and the red count is gone');
-  check((await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.className)) === 'award' && (await page.$$('#shop-awards .award.missing')).length === 4, 'it shows with the prizes (4 still missing)');
-  // the next box gives a new one; after all 10, doubles
   await page.evaluate(() => { shop.boxes = 1; saveShop(); renderShop(); });
   await page.click('#box-open');
   await new Promise(r => setTimeout(r, 900));
-  check(Object.keys((await saved()).awards).length === 2, 'the next box gives one you do not have yet');
-  await page.evaluate(() => { for (const a of SHOP_AWARDS) shop.awards[a.id] = 1; shop.boxes = 1; saveShop(); renderShop(); });
-  await page.click('#box-open');
-  await new Promise(r => setTimeout(r, 900));
-  check((await saved()).awards[first.id] === 2 && (await page.$eval(`#shop-awards .award[data-id="${first.id}"]`, e => e.textContent)).includes('×2'), 'with all 5 prizes, a box gives a second one (×2)');
+  check((await saved()).wands === 2 && (await text('shop-msg')).includes('2'), 'another wand: now 2');
   await page.reload();
-  check(await vis('shop-screen'), 'after a reload the app reopens in the shop');
-  check((await page.$$('#shop-awards .award.missing')).length === 0, 'the collection is saved on the device');
+  check(await vis('shop-screen') && (await page.evaluate(() => shop.wands)) === 2, 'after a reload the app reopens in the shop and the wands are kept');
+  for (const [r, coins] of [[0.6, 50], [0.95, 100]]) {
+    const before = await page.evaluate(r => { Math.random = () => r; shop.boxes = 1; saveShop(); renderShop(); return { total: grandTotal, wands: shop.wands }; }, r);
+    await page.click('#box-open');
+    await new Promise(res => setTimeout(res, 900));
+    const after = await page.evaluate(() => ({ total: grandTotal, saved: +localStorage.getItem(TOTAL_KEY), wands: shop.wands, boxes: shop.boxes }));
+    check(after.total === before.total + coins && after.saved === after.total && after.wands === before.wands && after.boxes === 0, `a box can give ${coins} coins instead (saved: ${after.total})`);
+    check((await text('box-pic')) === '💰' && (await text('shop-msg')).includes(`${coins} נקודות`) && (await text('shop-balance')).includes(String(after.total)), `it shows 💰 "${coins} נקודות" and the new balance`);
+  }
+  const odds = await page.evaluate(() => { const out = { wand: 0, 50: 0, 100: 0 }; const real = Math.random;
+    for (let k = 0; k < 600; k++) { const r = k / 600; Math.random = () => r; shop.boxes = 1; const t = grandTotal, w = shop.wands; openBox();
+      if (grandTotal - t === 50) out[50]++; else if (grandTotal - t === 100) out[100]++; else if (shop.wands === w + 1) out.wand++; }
+    Math.random = real; return out; });
+  check(odds.wand === 300 && odds[50] === 200 && odds[100] === 100, `half the boxes give a wand, a third 50 coins, a sixth 100 coins (${JSON.stringify(odds)})`);
 
   for (const [w, h] of [[320, 568], [390, 844]]) {
     await page.setViewport({ width: w, height: h });
@@ -1388,10 +1397,11 @@ async function testWand() {
   const shown = sel => page.$eval(sel, e => getComputedStyle(e).display !== 'none');
 
   await page.evaluate(() => { showStart(); startFromInput(); });
-  check(!(await shown('#wand-btn')), 'without a wand there is no wand button in the quiz');
+  check(await shown('#wand-btn') && await page.$eval('#wand-btn', e => e.disabled) && (await page.$eval('#wand-count', e => e.textContent)) === '0', 'without a wand the wand button shows 0 and is disabled');
   await finishQuiz();
   await page.click('#coin-box');
   check((await wands()) === '1,1', 'opening the box gives a magic wand (saved)');
+  check((await page.$eval('#menu-wands', e => e.textContent)) === '🪄 1' && (await page.$eval('#shop-wands', e => e.textContent)) === '🪄 × 1', 'the main screen and the shop count it (🪄 1)');
   await page.waitForFunction(() => document.getElementById('box-toast').classList.contains('on'), { timeout: 3000 }).catch(() => {});
   check((await page.$eval('#box-toast', e => e.textContent)).includes('שרביט קסמים'), 'a note says a magic wand was won');
 
@@ -1404,6 +1414,7 @@ async function testWand() {
     return { magic: bs.filter(b => b.classList.contains('magic')).map(b => b.innerText), c, othersOff: bs.filter(b => b.innerText !== c).every(b => b.disabled && b.classList.contains('faded')) }; });
   check(st.magic.length === 1 && st.magic[0] === st.c && st.othersOff, 'tapping the wand makes the right answer glow; the other answers fade and cannot be tapped');
   check((await wands()) === '0,0' && await page.$eval('#wand-btn', e => e.disabled), 'the wand is used up (saved), once per question');
+  check((await page.$eval('#menu-wands', e => e.textContent)) === '' && (await page.$eval('#shop-wands', e => e.textContent)) === '🪄 × 0', 'the counts go down too (none left: nothing on the main screen, 0 in the shop)');
   // reopening the app in the middle of that question: still shown, the wand is not given back
   await page.reload({ waitUntil: 'load' });
   await page.waitForFunction(() => getComputedStyle(document.getElementById('game-screen')).display !== 'none', { timeout: 10000 });
@@ -1413,7 +1424,7 @@ async function testWand() {
   const after = await page.evaluate(() => ({ score: totalScore, streak, missed: missed.length }));
   check(after.score === before.score && after.streak === before.streak && after.missed === 1, 'the word answered with the wand gives no point, takes none, keeps the streak and goes to the practice list');
   await page.evaluate(() => { clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion(); });
-  check(!(await shown('#wand-btn')), 'with no wands left the button is gone on the next question');
+  check(await shown('#wand-btn') && await page.$eval('#wand-btn', e => e.disabled) && (await page.$eval('#wand-count', e => e.textContent)) === '0', 'with no wands left the button stays disabled (0) on the next question');
 
   // no limit: every box gives one more, even boxes collected without opening them
   await finishQuiz(); await page.evaluate(() => showStart());   // left closed

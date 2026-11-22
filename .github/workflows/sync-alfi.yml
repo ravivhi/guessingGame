@@ -5,9 +5,9 @@
 # alfi collaborators can change only what ends up in alfi/, never anything else here.
 name: Sync alfi from ravivhi/alfi
 
-# Manual only: the owner reviews ravivhi/alfi changes, then publishes them with
-# Actions → "Sync alfi from ravivhi/alfi" → Run workflow. (alfi collaborators push
-# to its main without review, so this click is the approval step for the kids' app.)
+# Started automatically by ravivhi/alfi's publish.yml on every push to its main that changes
+# web/ (it holds a token that can only start workflows here, not change code), or by hand with
+# Actions → "Sync alfi from ravivhi/alfi" → Run workflow.
 on:
   workflow_dispatch:
 

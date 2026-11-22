@@ -2202,20 +2202,34 @@
             } catch (e) {}   // e.g. the word bank can't be loaded offline: stay on the start screen
         }
 
-        // The phone's back button: one extra history entry catches it. A pop-up closes; in a quiz it asks
-        // before leaving (like the leave button); other screens go back to the start screen; on the start
-        // screen it leaves the app.
+        // The phone's back button: an extra history entry (the "trap") catches it. A pop-up closes; in a quiz it
+        // asks before leaving (like the leave button); other screens go back to the start screen.
+        // The trap is there only while it is needed - on another screen than the start screen, or with a pop-up
+        // open - so on the start screen back leaves the app at the first press. It is added when the user taps
+        // into another screen: Chrome's back button skips history entries a page adds before the user touched
+        // it, so an entry added at page load would let back close the app.
         history.replaceState({ eq: 0 }, "");
-        history.pushState({ eq: 1 }, "");
+        let backTrap = false, skipPops = 0;
+        const shownEl = id => getComputedStyle(document.getElementById(id)).display !== "none";
+        function updateBackTrap() {
+            const need = !shownEl("start-screen") || !!document.querySelector("[data-dialog]");
+            if (need && !backTrap) { backTrap = true; history.pushState({ eq: 1 }, ""); }
+            else if (!need && backTrap) { backTrap = false; skipPops++; history.back(); }   // remove the unused trap
+        }
         window.addEventListener("popstate", () => {
-            const stay = () => history.pushState({ eq: 1 }, "");
-            const shown = id => getComputedStyle(document.getElementById(id)).display !== "none";
+            if (skipPops) { skipPops--; return; }   // our own history.back() above
+            backTrap = false;                        // the back button used the trap up
             const dialog = [...document.querySelectorAll("[data-dialog]")].pop();
-            if (dialog) { dialog.click(); return stay(); }   // a click on the dark background cancels it
-            if (shown("game-screen")) { leaveGame(); return stay(); }
-            if (["summary-screen", "learn-screen", "learn-done-screen", "shop-screen"].some(shown)) { showStart(); return stay(); }
-            history.back();
+            if (dialog) dialog.click();              // a click on the dark background cancels it
+            else if (shownEl("game-screen")) leaveGame();
+            else if (!shownEl("start-screen")) showStart();
+            updateBackTrap();                        // still needed (e.g. the "leave the quiz?" pop-up): set it again
         });
+        // any screen change or pop-up updates the trap
+        const trapWatch = new MutationObserver(updateBackTrap);
+        trapWatch.observe(document.body, { childList: true });
+        for (const id of ["start-screen", "game-screen", "summary-screen", "learn-screen", "learn-done-screen", "shop-screen"])
+            trapWatch.observe(document.getElementById(id), { attributes: true, attributeFilter: ["style"] });
         restoreSession();
     </script>
 </body>

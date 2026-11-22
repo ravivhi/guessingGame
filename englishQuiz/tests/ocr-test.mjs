@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist   (pairs/list take a file-name part too: node ocr-test.mjs list quarter)
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist|learn|shop|box|phoneback   (pairs/list take a file-name part too: node ocr-test.mjs list quarter)
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -1147,7 +1147,75 @@ async function testBox() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox };
+// The phone's back button (it fires popstate like history.back() does). The page keeps one extra history entry (the
+// "trap", history.state.eq === 1) only while it is needed: off the start screen or with a pop-up open. It is added
+// when the user taps into another screen (Chrome's back button skips entries added before any tap), and removed
+// back on the start screen, so there back leaves the app at the first press. History must never pile up.
+async function testPhoneBack() {
+  console.log('\n[phoneback] the phone back button');
+  const page = await openPage();
+  const cdp = await page.createCDPSession();
+  const hist = async () => { const h = await cdp.send('Page.getNavigationHistory'); return { index: h.currentIndex, length: h.entries.length, eq: await page.evaluate(() => history.state && history.state.eq) }; };
+  const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
+  const settle = () => new Promise(r => setTimeout(r, 150));
+  const back = async () => { await page.evaluate(() => history.back()); await settle(); };
+  const dialog = () => page.$('[data-dialog]');
+  const clickText = t => page.evaluate(t => [...document.querySelectorAll('button')].find(b => b.innerText.trim() === t).click(), t);
+
+  const base = await hist();
+  check(base.eq === 0 && base.index === base.length - 1, `start screen: no trap, so back leaves the app (${JSON.stringify(base)})`);
+
+  // a quiz: back asks before leaving; back again cancels that question; leaving goes to the start screen
+  await page.evaluate(() => { document.getElementById('words-input').value = 'apple\tתפוח\ndog\tכלב\ncat\tחתול\nsun\tשמש'; renderWords(); });
+  await page.click('#start-btn'); await settle();
+  check((await hist()).eq === 1, 'tapping into a quiz sets the trap');
+  await back();
+  check(await vis('game-screen') && !!(await dialog()) && (await hist()).eq === 1, 'back in a quiz asks before leaving, and the trap is set again');
+  await back();
+  check(await vis('game-screen') && !(await dialog()) && (await hist()).eq === 1, 'back again closes the question and stays in the quiz');
+  await back();
+  await clickText('חזרה לתפריט'); await settle();
+  let h = await hist();
+  check(await vis('start-screen') && h.eq === 0 && h.index === base.index, `confirming goes to the start screen and the trap is removed (${JSON.stringify(h)})`);
+
+  // the shop, many times: back to the start screen, history does not pile up
+  for (let i = 0; i < 3; i++) { await page.click('#shop-btn'); await settle(); await back(); }
+  h = await hist();
+  check(await vis('start-screen') && !(await vis('shop-screen')) && h.eq === 0 && h.index === base.index && h.length <= base.length + 1, `shop -> back -> start screen, 3 times, no history piling up (${JSON.stringify(h)})`);
+  // the in-app back button of the shop removes the trap too
+  await page.click('#shop-btn'); await settle(); await page.click('#shop-back'); await settle();
+  h = await hist();
+  check(h.eq === 0 && h.index === base.index, 'the shop\'s own back button removes the trap');
+
+  // a pop-up on the start screen: back closes it and stays
+  await page.evaluate(() => { clearWords(); }); await settle();
+  check(!!(await dialog()) && (await hist()).eq === 1, 'a pop-up on the start screen sets the trap');
+  await back();
+  h = await hist();
+  check(!(await dialog()) && await vis('start-screen') && h.eq === 0 && h.index === base.index && (await page.$$eval('#words-table tbody tr', r => r.length)) === 4, 'back closes it (nothing cleared), the trap is gone');
+
+  // the summary and the learning screens go back to the start screen
+  await page.click('#start-btn'); await settle();
+  for (let k = 0; k < 4; k++) { await page.evaluate(() => { const c = wordsData[currentIndex].correct; [...document.querySelectorAll('#answers-container button')].find(b => b.innerText === c).click(); }); await new Promise(r => setTimeout(r, 650)); }
+  check(await vis('summary-screen') && (await hist()).eq === 1, 'the summary keeps the trap');
+  await back();
+  check(await vis('start-screen') && (await hist()).eq === 0, 'back from the summary goes to the start screen');
+  await page.evaluate(() => startLearning(1, 0)); await new Promise(r => setTimeout(r, 500));
+  check(await vis('learn-screen') && (await hist()).eq === 1, 'the learning cards set the trap');
+  await back();
+  check(await vis('start-screen') && (await hist()).eq === 0, 'back from the learning cards goes to the start screen');
+
+  // reopened on another screen (the app remembers where it was): the trap is set there too
+  await page.click('#shop-btn'); await settle();
+  await page.reload({ waitUntil: 'load' }); await settle();
+  check(await vis('shop-screen') && (await hist()).eq === 1, 'reopened in the shop: the trap is set');
+  await back();
+  check(await vis('start-screen') && (await hist()).eq === 0, 'and back goes to the start screen');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

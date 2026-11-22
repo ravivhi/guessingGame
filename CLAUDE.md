@@ -14,6 +14,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `ehadi/` (served at ravivh.com/ehadi/) is synced from the public repo **ravivhi/ehadi** by `.github/workflows/sync-ehadi.yml` (tests/, android/, play-assets/, tts-proxy/ and repo files are excluded). Like alfi, it runs automatically on every push to ehadi's main that changes the web app (ehadi's publish.yml, same Actions-only token), or by hand. Make ehadi changes in that repo. Same pull-only rule as alfi.
 
+`android-englishQuiz/` is the English Quiz Android app (Bubblewrap TWA, com.raviv.englishQuiz; merged in from the old local englishQuizApp folder). The Guessing Game Android app is the Bubblewrap project at the repo root (only twa-manifest.json is tracked). Both load the website, so web changes need no rebuild. Keys stay in `C:\Users\Raviv.Hilleli\signing-keys\<app>` (never commit them); never run `bubblewrap update` (reverts targetSdk 36); `android-englishQuiz/twa-manifest.json` must stay LF (its sha1 is in manifest-checksum.txt). Everything committed here is public on ravivh.com.
+
 ## Development
 
 No build step, no package manager, no dependencies. To develop:

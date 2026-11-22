@@ -7,7 +7,7 @@ Nov 12, 2026 · Raviv Hilleli
 A new app goes from a PWA folder on ravivh.com to a Play closed test in six steps; plan on 14+ days of closed testing before production.
 
 1. Put the PWA live on ravivh.com (GitHub Pages repo `guessingGame`), with its own icons and a privacy page.
-2. Build a signed `.aab` with Bubblewrap in its own folder (e.g. `C:\Users\Raviv.Hilleli\englishQuizApp`).
+2. Build a signed `.aab` with Bubblewrap in its own folder (e.g. `android-englishQuiz/` in this repo). Keep the keystore in `C:\Users\Raviv.Hilleli\signing-keys\<app>`, never in the repo: everything committed here is public.
 3. Create the app in Play Console.
 4. Fill the App content declarations.
 5. Fill the store listing and store settings.

@@ -17,7 +17,7 @@
   "maskableIconUrl": "https://ravivh.com/englishQuiz/icons/icon-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "./android.keystore",
+    "path": "C:/Users/Raviv.Hilleli/signing-keys/englishQuiz/android.keystore",
     "alias": "englishpractice"
   },
   "appVersionName": "1.0.0.2",

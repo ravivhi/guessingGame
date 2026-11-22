@@ -277,38 +277,36 @@
         .path-title { font-weight: bold; color: #553c9a; font-size: 1.05rem; }
         #path-progress { font-weight: bold; color: #2b6cb0; font-size: 0.95rem; white-space: nowrap; }
         #cat-list { flex: 1 1 auto; min-height: 96px; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 4px 8px 12px; }
+        /* a part of the learning path: white until its quiz is passed, then green with ✅ */
         .cat-step {
-            display: flex; align-items: center; gap: 12px; flex: none;
-            width: 100%; padding: 10px 14px;
-            border: none; border-radius: 18px;
-            font-family: inherit; text-align: right; color: #fff;
-            cursor: pointer; touch-action: manipulation;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 8px; flex: none;
+            width: 100%; padding: 8px 10px;
+            border: 2px solid #e2e8f0; border-radius: 18px; background: #fff;
+            text-align: right; color: #2d3748;
         }
         .cat-step .cat-emoji {
-            flex: none; width: 2.7rem; height: 2.7rem;
+            flex: none; width: 2.5rem; height: 2.5rem;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; line-height: 1;
-            background: rgba(255,255,255,0.35); border-radius: 50%;
+            font-size: 1.6rem; line-height: 1;
+            background: #edf2f7; border-radius: 50%;
         }
         .cat-step .cat-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-        .cat-step .cat-name { font-size: 1.05rem; font-weight: bold; }
-        .cat-step .cat-meta { font-size: 0.8rem; opacity: 0.9; }
-        .cat-step .cat-state { flex: none; font-size: 1.4rem; }
-        .cat-row { display: flex; gap: 8px; align-items: stretch; }
+        .cat-step .cat-name { font-size: 1rem; font-weight: bold; overflow-wrap: anywhere; }
+        .cat-step .cat-meta { font-size: 0.78rem; opacity: 0.85; }
+        .cat-step .cat-state { flex: none; font-size: 1.3rem; }
+        .cat-step.done { background: linear-gradient(135deg, #38a169, #68d391); border-color: #2f855a; color: #fff; }
+        .cat-step.done .cat-emoji { background: rgba(255,255,255,0.35); }
+        .cat-row { display: flex; gap: 6px; align-items: stretch; }
         .cat-row > .cat-step { flex: 1; min-width: 0; }
-        .cat-quiz-space { flex: none; width: 56px; }
-        .cat-quiz { flex: none; width: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-                    border: none; border-radius: 18px; color: #fff; font-family: inherit; font-size: 0.85rem; font-weight: bold; cursor: pointer;
-                    background: linear-gradient(135deg, #5a67d8, #9f7aea); box-shadow: 0 4px 0 rgba(0,0,0,0.15); }
-        .cat-quiz .cat-quiz-icon { font-size: 1.4rem; line-height: 1; }
-        @media (max-width: 360px) { .cat-quiz, .cat-quiz-space { width: 46px; } .cat-quiz { font-size: 0.75rem; border-radius: 14px; } .cat-row { gap: 6px; } }
-        .cat-quiz:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.15); }
-        .cat-step.done { background: linear-gradient(135deg, #38a169, #68d391); }
-        .cat-step.current { background: linear-gradient(135deg, #dd6b20, #f6ad55); animation: stepPulse 1.4s ease-in-out infinite; }
-        .cat-step.locked { background: #edf2f7; color: #a0aec0; box-shadow: none; cursor: not-allowed; }
-        .cat-step.locked .cat-emoji { filter: grayscale(1); opacity: 0.5; }
-        @keyframes stepPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+        /* the 📖 learn and 📝 quiz buttons next to each part */
+        .cat-btn { flex: none; width: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px 0;
+                   border: none; border-radius: 16px; color: #fff; font-family: inherit; font-size: 0.8rem; font-weight: bold; cursor: pointer;
+                   touch-action: manipulation; box-shadow: 0 4px 0 rgba(0,0,0,0.15); }
+        .cat-btn .cat-btn-icon { font-size: 1.35rem; line-height: 1; }
+        .cat-learn { background: linear-gradient(135deg, #dd6b20, #f6ad55); }
+        .cat-quiz { background: linear-gradient(135deg, #5a67d8, #9f7aea); }
+        .cat-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+        @media (max-width: 360px) { .cat-btn { width: 44px; font-size: 0.72rem; border-radius: 14px; } .cat-row { gap: 5px; } .cat-step .cat-emoji { width: 2.1rem; height: 2.1rem; font-size: 1.35rem; } }
 
         /* 🛒 the shop: points buy a character (shown on the main screen) and a background */
         #start-screen { position: relative; }
@@ -1698,12 +1696,17 @@
 
         // ---- 📚 Learning path. Each level's categories in file order; a big category is split into parts of
         // up to 15 words. Learning = cards with the English word (read aloud) and its Hebrew meaning together,
-        // then a short quiz on those words; finishing it with no mistakes opens the next part.
-        // Finished parts can be learned again any time.
-        const LEARN_KEY = "englishquiz-learn-progress";   // { level: how many parts are finished, in order }
+        // then a short quiz on those words; finishing it with no mistakes marks the part as passed (green).
+        // Every part is open - learn or take the quiz of any part, in any order, any time.
+        const LEARN_KEY = "englishquiz-learn-progress";   // { level: [indexes of the passed parts] }
         const PART_MAX = 15;
         let learnProgress = {};
         try { learnProgress = JSON.parse(localStorage.getItem(LEARN_KEY)) || {}; } catch (e) {}
+        // older versions saved how many parts were passed in order (a number): those are the first N parts
+        function passedSet(level) {
+            const v = learnProgress[level];
+            return new Set(Array.isArray(v) ? v : Array.from({ length: Math.max(0, +v || 0) }, (_, i) => i));
+        }
         const CAT_EMOJIS = [
             [/מקצועות לימוד|בית ספר|בית הספר|חינוך|למידה|קריאה וכתיבה/, "🏫"], [/ברכות/, "👋"], [/מספרים/, "🔢"],
             [/צבעים/, "🎨"], [/משפחה/, "👨‍👩‍👧"], [/חיות מחמד/, "🐶"], [/חיות בר/, "🦁"], [/צמחים/, "🌱"], [/בעלי חיים/, "🐾"],
@@ -1743,37 +1746,41 @@
             try { words = await loadLevel(level); }
             catch (e) { if (token === pathToken) { list.innerHTML = ""; status.textContent = "לא הצלחנו לטעון את מאגר המילים – בדקו את החיבור לאינטרנט."; } return; }
             if (token !== pathToken) return;   // the level was changed meanwhile
-            const steps = learnSteps(words), done = Math.min(learnProgress[level] || 0, steps.length);
+            const steps = learnSteps(words), passed = passedSet(level);
             list.innerHTML = "";
+            // each row: the part (green with ✅ once its quiz was passed), a 📖 learn button and a 📝 quiz button
+            const rowButton = (cls, icon, label, aria, onclick) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "cat-btn " + cls;
+                btn.innerHTML = '<span class="cat-btn-icon"></span><span></span>';
+                btn.firstChild.textContent = icon;
+                btn.lastChild.textContent = label;
+                btn.setAttribute("aria-label", aria);
+                btn.onclick = onclick;
+                return btn;
+            };
             steps.forEach((s, i) => {
-                const state = i < done ? "done" : i === done ? "current" : "locked";
-                const b = document.createElement("button");
-                b.type = "button";
-                b.className = "cat-step " + state;
-                b.disabled = state === "locked";
-                b.innerHTML = '<span class="cat-emoji"></span><span class="cat-text"><span class="cat-name"></span><span class="cat-meta"></span></span><span class="cat-state"></span>';
-                b.querySelector(".cat-emoji").textContent = catEmoji(s.name);
-                b.querySelector(".cat-name").textContent = `${i + 1}. ${s.name}`;
-                b.querySelector(".cat-meta").textContent = (s.part ? `חלק ${s.part} מתוך ${s.parts} · ` : "") + `${s.words.length} מילים`;
-                b.querySelector(".cat-state").textContent = state === "done" ? "✅" : state === "current" ? "▶️" : "🔒";
-                b.onclick = () => startLearning(level, i);
+                const done = passed.has(i);
+                const card = document.createElement("div");
+                card.className = "cat-step" + (done ? " done" : "");
+                card.innerHTML = '<span class="cat-emoji"></span><span class="cat-text"><span class="cat-name"></span><span class="cat-meta"></span></span><span class="cat-state"></span>';
+                card.querySelector(".cat-emoji").textContent = catEmoji(s.name);
+                card.querySelector(".cat-name").textContent = `${i + 1}. ${s.name}`;
+                card.querySelector(".cat-meta").textContent = (s.part ? `חלק ${s.part} מתוך ${s.parts} · ` : "") + `${s.words.length} מילים`;
+                card.querySelector(".cat-state").textContent = done ? "✅" : "";
                 const row = document.createElement("div");
                 row.className = "cat-row";
-                row.appendChild(b);
-                if (state !== "locked") {
-                    const q = document.createElement("button");
-                    q.type = "button";
-                    q.className = "cat-quiz " + state;
-                    q.innerHTML = '<span class="cat-quiz-icon">📝</span><span>בוחן</span>';
-                    q.setAttribute("aria-label", `בוחן: ${s.name}`);
-                    q.onclick = () => quizStep(level, i);
-                    row.appendChild(q);
-                } else row.appendChild(Object.assign(document.createElement("span"), { className: "cat-quiz-space" }));   // keeps the rows aligned
+                row.append(card,
+                    rowButton("cat-learn", "📖", "לימוד", `לימוד: ${s.name}`, () => startLearning(level, i)),
+                    rowButton("cat-quiz", "📝", "בוחן", `בוחן: ${s.name}`, () => quizStep(level, i)));
                 list.appendChild(row);
             });
-            document.getElementById("path-progress").textContent = `⭐ ${done}/${steps.length}`;
-            const cur = list.children[Math.min(done, steps.length - 1)];
-            if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.offsetTop - list.clientHeight / 3);   // the open step in view
+            const count = steps.filter((s, i) => passed.has(i)).length;
+            document.getElementById("path-progress").textContent = `⭐ ${count}/${steps.length}`;
+            const first = steps.findIndex((s, i) => !passed.has(i));   // the first part not passed yet, in view
+            const cur = list.children[first < 0 ? steps.length - 1 : first];
+            if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.offsetTop - list.clientHeight / 3);
         }
 
         let learn = null;   // { level, index, steps, step, i }
@@ -1880,30 +1887,85 @@
             } catch (e) {}
         }
 
-        // called by showSummary: in a step's quiz, a full round with no mistakes opens the next step
+        // 🎆 Fireworks over the whole screen for a few seconds (a canvas that doesn't catch taps, removed at the end)
+        function fireworks(duration = 3500) {
+            const cv = document.createElement("canvas");
+            cv.id = "fireworks";
+            cv.setAttribute("aria-hidden", "true");
+            cv.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1500;";
+            document.body.appendChild(cv);
+            const ctx = cv.getContext("2d"), dpr = Math.min(2, window.devicePixelRatio || 1);
+            const W = cv.width = innerWidth * dpr, H = cv.height = innerHeight * dpr;
+            const colors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93", "#ff924c", "#f15bb5", "#00f5d4", "#fff"];
+            const rockets = [], sparks = [], t0 = performance.now();
+            let nextLaunch = 0;
+            const launch = () => rockets.push({ x: W * (0.15 + Math.random() * 0.7), y: H, vx: (Math.random() - 0.5) * 2 * dpr,
+                vy: -(H * 0.016 + Math.random() * H * 0.005), top: H * (0.12 + Math.random() * 0.3), color: colors[Math.floor(Math.random() * colors.length)] });
+            const burst = r => {
+                const n = 45 + Math.floor(Math.random() * 25), speed = (2.2 + Math.random() * 2) * dpr;
+                for (let k = 0; k < n; k++) {
+                    const a = (Math.PI * 2 * k) / n, v = speed * (0.6 + Math.random() * 0.5);
+                    sparks.push({ x: r.x, y: r.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, color: Math.random() < 0.25 ? "#fff" : r.color });
+                }
+            };
+            const frame = now => {
+                const t = now - t0;
+                if (t < duration - 1200 && t >= nextLaunch) { launch(); if (Math.random() < 0.4) launch(); nextLaunch = t + 280 + Math.random() * 260; }
+                ctx.globalCompositeOperation = "destination-out";   // fade the last frame: short trails
+                ctx.fillStyle = "rgba(0,0,0,0.25)";
+                ctx.fillRect(0, 0, W, H);
+                ctx.globalCompositeOperation = "lighter";
+                for (let k = rockets.length - 1; k >= 0; k--) {
+                    const r = rockets[k];
+                    r.x += r.vx; r.y += r.vy; r.vy += 0.12 * dpr;
+                    ctx.fillStyle = r.color;
+                    ctx.beginPath(); ctx.arc(r.x, r.y, 2.2 * dpr, 0, Math.PI * 2); ctx.fill();
+                    if (r.y <= r.top || r.vy >= 0) { burst(r); rockets.splice(k, 1); }
+                }
+                for (let k = sparks.length - 1; k >= 0; k--) {
+                    const s = sparks[k];
+                    s.x += s.vx; s.y += s.vy; s.vx *= 0.98; s.vy = s.vy * 0.98 + 0.06 * dpr; s.life -= 0.013;
+                    if (s.life <= 0) { sparks.splice(k, 1); continue; }
+                    ctx.globalAlpha = s.life;
+                    ctx.fillStyle = s.color;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, 2 * dpr, 0, Math.PI * 2); ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+                if (t < duration || rockets.length || sparks.length) requestAnimationFrame(frame);
+                else cv.remove();
+            };
+            requestAnimationFrame(frame);
+        }
+
+        // called by showSummary: in a step's quiz, a full round with no mistakes marks the step as passed (green)
         function stepQuizResult(rate, fullRound) {
             const res = document.getElementById("step-result"), nextBtn = document.getElementById("next-step-btn");
             document.getElementById("change-words-btn").textContent = stepQuiz ? "🗺️ חזרה למסלול" : "החלפת מילים";
             res.style.display = nextBtn.style.display = "none";
             if (!stepQuiz) return;
-            const { level, index, steps } = stepQuiz, before = learnProgress[level] || 0, passed = fullRound && rate >= STEP_PASS;
+            const { level, index, steps } = stepQuiz, passedSteps = passedSet(level), wasPassed = passedSteps.has(index);
+            const passed = fullRound && rate >= STEP_PASS;
             learn = { level, index, steps, step: steps[index], i: 0 };   // so "next topic" knows where we are
-            if (passed && before <= index) {
-                learnProgress[level] = index + 1;
+            if (passed && !wasPassed) {
+                passedSteps.add(index);
+                learnProgress[level] = [...passedSteps].sort((a, b) => a - b);
                 try { localStorage.setItem(LEARN_KEY, JSON.stringify(learnProgress)); } catch (e) {}
-                playUnlockSound();   // a new step (or the next level) just opened
+                playUnlockSound();   // the step just turned green
             }
-            const next = steps[index + 1];
+            const allPassed = steps.every((s, i) => passedSteps.has(i));
             res.style.display = "";
-            if (passed || before > index) {
+            if (passed) {
+                fireworks();   // 🎆 the topic's quiz is done
                 res.style.color = "#2f855a";
-                res.textContent = !passed ? "" : next ? (before === index ? `🔓 נפתח נושא חדש: ${catEmoji(next.name)} ${stepLabel(next)}` : "✅ עברתם את הבוחן!") : `🏆 סיימתם את כל הנושאים ברמה ${level}!`;
-                if (!res.textContent) res.style.display = "none";
-                if (next || level < LEVEL_COUNT) { nextBtn.textContent = next ? "▶ לנושא הבא" : `▶ לרמה ${level + 1}`; nextBtn.style.display = ""; }
-            } else {
+                res.textContent = wasPassed ? "✅ עברתם את הבוחן!" : allPassed ? `🏆 עברתם את כל הנושאים ברמה ${level}!` : "✅ עברתם את הנושא! הוא מסומן עכשיו בירוק";
+            } else if (wasPassed) res.style.display = "none";   // already green: nothing to add
+            else {
                 res.style.color = "#c05621";
-                res.textContent = fullRound ? "כדי לפתוח את הנושא הבא צריך לענות על כל הבוחן בלי טעויות – נסו שוב! 💪" : "עכשיו נסו את כל הבוחן שוב 💪";
+                res.textContent = fullRound ? "כדי שהנושא יסומן בירוק צריך לענות על כל הבוחן בלי טעויות – נסו שוב! 💪" : "עכשיו נסו את כל הבוחן שוב 💪";
             }
+            // nothing is locked: the next topic (or level) is always there
+            const next = steps[index + 1];
+            if (next || level < LEVEL_COUNT) { nextBtn.textContent = next ? "▶ לנושא הבא" : `▶ לרמה ${level + 1}`; nextBtn.style.display = ""; }
         }
 
         function nextLearnCategory() {

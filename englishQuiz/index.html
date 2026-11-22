@@ -2199,19 +2199,22 @@
         }
 
         // a little "ding" for every point that is counted (higher and higher)
-        function coinSound(k) {
+        // a short coin "ka-ching" (about a quarter of a second), played once when the points are collected
+        function coinSound() {
             try {
                 audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === "suspended") audioCtx.resume();
-                const t = audioCtx.currentTime + 0.01, o = audioCtx.createOscillator(), g = audioCtx.createGain();
-                o.type = "square";
-                o.frequency.setValueAtTime(880 + Math.min(k, 25) * 25, t);
-                o.frequency.setValueAtTime(1320 + Math.min(k, 25) * 25, t + 0.04);
-                g.gain.setValueAtTime(0.0001, t);
-                g.gain.exponentialRampToValueAtTime(0.06, t + 0.01);
-                g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
-                o.connect(g).connect(audioCtx.destination);
-                o.start(t); o.stop(t + 0.15);
+                const t = audioCtx.currentTime + 0.01;
+                [[988, 0, 0.08], [1319, 0.07, 0.18]].forEach(([f, at, dur]) => {   // B5, then E6
+                    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                    o.type = "triangle";
+                    o.frequency.value = f;
+                    g.gain.setValueAtTime(0.0001, t + at);
+                    g.gain.exponentialRampToValueAtTime(0.2, t + at + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.0001, t + at + dur);
+                    o.connect(g).connect(audioCtx.destination);
+                    o.start(t + at); o.stop(t + at + dur + 0.02);
+                });
             } catch (e) {}
         }
 
@@ -2327,16 +2330,15 @@
             pic.textContent = "💰";
             pic.animate([{ transform: "scale(0.4)" }, { transform: "scale(1.6)", offset: 0.6 }, { transform: "scale(1)" }], { duration: 450, easing: "ease-out" });
             avatarBurst(["💰", "⭐", "✨"], 16, pic, true);
-            playUnlockSound();
+            coinSound();
             await new Promise(r => setTimeout(r, 650));
             if (!here()) return finish();
             box.style.display = "none";
             scoreEl.style.display = "";
             const steps = Math.min(points, 25), ms = Math.max(50, Math.min(120, 1500 / steps));
-            for (let k = 1; k <= steps; k++) {   // the points tick up one by one into the total, with a ding each
+            for (let k = 1; k <= steps; k++) {   // the points tick up into the total (quietly: the one ka-ching was enough)
                 if (!here()) break;
                 show(Math.round(points * k / steps));
-                coinSound(k);
                 await new Promise(r => setTimeout(r, ms));
             }
             finish();

@@ -1527,8 +1527,8 @@ async function testCelebrate() {
   await page.click('#coin-box').catch(() => {});   // a second tap while it opens: nothing more
   await page.waitForFunction(() => document.querySelector('#coin-box .cb-pic').textContent === '💰', { timeout: 3000 }).catch(() => {});
   check((await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).includes('💰'), 'it shakes, pops open into 💰 and coins burst out');
-  await page.waitForFunction(() => getComputedStyle(document.getElementById('coin-box')).display === 'none' && window.coins >= Math.min(totalScore, 25), { timeout: 8000 }).catch(() => {});
-  check(!(await shown('#coin-box')) && (await score()) === final && (await page.evaluate(() => window.coins)) === Math.min(r.points, 25), `then the points tick up into the total with a ding each (${await score()})`);
+  await page.waitForFunction(t => getComputedStyle(document.getElementById('coin-box')).display === 'none' && document.getElementById('summary-final-score').innerText === t, { timeout: 8000 }, final).catch(() => {});
+  check(!(await shown('#coin-box')) && (await score()) === final && (await page.evaluate(() => window.coins)) === 1, `then the points tick up into the total, with one short ka-ching (${await score()}; sounds: ${await page.evaluate(() => window.coins)})`);
   check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'a second tap did not add them twice');
 
   // tapping the character: a funny gag (English + Hebrew in the bubble, said aloud), one at a time, never the same twice in a row

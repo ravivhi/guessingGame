@@ -322,6 +322,16 @@ canvas.full{position:absolute;inset:0;width:100%;height:100%;touch-action:none;d
 .setrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0;font:800 18px Rubik}
 .setrow button{font:800 17px Rubik;border:3px solid #0D2A5C;border-radius:12px;background:#fff;padding:4px 12px;cursor:pointer}
 .setrow button.on{background:#FFC928}
+.pbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.pbtns .btn{font-size:17px;padding:8px 16px}
+.btn.hold{background:#FFE5E5;color:#A12A2A;border-color:#A12A2A;touch-action:none}
+.pmsg{font-weight:800;margin:8px 0 0;color:#1B5E20}.pmsg.bad{color:#A12A2A}
+.bars{display:flex;gap:8px;align-items:flex-end;height:120px;margin:6px 0 4px;direction:rtl}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font:700 14px Rubik}
+.bars i{display:block;width:70%;max-width:44px;background:#42A5F5;border-radius:8px 8px 0 0;min-height:3px}
+.bars div.today i{background:#FFC928}
+.fbtn{font:800 20px Rubik;border:2px solid #0D2A5C;border-radius:10px;background:#fff;cursor:pointer;padding:0 8px;line-height:1.3}
+.fbtn.on{background:#FFC928}
 .week{display:flex;gap:8px;justify-content:center;margin:8px 0}
 .week div{text-align:center;font:800 16px Rubik}
 .week i{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:3px solid #0D2A5C;background:#ECEFF1;font-style:normal;font-size:20px;margin-top:4px}
@@ -782,12 +792,15 @@ const starsOf=(u,L)=>u.prog&&u.prog[L]?Object.keys(u.prog[L]).length:0;
 const totalStars=u=>LETTERS.reduce((s,L)=>s+starsOf(u,L),0);
 
 /* ================= audio ================= */
-let AC=null;
-function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+let AC=null,MG=null;
+const SND=()=>DB.snd=Object.assign({voice:1,fx:1},DB.snd||{});
+function OUTN(a){return MG||a.destination}
+function setFxVol(v){SND().fx=v;if(MG)MG.gain.value=v;save()}
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=SND().fx;MG.connect(AC.destination)}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
 ['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>ac(),{capture:true,passive:true}));
-function tone(f,d,type,v,at){if(DB.mute)return;const a=ac();if(!a)return;const t=a.currentTime+(at||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.12,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.03)}
-function sweep(f0,f1,d,type,v,at){if(DB.mute)return;const a=ac();if(!a)return;const t=a.currentTime+(at||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.1,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.03)}
-function noise(d,v,f0,f1,at){if(DB.mute)return;const a=ac();if(!a)return;const t=a.currentTime+(at||0),n=Math.floor(a.sampleRate*d),b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=Math.random()*2-1;const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+d);const g=a.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(a.destination);s.start(t)}
+function tone(f,d,type,v,at){if(DB.mute)return;const a=ac();if(!a)return;const t=a.currentTime+(at||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.12,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(OUTN(a));o.start(t);o.stop(t+d+.03)}
+function sweep(f0,f1,d,type,v,at){if(DB.mute)return;const a=ac();if(!a)return;const t=a.currentTime+(at||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.1,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(OUTN(a));o.start(t);o.stop(t+d+.03)}
+function noise(d,v,f0,f1,at){if(DB.mute)return;const a=ac();if(!a)return;const t=a.currentTime+(at||0),n=Math.floor(a.sampleRate*d),b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=Math.random()*2-1;const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+d);const g=a.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(OUTN(a));s.start(t)}
 const SFX={
  pick(){tone(520,.1,'triangle',.07)},
  good(){[784,988,1175,1568].forEach((f,i)=>tone(f,.16,'sine',.09,i*.06))},
@@ -803,17 +816,17 @@ const SFX={
  door(){[523,659,784,1047].forEach((f,i)=>tone(f,.22,'triangle',.1,i*.09))},
  bonk(){tone(160,.12,'square',.08);noise(.1,.4,900,200)},
  tick(){tone(1200,.05,'square',.03)},
- applause(){if(DB.mute)return;const a=ac();if(!a)return;const len=Math.floor(a.sampleRate*2.6),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);for(let k=0;k<90;k++){const st=Math.floor(Math.random()*(len-4000)*.9),dur=500+Math.random()*1500,amp=.3+Math.random()*.5;for(let i=0;i<dur;i++)d[st+i]+=(Math.random()*2-1)*Math.exp(-i/(dur*.22))*amp}const s=a.createBufferSource();s.buffer=buf;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=2300;f.Q.value=.6;const g=a.createGain(),t=a.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.16,t+.5);g.gain.linearRampToValueAtTime(.16,t+1.9);g.gain.linearRampToValueAtTime(.0001,t+2.6);s.connect(f);f.connect(g);g.connect(a.destination);s.start()}};
+ applause(){if(DB.mute)return;const a=ac();if(!a)return;const len=Math.floor(a.sampleRate*2.6),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);for(let k=0;k<90;k++){const st=Math.floor(Math.random()*(len-4000)*.9),dur=500+Math.random()*1500,amp=.3+Math.random()*.5;for(let i=0;i<dur;i++)d[st+i]+=(Math.random()*2-1)*Math.exp(-i/(dur*.22))*amp}const s=a.createBufferSource();s.buffer=buf;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=2300;f.Q.value=.6;const g=a.createGain(),t=a.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.16,t+.5);g.gain.linearRampToValueAtTime(.16,t+1.9);g.gain.linearRampToValueAtTime(.0001,t+2.6);s.connect(f);f.connect(g);g.connect(OUTN(a));s.start()}};
 const PENT=[523,587,659,784,880,1047,1175,1319];
 
 /* ================= speech (Hebrew TTS) ================= */
 let HEV=null,voicesChecked=false;
 function loadVoices(){if(!('speechSynthesis' in window))return;const vs=speechSynthesis.getVoices();if(vs.length)voicesChecked=true;HEV=vs.find(v=>/^(he|iw)/i.test(v.lang)&&/online|natural/i.test(v.name))||vs.find(v=>/^(he|iw)/i.test(v.lang))||null}
 if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
-function say(text,opt){opt=opt||{};if(DB.mute||!text||!('speechSynthesis' in window))return null;try{if(!opt.queue)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='he-IL';if(HEV)u.voice=HEV;u.rate=opt.rate||.9;u.pitch=1.05;speechSynthesis.speak(u);return u}catch(e){return null}}
+function say(text,opt){opt=opt||{};if(DB.mute||!text||!('speechSynthesis' in window)||SND().voice<=0)return null;try{if(!opt.queue)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='he-IL';if(HEV)u.voice=HEV;u.rate=opt.rate||.9;u.pitch=1.05;u.volume=SND().voice;speechSynthesis.speak(u);return u}catch(e){return null}}
 const sayL=L=>say(LN[L]);
 const sayS=(L,v,q)=>say(sylSay(L,v),{rate:.75,queue:!!q});
-function noVoice(box){if(voicesChecked&&!HEV)box.appendChild(el('div','voicewarn','🔈 לא נמצא קול עברי בדפדפן הזה, ולכן לא שומעים את הצלילים. פתחו את האפליקציה ב-Edge.'))}
+function noVoice(box){if(voicesChecked&&!HEV)box.appendChild(el('div','voicewarn','🔈 לא נמצא קול עברי במכשיר, ולכן לא שומעים את הצלילים. אפשר להתקין קול בעברית בהגדרות הטלפון: המרת טקסט לדיבור ← מנוע של Google ← התקנת נתוני קול ← עברית.'))}
 
 /* ================= confetti ================= */
 const FX=$('#fx'),fxc=FX.getContext('2d');let parts=[],fxOn=false;
@@ -925,9 +938,9 @@ const dstr=t=>{const x=new Date(t);return x.getFullYear()+'-'+String(x.getMonth(
 const today=()=>dstr(Date.now()),yesterday=()=>dstr(Date.now()-DAY);
 const LVT=['טירון','חוקר אותיות','צייד צלילים','קורא צעיר','אביר המילים','גיבור הקריאה','אלוף האותיות','מאסטר הקריאה','אגדת האלף-בית'];
 const levelOf=xp=>Math.floor(Math.sqrt((xp||0)/80))+1,lvlXp=l=>80*(l-1)*(l-1),lvlTitle=l=>LVT[Math.min(LVT.length-1,Math.floor((l-1)/2))];
-function ensureU(u){if(u._v===2)return u;u.xp=u.xp||0;u.prog=u.prog||{};u.mast=u.mast||{};u.words=u.words||{};u.badges=u.badges||{};u.days=u.days||{};
+function ensureU(u){if(u._v===2&&u.settings&&u.settings.brkLen!=null)return u;u.xp=u.xp||0;u.prog=u.prog||{};u.mast=u.mast||{};u.words=u.words||{};u.badges=u.badges||{};u.days=u.days||{};
  u.stats=Object.assign({games:0,correct:0,wrong:0,perfect:0,sec:0,reviews:0,read:0,chests:0,bestCombo:0},u.stats||{});
- u.streak=Object.assign({n:0,last:'',best:0,shield:0},u.streak||{});u.settings=Object.assign({goal:20,brk:20},u.settings||{});u._v=2;return u}
+ u.streak=Object.assign({n:0,last:'',best:0,shield:0},u.streak||{});u.settings=Object.assign({goal:20,brk:20,brkLen:20,limit:0},u.settings||{});u._v=2;return u}
 const QUESTS={games:{n:3,t:'שחקו 3 משחקים',i:'🎮'},correct:{n:20,t:'ענו נכון 20 פעמים',i:'✅'},combo:{n:5,t:'רצף של 5 תשובות נכונות',i:'🔥'},sound:{n:1,t:'השלימו משחק צלילים',i:'🔊'},trace:{n:1,t:'כתבו אות',i:'✏️'},xp:{n:30,t:'צברו 30 נקודות',i:'⭐'},words:{n:4,t:'קראו 4 מילים',i:'📖'},review:{n:1,t:'עשו חזרה חכמה',i:'🔁'},stars3:{n:1,t:'קבלו 3 כוכבים במשחק',i:'🌟'}};
 function day(u){const t=today();if(!u.daily||u.daily.date!==t){checkStreak(u);const ids=Object.keys(QUESTS).filter(q=>(q!=='words'||readable(learned(u)).length>=4)&&(q!=='review'||learned(u).length>=3));
   u.daily={date:t,xp:0,games:0,correct:0,combo:0,sound:0,trace:0,words:0,review:0,stars3:0,sec:0,quests:shuffle(ids).slice(0,3),chest:false,goal:false};save()}return u.daily}
@@ -936,6 +949,9 @@ function checkStreak(u){const s=u.streak;if(s.n&&s.last&&s.last<yesterday()){if(
 const streakNow=u=>{const s=u.streak;return s.last===today()||s.last===yesterday()?s.n:0};
 function extendStreak(u){const s=u.streak,t=today();if(s.last===t)return;s.n=s.last===yesterday()?s.n+1:1;s.last=t;s.best=Math.max(s.best,s.n);u.days[t]=1;CQ.push({t:'streak',n:s.n})}
 function addXP(u,n){if(!n)return;const l0=levelOf(u.xp);u.xp+=n;if(levelOf(u.xp)>l0)CQ.push({t:'level',lv:levelOf(u.xp)});const d=day(u);d.xp+=n;if(!d.goal&&d.xp>=u.settings.goal){d.goal=true;extendStreak(u)}}
+/* which letter the child picked instead of the right one, e.g. ב instead of כ */
+function noteConf(u,L,got){if(!got||got===L||!LETTERS.includes(L)||!LETTERS.includes(got))return;const c=u.conf=u.conf||{},m=c[L]=c[L]||{};m[got]=(m[got]||0)+1}
+function confusions(u,min){const out=[],c=u.conf||{};Object.keys(c).forEach(L=>Object.keys(c[L]).forEach(x=>{if(c[L][x]>=(min||3))out.push({L,x,n:c[L][x]})}));return out.sort((a,b)=>b.n-a.n)}
 function mastUpdate(u,L,ok){if(!LETTERS.includes(L))return;const m=u.mast[L]=u.mast[L]||{c:0,w:0,box:0,next:0},now=Date.now();
  if(ok){m.c++;if(now>=m.next){m.box=Math.min(5,m.box+1);m.next=now+BOXI[m.box]}}else{m.w++;m.box=Math.max(0,m.box-1);m.next=now}m.last=now}
 const mastBox=(u,L)=>u.mast[L]?u.mast[L].box:0;
@@ -970,6 +986,10 @@ const BADGES=[
  {id:'chest',i:'🎁',n:'צייד משימות',d:'פותחים מתנה יומית',ok:u=>u.stats.chests>=1},
  {id:'shop5',i:'🛍️',n:'אספן',d:'5 פריטים מהחנות',ok:u=>(u.owned||[]).length>=5}];
 const CQ=[];let breakDue=false,sesSec=0,lastAct=Date.now();
+/* daily play-time limit (minutes, 0 = none); a parent can add 15 minutes for today */
+const limitHit=u=>{const lim=u.settings.limit||0,d=day(u);return lim>0&&d.sec>=(lim+(d.extra||0))*60};
+const breakOn=u=>u.breakUntil>Date.now();
+function playLog(u,sec){const t=today(),p=u.play=u.play||{};if(!p[t])Object.keys(p).sort().slice(0,-29).forEach(k=>delete p[k]);p[t]=(p[t]||0)+sec}
 function checkBadges(u){BADGES.forEach(b=>{if(!u.badges[b.id]&&b.ok(u)){u.badges[b.id]=Date.now();CQ.push({t:'badge',b})}})}
 function addCoinsQuiet(n){const u=U();if(u){u.coins+=n;save();refreshTop()}}
 function weekHtml(u){const nm=['א','ב','ג','ד','ה','ו','ש'];let h='<div class="week">';for(let i=6;i>=0;i--){const t=Date.now()-i*DAY,ds=dstr(t);h+='<div>'+nm[new Date(t).getDay()]+'<i class="'+(u.days[ds]?'on':'')+'">'+(u.days[ds]?'🔥':'')+'</i></div>'}return h+'</div>'}
@@ -984,9 +1004,16 @@ function flushCQ(then){const u=U();if(u)checkBadges(u);save();refreshTop();
  if(coins)addCoinsQuiet(coins);SFX.chime();confetti(70);say([...new Set(sp)].join('. '));
  const o=showOverlay('<div class="trophy">'+icon+'</div><h2>חדשות טובות!</h2>'+lines.map(l=>'<p>'+esc(l)+'</p>').join('')+week+(coins?'<div class="earn">+'+coins+' 🪙</div>':'')+'<div class="row"><button class="btn g">מעולה!</button></div>');
  o.querySelector('button').onclick=()=>{SFX.pick();flushCQ(then)}}
-function showBreak(u,then){SFX.chime();say('זמן להפסקה קטנה! קום, שתה מים וקפוץ עשר קפיצות');
- const o=showOverlay('<div class="trophy">🧃</div><h2>זמן להפסקה קטנה!</h2><p>שיחקת '+u.settings.brk+' דקות. קום, שתה מים וקפוץ 10 קפיצות 🤸 – ואז חוזרים!</p><div class="row"><button class="btn g"></button></div>'),b=o.querySelector('button');b.onclick=()=>{SFX.pick();flushCQ(then)};
- b.disabled=true;let s=20;const tick=()=>{if(!b.isConnected)return;if(s<=0){b.disabled=false;b.textContent='חזרתי! ממשיכים';return}b.textContent='⏳ '+s;s--;setTimeout(tick,1000)};tick()}
+/* the break is saved (breakUntil), so closing and reopening the app doesn't skip it; a parent can skip it */
+function showBreak(u,then){const fresh=!breakOn(u);if(fresh){u.breakUntil=Date.now()+(u.settings.brkLen||20)*1000;save();SFX.chime();say('זמן להפסקה קטנה! קום, שתה מים וקפוץ עשר קפיצות')}
+ const o=showOverlay('<div class="trophy">🧃</div><h2>זמן להפסקה קטנה!</h2><p>'+(fresh?'שיחקת '+u.settings.brk+' דקות. ':'')+'קום, שתה מים וקפוץ 10 קפיצות 🤸 – ואז חוזרים!</p><div class="row"><button class="btn g" data-a="go"></button></div><div class="row"><button class="btn w" data-a="par" style="font-size:15px;padding:6px 14px">👨‍👩‍👦 הורים: דילוג</button></div>'),b=o.querySelector('[data-a=go]');
+ const end=()=>{u.breakUntil=0;save();flushCQ(then)};b.onclick=()=>{SFX.pick();end()};
+ o.querySelector('[data-a=par]').onclick=()=>{SFX.pick();parentGate(end,()=>showBreak(u,then))};
+ b.disabled=true;const tick=()=>{if(!b.isConnected)return;const s=Math.ceil((u.breakUntil-Date.now())/1000);if(s<=0){b.disabled=false;b.textContent='חזרתי! ממשיכים';return}b.textContent='⏳ '+(s>=60?Math.floor(s/60)+':'+String(s%60).padStart(2,'0'):s);setTimeout(tick,1000)};tick()}
+function showLimit(u,then){SFX.chime();say('זמן המשחק של היום נגמר. ממשיכים מחר!');
+ const o=showOverlay('<div class="trophy">🌙</div><h2>זמן המשחק של היום נגמר</h2><p>ממשיכים מחר! 👋</p><div class="row"><button class="btn g" data-a="home">למסך הבית</button></div><div class="row"><button class="btn w" data-a="par" style="font-size:15px;padding:6px 14px">👨‍👩‍👦 הורים: עוד 15 דקות</button></div>');
+ o.querySelector('[data-a=home]').onclick=()=>{SFX.pick();hideOverlay();showHome()};
+ o.querySelector('[data-a=par]').onclick=()=>{SFX.pick();parentGate(()=>{const d=day(u);d.extra=(d.extra||0)+15;save();then()},()=>showLimit(u,then))}}
 function openChest(then){const u=U(),coins=rint(15,25),pool=SHOP.filter(s=>!u.owned.includes(s.id)&&s.price<=30),free=pool.length&&Math.random()<.2?pick(pool):null;
  const o=showOverlay('<div class="trophy" style="font-size:110px;cursor:pointer;animation:wiggle 1s infinite">🎁</div><h2>המתנה היומית!</h2><p>לחצו 3 פעמים על המתנה כדי לפתוח</p><div class="row"></div>');
  const g=o.querySelector('.trophy');let taps=0;say('לחצו על המתנה כדי לפתוח');
@@ -995,7 +1022,7 @@ function openChest(then){const u=U(),coins=rint(15,25),pool=SHOP.filter(s=>!u.ow
   o.querySelector('p').innerHTML='<span class="earn">+'+coins+' 🪙</span>'+(free?'<br><span class="first">🎉 מתנה מהחנות: '+free.name+'</span>':'');say('וואו! '+coins+' מטבעות'+(free?' ו'+free.name+' במתנה':''));
   const r=o.querySelector('.row');r.innerHTML='<button class="btn g">איזה כיף!</button>';r.firstChild.onclick=()=>{SFX.pick();flushCQ(then)}}}
 ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{lastAct=Date.now()},{capture:true,passive:true}));
-setInterval(()=>{const u=U();if(!u||document.hidden||Date.now()-lastAct>9e4)return;u.stats.sec+=15;day(u).sec+=15;sesSec+=15;if(u.settings.brk&&sesSec>=u.settings.brk*60){sesSec=0;breakDue=true}save()},15e3);
+setInterval(()=>{const u=U();if(!u||document.hidden||Date.now()-lastAct>9e4)return;u.stats.sec+=15;day(u).sec+=15;playLog(u,15);sesSec+=15;if(u.settings.brk&&sesSec>=u.settings.brk*60){sesSec=0;breakDue=true}save()},15e3);
 /* המשך: the next activity of the same letter; after the last one, the first activity of the next letter */
 function nextAct(gid,L){const i=ALLG.findIndex(g=>g.id===gid);return i<ALLG.length-1?[ALLG[i+1].id,L]:[ALLG[0].id,LETTERS[(LETTERS.indexOf(L)+1)%LETTERS.length]]}
 
@@ -1022,10 +1049,9 @@ function addCoins(n,fromEl){const u=U();if(!u)return;u.coins=Math.max(0,u.coins+
 /* ================= screens: users ================= */
 function showUsers(){clearView();setTop('מי משחק היום?',U()?showHome:null);
  const p=el('div','page');p.innerHTML='<div class="hello">מי משחק היום? 🦸‍♂️ ⚽ 🦖</div>';
- if(voicesChecked&&!HEV)p.appendChild(el('div','voicewarn','🔈 לא נמצא קול עברי בדפדפן הזה, ולכן ההנחיות יופיעו רק בכתב. בדפדפן Edge יש קול עברי מובנה.'));
+ if(voicesChecked&&!HEV)p.appendChild(el('div','voicewarn','🔈 לא נמצא קול עברי במכשיר, ולכן ההנחיות יופיעו רק בכתב. אפשר להתקין קול בעברית בהגדרות הטלפון: המרת טקסט לדיבור ← מנוע של Google ← התקנת נתוני קול ← עברית.'));
  const g=el('div','ugrid');
  DB.users.forEach(u=>{ensureU(u);const c=el('div','ucard',avatarSVG(u)+'<div class="un">'+esc(u.name)+'</div><div class="uc">🪙 '+u.coins+'</div><div class="ust">שלב '+levelOf(u.xp)+' · 🔥 '+streakNow(u)+' · ⭐ '+totalStars(u)+'</div>');
-  const x=el('button','udel','✖');x.title='מחיקת שחקן';x.onclick=e=>{e.stopPropagation();if(confirm('למחוק את '+u.name+'? כל המטבעות והצעצועים יימחקו.')){DB.users=DB.users.filter(q=>q!==u);if(DB.cur===u.id)DB.cur=null;save();showUsers()}};c.appendChild(x);
   c.onclick=()=>{DB.cur=u.id;save();SFX.good();say('שלום '+u.name+'! בוא נשחק');showHome()};g.appendChild(c)});
  const add=el('div','ucard add','<div class="plus">+</div><div class="un">שחקן חדש</div>');add.onclick=()=>{SFX.pick();showNewUser()};g.appendChild(add);
  p.appendChild(g);view.appendChild(p)}
@@ -1092,27 +1118,63 @@ function showStreak(){const u=U();if(!u)return;const s=u.streak,sk=streakNow(u);
  const buy=o.querySelector('[data-a=buy]');if(s.shield>=2||u.coins<40){buy.disabled=true;if(s.shield>=2)buy.textContent='🛡️ יש לך 2 מגנים'}
  buy.onclick=()=>{u.coins-=40;s.shield++;save();refreshTop();SFX.coin();say('קנית מגן רצף!');showStreak()};
  o.querySelector('[data-a=ok]').onclick=()=>{SFX.pick();hideOverlay()};say(sk?'יש לך רצף של '+sk+' ימים!':'משיגים את המטרה היומית כדי להתחיל רצף')}
-function showParents(){const a=rint(6,9),b=rint(6,9),o=showOverlay('<div class="trophy">👨‍👩‍👦</div><h2>אזור הורים</h2><p>כדי להיכנס, פתרו את התרגיל: '+a+' × '+b+' = ?</p><input id="pg" inputmode="numeric" autocomplete="off" style="font:800 30px Rubik;width:150px;text-align:center;border:4px solid #0D2A5C;border-radius:14px"><div class="row"><button class="btn g" data-a="ok">כניסה</button><button class="btn w" data-a="no">ביטול</button></div>');
- const inp=o.querySelector('#pg');setTimeout(()=>inp.focus(),50);o.querySelector('[data-a=no]').onclick=hideOverlay;
- const go=()=>{if(+inp.value===a*b){hideOverlay();parentsPanel()}else{replay(inp,'shake');SFX.bad()}};o.querySelector('[data-a=ok]').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()}}
+function showParents(){parentGate(parentsPanel)}
+function parentGate(ok,cancel){const a=rint(6,9),b=rint(6,9),o=showOverlay('<div class="trophy">👨‍👩‍👦</div><h2>אזור הורים</h2><p>כדי להיכנס, פתרו את התרגיל: '+a+' × '+b+' = ?</p><input id="pg" inputmode="numeric" autocomplete="off" style="font:800 30px Rubik;width:150px;text-align:center;border:4px solid #0D2A5C;border-radius:14px"><div class="row"><button class="btn g" data-a="ok">כניסה</button><button class="btn w" data-a="no">ביטול</button></div>');
+ const inp=o.querySelector('#pg');setTimeout(()=>inp.focus(),50);o.querySelector('[data-a=no]').onclick=()=>{hideOverlay();if(cancel)cancel()};
+ const go=()=>{if(+inp.value===a*b){hideOverlay();ok()}else{replay(inp,'shake');SFX.bad()}};o.querySelector('[data-a=ok]').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()}}
 function parentsPanel(){const u=U();if(!u)return;clearView();setTop('👨‍👩‍👦 אזור הורים',showHome);const d=day(u),st=u.stats,acc=st.correct+st.wrong?Math.round(st.correct/(st.correct+st.wrong)*100):0,p=el('div','page');
- p.appendChild(el('div','card pcard','<h3>'+esc(u.name)+' – תמונת מצב</h3><div class="kpis">'+[['שלב',levelOf(u.xp)],['נקודות',u.xp],['רצף',streakNow(u)+' ימים (שיא '+u.streak.best+')'],['משחקים',st.games],['דיוק',acc+'%'],['היום',Math.round(d.sec/60)+' דק׳'],['סה״כ',Math.round(st.sec/60)+' דק׳'],['אותיות שנלמדו',learned(u).length+'/22'],['אותיות זהב',goldCount(u)],['מילים שנקראו',st.read]].map(x=>'<div class="kpi">'+x[0]+': <b>'+x[1]+'</b></div>').join('')+'</div>'));
+ p.appendChild(el('div','card pcard','<h3>'+esc(u.name)+' – תמונת מצב</h3><div class="kpis">'+[['שלב',levelOf(u.xp)],['נקודות',u.xp],['רצף',streakNow(u)+' ימים (שיא '+u.streak.best+')'],['משחקים',st.games],['דיוק',acc+'%'],['היום',Math.round(d.sec/60)+' דק׳'],['סה״כ',Math.round(st.sec/60)+' דק׳'],['אותיות שנלמדו',learned(u).length+'/22'],['אותיות זהב',goldCount(u)],['מילים שנקראו',st.read],['הצלחה בניסיון הראשון',st.ftN?Math.round((st.ft1||0)/st.ftN*100)+'%':'-']].map(x=>'<div class="kpi">'+x[0]+': <b>'+x[1]+'</b></div>').join('')+'</div>'));
  const weak=learned(u).map(L=>{const m=u.mast[L]||{c:0,w:0,box:0},n=m.c+m.w;return {L,box:m.box,acc:n?m.c/n:1,n}}).filter(x=>x.n>=3).sort((a,b)=>a.acc-b.acc||a.box-b.box).slice(0,4);
- p.appendChild(el('div','card pcard','<h3>💡 המלצות</h3><p>'+(weak.length?'כדאי לתרגל: '+weak.map(x=>'<b>'+x.L+'</b> ('+Math.round(x.acc*100)+'%)').join(', ')+'. "חזרה חכמה" מתרגלת אוטומטית את האותיות החלשות.':'עוד אין מספיק נתונים. אחרי כמה משחקים יופיעו כאן המלצות.')+'</p><p>אותיות שמחכות לחזרה: <b>'+(dueLetters(u).join(' ')||'אין')+'</b></p>'));
- let h='<h3>📊 התקדמות לפי אות</h3><div style="overflow:auto"><table class="ptable"><tr><th>אות</th><th>חוזק</th><th>נכון</th><th>טעויות</th><th>דיוק</th><th>משחקים</th><th>כוכבים</th><th>חזרה הבאה</th></tr>';
+ p.appendChild(el('div','card pcard','<h3>💡 המלצות</h3><p>'+(weak.length?'כדאי לתרגל: '+weak.map(x=>'<b>'+x.L+'</b> ('+Math.round(x.acc*100)+'%)').join(', ')+'. "חזרה חכמה" מתרגלת אוטומטית את האותיות החלשות.':'עוד אין מספיק נתונים. אחרי כמה משחקים יופיעו כאן המלצות.')+'</p>'+(()=>{const cf=confusions(u).slice(0,5);return cf.length?'<p>'+cf.map(c=>'יש בלבול בין <b>'+c.L+'</b> ל-<b>'+c.x+'</b> ('+c.n+' פעמים)').join('<br>')+'</p>':''})()+'<p>אותיות שמחכות לחזרה: <b>'+(dueLetters(u).join(' ')||'אין')+'</b></p>'+((u.focus||[]).length?'<p>מסומנות לתרגול נוסף: <b>'+u.focus.join(' ')+'</b> – "חזרה חכמה" שואלת עליהן קודם.</p>':'')));
+ {const d7=[];for(let i=6;i>=0;i--){const t=Date.now()-i*DAY,ds=dstr(t);d7.push({n:['א','ב','ג','ד','ה','ו','ש'][new Date(t).getDay()],m:Math.round(((u.play||{})[ds]||0)/60),t:i===0})}const mx=Math.max(10,...d7.map(x=>x.m)),lim=u.settings.limit;
+  p.appendChild(el('div','card pcard','<h3>⏱️ זמן משחק</h3><p>היום: <b>'+Math.round(d.sec/60)+' דק׳</b>'+(lim?' מתוך '+(lim+(d.extra||0))+' דק׳':'')+(breakOn(u)?' · עכשיו בהפסקה':'')+'</p><div class="bars">'+d7.map(x=>'<div class="'+(x.t?'today':'')+'"><span>'+x.m+'</span><i style="height:'+Math.round(x.m/mx*90)+'px"></i>'+x.n+'</div>').join('')+'</div><p style="font-size:14px;margin:0">דקות משחק ב-7 הימים האחרונים</p>'))}
+ let h='<h3>📊 התקדמות לפי אות</h3><div style="overflow:auto"><table class="ptable"><tr><th>אות</th><th>חוזק</th><th>נכון</th><th>טעויות</th><th>דיוק</th><th>משחקים</th><th>כוכבים</th><th>חזרה הבאה</th><th>תרגול נוסף</th></tr>';
  LETTERS.forEach(L=>{const m=u.mast[L]||{c:0,w:0,box:0,next:0},n=m.c+m.w,pr=u.prog[L]||{},stars=Object.values(pr).reduce((a,b)=>a+(+b||0),0);
-  h+='<tr><td style="font:900 24px Rubik">'+L+'</td><td><span class="mbar">'+[1,2,3,4,5].map(x=>'<i class="'+(x<=m.box?'on':'')+'"></i>').join('')+'</span></td><td>'+m.c+'</td><td>'+m.w+'</td><td>'+(n?Math.round(m.c/n*100)+'%':'-')+'</td><td>'+Object.keys(pr).length+'/'+ALLG.length+'</td><td>'+stars+'</td><td>'+(n?(m.next<=Date.now()?'עכשיו':new Date(m.next).toLocaleDateString('he-IL')):'-')+'</td></tr>'});
- p.appendChild(el('div','card pcard',h+'</table></div>'));
+  h+='<tr><td style="font:900 24px Rubik">'+L+'</td><td><span class="mbar">'+[1,2,3,4,5].map(x=>'<i class="'+(x<=m.box?'on':'')+'"></i>').join('')+'</span></td><td>'+m.c+'</td><td>'+m.w+'</td><td>'+(n?Math.round(m.c/n*100)+'%':'-')+'</td><td>'+Object.keys(pr).length+'/'+ALLG.length+'</td><td>'+stars+'</td><td>'+(n?(m.next<=Date.now()?'עכשיו':new Date(m.next).toLocaleDateString('he-IL')):'-')+'</td><td>'+(learned(u).includes(L)?'<button class="fbtn'+((u.focus||[]).includes(L)?' on':'')+'" data-f="'+L+'" title="תרגול נוסף">'+((u.focus||[]).includes(L)?'★':'☆')+'</button>':'-')+'</td></tr>'});
+ const tb=el('div','card pcard',h+'</table></div><p style="font-size:14px;margin:6px 0 0">☆ = סימון אות לתרגול נוסף (עד 3 אותיות). "חזרה חכמה" שואלת קודם על האותיות המסומנות.</p>');
+ tb.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const L=b.dataset.f,f=u.focus=u.focus||[];if(f.includes(L))f.splice(f.indexOf(L),1);else if(f.length>=3){alert('אפשר לסמן עד 3 אותיות לתרגול נוסף. כדי לסמן את '+L+', קודם מסירים סימון מאות אחרת ('+f.join(', ')+').');return}else f.push(L);save();SFX.pick();parentsPanel()});
+ p.appendChild(tb);
  const s=el('div','card pcard','<h3>⚙️ הגדרות</h3>'),row=(label,key,vals,fmt)=>{const r=el('div','setrow','<span>'+label+'</span>');vals.forEach(v=>{const b=el('button',u.settings[key]===v?'on':'',fmt(v));b.onclick=()=>{u.settings[key]=v;save();parentsPanel()};r.appendChild(b)});s.appendChild(r)};
- row('מטרה יומית:','goal',[10,20,30,50],v=>v+' נקודות');row('תזכורת להפסקה:','brk',[0,15,20,30],v=>v?'כל '+v+' דק׳':'כבויה');
+ row('מטרה יומית:','goal',[10,20,30,50],v=>v+' נקודות');row('תזכורת להפסקה:','brk',[0,10,15,20,30],v=>v?'כל '+v+' דק׳':'כבויה');
+ if(u.settings.brk)row('אורך ההפסקה:','brkLen',[20,60,120,300],v=>v<60?v+' שנ׳':v/60+' דק׳');
+ row('זמן משחק ביום:','limit',[0,15,20,30,45,60],v=>v?v+' דק׳':'ללא הגבלה');
+ if(breakOn(u)){const sk=el('button','btn','⏭️ דילוג על ההפסקה הנוכחית');sk.onclick=()=>{u.breakUntil=0;save();parentsPanel()};s.appendChild(sk)}
+ {const vr=(label,key,set)=>{const r=el('div','setrow','<span>'+label+'</span>');[[0,'כבוי'],[.4,'חלש'],[.7,'בינוני'],[1,'רגיל']].forEach(([v,t])=>{const b=el('button',SND()[key]===v?'on':'',t);b.onclick=()=>{set(v);save();parentsPanel()};r.appendChild(b)});s.appendChild(r)};
+  vr('🗣️ קול המדריך:','voice',v=>{SND().voice=v;if(v)setTimeout(()=>say('ככה נשמע הקול'),50)});vr('🎵 צלילי משחק:','fx',v=>{setFxVol(v);if(v)setTimeout(()=>SFX.coin(),50)})}
  s.appendChild(el('p','','נקודות: תשובה נכונה = 1, משחק שהסתיים = 10, משחק בלי טעויות = עוד 5. מטרה של 20 נקודות היא בערך 10-15 דקות משחק. הרצף היומי נשמר רק כשמשיגים את המטרה, כך שהילד מתרגל קצת כל יום.'));
- const rs=el('button','btn','🗑️ איפוס ההתקדמות של '+esc(u.name));rs.onclick=()=>{if(confirm('לאפס את כל ההתקדמות של '+u.name+'? (המטבעות והצעצועים נשארים)')){['prog','mast','words','badges','days','daily','stats','streak'].forEach(x=>delete u[x]);u.xp=0;u._v=0;ensureU(u);save();parentsPanel()}};s.appendChild(rs);p.appendChild(s);
+ p.appendChild(s);p.appendChild(backupCard(u));
  p.appendChild(el('div','card pcard','<h3>🧠 איך האפליקציה מלמדת</h3><p>כל תשובה מעדכנת "חוזק" לכל אות (0-5). אות שנענתה נכון חוזרת לתרגול אחרי זמן הולך וגדל (10 דקות, יום, 3 ימים, שבוע, 3 שבועות), ואות שנענתה לא נכון חוזרת מיד – כך נבנה זיכרון לטווח ארוך. "קוראים מילים" משתמש רק במילים מאותיות שכבר נלמדו. טעויות בחזרה ובקריאה נשאלות שוב בסוף המשחק.</p>'));
  view.appendChild(p)}
 
+/* ================= backup & restore ================= */
+const BK_V=1;
+function holdBtn(label,secs,done){const b=el('button','btn hold',label);let t=null,left=0;const stop=()=>{if(t){clearInterval(t);t=null}b.textContent=label};
+ b.onpointerdown=e=>{e.preventDefault();left=secs;b.textContent='החזיקו… '+left;t=setInterval(()=>{left--;if(left<=0){stop();done()}else b.textContent='החזיקו… '+left},1000)};
+ ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,stop));b.oncontextmenu=e=>e.preventDefault();return b}
+function backupCard(u){const c=el('div','card pcard','<h3>💾 גיבוי ונתונים</h3><p>הגיבוי שומר קובץ עם ההתקדמות, המטבעות והצעצועים של כל השחקנים. אפשר לשחזר אותו בטלפון חדש או אחרי מחיקה.</p>'),msg=el('p','pmsg'),btns=el('div','pbtns');
+ const say2=(t,bad)=>{msg.textContent=t;msg.className='pmsg'+(bad?' bad':'')};
+ const bk=el('button','btn b','⬇️ גיבוי לקובץ');bk.onclick=()=>{try{const data=JSON.stringify({app:'alfi',kind:'backup',v:BK_V,at:new Date().toISOString(),users:DB.users},null,1),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='alfi-backup-'+today()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);say2('קובץ הגיבוי נשמר (בתיקיית ההורדות)')}catch(e){say2('שמירת הקובץ נכשלה',1)}};
+ const fi=el('input');fi.type='file';fi.accept='.json,application/json';fi.style.display='none';
+ fi.onchange=()=>{const f=fi.files&&fi.files[0];fi.value='';if(!f)return;f.text().then(txt=>{const r=readBackup(txt);if(r.err)return say2(r.err,1);
+  const same=r.users.filter(x=>DB.users.some(y=>y.id===x.id)),names=r.users.map(x=>x.name).join(', ');
+  if(!confirm('לשחזר מהגיבוי: '+names+'?'+(same.length?'\nהנתונים הקיימים של '+same.map(x=>x.name).join(', ')+' יוחלפו.':'')))return;
+  r.users.forEach(x=>{const i=DB.users.findIndex(y=>y.id===x.id);if(i>=0)DB.users[i]=x;else DB.users.push(x)});save();parentsPanel();const m=view.querySelector('.pmsg');if(m){m.textContent='השחזור הושלם ✔';m.scrollIntoView({block:'center'})}},()=>say2('הקובץ לא נקרא',1))};
+ const rs=el('button','btn b','⬆️ שחזור מקובץ');rs.onclick=()=>fi.click();
+ btns.append(bk,rs,fi,holdBtn('🔄 איפוס ההתקדמות של '+u.name,3,()=>{['prog','mast','words','badges','days','daily','stats','streak','conf','focus'].forEach(x=>delete u[x]);u.xp=0;u._v=0;ensureU(u);save();parentsPanel();const m=view.querySelector('.pmsg');if(m)m.textContent='ההתקדמות אופסה (המטבעות והצעצועים נשארו)'}),
+  holdBtn('🗑️ מחיקת '+u.name,5,()=>{DB.users=DB.users.filter(q=>q!==u);if(DB.cur===u.id)DB.cur=null;save();showUsers()}));
+ c.append(btns,msg,el('p','','איפוס ומחיקה: לוחצים ומחזיקים (3 שניות לאיפוס, 5 למחיקה). את המחיקה אי אפשר לבטל, אלא אם יש גיבוי.'));return c}
+function readBackup(txt){let d;try{d=JSON.parse(txt)}catch(e){return {err:'הקובץ לא נקרא - זה לא קובץ גיבוי'}}
+ if(!d||d.app!=='alfi'||d.kind!=='backup'||!Array.isArray(d.users))return {err:'הקובץ אינו גיבוי של אלופי האותיות'};
+ if(+d.v>BK_V)return {err:'הקובץ נוצר בגרסה חדשה יותר של האפליקציה. עדכנו את האפליקציה ונסו שוב'};
+ const users=d.users.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&x.name.trim());if(!users.length)return {err:'אין שחקנים בקובץ הגיבוי'};
+ users.forEach(x=>{x.coins=+x.coins||0;if(!Array.isArray(x.owned))x.owned=[];if(!x.eq||typeof x.eq!=='object')x.eq={};if(!x.look||typeof x.look!=='object')x.look={skin:SKINS[1],hair:HAIRS[0]};x._v=0});return {users}}
+
 /* ================= game runner ================= */
 const IMPL={};
-function runGame(gid,L,opt){const u=U();if(!u)return showUsers();opt=opt||{};clearView();const G=GLOOK.find(g=>g.id===gid),isX=XGAMES.some(g=>g.id===gid);
+function runGame(gid,L,opt){const u=U();if(!u)return showUsers();opt=opt||{};
+ if(breakOn(u)){clearView();return showBreak(u,()=>runGame(gid,L,opt))}
+ if(limitHit(u)){clearView();showHome();return showLimit(u,()=>runGame(gid,L,opt))}
+ clearView();const G=GLOOK.find(g=>g.id===gid),isX=XGAMES.some(g=>g.id===gid);
  setTop(G.icon+' '+G.name+(L&&!isX?' · '+L:''),isX||!L?showHome:()=>showLetter(L));
  view.innerHTML='<div class="game"><div class="ghead"><button class="tb" id="gspk" aria-label="השמעת ההנחיה" title="השמעת ההנחיה">🔈</button><div class="gins" id="gins"></div><div class="combo" id="gcombo"></div></div><div class="gstage" id="gstage"></div></div>';
  const stage=$('#gstage'),insEl=$('#gins'),comboEl=$('#gcombo');let insSay='',spkFn=null;const timers=new Set();
@@ -1123,10 +1185,10 @@ function runGame(gid,L,opt){const u=U();if(!u)return showUsers();opt=opt||{};cle
   loop(f){let last=performance.now();const step=t=>{if(!ctx.alive)return;const dt=Math.min(.05,Math.max(0,(t-last)/1000));last=t;f(dt,t);requestAnimationFrame(step)};requestAnimationFrame(step)},
   on(t,ev,f,o){t.addEventListener(ev,f,o);cleanups.push(()=>t.removeEventListener(ev,f,o))},
   cleanup(f){cleanups.push(f)},
-  ok(o){o=o||{};if(!ctx.alive)return;const s=ctx.st,d=day(u);s.ok++;s.combo++;s.best=Math.max(s.best,s.combo);u.stats.correct++;d.correct++;d.combo=Math.max(d.combo,s.combo);u.stats.bestCombo=Math.max(u.stats.bestCombo,s.combo);if(o.m!==false)mastUpdate(u,o.L||L,true);addXP(u,1);
+  ok(o){o=o||{};if(!ctx.alive)return;const s=ctx.st,d=day(u);s.ok++;s.combo++;s.best=Math.max(s.best,s.combo);u.stats.correct++;d.correct++;d.combo=Math.max(d.combo,s.combo);u.stats.bestCombo=Math.max(u.stats.bestCombo,s.combo);if(o.m!==false){mastUpdate(u,o.L||L,true);u.stats.ftN=(u.stats.ftN||0)+1;if(!s.miss)u.stats.ft1=(u.stats.ft1||0)+1}s.miss=false;addXP(u,1);
    if(s.combo>=3){comboEl.textContent='🔥 '+s.combo+' ברצף';comboEl.classList.add('on');replay(comboEl,'pump');tone(440+Math.min(s.combo,20)*30,.09,'square',.035)}
    save()},
-  no(o){o=o||{};if(!ctx.alive)return;ctx.st.wrong++;ctx.st.combo=0;comboEl.classList.remove('on');u.stats.wrong++;if(o.m!==false)mastUpdate(u,o.L||L,false);save()},
+  no(o){o=o||{};if(!ctx.alive)return;ctx.st.wrong++;ctx.st.combo=0;comboEl.classList.remove('on');u.stats.wrong++;if(o.m!==false){mastUpdate(u,o.L||L,false);ctx.st.miss=true;noteConf(u,o.L||L,o.got)}save()},
   win(){if(!ctx.alive)return;ctx.alive=false;gameWin(gid,L,ctx)},
   lose(msg){if(!ctx.alive)return;ctx.alive=false;gameLose(gid,L,msg,ctx)}};
  $('#gspk').onclick=()=>spkFn?spkFn():say(insSay);
@@ -1254,7 +1316,7 @@ IMPL.lesson=function(ctx){const L=ctx.L,st=ctx.stage;st.classList.add('lesson');
  function find(b,done){ctx.ins('מצאו את כל האותיות '+L+' (יש 4)','מצאו את כל האותיות '+LN[L]);
   const items=shuffle([L,L,L,L].concat(SIM[L],SIM[L]));const g=el('div','fgrid');let got=0;
   items.forEach(x=>{const t=el('div','ftile',x);t.style.fontFamily=pick(FONTS)+',Rubik,Arial';t.style.color=pick(TILE_COLS);
-   t.onclick=()=>{if(t.classList.contains('ok'))return;if(x===L){t.classList.add('ok');replay(t,'bounce');SFX.good();ctx.ok();sayL(L);if(++got===4)ctx.timeout(()=>{say('מצאת את כולן! '+pick(PRAISE));done()},700)}else{replay(t,'shake');SFX.bad();ctx.no();say('זאת '+LN[x])}};g.appendChild(t)});
+   t.onclick=()=>{if(t.classList.contains('ok'))return;if(x===L){t.classList.add('ok');replay(t,'bounce');SFX.good();ctx.ok();sayL(L);if(++got===4)ctx.timeout(()=>{say('מצאת את כולן! '+pick(PRAISE));done()},700)}else{replay(t,'shake');SFX.bad();ctx.no({got:x});say('זאת '+LN[x])}};g.appendChild(t)});
   b.appendChild(g)}};
 
 /* ================= game 2: tracing (כותבים את האות) ================= */
@@ -1311,7 +1373,7 @@ IMPL.color=function(ctx){const L=ctx.L,st=ctx.stage;st.classList.add('center');
  const bar=el('div','cbar','<i></i>');wrap.appendChild(bar);
  const pots=el('div','pots');COLS.forEach((c,i)=>{const b=el('button','pot'+(i===0?' sel':''));b.style.background=c[0];b.title=c[1];b.onclick=()=>{col=c[0];pots.querySelectorAll('.pot').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');tone(520+i*40,.12,'triangle',.08);say(c[1])};pots.appendChild(b)});wrap.appendChild(pots);
  const rr=el('div','row');const bRe=el('button','btn w','↺ מתחילים מחדש');bRe.onclick=()=>{SFX.pick();px.clearRect(0,0,PX,PX);finished=false;check()};rr.appendChild(bRe);wrap.appendChild(rr);
- let crayon=null;function cray(on){if(DB.mute&&on)return;const a=ac();if(!a)return;if(!crayon){const n=a.sampleRate*2,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<n;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.5+(Math.random()*2-1)*.25}const s=a.createBufferSource();s.buffer=b;s.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=1100;f.Q.value=.35;const g=a.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(a.destination);s.start();crayon={s,g}}crayon.g.gain.setTargetAtTime(on?.09:0,a.currentTime,on?.03:.08)}
+ let crayon=null;function cray(on){if(DB.mute&&on)return;const a=ac();if(!a)return;if(!crayon){const n=a.sampleRate*2,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<n;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.5+(Math.random()*2-1)*.25}const s=a.createBufferSource();s.buffer=b;s.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=1100;f.Q.value=.35;const g=a.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(OUTN(a));s.start();crayon={s,g}}crayon.g.gain.setTargetAtTime(on?.09:0,a.currentTime,on?.03:.08)}
  ctx.cleanup(()=>{if(crayon){try{crayon.s.stop()}catch(e){}}});
  const pos=e=>{const r=cPaint.getBoundingClientRect();return {x:(e.clientX-r.left)*PX/r.width,y:(e.clientY-r.top)*PX/r.height}};
  function seg(a,b){px.strokeStyle=col;px.lineWidth=brush;px.lineCap='round';px.lineJoin='round';px.beginPath();px.moveTo(a.x,a.y);px.lineTo(b.x+.01,b.y);px.stroke();px.save();px.globalCompositeOperation='destination-in';px.drawImage(mask,0,0);px.restore()}
@@ -1347,7 +1409,7 @@ function planeGame(ctx,o){const st=ctx.stage,need=5,L=o.tgt;
   for(let i=items.length-1;i>=0;i--){const it=items[i];it.x-=sp*dt;it.el.style.transform='translate('+(it.x-39)+'px,'+(it.y-45)+'px)';
    if(Math.abs(it.x-(px+35))<52&&Math.abs(it.y-py)<48){items.splice(i,1);
     if(it.ok){got++;it.el.classList.add('pop');SFX.pop();SFX.good();ctx.ok();o.hit();H.fill(got);ctx.timeout(()=>it.el.remove(),350);if(got>=need){stop=true;ctx.timeout(()=>ctx.win(),900)}}
-    else{it.el.classList.add('bad');SFX.bad();ctx.no();o.miss(it.t);restart=true;ctx.timeout(()=>it.el.remove(),350)}}
+    else{it.el.classList.add('bad');SFX.bad();ctx.no({got:it.t});o.miss(it.t);restart=true;ctx.timeout(()=>it.el.remove(),350)}}
    else if(it.x<-100){it.el.remove();items.splice(i,1)}}
   if(restart){items.forEach(x=>x.el.remove());items=[];spawnT=1.6;replay(ar,'shake')}})}
 
@@ -1362,7 +1424,7 @@ IMPL.mole=function(ctx){const L=ctx.L,st=ctx.stage,need=5;
   const cycle=()=>{if(!ctx.alive||o.gone)return;o.up=!o.up;h.classList.toggle('up',o.up);ctx.timeout(cycle,o.up?rnd(1600,2600):rnd(500,1500))};ctx.timeout(cycle,rnd(100,1600));
   h.addEventListener('pointerdown',e=>{if(!o.up||o.gone||!ctx.alive)return;const bk=el('div','bonk','🔨');bk.style.left=e.clientX+'px';bk.style.top=e.clientY+'px';document.body.appendChild(bk);setTimeout(()=>bk.remove(),450);SFX.bonk();
    if(x===L){o.gone=true;h.classList.add('hit');SFX.good();ctx.ok();sayL(L);got++;H.fill(got);setTimeout(()=>h.classList.add('gone'),250);if(got>=need)ctx.timeout(()=>ctx.win(),1000)}
-   else{replay(h,'no');SFX.bad();ctx.no();say('זאת '+LN[x]);ctx.timeout(()=>{h.classList.remove('no');if(o.up&&!o.gone){o.up=false;h.classList.remove('up')}},450)}});return o})};
+   else{replay(h,'no');SFX.bad();ctx.no({got:x});say('זאת '+LN[x]);ctx.timeout(()=>{h.classList.remove('no');if(o.up&&!o.gone){o.up=false;h.classList.remove('up')}},450)}});return o})};
 
 /* ================= game 6: match pairs (מוצאים זוגות) ================= */
 IMPL.match=function(ctx){const L=ctx.L,st=ctx.stage,other=pick(SIM[L]),STY=['color','plain','stripe','wave','dot','outline'];
@@ -1440,7 +1502,7 @@ function soundQuiz(ctx,o){const L=ctx.L,order=shuffle(VOWELS);let k=0;const w=el
   opts.forEach(x=>{const b=el('div','sopt',esc(syl(x.L,x.v))+(o.names?'<small>'+x.v.n+'</small>':''));
    b.onclick=()=>{if(lock||b.classList.contains('no'))return;
     if(x.L===L&&x.v.s===v.s){lock=true;b.classList.add('ok');SFX.good();ctx.ok();sayS(L,v);k++;ctx.timeout(()=>{if(k<order.length)round();else ctx.win()},1500)}
-    else{b.classList.add('no');replay(b,'shake');SFX.bad();ctx.no();ctx.timeout(()=>sayS(x.L,x.v),250);if(++wr>=2)[...g.children].forEach((e,i)=>{if(opts[i].L===L&&opts[i].v.s===v.s)e.classList.add('hint')})}};g.appendChild(b)});
+    else{b.classList.add('no');replay(b,'shake');SFX.bad();ctx.no({got:x.L});ctx.timeout(()=>sayS(x.L,x.v),250);if(++wr>=2)[...g.children].forEach((e,i)=>{if(opts[i].L===L&&opts[i].v.s===v.s)e.classList.add('hint')})}};g.appendChild(b)});
   w.append(sDots(order.length,k),sSpeaker(ctx,hear),g);
   if(k===0){say(o.ins);sayS(L,v,true)}else ctx.timeout(hear,350)}
  round()}
@@ -1472,22 +1534,22 @@ function quizRun(ctx,qs,done){const w=el('div','qwrap');ctx.stage.appendChild(w)
  function next(){if(!ctx.alive)return;if(!queue.length){done();return}show(queue.shift())}
  function show(q){w.innerHTML='';w.__q=q;noVoice(w);const pb=el('div','qprog','<i style="width:'+(answered/total*100)+'%"></i>');w.appendChild(pb);const fb=el('div','fb');let wr=0,lock=false;
   const good=()=>{if(lock)return;lock=true;answered++;pb.firstChild.style.width=(answered/total*100)+'%';SFX.good();ctx.ok({L:q.L,m:q.m});fb.className='fb ok';fb.textContent='✔ '+pick(PRAISE);if(q.onOk)q.onOk();ctx.timeout(next,1600)};
-  const bad=()=>{SFX.bad();ctx.no({L:q.L,m:q.m});wr++;fb.className='fb no';fb.textContent='כמעט! נסו שוב 💪';if(wr===1&&!q.again){queue.push(Object.assign({},q,{again:1}));total++;pb.firstChild.style.width=(answered/total*100)+'%'}return wr};
+  const bad=g=>{SFX.bad();ctx.no({L:q.L,m:q.m,got:g});wr++;fb.className='fb no';fb.textContent='כמעט! נסו שוב 💪';if(wr===1&&!q.again){queue.push(Object.assign({},q,{again:1}));total++;pb.firstChild.style.width=(answered/total*100)+'%'}return wr};
   ctx.ins(q.ins+(q.again?' (שוב, כדי לזכור!)':''),false);ctx.setSpk(q.hear||(()=>say(q.ins)));
   const top=el('div','brow');if(q.hear)top.appendChild(sSpeaker(ctx,q.hear));if(q.prompt)top.appendChild(q.prompt());w.appendChild(top);
   if(q.custom)q.custom(w,good,bad);
   else{const g=el('div','sopts');q.opts.forEach(o=>{const b=el('div','sopt'+(q.cls?' '+q.cls:''),o.html);
-   b.onclick=()=>{if(lock||b.classList.contains('no'))return;if(o.ok){b.classList.add('ok');good()}else{b.classList.add('no');replay(b,'shake');if(o.say)ctx.timeout(o.say,250);if(bad()>=2)[...g.children].forEach((e,i)=>{if(q.opts[i].ok)e.classList.add('hint')})}};g.appendChild(b)});w.appendChild(g)}
+   b.onclick=()=>{if(lock||b.classList.contains('no'))return;if(o.ok){b.classList.add('ok');good()}else{b.classList.add('no');replay(b,'shake');if(o.say)ctx.timeout(o.say,250);if(bad(o.g)>=2)[...g.children].forEach((e,i)=>{if(q.opts[i].ok)e.classList.add('hint')})}};g.appendChild(b)});w.appendChild(g)}
   w.appendChild(fb);ctx.timeout(()=>{if(q.hear)q.hear();else say(q.ins)},300)}
  next()}
 function letterQ(L,pool,type){const others=n=>shuffle([...new Set(SIM[L].concat(pool))].filter(x=>x!==L)).slice(0,n),big=t=>'<span style="font-size:clamp(50px,9vh,90px)">'+t+'</span>';
- if(type==='name')return {L,ins:'איפה האות '+LNP[L]+'?',hear:()=>say('איפה האות '+LN[L]+'?'),opts:shuffle([L].concat(others(3))).map(x=>({html:x,ok:x===L,say:()=>say('זאת '+LN[x])}))};
+ if(type==='name')return {L,ins:'איפה האות '+LNP[L]+'?',hear:()=>say('איפה האות '+LN[L]+'?'),opts:shuffle([L].concat(others(3))).map(x=>({html:x,ok:x===L,g:x,say:()=>say('זאת '+LN[x])}))};
  if(type==='pic'){const w=pick(WORDS[L]),ow=[];for(const x of shuffle(LETTERS.filter(y=>y!==L))){const c=pick(WORDS[x]);if(c[1]!==w[1]&&!ow.some(o=>o[1]===c[1]))ow.push(c);if(ow.length===3)break}
   return {L,ins:'איזו תמונה מתחילה באות '+L+'?',hear:()=>say('איזו תמונה מתחילה באות '+LN[L]+'?'),prompt:()=>el('div','qcard',L),opts:shuffle([w].concat(ow)).map(x=>({html:big(x[1]),ok:x===w,say:()=>say(x[0])})),onOk:()=>say(w[0])}}
- if(type==='first'){const w=pick(WORDS[L]);return {L,ins:'באיזו אות מתחילה המילה '+w[0]+'?',hear:()=>say('באיזו אות מתחילה המילה '+w[0]+'?'),prompt:()=>el('div','qcard','<span class="em">'+w[1]+'</span>'),opts:shuffle([L].concat(others(3))).map(x=>({html:x,ok:x===L,say:()=>say(LN[x])}))}}
- const v=pick(VOWELS);return {L,ins:'איזה צליל שמעת?',hear:()=>sayS(L,v),cls:'nq',opts:shuffle([L].concat(distinctLetters(L,3))).map(x=>({html:esc(syl(x,v)),ok:x===L,say:()=>sayS(x,v)}))}}
+ if(type==='first'){const w=pick(WORDS[L]);return {L,ins:'באיזו אות מתחילה המילה '+w[0]+'?',hear:()=>say('באיזו אות מתחילה המילה '+w[0]+'?'),prompt:()=>el('div','qcard','<span class="em">'+w[1]+'</span>'),opts:shuffle([L].concat(others(3))).map(x=>({html:x,ok:x===L,g:x,say:()=>say(LN[x])}))}}
+ const v=pick(VOWELS);return {L,ins:'איזה צליל שמעת?',hear:()=>sayS(L,v),cls:'nq',opts:shuffle([L].concat(distinctLetters(L,3))).map(x=>({html:esc(syl(x,v)),ok:x===L,g:x,say:()=>sayS(x,v)}))}}
 IMPL.review=function(ctx){const u=U(),o=ctx.opt||{};let pool=o.rev&&o.rev.length?o.rev.slice():learned(u);if(pool.length<2)pool=LETTERS.slice(0,4);
- const now=Date.now(),score=L=>{const m=u.mast[L];return (m?m.box*10:-40)-(m&&now>=m.next?30:0)+Math.random()*8},order=pool.slice().sort((a,b)=>score(a)-score(b)),types=['name','pic','first','sound'],qs=[];
+ const foc=(u.focus||[]).filter(L=>pool.includes(L)),now=Date.now(),score=L=>{const m=u.mast[L];return (m?m.box*10:-40)-(m&&now>=m.next?30:0)-(foc.includes(L)?60:0)+Math.random()*8},order=pool.slice().sort((a,b)=>score(a)-score(b)),types=['name','pic','first','sound'],qs=[];
  for(let i=0;i<8;i++)qs.push(letterQ(order[i%Math.min(order.length,5)],pool,types[i%4]));
  quizRun(ctx,shuffle(qs),()=>ctx.win())};
 function wordView(r){const d=el('div','word nq');d.style.fontSize='clamp(60px,12vh,110px)';r.s.forEach(s=>{const sp=el('span','',esc(s));sp.onclick=e=>{e.stopPropagation();sp.classList.add('lit');setTimeout(()=>sp.classList.remove('lit'),700);say(s,{rate:.7})};d.appendChild(sp)});return d}
@@ -1532,7 +1594,7 @@ IMPL.race=function(ctx){const L=ctx.L,st=ctx.stage,need=10,TIME=60,bads=SIM[L];
  const leaves=Array.from({length:26},()=>({x:Math.random(),y:Math.random(),v:rnd(.05,.12),r:rnd(0,6),c:pick(['#FB8C00','#FFC928','#8BC34A','#E53935'])}));
  const hud=el('div','hud');const hc=el('div','hudbox','<span class="tgt" style="width:44px;height:44px;font-size:30px">'+L+'</span><b>0 / '+need+'</b>');const ht=el('div','hudbox','⏱ <b>'+TIME+'</b>');hud.append(hc,ht);st.appendChild(hud);
  function updHud(){hc.querySelector('b').textContent=got+' / '+need;const s=Math.max(0,Math.ceil(tLeft));ht.querySelector('b').textContent=s;ht.style.background=s<=10?'#FFCDD2':s<=25?'#FFF3CD':'#fff'}
- let ENG=null;function engine(on){const a=ac();if(!a)return;if(!ENG){const o=a.createOscillator(),o2=a.createOscillator(),f=a.createBiquadFilter(),g=a.createGain();o.type='sawtooth';o2.type='triangle';f.type='lowpass';f.frequency.value=600;g.gain.value=0;o.connect(f);o2.connect(f);f.connect(g);g.connect(a.destination);o.start();o2.start();ENG={o,o2,g}}
+ let ENG=null;function engine(on){const a=ac();if(!a)return;if(!ENG){const o=a.createOscillator(),o2=a.createOscillator(),f=a.createBiquadFilter(),g=a.createGain();o.type='sawtooth';o2.type='triangle';f.type='lowpass';f.frequency.value=600;g.gain.value=0;o.connect(f);o2.connect(f);f.connect(g);g.connect(OUTN(a));o.start();o2.start();ENG={o,o2,g}}
   const r=speed/MAXS,t=a.currentTime;ENG.o.frequency.setTargetAtTime(48+70*r,t,.15);ENG.o2.frequency.setTargetAtTime(96+140*r,t,.15);ENG.g.gain.setTargetAtTime(on&&!DB.mute?.03+.035*r:0,t,.12)}
  ctx.cleanup(()=>{if(ENG){try{ENG.o.stop();ENG.o2.stop()}catch(e){}}});
  const intro=el('div','intro');intro.innerHTML='<div class="card"><h3>🏁 מירוץ האותיות</h3><p>אוספים 10 פעמים את האות <span class="tgt">'+L+'</span></p><p style="font-size:18px">לוחצים בצד ימין או שמאל של המסך (או על החצים) כדי להחליף נתיב. נזהרים מאותיות אחרות ומקונוסים!</p><p>בחרו מכונית:</p><div class="cars"></div><button class="btn g glow">יוצאים לדרך! 🚦</button></div>';st.appendChild(intro);
@@ -1555,7 +1617,7 @@ IMPL.race=function(ctx){const L=ctx.L,st=ctx.stage,need=10,TIME=60,bads=SIM[L];
   if(ps)ps.it.forEach(it=>{if(it.dead||Math.abs(it.off-px)>.3)return;it.dead=1;
    if(it.cone){slow=1.6;SFX.bump();ctx.no({m:false});replay(cv,'shake')}
    else if(it.g){got++;SFX.good();ctx.ok();sayL(L);for(let i=0;i<18;i++)bursts.push({x:W/2,y:H*.8,vx:rnd(-6,6),vy:rnd(-9,-2),l:1,c:pick(['#FFC928','#E53935','#1E6FD9','#2EB85C'])});if(got>=need&&finishSeg<0){finishSeg=pi+40;ctx.timeout(()=>say('הנה קו הסיום!'),700)}}
-   else{slow=.9;SFX.bump();ctx.no();say('זאת '+LN[it.t])}});
+   else{slow=.9;SFX.bump();ctx.no({got:it.t});say('זאת '+LN[it.t])}});
   if(finishSeg>0&&pi>=finishSeg){state='end';engine(false);ctx.win();return}
   if(tLeft<=0||pos>=(segs.length-DRAW-5)*SEG){state='end';engine(false);ctx.lose('נגמר הזמן! אספת '+got+' מתוך '+need)}}
  function drawItem(it,x,y,sz,t){if(it.cone){c.fillStyle='#FF6D00';c.beginPath();c.moveTo(x,y-sz*.9);c.lineTo(x+sz*.32,y);c.lineTo(x-sz*.32,y);c.closePath();c.fill();c.fillStyle='#fff';c.fillRect(x-sz*.17,y-sz*.5,sz*.34,sz*.12);c.fillStyle='#E65100';c.fillRect(x-sz*.4,y-sz*.06,sz*.8,sz*.08);return}

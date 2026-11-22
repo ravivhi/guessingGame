@@ -1,8 +1,9 @@
 # Pulls the ehadi app from the public repo ravivhi/ehadi into ehadi/ here,
 # so it's served at https://ravivh.com/ehadi/.
 #
-# Pull model on purpose: ravivhi/ehadi holds NO credentials for this repo.
-# Manual only: review ehadi changes, then Actions → "Sync ehadi" → Run workflow.
+# Pull model on purpose: ravivhi/ehadi holds no token that can write here.
+# Started automatically by ravivhi/ehadi's publish.yml on every push to its main that changes the
+# web app (with a token that can only start workflows here), or by hand: Actions → "Sync ehadi" → Run workflow.
 name: Sync ehadi from ravivhi/ehadi
 
 on:

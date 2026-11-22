@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## ehadi/ is generated too — do not edit here
 
-`ehadi/` (served at ravivh.com/ehadi/) is synced from the public repo **ravivhi/ehadi** by `.github/workflows/sync-ehadi.yml` (manual Run workflow; tests/, android/, play-assets/, tts-proxy/ and repo files are excluded). Make ehadi changes in that repo. Same pull-only rule as alfi.
+`ehadi/` (served at ravivh.com/ehadi/) is synced from the public repo **ravivhi/ehadi** by `.github/workflows/sync-ehadi.yml` (tests/, android/, play-assets/, tts-proxy/ and repo files are excluded). Like alfi, it runs automatically on every push to ehadi's main that changes the web app (ehadi's publish.yml, same Actions-only token), or by hand. Make ehadi changes in that repo. Same pull-only rule as alfi.
 
 ## Development
 

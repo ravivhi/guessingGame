@@ -2764,7 +2764,7 @@
             document.getElementById("shop-balance").textContent = `⭐ ${grandTotal}`;
             const boxes = shop.boxes || 0;
             document.getElementById("box-count").textContent = boxes ? `יש לכם ${boxes} ${boxes === 1 ? "קופסה" : "קופסאות"}!` : "אין לכם קופסה עדיין";
-            document.getElementById("box-hint").textContent = `הקופסה מגיעה כשאוספים את כל הפרצופים! (עוד ${Math.max(0, BOX_GOAL - streak)} נכונות ברצף)`;
+            document.getElementById("box-hint").textContent = "הקופסה מגיעה כשאוספים את כל הפרצופים!";
             const stage = streakStage(streak), faces = document.getElementById("shop-faces");   // faces 1..current stage
             faces.innerHTML = "";
             STREAK_EMOJIS.forEach((e, i) => {

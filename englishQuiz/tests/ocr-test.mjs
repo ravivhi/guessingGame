@@ -5,7 +5,7 @@
 // The translation service (MyMemory) is stubbed, so the test is fast, repeatable and doesn't hit the real API.
 //
 // Setup (once):   cd tests && npm install
-// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist|learn|shop|box|phoneback   (pairs/list take a file-name part too: node ocr-test.mjs list quarter)
+// Run:            cd tests && npm run ocr              (everything)   |   node ocr-test.mjs wordbank|random|layout|back|tabs|streak|pairs|list|translation|practice|chooser|header|persist|learn|shop|box|phoneback|avatar   (pairs/list take a file-name part too: node ocr-test.mjs list quarter)
 // Chrome:         set CHROME_PATH if Chrome/Edge isn't in a default location.
 //
 // The photos in tests/fixtures/ are git-ignored on purpose (copyrighted workbook pages).
@@ -1234,7 +1234,55 @@ async function testPhoneBack() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack };
+// 🐶 Tapping the character on the main screen: its own move, emojis and English phrase, then a word of the chosen
+// level in a speech bubble (read aloud, tap the bubble to hear it again). 5 quick taps make it dizzy. Not the shop.
+async function testAvatar() {
+  console.log('\n[avatar] tapping the character: its own reaction and a word to learn');
+  const page = await openPage();
+  const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
+  const text = sel => page.$eval(sel, e => e.textContent);
+  // record what is read aloud instead of speaking
+  await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => window.spoken.push(u.text); speechSynthesis.cancel = () => {}; });
+  const spoken = () => page.evaluate(() => { const s = window.spoken.slice(); window.spoken.length = 0; return s; });
+  const setAvatar = id => page.evaluate(id => { if (!shop.owned.includes(id)) shop.owned.push(id); shop.avatar = id; saveShop(); applyShop(); }, id);
+
+  check(await page.evaluate(() => SHOP_AVATARS.every(a => AVATAR_FX[a.id] && AVATAR_MOVES[AVATAR_FX[a.id].move] && AVATAR_FX[a.id].fx.length && AVATAR_FX[a.id].say)), 'every character in the shop has its own move, emojis and phrase');
+  await page.select('#level-select', '1');
+  await setAvatar('dog');
+  await page.click('#menu-avatar');
+  await page.waitForFunction(() => document.getElementById('avatar-bubble').classList.contains('on'), { timeout: 10000 });
+  const l1 = Object.fromEntries(fs.readFileSync(path.join(root, 'wordbank', 'level-1.txt'), 'utf8').split(/\r?\n/).filter(l => l.includes('|')).map(l => l.split('|')));
+  const w1 = await page.evaluate(() => avatarWord.en);
+  check(!(await vis('shop-screen')) && await vis('start-screen'), 'tapping the character no longer opens the shop');
+  check((await text('#avatar-bubble .ab-say')).includes('Woof woof!') && (await text('#avatar-bubble .ab-word')).includes(w1) && l1[w1] && (await text('#avatar-bubble .ab-he')) === l1[w1], `the dog says "Woof woof!" and teaches a level-1 word with its meaning (${w1} = ${l1[w1]})`);
+  check(JSON.stringify(await spoken()) === JSON.stringify(['Woof woof!', w1]), 'it reads "Woof woof!" and then the word aloud');
+  check((await page.$$('#avatar-fx span')).length > 0 && (await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).every(t => ['🦴', '🐾'].includes(t)), 'bones and paw prints burst out of the dog');
+  check(await page.$eval('#menu-avatar', e => e.getAnimations().length > 0), 'the dog moves');
+  await page.click('#avatar-bubble');
+  check(JSON.stringify(await spoken()) === JSON.stringify([w1]), 'tapping the bubble reads the word again');
+  check((await page.$$eval('#avatar-bubble', b => b.map(x => { const r = x.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0; })))[0], 'the bubble is fully on the screen');
+
+  // another character: its own phrase and emojis
+  await new Promise(r => setTimeout(r, 2600));   // not a quick tap
+  await setAvatar('robot');
+  await page.click('#menu-avatar');
+  await page.waitForFunction(w => avatarWord && avatarWord.en !== w, { timeout: 10000 }, w1);
+  check((await text('#avatar-bubble .ab-say')).includes('Beep boop!') && (await spoken())[0] === 'Beep boop!', 'the robot says "Beep boop!" (and a new word)');
+
+  // 5 quick taps: dizzy
+  await new Promise(r => setTimeout(r, 2600));
+  for (let k = 0; k < 5; k++) await page.click('#menu-avatar');
+  await new Promise(r => setTimeout(r, 200));
+  check((await text('#avatar-bubble .ab-say')).includes('dizzy') && (await spoken()).includes("Whoa, I'm dizzy!"), '5 quick taps make the character dizzy');
+
+  // no character chosen: no badge to tap
+  await page.evaluate(() => { shop.avatar = null; applyShop(); });
+  check(!(await page.$eval('#menu-avatar', e => e.getBoundingClientRect().width > 0)), 'without a character there is nothing to tap');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

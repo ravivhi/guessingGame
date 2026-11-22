@@ -346,11 +346,25 @@
         #box-toast.on { display: block; animation: cardPop 0.35s ease-out; }
         #shop-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.18); }
         @keyframes shopWiggle { 0%, 88%, 100% { transform: rotate(0); } 92% { transform: rotate(-12deg); } 96% { transform: rotate(12deg); } }
-        /* the chosen character: a round badge in the top-right corner of the main screen (tap = the shop) */
+        /* the chosen character: a round badge in the top-right corner of the main screen (tap = it reacts and teaches a word) */
         #menu-avatar { position: absolute; top: -8px; right: -8px; width: 46px; height: 46px; padding: 0; border: 3px solid #f6ad55;
                        border-radius: 50%; font-size: 1.6rem; line-height: 40px; cursor: pointer; background: #fffaf0;
-                       box-shadow: 0 3px 0 rgba(0,0,0,0.15); }
+                       box-shadow: 0 3px 0 rgba(0,0,0,0.15); z-index: 5; touch-action: manipulation; }
         #menu-avatar:empty { display: none; }
+        /* the character's speech bubble, under it, with its tail pointing up at the character */
+        #avatar-bubble { position: absolute; top: 48px; right: 0; z-index: 6; display: none; max-width: 230px; min-width: 150px;
+                         padding: 10px 14px; border-radius: 16px; background: #fffaf0; border: 3px solid #f6ad55; color: #2d3748;
+                         box-shadow: 0 6px 16px rgba(0,0,0,0.2); text-align: center; cursor: pointer; }
+        #avatar-bubble::before { content: ""; position: absolute; top: -12px; right: 12px; border: 9px solid transparent; border-top: 0;
+                                 border-bottom: 12px solid #f6ad55; }
+        #avatar-bubble.on { display: block; animation: cardPop 0.3s ease-out; }
+        #avatar-bubble .ab-say { font-size: 0.85rem; color: #975a16; font-weight: bold; }
+        #avatar-bubble .ab-word { font-size: 1.5rem; font-weight: bold; color: #2b6cb0; margin-top: 2px; overflow-wrap: anywhere; }
+        #avatar-bubble .ab-he { font-size: 1.1rem; margin-top: 2px; }
+        #avatar-bubble .ab-hint { font-size: 0.7rem; color: #a0aec0; margin-top: 4px; }
+        /* emojis bursting out of the character */
+        #avatar-fx { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+        #avatar-fx span { position: absolute; font-size: 1.5rem; line-height: 1; will-change: transform, opacity; }
         /* the character asks the question in the game, and hops on every right answer */
         #game-avatar { display: inline-block; font-size: 1.6rem; line-height: 1; vertical-align: middle; margin-inline-end: 6px; }
         #game-avatar:empty { display: none; }
@@ -440,7 +454,8 @@
     <div class="game-container">
         <div id="start-screen">
             <button type="button" id="shop-btn" onclick="openShop()" aria-label="חנות" title="חנות">🏪</button>
-            <button type="button" id="menu-avatar" onclick="openShop()" aria-label="הדמות שלי" title="הדמות שלי"></button>
+            <button type="button" id="menu-avatar" onclick="avatarTap()" aria-label="הדמות שלי – לחצו עליה" title="לחצו על הדמות!"></button>
+            <div id="avatar-bubble" role="status" onclick="avatarBubbleTap()"></div>
             <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
@@ -492,6 +507,7 @@
         </div>
 
         <div id="box-toast" role="status"></div>
+        <div id="avatar-fx" aria-hidden="true"></div>
 
         <div id="game-screen" style="display:none;">
             <div class="header-info">
@@ -1054,15 +1070,20 @@
         }
 
         function speakWord() { speakText(document.getElementById("question-word").innerText.trim()); }
-        function speakText(word) {
-            if (!word || !("speechSynthesis" in window)) return;
+        function speakText(word) { speakTexts([word]); }
+        // several English texts one after the other (e.g. the character's "Woof woof!" and then a word)
+        function speakTexts(texts) {
+            texts = texts.filter(Boolean);
+            if (!texts.length || !("speechSynthesis" in window)) return;
             speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(word);
-            u.lang = "en-US";
-            u.rate = 0.85;
             const v = speechSynthesis.getVoices().find(v => /^en[-_]US/i.test(v.lang)) || speechSynthesis.getVoices().find(v => /^en/i.test(v.lang));
-            if (v) u.voice = v;
-            speechSynthesis.speak(u);
+            for (const t of texts) {
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = "en-US";
+                u.rate = 0.85;
+                if (v) u.voice = v;
+                speechSynthesis.speak(u);
+            }
         }
         if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { for (const id of ["speak-btn", "learn-speak"]) { const b = document.getElementById(id); if (b) b.style.display = "none"; } });
 
@@ -2102,6 +2123,115 @@
             document.body.style.setProperty("--bg", t.bg);
             const meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute("content", t.bg.match(/#[0-9a-f]{6}/i)[0]);
+        }
+
+        // ---- 🐶 Tapping the character on the main screen: it reacts in its own way (a move, a burst of emojis and an
+        // English sound or phrase, read aloud), then teaches a word of the chosen level in a speech bubble (tap the
+        // bubble to hear the word again). 5 quick taps make any character dizzy.
+        const AVATAR_FX = {
+            dog: { move: "wag", fx: ["🦴", "🐾"], say: "Woof woof!" },          cat: { move: "wiggle", fx: ["🧶", "💕"], say: "Meow!" },
+            rabbit: { move: "hop", fx: ["🥕"], say: "Hop hop!" },                frog: { move: "bighop", fx: ["🍃", "💚"], say: "Ribbit!" },
+            fox: { move: "spin", fx: ["🍂"], say: "Hello, friend!" },            panda: { move: "grow", fx: ["🎋"], say: "I love bamboo!" },
+            penguin: { move: "wiggle", fx: ["❄️"], say: "Brrr! It's cold!" },    monkey: { move: "flip", fx: ["🍌"], say: "Ooh ooh, ah ah!" },
+            tiger: { move: "grow", fx: ["🐾", "💥"], say: "Roar!" },             lion: { move: "grow", fx: ["👑", "💥"], say: "Roar! I am the king!" },
+            owl: { move: "spin", fx: ["🌙", "⭐"], say: "Hoot hoot!" },           robot: { move: "wiggle", fx: ["⚙️", "🔩"], say: "Beep boop!" },
+            alien: { move: "float", fx: ["🛸", "✨"], say: "Hello, Earth!" },     dino: { move: "bighop", fx: ["🌿", "🦴"], say: "Rawr!" },
+            dragon: { move: "grow", fx: ["🔥"], say: "I breathe fire!" },         unicorn: { move: "hop", fx: ["🌈", "✨"], say: "Magic!" },
+            pig: { move: "wiggle", fx: ["🍎", "💗"], say: "Oink oink!" },        chick: { move: "hop", fx: ["🌼"], say: "Cheep cheep!" },
+            cow: { move: "wag", fx: ["🥛", "🌾"], say: "Moo!" },                 bee: { move: "zigzag", fx: ["🌻", "🍯"], say: "Buzz buzz!" },
+            bear: { move: "grow", fx: ["🍯"], say: "I love honey!" },            koala: { move: "float", fx: ["💤", "🍃"], say: "Sleepy time!" },
+            butterfly: { move: "flutter", fx: ["🌸", "🌷"], say: "Fly with me!" }, giraffe: { move: "tall", fx: ["🌳", "🍃"], say: "I am so tall!" },
+            zebra: { move: "wag", fx: ["🌾"], say: "Look at my stripes!" },     elephant: { move: "wag", fx: ["💦"], say: "Toot toot!" },
+            parrot: { move: "fly", fx: ["🪶"], say: "Hello! Hello!" },           dolphin: { move: "flip", fx: ["💦", "🌊"], say: "Splash!" },
+            octopus: { move: "wiggle", fx: ["🫧"], say: "I have eight arms!" },  flamingo: { move: "float", fx: ["💗"], say: "I stand on one leg!" },
+            shark: { move: "wiggle", fx: ["🌊"], say: "Chomp chomp!" },          sauropod: { move: "grow", fx: ["🌿"], say: "Stomp stomp!" },
+            ghost: { move: "fade", fx: ["💨", "✨"], say: "Boo!" },              wizard: { move: "spin", fx: ["✨", "🪄", "⭐"], say: "Abracadabra!" },
+            fairy: { move: "fly", fx: ["✨", "🌟"], say: "Sparkle sparkle!" },    superhero: { move: "fly", fx: ["💥", "⭐"], say: "To the rescue!" },
+            mermaid: { move: "flip", fx: ["🫧", "🐚"], say: "Under the sea!" },   astronaut: { move: "float", fx: ["⭐", "🪐", "🚀"], say: "Blast off!" },
+            prince: { move: "grow", fx: ["👑", "💎"], say: "Hello, my friend!" }, princess: { move: "spin", fx: ["👑", "💖"], say: "Welcome to my castle!" },
+        };
+        const AVATAR_MOVES = {   // keyframes for element.animate()
+            hop: [{ transform: "translateY(0)" }, { transform: "translateY(-14px)" }, { transform: "translateY(0)" }, { transform: "translateY(-8px)" }, { transform: "translateY(0)" }],
+            bighop: [{ transform: "translateY(0) scale(1)" }, { transform: "translateY(-30px) scale(1.2)" }, { transform: "translateY(0) scale(1)" }],
+            wag: [{ transform: "rotate(0)" }, { transform: "rotate(-22deg)" }, { transform: "rotate(22deg)" }, { transform: "rotate(-22deg)" }, { transform: "rotate(22deg)" }, { transform: "rotate(0)" }],
+            wiggle: [{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(0)" }],
+            spin: [{ transform: "rotate(0)" }, { transform: "rotate(360deg)" }],
+            flip: [{ transform: "perspective(200px) rotateY(0)" }, { transform: "perspective(200px) rotateY(360deg)" }],
+            grow: [{ transform: "scale(1)" }, { transform: "scale(1.7)" }, { transform: "scale(1.5)" }, { transform: "scale(1)" }],
+            tall: [{ transform: "scaleY(1)", transformOrigin: "50% 100%" }, { transform: "scaleY(1.8)", transformOrigin: "50% 100%" }, { transform: "scaleY(1)", transformOrigin: "50% 100%" }],
+            float: [{ transform: "translateY(0) rotate(0)" }, { transform: "translateY(-12px) rotate(-8deg)" }, { transform: "translateY(4px) rotate(8deg)" }, { transform: "translateY(0) rotate(0)" }],
+            fly: [{ transform: "translate(0, 0) rotate(0)" }, { transform: "translate(-40px, 30px) rotate(-20deg)" }, { transform: "translate(-15px, 60px) rotate(15deg)" }, { transform: "translate(0, 0) rotate(0)" }],
+            zigzag: [{ transform: "translate(0, 0)" }, { transform: "translate(-20px, 10px)" }, { transform: "translate(-5px, 22px)" }, { transform: "translate(-28px, 30px)" }, { transform: "translate(0, 0)" }],
+            flutter: [{ transform: "scaleX(1)" }, { transform: "scaleX(0.3)" }, { transform: "scaleX(1)" }, { transform: "scaleX(0.3)" }, { transform: "scaleX(1)" }],
+            fade: [{ opacity: 1, transform: "scale(1)" }, { opacity: 0.1, transform: "scale(1.3)" }, { opacity: 1, transform: "scale(1)" }],
+            dizzy: [{ transform: "rotate(0)" }, { transform: "rotate(540deg) scale(0.8)" }, { transform: "rotate(1080deg) scale(1.1)" }, { transform: "rotate(1440deg)" }],
+        };
+        // words for the bubble when the word bank can't be loaded (offline before it was saved)
+        const AVATAR_WORDS = [{ en: "apple", he: "תפוח", pic: "🍎" }, { en: "dog", he: "כלב", pic: "🐶" }, { en: "sun", he: "שמש", pic: "☀️" },
+                              { en: "book", he: "ספר", pic: "📖" }, { en: "happy", he: "שמח", pic: "😊" }, { en: "water", he: "מים", pic: "💧" }];
+        let avatarTaps = [], avatarWord = null, bubbleTimer = null;
+
+        function avatarBurst(emojis, count = 10) {
+            const from = document.getElementById("menu-avatar").getBoundingClientRect(), layer = document.getElementById("avatar-fx");
+            const x0 = from.left + from.width / 2, y0 = from.top + from.height / 2;
+            for (let k = 0; k < count; k++) {
+                const s = document.createElement("span");
+                s.textContent = emojis[k % emojis.length];
+                s.style.left = (x0 - 12) + "px"; s.style.top = (y0 - 12) + "px";
+                layer.appendChild(s);
+                // mostly down and to the left, away from the screen corner
+                const a = Math.PI * (0.45 + Math.random() * 0.6), d = 60 + Math.random() * 90;
+                const dx = Math.cos(a) * d, dy = Math.sin(a) * d, r = (Math.random() - 0.5) * 120;
+                s.animate([{ transform: "translate(0,0) scale(0.4)", opacity: 1 }, { transform: `translate(${dx}px, ${dy}px) rotate(${r}deg) scale(1.1)`, opacity: 1, offset: 0.7 },
+                           { transform: `translate(${dx * 1.1}px, ${dy * 1.1 + 25}px) rotate(${r}deg) scale(0.9)`, opacity: 0 }],
+                          { duration: 900 + Math.random() * 400, easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => s.remove();
+            }
+        }
+
+        function showAvatarBubble(say, word, he, hint) {
+            const b = document.getElementById("avatar-bubble");
+            b.innerHTML = '<div class="ab-say" dir="ltr"></div><div class="ab-word" dir="ltr"></div><div class="ab-he"></div><div class="ab-hint"></div>';
+            b.querySelector(".ab-say").textContent = say;
+            b.querySelector(".ab-word").textContent = word;
+            b.querySelector(".ab-he").textContent = he;
+            b.querySelector(".ab-hint").textContent = hint || "";
+            b.classList.remove("on"); void b.offsetWidth; b.classList.add("on");
+            clearTimeout(bubbleTimer);
+            bubbleTimer = setTimeout(() => b.classList.remove("on"), 6000);
+        }
+
+        async function avatarTap() {
+            const a = SHOP_AVATARS.find(x => x.id === shop.avatar);
+            if (!a) return;
+            const fx = AVATAR_FX[a.id] || { move: "hop", fx: ["✨"], say: "Hello!" }, el = document.getElementById("menu-avatar");
+            const now = Date.now();
+            avatarTaps = avatarTaps.filter(t => now - t < 2500).concat(now);
+            el.getAnimations().forEach(x => x.cancel());
+            if (avatarTaps.length >= 5) {   // too many quick taps: dizzy!
+                avatarTaps = [];
+                avatarWord = null;
+                el.animate(AVATAR_MOVES.dizzy, { duration: 1400, easing: "ease-in-out" });
+                avatarBurst(["💫", "⭐", "😵‍💫"], 12);
+                showAvatarBubble(`${a.pic} Whoa, I'm dizzy!`, "😵‍💫", "וואו, הסתחררתי!", "");
+                speakTexts(["Whoa, I'm dizzy!"]);
+                return;
+            }
+            el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: fx.move === "spin" || fx.move === "flip" ? 700 : 900, easing: "ease-in-out" });
+            avatarBurst(fx.fx);
+            let words;
+            try { words = await loadLevel(+document.getElementById("level-select").value); } catch (e) { words = AVATAR_WORDS; }
+            if (!words.length) words = AVATAR_WORDS;
+            let w;
+            do { w = words[Math.floor(Math.random() * words.length)]; } while (words.length > 1 && avatarWord && w.en === avatarWord.en);   // not the same word twice in a row
+            avatarWord = w;
+            showAvatarBubble(`${a.pic} ${fx.say}`, (w.pic ? w.pic + " " : "") + w.en, chosen[w.en.toLowerCase()] || w.he, "🔊 לחצו לשמוע שוב");
+            speakTexts([fx.say, w.en]);
+        }
+
+        function avatarBubbleTap() {
+            if (avatarWord) speakText(avatarWord.en);
+            clearTimeout(bubbleTimer);
+            bubbleTimer = setTimeout(() => document.getElementById("avatar-bubble").classList.remove("on"), 6000);
         }
 
         function openShop() {

@@ -1288,7 +1288,8 @@ async function testAvatar() {
   let g = await gif();
   const dogGifs = await page.evaluate(() => AVATAR_GIFS.dog);
   const sceneSay = await page.evaluate(n => GIF_SCENES[n].say, g.scene);
-  check(dogGifs.includes(g.scene) && g.say.includes('Woof woof! ' + sceneSay) && g.he && g.stage.includes('🐶') && g.stage.some(t => ['🦴', '🐾'].includes(t)) && g.moving > 0,
+  const sceneHe = await page.evaluate(n => GIF_SCENES[n].he, g.scene);
+  check(dogGifs.includes(g.scene) && g.say.includes('Woof woof! ' + sceneSay) && g.he === 'הב הב! ' + sceneHe && g.stage.includes('🐶') && g.stage.some(t => ['🦴', '🐾'].includes(t)) && g.moving > 0,
         `tapping the dog opens one of its GIFs (${g.scene}): the dog with its bones / paws, moving, its own "Woof woof!" and the cartoon's own line (${sceneSay}) and a Hebrew line (${g.he})`);
   check(g.fits && await page.$eval('#gif-pop .gp-badge', e => e.textContent === 'GIF'), 'the GIF pop-up is fully on the screen');
   check(!(await page.$eval('#avatar-bubble', e => e.classList.contains('on'))) && !(await page.evaluate(() => typeof avatarWord !== 'undefined')), 'no word to learn any more');
@@ -1312,6 +1313,7 @@ async function testAvatar() {
   check(new Set(seen).size === 4 && seen.every(n => dogGifs.includes(n)), `4 taps show the dog's 4 different GIFs (${seen.join(', ')})`);
   check(new Set(seen.says).size === 4, `each GIF says something different (${seen.says.join(' / ')})`);
   check(await page.evaluate(() => { const s = Object.values(GIF_SCENES).map(x => x.say); return s.every(Boolean) && new Set(s).size === s.length; }), 'every cartoon has its own English line');
+  check(await page.evaluate(() => SHOP_AVATARS.every(a => AVATAR_SAY_HE[a.id]) && Object.values(GIF_SCENES).every(x => x.he)), 'every character phrase and every cartoon line has its Hebrew too');
 
   // the 5th tap in a row (slow taps too): dizzy, then the headache GIF
   await spoken();
@@ -1627,7 +1629,57 @@ async function testCelebrate() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep, wand: testWand, pictures: testPictures };
+async function testFire() {
+  console.log('\n[fire] 🔥 days in a row: every day a quiz is finished adds one; from 10 days all the points are doubled');
+  const page = await openPage();
+  await page.evaluate(() => {
+    speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 50); speechSynthesis.cancel = () => {}; window.coinSound = () => {};
+    document.getElementById('words-input').value = Array.from({ length: 6 }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n');
+    renderWords();
+  });
+  // the day the app thinks it is: shift the clock by whole days
+  const setDay = n => page.evaluate(n => { const R = window.__RealDate || (window.__RealDate = Date), off = n * 864e5;
+    window.Date = class extends R { constructor(...a) { if (a.length) super(...a); else super(R.now() + off); } static now() { return R.now() + off; } }; }, n);
+  const finishQuiz = () => page.evaluate(() => {
+    showStart(); startFromInput();
+    while (currentIndex < wordsData.length) { const c = wordsData[currentIndex].correct; [...document.querySelectorAll('#answers-container button')].find(b => b.innerText === c).click(); clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion(); }
+    return { points: totalScore, badges: [...document.querySelectorAll('#bonus-container .fire-badge')].map(b => b.innerText) };
+  });
+  const fire = () => page.evaluate(() => { showStart(); return document.getElementById('menu-fire').textContent; });
+  const saved = () => page.evaluate(() => JSON.parse(localStorage.getItem('englishquiz-daily-streak')));
+
+  check((await fire()) === '', 'before playing there is no 🔥 on the main screen');
+  let r = await finishQuiz();
+  check(r.points === 6 && r.badges.length === 1 && r.badges[0].includes('יום ראשון') && (await fire()) === '🔥 1', `the first quiz of the day: 🔥 1 (${r.badges.join(' | ')})`);
+  r = await finishQuiz();
+  check(r.badges.length === 0 && (await fire()) === '🔥 1' && (await saved()).days === 1, 'another quiz the same day adds nothing');
+  for (let d = 1; d <= 8; d++) { await setDay(d); r = await finishQuiz(); }
+  check((await fire()) === '🔥 9' && r.points === 6, `9 days in a row: 🔥 9, points not doubled yet (${r.points})`);
+  await setDay(9); r = await finishQuiz();
+  check((await fire()) === '🔥 10 ×2' && r.points === 12 && r.badges.some(b => b.includes('כפולות')), `the 10th day: 🔥 10 ×2 and the quiz's points are doubled (6 → ${r.points}; ${r.badges.join(' | ')})`);
+  await page.evaluate(() => openCoinBox()); await new Promise(res => setTimeout(res, 300));
+  // the shop's surprise box: its coins are doubled too
+  await page.evaluate(() => { shop.boxes = 1; saveShop(); Math.random = () => 0.6; });
+  const t0 = await page.evaluate(() => grandTotal);
+  await page.evaluate(() => openBox());
+  check((await page.evaluate(() => grandTotal)) - t0 === 50, 'the shop box coins are not doubled (50)');
+  const odds = await page.evaluate(() => { const out = { wand: 0, 50: 0, 100: 0, 200: 0 };
+    for (let k = 0; k < 600; k++) { const r = k / 600; Math.random = () => r; shop.boxes = 1; const t = grandTotal, w = shop.wands || 0; openBox();
+      if ((shop.wands || 0) > w) out.wand++; else out[grandTotal - t]++; }
+    return out; });
+  check(odds.wand === 300 && Math.abs(odds[50] - 150) <= 1 && Math.abs(odds[100] - 100) <= 1 && Math.abs(odds[200] - 50) <= 1, `🔥 in a streak the shop box may give 200 too: half a wand, then 50 / 100 / 200 (${JSON.stringify(odds)})`);
+  // a missed day: back to 0 on the main screen, and the next quiz starts again from 1, points no longer doubled
+  await setDay(11);
+  check((await fire()) === '', 'a day missed: the 🔥 is gone from the main screen');
+  r = await finishQuiz();
+  check((await fire()) === '🔥 1' && r.points === 6, `playing again starts from 🔥 1, no double points (${r.points})`);
+  await page.reload({ waitUntil: 'load' });
+  check((await saved()).days === 1, 'the days in a row are saved on the device');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { fire: testFire, wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep, wand: testWand, pictures: testPictures };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

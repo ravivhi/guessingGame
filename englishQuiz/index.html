@@ -899,6 +899,7 @@
         function askConfirm(text, okText) {
             return new Promise(resolve => {
                 const bg = document.createElement("div");
+                bg.dataset.dialog = "1";
                 bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;";
                 bg.innerHTML = `<div dir="rtl" style="background:#fff;color:#1a202c;border-radius:16px;padding:22px 20px 16px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);">
                     <div data-text style="font-size:1.15rem;font-weight:bold;margin-bottom:18px;"></div>
@@ -1507,6 +1508,7 @@
         function chooseMeaning(en, current) {
             return new Promise(resolve => {
                 const bg = document.createElement("div");
+                bg.dataset.dialog = "1";
                 bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;";
                 const box = document.createElement("div");
                 box.dir = "rtl";
@@ -2120,6 +2122,20 @@
         document.getElementById("words-input").value = readList(mode);
         applyModeUI();
         renderWords();
+        // The phone's back button: one extra history entry catches it. A pop-up closes; in a quiz it asks
+        // before leaving (like the leave button); other screens go back to the start screen; on the start
+        // screen it leaves the app.
+        history.replaceState({ eq: 0 }, "");
+        history.pushState({ eq: 1 }, "");
+        window.addEventListener("popstate", () => {
+            const stay = () => history.pushState({ eq: 1 }, "");
+            const shown = id => getComputedStyle(document.getElementById(id)).display !== "none";
+            const dialog = [...document.querySelectorAll("[data-dialog]")].pop();
+            if (dialog) { dialog.click(); return stay(); }   // a click on the dark background cancels it
+            if (shown("game-screen")) { leaveGame(); return stay(); }
+            if (["summary-screen", "learn-screen", "learn-done-screen", "shop-screen"].some(shown)) { showStart(); return stay(); }
+            history.back();
+        });
     </script>
 </body>
 </html>

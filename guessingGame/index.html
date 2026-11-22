@@ -1308,6 +1308,19 @@
                 .then(() => console.log('SW registered'))
                 .catch(err => console.log('SW failed:', err));
         }
+        // The phone's back button: one extra history entry catches it. Names → menu, round summary → menu
+        // (like its button). Ignored during a round, so a stray press can't spoil a player's turn.
+        // On the menu or the setup screen it leaves the app.
+        history.replaceState({ gg: 0 }, '');
+        history.pushState({ gg: 1 }, '');
+        window.addEventListener('popstate', () => {
+            const stay = () => history.pushState({ gg: 1 }, '');
+            const shown = id => !document.getElementById(id).classList.contains('hidden');
+            if (shown('names-screen')) { closeNamesScreen(); return stay(); }
+            if (shown('summary-screen')) { backToMenu(); return stay(); }
+            if (shown('game-screen')) return stay();
+            history.back();
+        });
 
         </script>
 </body>

@@ -896,21 +896,19 @@ async function testLearn() {
   await playQuiz(1);   // one mistake
   check(await vis('summary-screen') && (await text('step-result')).includes('בירוק') && (await text('step-result')).includes('בלי טעויות'), `one mistake: the summary says the part turns green only with no mistakes (${await text('step-result')})`);
   check(!(await progress()) && await sounds() === 0 && !(await fireworks()), 'not passed: nothing saved, no sound, no fireworks');
-  check(await vis('next-step-btn'), 'the next topic is offered anyway (nothing is locked)');
-  await page.evaluate(() => practiceMissed());
+  const onlyBack = () => page.evaluate(() => [...document.querySelectorAll('#summary-screen .btn-restart')].filter(b => getComputedStyle(b).display !== 'none').map(b => b.id || b.textContent.trim()));
+  check(JSON.stringify(await onlyBack()) === '["change-words-btn"]' && (await text('change-words-btn')).includes('מסלול'),
+        `the summary of a learning quiz has only the button back to the path (no try again / practice / next topic): ${JSON.stringify(await onlyBack())}`);
+  await page.click('#change-words-btn');
+  await page.waitForSelector('#cat-list .cat-quiz');
+  await page.click(`${row(0)} .cat-quiz`);
+  await quizReady();
   await playQuiz(0);
-  check(!(await progress()) && !(await fireworks()), 'practising only the missed words does not pass the part');
-  check((await text('change-words-btn')).includes('מסלול'), 'the summary offers a way back to the path');
-  check(await vis('all-words-btn'), 'after practising, "all the words" brings back the full quiz');
-  await page.evaluate(() => playAll());
-  await playQuiz(0);
-  check((await text('step-result')).includes('בירוק') && await vis('next-step-btn'), `passing the quiz says the part is green now (${await text('step-result')})`);
+  check((await text('step-result')).includes('בירוק') && JSON.stringify(await onlyBack()) === '["change-words-btn"]', `taking the part's quiz again from the path and passing it: the part is green now (${await text('step-result')}), still only the back button`);
   check(JSON.stringify((await progress())[1]) === '[0]', 'the passed part is saved on the device');
   check(await sounds() === 1, 'the happy sound plays once');
   check(await fireworks(), '🎆 fireworks when the quiz of the part is passed');
-  await page.click('#next-step-btn');
-  check(await vis('learn-screen') && (await text('learn-title')).includes(want[1].name), '"next topic" starts learning the next part');
-  await page.click('#learn-back');
+  await page.click('#change-words-btn');
   await page.waitForSelector('#cat-list .cat-step.done');
   st = await steps();
   check(st[0].done && st[0].state === '✅' && !st[1].done && st.slice(1).every(s => s.learn && s.quiz), 'back on the path: part 1 is green with ✅, the others stay white and open');
@@ -957,11 +955,10 @@ async function testLearn() {
   await page.waitForFunction(n => document.querySelectorAll('#cat-list .cat-step.done').length === n - 1, { timeout: 10000 }, n5);
   await page.click(`${row(n5 - 1)} .cat-learn`);
   await doStep(0);
-  check((await text('step-result')).includes('ברמה 5') && (await text('next-step-btn')).includes('לרמה 6'), 'passing the last part of level 5 says all its topics are passed and offers level 6');
+  check((await text('step-result')).includes('ברמה 5') && !(await vis('next-step-btn')), 'passing the last part of level 5 says all its topics are passed');
   await fireworks();   // clear them (the check below must not see these)
-  await page.click('#next-step-btn');
-  await page.waitForFunction(() => document.getElementById('cat-level-select').value === '6' && document.querySelectorAll('#cat-list .cat-learn').length > 0, { timeout: 10000 });
-  check(await vis('start-screen'), 'which opens the level 6 path');
+  await page.click('#change-words-btn');
+  await page.waitForFunction(() => document.querySelectorAll('#cat-list .cat-learn').length > 0, { timeout: 10000 });
 
   // a quiz from the random tab is not a part's quiz
   await page.click('#tab-random');
@@ -1282,8 +1279,8 @@ async function testAvatar() {
   // every scene draws and moves, for an emoji character and for the drawn capybara
   const scenes = await page.evaluate(() => { const out = []; for (const id of ['dog', 'capybara']) for (const n of Object.keys(GIF_SCENES)) {
     openGif(SHOP_AVATARS.find(a => a.id === id), n, 'hi', 60000); const p = document.getElementById('gif-pop');
-    if (p.querySelectorAll('.gp-stage .gp-e').length < 2 || !p.getAnimations({ subtree: true }).length || (id === 'capybara' && !p.querySelector('.gp-stage img'))) out.push(id + ':' + n); closeGif(); } return out; });
-  check(scenes.length === 0, `all ${await page.evaluate(() => Object.keys(GIF_SCENES).length)} cartoons draw and move (emoji and drawn characters)${scenes.length ? ': ' + scenes.join(', ') : ''}`);
+    if (p.querySelectorAll('.gp-stage .gp-e').length < 2 || (n !== 'headache' && ![...p.querySelectorAll('.gp-stage .gp-e')].some(e => AVATAR_FX[id].fx.includes(e.textContent))) || !p.getAnimations({ subtree: true }).length || (id === 'capybara' && !p.querySelector('.gp-stage img'))) out.push(id + ':' + n); closeGif(); } return out; });
+  check(scenes.length === 0, `all ${await page.evaluate(() => Object.keys(GIF_SCENES).length)} cartoons draw and move, each with the character's own things (emoji and drawn characters)${scenes.length ? ': ' + scenes.join(', ') : ''}`);
 
   await setAvatar('dog');
   await page.click('#menu-avatar');
@@ -1511,13 +1508,14 @@ async function testCelebrate() {
   const final = `נקודות בבוחן: ${r.points} · סה״כ: ${r.total + r.points}`;
   const shown = sel => page.$eval(sel, e => getComputedStyle(e).display !== 'none');
   const money = () => page.evaluate(() => [grandTotal, pendingCoins, +localStorage.getItem(TOTAL_KEY), +localStorage.getItem(PENDING_KEY)].join());
-  check(r.points > 0 && await shown('#coin-box') && !(await shown('#summary-final-score')), 'after the quiz a surprise box 🎁 waits on the result screen (the numbers come once it is opened)');
+  check(r.points > 0 && await shown('#coin-box') && await shown('#summary-final-score') && (await score()) === `נקודות בבוחן: ${r.points} · סה״כ: ${r.total}`,
+        `after the quiz a surprise box 🎁 waits on the result screen, under the quiz's points and the total from before (${await score()})`);
   check((await money()) === [r.total, r.points, r.total, r.points].join(), 'its points are saved as waiting, not in the total yet');
   check(await canvas('fireworks') && !(await canvas('confetti')), '100%: fireworks');
   check(await page.$eval('#summary-emoji', e => e.getAnimations().length > 0), 'the trophy pops in');
   check((await page.$eval('#summary-avatar', e => e.textContent)) === '🐶' && await page.$eval('#summary-avatar', e => e.getAnimations().length > 0), 'the dog jumps onto the result screen');
   check((await sayOn()).includes("You're a champion!"), 'the dog says "You\'re a champion!"');
-  check((await page.evaluate(() => window.spoken)).includes("You're a champion!"), 'and says it aloud');
+  check(!(await page.evaluate(() => window.spoken)).includes("You're a champion!"), 'written only: it is not said aloud');
   check((await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).some(t => ['🦴', '🐾'].includes(t)), 'its bones and paw prints burst out');
   check(await page.$eval('#summary-say', b => { const r = b.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0; }), 'its bubble is on the screen');
   // open the box
@@ -1527,6 +1525,14 @@ async function testCelebrate() {
   await page.click('#coin-box').catch(() => {});   // a second tap while it opens: nothing more
   await page.waitForFunction(() => document.querySelector('#coin-box .cb-pic').textContent === '💰', { timeout: 3000 }).catch(() => {});
   check((await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).includes('💰'), 'it shakes, pops open into 💰 and coins burst out');
+  const ticks = [];
+  for (let k = 0; k < 150 && ticks[ticks.length - 1] !== r.total + r.points; k++) {
+    const t = await page.evaluate(() => { const e = document.querySelector('#summary-final-score .total-up'); return e ? { n: +e.textContent, pop: e.getAnimations().length > 0 } : null; });
+    if (t && ticks[ticks.length - 1] !== t.n) { ticks.push(t.n); if (t.pop) ticks.pops = (ticks.pops || 0) + 1; }
+    await new Promise(res => setTimeout(res, 40));
+  }
+  check(ticks.length >= Math.min(r.points, 25) - 3 && ticks.every((n, i) => !i || n > ticks[i - 1]) && ticks[ticks.length - 1] === r.total + r.points && ticks.pops >= 3,
+        `the total counts up step by step to its new value, popping as it goes (${ticks[0]} … ${ticks[ticks.length - 1]}, ${ticks.length} steps)`);
   await page.waitForFunction(t => getComputedStyle(document.getElementById('coin-box')).display === 'none' && document.getElementById('summary-final-score').innerText === t, { timeout: 8000 }, final).catch(() => {});
   check(!(await shown('#coin-box')) && (await score()) === final && (await page.evaluate(() => window.coins)) === 1, `then the points tick up into the total, with one short ka-ching (${await score()}; sounds: ${await page.evaluate(() => window.coins)})`);
   check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'a second tap did not add them twice');
@@ -1564,13 +1570,13 @@ async function testCelebrate() {
   await clearFx();
   r = await play(2);
   check(await canvas('confetti') && !(await canvas('fireworks')), '80%: confetti (no fireworks)');
-  check((await sayOn()).includes('Great job!'), 'the dog says "Great job!"');
+  check((await sayOn()).includes('Great job!') && !(await page.evaluate(() => window.spoken)).includes('Great job!'), 'the dog shows "Great job!" (not said aloud)');
 
   // 5 of 10 wrong (50%): a small cheer and "Nice try! Keep going!"
   await clearFx();
   r = await play(5);
   check(!(await canvas('confetti')) && !(await canvas('fireworks')) && (await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).includes('👏'), '50%: a small cheer of 👏💪⭐, no fireworks or confetti');
-  check((await sayOn()).includes('Nice try! Keep going!'), 'the dog says "Nice try! Keep going!"');
+  check((await sayOn()).includes('Nice try! Keep going!') && !(await page.evaluate(() => window.spoken)).includes('Nice try! Keep going!'), 'the dog shows "Nice try! Keep going!" (not said aloud)');
 
   // the box is never lost: reopening the app on the result screen keeps it closed and waiting
   check(await shown('#coin-box') && (await money()) === [r.total, r.points, r.total, r.points].join(), 'a box not opened yet keeps its points waiting');

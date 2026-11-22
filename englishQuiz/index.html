@@ -393,6 +393,7 @@
                     border: 3px dashed #d69e2e; background: #fffff0; color: #744210; font-weight: bold; font-size: 1.05rem; font-family: inherit; cursor: pointer;
                     touch-action: manipulation; box-shadow: 0 3px 0 rgba(0,0,0,0.1); }
         #coin-box .cb-pic { font-size: 2.4rem; line-height: 1; display: inline-block; animation: shopWiggle 1.6s infinite; }
+        #summary-final-score .total-up { display: inline-block; }
         #coin-box:disabled { cursor: default; color: #744210; }
         #coin-box:disabled .cb-pic { animation: none; }
         .shop-item .shop-swatch.pic { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; line-height: 1; }
@@ -712,7 +713,7 @@
             <p style="font-size: 1.3rem; margin: 10px 0;" id="summary-stats">צדקתם ב-0 מתוך 0 מילים</p>
             <p style="font-size: 1.5rem; font-weight: bold; color: #2b6cb0;" id="summary-final-score">ציון סופי: 0</p>
             <button type="button" id="coin-box" style="display:none" onclick="openCoinBox()"><span class="cb-pic">🎁</span><span class="cb-text">קופסת הפתעה! לחצו לפתוח</span></button>
-            <button class="btn-restart" onclick="restartGame()">נסו שוב</button>
+            <button class="btn-restart" id="restart-btn" onclick="restartGame()">נסו שוב</button>
             <button class="btn-restart" id="practice-missed-btn" style="display:none;margin-top:10px;background:#dd6b20;" onclick="practiceMissed()">תרגול המילים שטעיתי</button>
             <button class="btn-restart" id="all-words-btn" style="display:none;margin-top:10px;background:#805ad5;" onclick="playAll()">כל המילים</button>
             <button class="btn-restart" id="next-step-btn" style="display:none;margin-top:10px;background:#38a169;" onclick="nextLearnCategory()"></button>
@@ -975,8 +976,9 @@
             document.getElementById("summary-title").innerText = title;
             document.getElementById("summary-stats").innerText = `צדקתם בניסיון ראשון ב-${correctFirstTryCount} מתוך ${totalWords} מילים`;
             const scoreEl = document.getElementById("summary-final-score"), box = document.getElementById("coin-box");
-            scoreEl.innerText = `נקודות בבוחן: ${totalScore} · סה״כ: ${grandTotal + totalScore}`;
-            scoreEl.style.display = totalScore ? "none" : "";   // no points: no box, just the numbers
+            // until the box is opened the total is the one from before; opening it counts the quiz's points into it
+            scoreEl.innerText = `נקודות בבוחן: ${totalScore} · סה״כ: ${grandTotal}`;
+            scoreEl.style.display = "";
             box.style.display = totalScore ? "" : "none";
             box.disabled = false;
             box.querySelector(".cb-pic").textContent = "🎁";
@@ -986,6 +988,9 @@
             practiceBtn.innerText = `תרגול המילים שטעיתי (${missed.length})`;
             document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
             stepQuizResult(successRate, wordsData === fullWords);
+            // a learning-path quiz ends with one button only: back to the path
+            document.getElementById("restart-btn").style.display = stepQuiz ? "none" : "";
+            if (stepQuiz) for (const id of ["practice-missed-btn", "all-words-btn", "next-step-btn"]) document.getElementById(id).style.display = "none";
             const av = SHOP_AVATARS.find(x => x.id === shop.avatar);
             putPic(document.getElementById("summary-avatar"), av);
             document.getElementById("summary-say").classList.remove("on");
@@ -2306,8 +2311,8 @@
                     if (!here()) return;
                     el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: 900, easing: "ease-in-out" });
                     avatarBurst(fx.fx, tier * 5, el, true);
-                    summarySay(`${picPrefix(av)}${say}`);
-                    return speakTexts([say]);
+                    summarySay(`${picPrefix(av)}${say}`);   // written only (no voice for "Nice try" / "Great job" / "Champion")
+                    return new Promise(r => setTimeout(r, 1200));
                   }).catch(() => {}).finally(() => { if (run === celebrateRun) { summaryBusy = false; summarySayLater(); } });
             }
 
@@ -2321,7 +2326,8 @@
             const points = totalScore, before = grandTotal;
             collectCoins();   // saved at once; the rest is the show
             const run = celebrateRun, here = () => run === celebrateRun && shownEl("summary-screen");
-            const show = n => scoreEl.innerText = `נקודות בבוחן: ${n} · סה״כ: ${before + n}`;
+            // the quiz's points stay; the total counts up to its new value, popping on every step
+            const show = n => { scoreEl.innerHTML = `נקודות בבוחן: ${points} · סה״כ: <span class="total-up">${before + n}</span>`; return scoreEl.querySelector(".total-up"); };
             const finish = () => { if (run !== celebrateRun) return;   // a newer result screen is showing: leave it alone
                 box.style.display = "none"; scoreEl.style.display = ""; show(points); if (shownEl("summary-screen")) saveSession("summary"); };
             await pic.animate([0, -16, 16, -20, 20, -24, 24, 0].map(d => ({ transform: `rotate(${d}deg) scale(${1 + Math.abs(d) / 80})` })),
@@ -2335,10 +2341,10 @@
             if (!here()) return finish();
             box.style.display = "none";
             scoreEl.style.display = "";
-            const steps = Math.min(points, 25), ms = Math.max(50, Math.min(120, 1500 / steps));
+            const steps = Math.min(points, 25), ms = Math.max(70, Math.min(150, 1800 / steps));
             for (let k = 1; k <= steps; k++) {   // the points tick up into the total (quietly: the one ka-ching was enough)
                 if (!here()) break;
-                show(Math.round(points * k / steps));
+                show(Math.round(points * k / steps)).animate([{ transform: "scale(1)", color: "#2b6cb0" }, { transform: "scale(1.45)", color: "#38a169" }, { transform: "scale(1)", color: "#2b6cb0" }], { duration: Math.max(ms, 140) });
                 await new Promise(r => setTimeout(r, ms));
             }
             finish();
@@ -2369,7 +2375,7 @@
             } else if (wasPassed) res.style.display = "none";   // already green: nothing to add
             else {
                 res.style.color = "#c05621";
-                res.textContent = fullRound ? "כדי שהנושא יסומן בירוק צריך לענות על כל הבוחן בלי טעויות – נסו שוב! 💪" : "עכשיו נסו את כל הבוחן שוב 💪";
+                res.textContent = fullRound ? "כדי שהנושא יסומן בירוק צריך לענות על כל הבוחן בלי טעויות – אפשר לנסות שוב מהמסלול! 💪" : "עכשיו נסו את כל הבוחן שוב 💪";
             }
             // nothing is locked: the next topic (or level) is always there
             const next = steps[index + 1];
@@ -2825,6 +2831,8 @@
             // zooming on a skateboard... into a rock. Oops!
             skate: { he: "אופס!", bg: "linear-gradient(#bee3f8, #e2e8f0 72%, #a0aec0 72%)", make(st, a, it) {
                 gifEl(st, "🪨", 178, 112, 30);
+                const prize = gifEl(st, it[0], 226, 116, 26);   // what it was racing to
+                loop(prize, [{ transform: "translateY(0)" }, { transform: "translateY(-8px)" }, { transform: "translateY(0)" }], 700);
                 const boom = gifEl(st, "💥", 170, 70, 44);
                 loop(boom, [{ opacity: 0, transform: "scale(0.3)" }, { opacity: 0, transform: "scale(0.3)", offset: 0.55 }, { opacity: 1, transform: "scale(1.2)", offset: 0.62 },
                             { opacity: 0, transform: "scale(1.5)", offset: 0.8 }, { opacity: 0 }], 2600);
@@ -2931,6 +2939,9 @@
                 const h = gifHero(st, a, 78, 78, 50);
                 h.style.rotate = "-75deg";
                 loop(h, [{ transform: "scale(1)" }, { transform: "scale(1.08)" }, { transform: "scale(1)" }], 2000);
+                const dream = gifEl(st, "💭", 150, 6, 58);   // dreaming of its favourite thing
+                const dreamt = gifEl(st, it[0], 168, 20, 24);
+                [dream, dreamt].forEach(e => loop(e, [{ transform: "scale(0.9)", opacity: 0.7 }, { transform: "scale(1.05)", opacity: 1 }, { transform: "scale(0.9)", opacity: 0.7 }], 2000));
                 ["z", "Z", "💤"].forEach((z, k) => {
                     const e = gifEl(st, z, 130, 60, 18 + k * 6);
                     e.style.color = "#fff"; e.style.fontWeight = "bold";

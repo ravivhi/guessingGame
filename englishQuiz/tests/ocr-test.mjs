@@ -1327,6 +1327,58 @@ async function testKeep() {
   await ctx.close();
 }
 
+async function testWand() {
+  console.log('\n[wand] the result screen\'s box gives a magic wand that shows the right answer in a quiz');
+  const page = await openPage();
+  await page.evaluate(() => {
+    speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 50); speechSynthesis.cancel = () => {}; window.coinSound = () => {};
+    document.getElementById('words-input').value = Array.from({ length: 6 }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n');
+    renderWords();
+  });
+  const wands = () => page.evaluate(() => [shop.wands || 0, JSON.parse(localStorage.getItem(SHOP_KEY)).wands || 0].join());
+  const finishQuiz = () => page.evaluate(() => {
+    showStart(); startFromInput();
+    while (currentIndex < wordsData.length) { const c = wordsData[currentIndex].correct; [...document.querySelectorAll('#answers-container button')].find(b => b.innerText === c).click(); clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion(); }
+  });
+  const shown = sel => page.$eval(sel, e => getComputedStyle(e).display !== 'none');
+
+  await page.evaluate(() => { showStart(); startFromInput(); });
+  check(!(await shown('#wand-btn')), 'without a wand there is no wand button in the quiz');
+  await finishQuiz();
+  await page.click('#coin-box');
+  check((await wands()) === '1,1', 'opening the box gives a magic wand (saved)');
+  await page.waitForFunction(() => document.getElementById('box-toast').classList.contains('on'), { timeout: 3000 }).catch(() => {});
+  check((await page.$eval('#box-toast', e => e.textContent)).includes('שרביט קסמים'), 'a note says a magic wand was won');
+
+  // using it
+  await page.evaluate(() => { showStart(); startFromInput(); });
+  const before = await page.evaluate(() => ({ score: totalScore, streak }));
+  check(await shown('#wand-btn') && (await page.$eval('#wand-count', e => e.textContent)) === '1' && !(await page.$eval('#wand-btn', e => e.disabled)), 'in the quiz the wand button shows how many wands there are (1)');
+  await page.click('#wand-btn');
+  const st = await page.evaluate(() => { const c = wordsData[currentIndex].correct, bs = [...document.querySelectorAll('#answers-container .btn-answer')];
+    return { magic: bs.filter(b => b.classList.contains('magic')).map(b => b.innerText), c, othersOff: bs.filter(b => b.innerText !== c).every(b => b.disabled && b.classList.contains('faded')) }; });
+  check(st.magic.length === 1 && st.magic[0] === st.c && st.othersOff, 'tapping the wand makes the right answer glow; the other answers fade and cannot be tapped');
+  check((await wands()) === '0,0' && await page.$eval('#wand-btn', e => e.disabled), 'the wand is used up (saved), once per question');
+  // reopening the app in the middle of that question: still shown, the wand is not given back
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => getComputedStyle(document.getElementById('game-screen')).display !== 'none', { timeout: 10000 });
+  check((await page.$$eval('#answers-container .magic', b => b.length)) === 1 && (await wands()) === '0,0', 'after reopening the app the right answer still glows (the wand is not given back)');
+  await page.evaluate(() => { speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 50); window.coinSound = () => {}; });
+  await page.evaluate(() => [...document.querySelectorAll('#answers-container .btn-answer')].find(b => b.classList.contains('magic')).click());
+  const after = await page.evaluate(() => ({ score: totalScore, streak, missed: missed.length }));
+  check(after.score === before.score && after.streak === before.streak && after.missed === 1, 'the word answered with the wand gives no point, takes none, keeps the streak and goes to the practice list');
+  await page.evaluate(() => { clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion(); });
+  check(!(await shown('#wand-btn')), 'with no wands left the button is gone on the next question');
+
+  // no limit: every box gives one more, even boxes collected without opening them
+  await finishQuiz(); await page.evaluate(() => showStart());   // left closed
+  await finishQuiz(); await page.click('#coin-box');
+  await finishQuiz(); await page.evaluate(() => restartGame());
+  check((await wands()) === '3,3', `no limit: every box adds a wand, opened or not (${await wands()})`);
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
 async function testCelebrate() {
   console.log('\n[celebrate] the end of a test: a celebration as big as the score');
   const page = await openPage();
@@ -1466,7 +1518,7 @@ async function testCelebrate() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep };
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep, wand: testWand };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

@@ -369,6 +369,14 @@
                                border-bottom: 12px solid #f6ad55; }
         #summary-avatar { display: inline-block; font-size: 3rem; line-height: 1; vertical-align: bottom; margin: 0 8px 22px 0; padding: 0;
                           background: none; border: 0; cursor: pointer; font-family: inherit; touch-action: manipulation; }
+        /* 🪄 the magic wand in the quiz (won in the result screen's surprise box): shows the right answer */
+        #wand-btn { position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 2; font-size: 1.3rem; line-height: 1; padding: 5px 10px; border: 2px solid #b794f4; border-radius: 999px;
+                    background: #faf5ff; color: #553c9a; cursor: pointer; font-family: inherit; touch-action: manipulation; white-space: nowrap; }
+        #wand-btn #wand-count { font-size: 0.9rem; font-weight: bold; margin-inline-start: 3px; }
+        #wand-btn:disabled { opacity: 0.45; cursor: default; }
+        .btn-answer.magic { animation: magicGlow 0.9s ease-in-out infinite alternate; border-color: #9f7aea !important; }
+        .btn-answer.faded { opacity: 0.35; }
+        @keyframes magicGlow { from { box-shadow: 0 0 0 3px #e9d8fd, 0 0 10px #b794f4; } to { box-shadow: 0 0 0 5px #d6bcfa, 0 0 26px #9f7aea; } }
         /* the result screen's surprise box with the quiz's points: it wiggles until it is tapped open */
         #coin-box { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 8px auto; padding: 6px 16px; border-radius: 18px;
                     border: 3px dashed #d69e2e; background: #fffff0; color: #744210; font-weight: bold; font-size: 1.05rem; font-family: inherit; cursor: pointer;
@@ -549,8 +557,9 @@
                 <button type="button" id="speak-btn" onclick="speakWord()" aria-label="השמעת המילה" title="השמעת המילה" style="font-size:1.6rem;line-height:1;padding:6px 10px;margin-bottom:5px;background:#e2e8f0;border:none;border-radius:50%;cursor:pointer;">🔊</button>
             </div>
             <!-- the gap between the word and the answers; the big streak emoji appears inside it -->
-            <div style="min-height:clamp(20px, 11vh, 90px);display:flex;align-items:center;justify-content:center;">
+            <div style="min-height:clamp(20px, 11vh, 90px);position:relative;display:flex;align-items:center;justify-content:center;">
                 <div id="streak-emoji" aria-hidden="true"></div>
+                <button type="button" id="wand-btn" onclick="useWand()" aria-label="שרביט קסמים: מראה את התשובה הנכונה" title="שרביט קסמים: מראה את התשובה הנכונה" style="display:none;">🪄<span id="wand-count"></span></button>
             </div>
             <div class="answers-grid" id="answers-container"></div>
         </div>
@@ -677,13 +686,15 @@
         let pendingCoins = 0;
         try { pendingCoins = Math.max(0, parseInt(localStorage.getItem(PENDING_KEY), 10) || 0); } catch (e) {}
         function savePending() { try { localStorage.setItem(PENDING_KEY, String(pendingCoins)); } catch (e) {} }
-        // moves the waiting points into the total (returns how many)
+        // moves the waiting points into the total (returns how many); every box also holds a 🪄 magic wand (no limit)
         function collectCoins() {
             const n = pendingCoins;
             if (!n) return 0;
             grandTotal += n;
+            shop.wands = (shop.wands || 0) + 1;
             pendingCoins = 0;
             try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
+            saveShop();
             savePending();
             showGrandTotal();
             return n;
@@ -775,6 +786,40 @@
                 if (wrongPicks.includes(ans)) { button.classList.add("wrong"); button.disabled = true; }
                 container.appendChild(button);
             });
+            wandUsed = !!(saved && saved.wand);
+            if (wandUsed) showMagic(false);
+            updateWandBtn();
+            saveSession("game");
+        }
+
+        // 🪄 The magic wand: one tap shows the right answer (it glows, the others fade). The word then gives no point
+        // and takes none away, the streak stays as it is, and it goes to "practise the words I got wrong".
+        let wandUsed = false;
+        function updateWandBtn() {
+            const b = document.getElementById("wand-btn"), n = shop.wands || 0;
+            b.style.display = n || wandUsed ? "" : "none";
+            document.getElementById("wand-count").textContent = n;
+            b.disabled = wandUsed || !n;
+        }
+        function showMagic(animate) {
+            const correct = wordsData[currentIndex].correct;
+            const bs = [...document.querySelectorAll("#answers-container .btn-answer")];
+            for (const btn of bs) {
+                if (btn.innerText === correct) {
+                    btn.classList.add("magic");
+                    if (animate) avatarBurst(["✨", "🪄", "⭐"], 10, btn, true);
+                } else if (!btn.classList.contains("wrong")) { btn.classList.add("faded"); btn.disabled = true; }
+            }
+        }
+        function useWand() {
+            if (!canAnswer || wandUsed || !(shop.wands > 0) || currentIndex >= wordsData.length) return;
+            shop.wands--;
+            saveShop();
+            wandUsed = true;
+            const cur = wordsData[currentIndex];
+            if (!missed.includes(cur)) missed.push(cur);
+            showMagic(true);
+            updateWandBtn();
             saveSession("game");
         }
 
@@ -785,7 +830,8 @@
                 canAnswer = false;
                 selectedButton.classList.add("correct");
 
-                if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; streak++; updateStreakEmoji(); earnBoxes(); }
+                if (wrongCount === 0 && !wandUsed) { totalScore += 1; correctFirstTryCount++; streak++; updateStreakEmoji(); earnBoxes(); }
+                document.getElementById("wand-btn").disabled = true;
                 const av = document.getElementById("game-avatar");
                 av.classList.remove("hop"); void av.offsetWidth; av.classList.add("hop");   // the character hops
                 document.getElementById("score").innerText = totalScore;
@@ -2199,7 +2245,8 @@
             if (!here()) return finish();
             pic.textContent = "💰";
             pic.animate([{ transform: "scale(0.4)" }, { transform: "scale(1.6)", offset: 0.6 }, { transform: "scale(1)" }], { duration: 450, easing: "ease-out" });
-            avatarBurst(["💰", "⭐", "✨"], 14, pic, true);
+            avatarBurst(["💰", "⭐", "✨", "🪄"], 16, pic, true);
+            showToast(`🪄 קיבלתם שרביט קסמים! יש לכם ${shop.wands} – בבוחן הוא מראה את התשובה הנכונה`, 4000);
             playUnlockSound();
             await new Promise(r => setTimeout(r, 650));
             if (!here()) return finish();
@@ -2371,6 +2418,14 @@
             }, 650);
         }
 
+        // a short note at the top of the screen
+        function showToast(text, ms = 3000) {
+            const t = document.getElementById("box-toast");
+            t.textContent = text;
+            t.classList.remove("on"); void t.offsetWidth; t.classList.add("on");
+            clearTimeout(earnBoxes.timer);
+            earnBoxes.timer = setTimeout(() => t.classList.remove("on"), ms);
+        }
         function saveShop() { try { localStorage.setItem(SHOP_KEY, JSON.stringify(shop)); } catch (e) {} }
         function applyShop() {
             const a = SHOP_AVATARS.find(x => x.id === shop.avatar), t = SHOP_THEMES.find(x => x.id === shop.theme) || SHOP_THEMES[0];
@@ -2611,7 +2666,7 @@
                 Object.assign(s, {
                     full: fullWords, sub: wordsData === fullWords ? null : wordsData.map(pos), missed: missed.map(pos),
                     i: currentIndex + (pending ? 1 : 0), score: totalScore, firstTry: correctFirstTryCount,
-                    q: pending ? null : { answers: currentAnswers, wrong: wrongPicks },
+                    q: pending ? null : { answers: currentAnswers, wrong: wrongPicks, wand: wandUsed },
                     step: stepQuiz ? { level: stepQuiz.level, index: stepQuiz.index } : null
                 });
                 // the summary is saved as it is shown: showing it again would add its points to the total a second time

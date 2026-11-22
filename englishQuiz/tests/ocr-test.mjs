@@ -1235,14 +1235,16 @@ async function testPhoneBack() {
 }
 
 // 🐶 Tapping the character on the main screen: its own move, emojis and English phrase, then a word of the chosen
-// level in a speech bubble (read aloud, tap the bubble to hear it again). 5 quick taps make it dizzy. Not the shop.
+// level in a speech bubble (read aloud, tap the bubble to hear it again). 5 taps in a row make it dizzy. Not the shop.
 async function testAvatar() {
   console.log('\n[avatar] tapping the character: its own reaction and a word to learn');
   const page = await openPage();
   const vis = id => page.$eval('#' + id, e => getComputedStyle(e).display !== 'none');
   const text = sel => page.$eval(sel, e => e.textContent);
   // record what is read aloud instead of speaking
-  await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => window.spoken.push(u.text); speechSynthesis.cancel = () => {}; });
+  // (each text "takes" 300 ms, then reports its end like a real voice)
+  await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => { window.spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 300); }; speechSynthesis.cancel = () => {}; });
+  const turnOver = () => page.waitForFunction(() => !document.getElementById('menu-avatar').disabled, { timeout: 10000 });
   const spoken = () => page.evaluate(() => { const s = window.spoken.slice(); window.spoken.length = 0; return s; });
   const setAvatar = id => page.evaluate(id => { if (!shop.owned.includes(id)) shop.owned.push(id); shop.avatar = id; saveShop(); applyShop(); }, id);
 
@@ -1258,22 +1260,38 @@ async function testAvatar() {
   check(JSON.stringify(await spoken()) === JSON.stringify(['Woof woof!', w1]), 'it reads "Woof woof!" and then the word aloud');
   check((await page.$$('#avatar-fx span')).length > 0 && (await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).every(t => ['🦴', '🐾'].includes(t)), 'bones and paw prints burst out of the dog');
   check(await page.$eval('#menu-avatar', e => e.getAnimations().length > 0), 'the dog moves');
+  // its turn: the button is off until it stops moving and talking; taps meanwhile do nothing
+  check(await page.$eval('#menu-avatar', e => e.disabled), 'during its turn the character\'s button is off');
+  await page.click('#menu-avatar'); await page.click('#menu-avatar');
+  await page.click('#avatar-bubble');
+  check((await page.evaluate(() => avatarWord.en)) === w1 && (await spoken()).length === 0, 'taps on the character or the bubble during its turn do nothing');
+  await turnOver();
+  check(!(await page.$eval('#menu-avatar', e => e.disabled)) && await page.$eval('#avatar-bubble', e => e.classList.contains('on')), 'when it is done the button is on again (the bubble stays)');
   await page.click('#avatar-bubble');
   check(JSON.stringify(await spoken()) === JSON.stringify([w1]), 'tapping the bubble reads the word again');
   check((await page.$$eval('#avatar-bubble', b => b.map(x => { const r = x.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0; })))[0], 'the bubble is fully on the screen');
 
-  // another character: its own phrase and emojis
-  await new Promise(r => setTimeout(r, 2600));   // not a quick tap
+  // another character: its own phrase and emojis (tap 2 in a row)
   await setAvatar('robot');
   await page.click('#menu-avatar');
   await page.waitForFunction(w => avatarWord && avatarWord.en !== w, { timeout: 10000 }, w1);
   check((await text('#avatar-bubble .ab-say')).includes('Beep boop!') && (await spoken())[0] === 'Beep boop!', 'the robot says "Beep boop!" (and a new word)');
 
-  // 5 quick taps: dizzy
-  await new Promise(r => setTimeout(r, 2600));
-  for (let k = 0; k < 5; k++) await page.click('#menu-avatar');
-  await new Promise(r => setTimeout(r, 200));
-  check((await text('#avatar-bubble .ab-say')).includes('dizzy') && (await spoken()).includes("Whoa, I'm dizzy!"), '5 quick taps make the character dizzy');
+  // 5 taps in a row, even slow ones (1.5 s apart): the 5th makes it dizzy
+  await turnOver();
+  const tapSlow = async () => { await turnOver(); await new Promise(r => setTimeout(r, 1500)); await page.click('#menu-avatar'); await new Promise(r => setTimeout(r, 150)); };
+  await tapSlow(); await tapSlow();   // taps 3 and 4
+  check(!(await text('#avatar-bubble .ab-say')).includes('dizzy'), '4 taps in a row: not dizzy yet');
+  await spoken();
+  await tapSlow();                    // tap 5
+  check((await text('#avatar-bubble .ab-say')).includes('dizzy') && (await spoken()).includes("Whoa, I'm dizzy!"), 'the 5th tap in a row (slow taps too) makes the character dizzy');
+  await tapSlow();
+  check((await text('#avatar-bubble .ab-say')).includes('Beep boop!'), 'after the dizzy spin the count starts over (the next tap teaches a word)');
+  // a pause of more than 6 seconds (the bubble closes) starts the count over
+  await new Promise(r => setTimeout(r, 6300));
+  for (let k = 0; k < 4; k++) await page.click('#menu-avatar');
+  await new Promise(r => setTimeout(r, 150));
+  check(!(await text('#avatar-bubble .ab-say')).includes('dizzy'), 'after a 6-second pause, 4 more taps are not 5 in a row');
 
   // no character chosen: no badge to tap
   await page.evaluate(() => { shop.avatar = null; applyShop(); });

@@ -351,6 +351,7 @@
                        border-radius: 50%; font-size: 1.6rem; line-height: 40px; cursor: pointer; background: #fffaf0;
                        box-shadow: 0 3px 0 rgba(0,0,0,0.15); z-index: 5; touch-action: manipulation; }
         #menu-avatar:empty { display: none; }
+        #menu-avatar:disabled { cursor: default; color: inherit; opacity: 1; }   /* off during its turn, but looks the same */
         /* the character's speech bubble, under it, with its tail pointing up at the character */
         #avatar-bubble { position: absolute; top: 48px; right: 0; z-index: 6; display: none; max-width: 230px; min-width: 150px;
                          padding: 10px 14px; border-radius: 16px; background: #fffaf0; border: 3px solid #f6ad55; color: #2d3748;
@@ -1071,19 +1072,26 @@
 
         function speakWord() { speakText(document.getElementById("question-word").innerText.trim()); }
         function speakText(word) { speakTexts([word]); }
-        // several English texts one after the other (e.g. the character's "Woof woof!" and then a word)
+        // several English texts one after the other (e.g. the character's "Woof woof!" and then a word).
+        // Returns a promise that resolves when the last one has been read (or after a time limit, as some phones
+        // never report the end).
         function speakTexts(texts) {
             texts = texts.filter(Boolean);
-            if (!texts.length || !("speechSynthesis" in window)) return;
+            if (!texts.length || !("speechSynthesis" in window)) return Promise.resolve();
             speechSynthesis.cancel();
             const v = speechSynthesis.getVoices().find(v => /^en[-_]US/i.test(v.lang)) || speechSynthesis.getVoices().find(v => /^en/i.test(v.lang));
-            for (const t of texts) {
-                const u = new SpeechSynthesisUtterance(t);
-                u.lang = "en-US";
-                u.rate = 0.85;
-                if (v) u.voice = v;
-                speechSynthesis.speak(u);
-            }
+            return new Promise(resolve => {
+                const limit = setTimeout(resolve, Math.min(8000, 1500 + texts.join(" ").length * 120));
+                const done = () => { clearTimeout(limit); resolve(); };
+                texts.forEach((t, k) => {
+                    const u = new SpeechSynthesisUtterance(t);
+                    u.lang = "en-US";
+                    u.rate = 0.85;
+                    if (v) u.voice = v;
+                    if (k === texts.length - 1) { u.onend = done; u.onerror = done; }
+                    speechSynthesis.speak(u);
+                });
+            });
         }
         if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { for (const id of ["speak-btn", "learn-speak"]) { const b = document.getElementById(id); if (b) b.style.display = "none"; } });
 
@@ -2127,7 +2135,7 @@
 
         // ---- 🐶 Tapping the character on the main screen: it reacts in its own way (a move, a burst of emojis and an
         // English sound or phrase, read aloud), then teaches a word of the chosen level in a speech bubble (tap the
-        // bubble to hear the word again). 5 quick taps make any character dizzy.
+        // bubble to hear the word again). 5 taps in a row make any character dizzy.
         const AVATAR_FX = {
             dog: { move: "wag", fx: ["🦴", "🐾"], say: "Woof woof!" },          cat: { move: "wiggle", fx: ["🧶", "💕"], say: "Meow!" },
             rabbit: { move: "hop", fx: ["🥕"], say: "Hop hop!" },                frog: { move: "bighop", fx: ["🍃", "💚"], say: "Ribbit!" },
@@ -2169,7 +2177,7 @@
         // words for the bubble when the word bank can't be loaded (offline before it was saved)
         const AVATAR_WORDS = [{ en: "apple", he: "תפוח", pic: "🍎" }, { en: "dog", he: "כלב", pic: "🐶" }, { en: "sun", he: "שמש", pic: "☀️" },
                               { en: "book", he: "ספר", pic: "📖" }, { en: "happy", he: "שמח", pic: "😊" }, { en: "water", he: "מים", pic: "💧" }];
-        let avatarTaps = [], avatarWord = null, bubbleTimer = null;
+        let avatarTaps = 0, avatarLastTap = 0, avatarWord = null, bubbleTimer = null;
 
         function avatarBurst(emojis, count = 10) {
             const from = document.getElementById("menu-avatar").getBoundingClientRect(), layer = document.getElementById("avatar-fx");
@@ -2196,27 +2204,38 @@
             b.querySelector(".ab-he").textContent = he;
             b.querySelector(".ab-hint").textContent = hint || "";
             b.classList.remove("on"); void b.offsetWidth; b.classList.add("on");
-            clearTimeout(bubbleTimer);
-            bubbleTimer = setTimeout(() => b.classList.remove("on"), 6000);
+            clearTimeout(bubbleTimer);   // it closes 6 seconds after the turn ends (see avatarTap)
         }
 
+        // A tap is a "turn": the character's button stays off until it has finished moving and talking.
         async function avatarTap() {
-            const a = SHOP_AVATARS.find(x => x.id === shop.avatar);
-            if (!a) return;
-            const fx = AVATAR_FX[a.id] || { move: "hop", fx: ["✨"], say: "Hello!" }, el = document.getElementById("menu-avatar");
-            const now = Date.now();
-            avatarTaps = avatarTaps.filter(t => now - t < 2500).concat(now);
+            const a = SHOP_AVATARS.find(x => x.id === shop.avatar), el = document.getElementById("menu-avatar");
+            if (!a || el.disabled) return;
+            el.disabled = true;
+            try { await avatarTurn(a, el); } finally {
+                el.disabled = false;
+                avatarLastTap = Date.now();   // the 6 seconds count from the end of the turn
+                clearTimeout(bubbleTimer);    // and the bubble stays 6 seconds after the character stopped talking
+                bubbleTimer = setTimeout(() => document.getElementById("avatar-bubble").classList.remove("on"), 6000);
+            }
+        }
+
+        async function avatarTurn(a, el) {
+            const fx = AVATAR_FX[a.id] || { move: "hop", fx: ["✨"], say: "Hello!" };
+            // taps in a row, at any speed; the count starts over after 6 seconds without a tap (when the bubble closes)
+            avatarTaps = (Date.now() - avatarLastTap > 6000 ? 0 : avatarTaps) + 1;
             el.getAnimations().forEach(x => x.cancel());
-            if (avatarTaps.length >= 5) {   // too many quick taps: dizzy!
-                avatarTaps = [];
+            const moved = anim => anim.finished.catch(() => {});
+            if (avatarTaps >= 5) {   // the 5th tap in a row: dizzy!
+                avatarTaps = 0;
                 avatarWord = null;
-                el.animate(AVATAR_MOVES.dizzy, { duration: 1400, easing: "ease-in-out" });
+                const spin = el.animate(AVATAR_MOVES.dizzy, { duration: 1400, easing: "ease-in-out" });
                 avatarBurst(["💫", "⭐", "😵‍💫"], 12);
                 showAvatarBubble(`${a.pic} Whoa, I'm dizzy!`, "😵‍💫", "וואו, הסתחררתי!", "");
-                speakTexts(["Whoa, I'm dizzy!"]);
+                await Promise.all([moved(spin), speakTexts(["Whoa, I'm dizzy!"])]);
                 return;
             }
-            el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: fx.move === "spin" || fx.move === "flip" ? 700 : 900, easing: "ease-in-out" });
+            const move = el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: fx.move === "spin" || fx.move === "flip" ? 700 : 900, easing: "ease-in-out" });
             avatarBurst(fx.fx);
             let words;
             try { words = await loadLevel(+document.getElementById("level-select").value); } catch (e) { words = AVATAR_WORDS; }
@@ -2225,10 +2244,11 @@
             do { w = words[Math.floor(Math.random() * words.length)]; } while (words.length > 1 && avatarWord && w.en === avatarWord.en);   // not the same word twice in a row
             avatarWord = w;
             showAvatarBubble(`${a.pic} ${fx.say}`, (w.pic ? w.pic + " " : "") + w.en, chosen[w.en.toLowerCase()] || w.he, "🔊 לחצו לשמוע שוב");
-            speakTexts([fx.say, w.en]);
+            await Promise.all([moved(move), speakTexts([fx.say, w.en])]);
         }
 
         function avatarBubbleTap() {
+            if (document.getElementById("menu-avatar").disabled) return;   // not while the character is still talking
             if (avatarWord) speakText(avatarWord.en);
             clearTimeout(bubbleTimer);
             bubbleTimer = setTimeout(() => document.getElementById("avatar-bubble").classList.remove("on"), 6000);

@@ -1027,14 +1027,22 @@ setInterval(()=>{const u=U();if(!u||document.hidden||Date.now()-lastAct>9e4)retu
 function nextAct(gid,L){const i=ALLG.findIndex(g=>g.id===gid);return i<ALLG.length-1?[ALLG[i+1].id,L]:[ALLG[0].id,LETTERS[(LETTERS.indexOf(L)+1)%LETTERS.length]]}
 
 /* ================= navigation ================= */
-const view=$('#view');let cleanups=[],backFn=null;
-function clearView(){cleanups.splice(0).forEach(f=>{try{f()}catch(e){}});try{speechSynthesis.cancel()}catch(e){}hideOverlay();view.innerHTML='';view.scrollTop=0}
+const view=$('#view');let cleanups=[],backFn=null,atHome=false;
+function clearView(){atHome=false;cleanups.splice(0).forEach(f=>{try{f()}catch(e){}});try{speechSynthesis.cancel()}catch(e){}hideOverlay();view.innerHTML='';view.scrollTop=0}
 function setTop(title,back){$('#tbTitle').textContent=title||'אלופי האותיות';backFn=back||null;$('#tbBack').style.visibility=back?'visible':'hidden';refreshTop()}
 function refreshTop(){const u=U();['#tbUser','#tbCoins','#tbStreak','#tbLevel'].forEach(s=>$(s).style.display=u?'':'none');$('#tbHome').style.visibility=u?'visible':'hidden';if(u){$('#tbUser').innerHTML=avatarSVG(u)+'<span>'+esc(u.name)+'</span>';$('#tbCoins b').textContent=u.coins;const sk=streakNow(u);$('#tbStreak b').textContent=sk;$('#tbStreak').classList.toggle('off',!sk);$('#tbLevel b').textContent=levelOf(u.xp)}}
 $('#tbStreak').onclick=()=>{SFX.pick();showStreak()};
 $('#tbLevel').onclick=()=>{SFX.pick();showBadges()};
 function updMute(){$('#tbMute').textContent=DB.mute?'🔇':'🔊'}
 $('#tbBack').onclick=()=>{SFX.pick();if(backFn)backFn()};
+/* the phone's back button: one extra history entry catches it. It does what the on-screen back arrow does,
+   cancels the parent question, and is ignored on other pop-ups (break, results). On the home screen, or a
+   screen with no back arrow, it leaves the app. */
+history.replaceState({alfi:0},'');history.pushState({alfi:1},'');
+addEventListener('popstate',()=>{const stay=()=>history.pushState({alfi:1},'');
+ if(!OV.hidden){const c=OV.querySelector('[data-a=no]');if(c)c.click();return stay()}
+ if(backFn&&!atHome){SFX.pick();backFn();return stay()}
+ history.back()});
 $('#tbHome').onclick=()=>{SFX.pick();if(U())showHome()};
 $('#tbUser').onclick=()=>{SFX.pick();showUsers()};
 $('#tbMute').onclick=()=>{DB.mute=!DB.mute;save();updMute();if(DB.mute){try{speechSynthesis.cancel()}catch(e){}}else SFX.pick()};
@@ -1075,7 +1083,7 @@ function mascotLine(u){const d=day(u),s=u.streak,due=dueLetters(u).length;
  if(!d.goal)return 'עוד '+(u.settings.goal-d.xp)+' נקודות למטרה של היום'+(streakNow(u)?' – ככה שומרים על הרצף 🔥':' 🎯');
  if(due>=3)return 'יש '+due+' אותיות שמחכות לחזרה חכמה. חזרה עושה אותן חזקות! 💪';
  return 'מעולה! בוא נבחר אות ונשחק 🔤'}
-function showHome(){const u=U();if(!u)return showUsers();clearView();setTop('אלופי האותיות',showUsers);const d=day(u),lv=levelOf(u.xp),x0=lvlXp(lv),x1=lvlXp(lv+1),sk=streakNow(u);
+function showHome(){const u=U();if(!u)return showUsers();clearView();atHome=true;setTop('אלופי האותיות',showUsers);const d=day(u),lv=levelOf(u.xp),x0=lvlXp(lv),x1=lvlXp(lv+1),sk=streakNow(u);
  const p=el('div','page hub'),top=el('div','hubtop');
  top.innerHTML=avatarSVG(u)+'<div class="lvbox"><div class="lvname">שלב '+lv+' · '+esc(u.name)+'</div><div class="lvtitle">'+lvlTitle(lv)+'</div><div class="xpbar"><i style="width:'+((u.xp-x0)/(x1-x0)*100)+'%"></i><span>'+(u.xp-x0)+' / '+(x1-x0)+' נקודות לשלב הבא</span></div></div>'
   +'<div class="ring" title="המטרה היומית">'+ringSVG(d.xp,u.settings.goal,'#FFC928')+'<b>'+Math.min(d.xp,u.settings.goal)+'/'+u.settings.goal+'<br>היום</b></div>'

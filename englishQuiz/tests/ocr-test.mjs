@@ -1648,7 +1648,7 @@ async function testFire() {
   const fire = () => page.evaluate(() => { showStart(); return document.getElementById('menu-fire').textContent; });
   const saved = () => page.evaluate(() => JSON.parse(localStorage.getItem('englishquiz-daily-streak')));
 
-  check((await fire()) === '', 'before playing there is no 🔥 on the main screen');
+  check((await fire()) === '🔥 1' && (await page.evaluate(() => { openShop(); const t = document.getElementById('shop-fire').textContent; showStart(); return t; })) === '🔥 × 1', 'before playing the first day already shows 🔥 1 (main screen and shop)');
   let r = await finishQuiz();
   check(r.points === 6 && r.badges.length === 1 && r.badges[0].includes('יום ראשון') && (await fire()) === '🔥 1', `the first quiz of the day: 🔥 1 (${r.badges.join(' | ')})`);
   r = await finishQuiz();
@@ -1675,7 +1675,7 @@ async function testFire() {
   check(odds.wand === 300 && Math.abs(odds[50] - 150) <= 1 && Math.abs(odds[100] - 100) <= 1 && Math.abs(odds[200] - 50) <= 1, `🔥 in a streak the shop box may give 200 too: half a wand, then 50 / 100 / 200 (${JSON.stringify(odds)})`);
   // a missed day: back to 0 on the main screen, and the next quiz starts again from 1, points no longer doubled
   await setDay(11);
-  check((await fire()) === '', 'a day missed: the 🔥 is gone from the main screen');
+  check((await fire()) === '🔥 1', 'a day missed: back to 🔥 1');
   r = await finishQuiz();
   check((await fire()) === '🔥 1' && r.points === 6, `playing again starts from 🔥 1, no double points (${r.points})`);
   await page.reload({ waitUntil: 'load' });

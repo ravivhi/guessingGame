@@ -797,8 +797,9 @@
         }
         document.addEventListener("visibilitychange", () => { if (!document.hidden) showDaily(); });
         function showDaily() {
-            const el = document.getElementById("menu-fire"), n = dailyDays();
-            if (el) el.textContent = n ? `🔥 ${n}${n >= DAILY_DOUBLE ? " ×2" : ""}` : "";
+            // today always counts as a day: a new (or broken) streak shows 1, not 0
+            const el = document.getElementById("menu-fire"), n = Math.max(1, dailyDays());
+            if (el) el.textContent = `🔥 ${n}${n >= DAILY_DOUBLE ? " ×2" : ""}`;
             // the shop's row: how many days, and what they give
             const sh = document.getElementById("shop-fire"), info = document.getElementById("fire-info");
             if (sh) sh.textContent = `🔥 × ${n}`;

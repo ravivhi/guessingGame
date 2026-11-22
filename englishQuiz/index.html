@@ -626,6 +626,7 @@
         let wrongCount = 0;
         let canAnswer = true;
         let nextQuestionTimer = null;   // the short pause after a right answer, before the next question
+        let currentAnswers = [], wrongPicks = [];   // the open question's answer buttons (in order) and the wrong ones tapped
 
         // A big emoji appears behind the quiz after 5 answers in a row that were right on the first try, and a
         // happier one every 5 more for the first 10 emojis, every 10 for emojis 11-20, every 15 for 21-30 (30 emojis
@@ -676,23 +677,26 @@
             return array;
         }
 
-        function loadQuestion() {
+        // saved: { answers, wrong } when the app reopens in the middle of a question (same button order, same wrong taps)
+        function loadQuestion(saved) {
             document.getElementById("total-progress").innerText = wordsData.length;
-            
+
             if (currentIndex >= wordsData.length) {
                 showSummary();
                 return;
             }
 
             canAnswer = true;
-            wrongCount = 0;
             document.getElementById("current-progress").innerText = currentIndex + 1;
 
             const currentData = wordsData[currentIndex];
             document.getElementById("question-word").innerText = currentData.word;
 
-            let allAnswers = [currentData.correct, ...currentData.dynamics];
-            allAnswers = shuffle(allAnswers);
+            if (!(saved && Array.isArray(saved.answers) && saved.answers.includes(currentData.correct) && Array.isArray(saved.wrong))) saved = null;
+            const allAnswers = saved ? saved.answers : shuffle([currentData.correct, ...currentData.dynamics]);
+            currentAnswers = allAnswers;
+            wrongPicks = saved ? saved.wrong.filter(a => a !== currentData.correct) : [];
+            wrongCount = wrongPicks.length;
 
             const container = document.getElementById("answers-container");
             container.innerHTML = "";
@@ -702,8 +706,10 @@
                 button.className = "btn-answer";
                 button.innerText = ans;
                 button.onclick = () => handleAnswer(button, ans, currentData.correct);
+                if (wrongPicks.includes(ans)) { button.classList.add("wrong"); button.disabled = true; }
                 container.appendChild(button);
             });
+            saveSession("game");
         }
 
         function handleAnswer(selectedButton, selectedAnswer, correctAnswer) {
@@ -723,6 +729,7 @@
                     currentIndex++;
                     loadQuestion();
                 }, 500);
+                saveSession("game");   // saved as already on the next question
 
             } else {
                 selectedButton.classList.add("wrong");
@@ -732,6 +739,8 @@
                 document.getElementById("score").innerText = totalScore;
                 const cur = wordsData[currentIndex];
                 if (!missed.includes(cur)) missed.push(cur);
+                wrongPicks.push(selectedAnswer);
+                saveSession("game");
             }
         }
 
@@ -779,6 +788,7 @@
             practiceBtn.innerText = `תרגול המילים שטעיתי (${missed.length})`;
             document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
             stepQuizResult(successRate, wordsData === fullWords);
+            saveSession("summary");
         }
 
         // "→ תפריט" in the middle of a quiz: back to the main menu. The round is abandoned, so its points
@@ -1062,6 +1072,7 @@
             for (const id of ["summary-screen", "game-screen", "learn-screen", "learn-done-screen", "shop-screen"]) document.getElementById(id).style.display = "none";
             document.getElementById("start-screen").style.display = "flex";
             if (mode === "category") renderPath();
+            saveSession("start");
         }
 
         let ocrWorker = null;
@@ -1794,6 +1805,7 @@
             document.getElementById("learn-meaning").textContent = chosen[w.en.toLowerCase()] || w.he;
             updateLearnNav();
             speakText(w.en);
+            saveSession("learn");
         }
 
         function learnStep(d) {
@@ -1808,6 +1820,7 @@
             document.getElementById("learn-screen").style.display = "none";
             document.getElementById("learn-done-screen").style.display = "block";
             document.getElementById("learn-done-text").textContent = `סיימתם ללמוד: ${catEmoji(steps[index].name)} ${stepLabel(steps[index])}`;
+            saveSession("learn-done");
         }
 
         // ---- The quiz at the end of each step of the learning path: the step's words, wrong answers from the
@@ -2033,6 +2046,7 @@
             document.getElementById("start-screen").style.display = "none";
             document.getElementById("shop-screen").style.display = "flex";
             renderShop();
+            saveSession("shop");
         }
 
         function renderShop() {
@@ -2122,6 +2136,71 @@
         document.getElementById("words-input").value = readList(mode);
         applyModeUI();
         renderWords();
+
+        // ---- Reopen where we left off: the shown screen (and a quiz in progress, a learning card, the summary)
+        // is saved on the device at every change, so closing the app and opening it again comes back to the same place.
+        function saveSession(screen) {
+            const s = { screen };
+            if (screen === "game" || screen === "summary") {
+                const pos = w => fullWords.indexOf(w);
+                const pending = nextQuestionTimer !== null;   // a right answer was just given: save as on the next question
+                Object.assign(s, {
+                    full: fullWords, sub: wordsData === fullWords ? null : wordsData.map(pos), missed: missed.map(pos),
+                    i: currentIndex + (pending ? 1 : 0), score: totalScore, firstTry: correctFirstTryCount,
+                    q: pending ? null : { answers: currentAnswers, wrong: wrongPicks },
+                    step: stepQuiz ? { level: stepQuiz.level, index: stepQuiz.index } : null
+                });
+                // the summary is saved as it is shown: showing it again would add its points to the total a second time
+                if (screen === "summary") s.html = document.getElementById("summary-screen").innerHTML;
+            } else if ((screen === "learn" || screen === "learn-done") && learn) s.learn = { level: learn.level, index: learn.index, i: learn.i };
+            try { localStorage.setItem("englishquiz-session", JSON.stringify(s)); } catch (e) {}
+        }
+
+        async function restoreSession() {
+            let s = null;
+            try { s = JSON.parse(localStorage.getItem("englishquiz-session")); } catch (e) {}
+            if (!s || !s.screen || s.screen === "start") return;
+            try {
+                if (s.screen === "shop") return openShop();
+                const lv = (s.step || s.learn || {}).level;
+                const steps = lv ? learnSteps(await loadLevel(lv)) : null;   // the learning path's steps (needs the word bank)
+                if (getComputedStyle(document.getElementById("start-screen")).display === "none") return;   // the user already moved on
+                const hide = () => document.getElementById("start-screen").style.display = "none";
+                if (s.screen === "learn" || s.screen === "learn-done") {
+                    const step = steps && steps[s.learn.index];
+                    if (!step) return;
+                    learn = { level: lv, index: s.learn.index, steps, step, i: Math.max(0, Math.min(step.words.length - 1, s.learn.i || 0)) };
+                    hide();
+                    if (s.screen === "learn") { document.getElementById("learn-screen").style.display = "flex"; showCard(); }
+                    else finishLearning();
+                    return;
+                }
+                if ((s.screen !== "game" && s.screen !== "summary") || !Array.isArray(s.full) || !s.full.length) return;
+                fullWords = s.full;
+                wordsData = Array.isArray(s.sub) ? s.sub.map(k => fullWords[k]).filter(Boolean) : fullWords;
+                if (!wordsData.length) wordsData = fullWords;
+                missed = (s.missed || []).map(k => fullWords[k]).filter(Boolean);
+                currentIndex = Math.max(0, Math.min(wordsData.length, s.i || 0));
+                totalScore = s.score || 0;
+                correctFirstTryCount = s.firstTry || 0;
+                stepQuiz = null;
+                if (s.step && steps && steps[s.step.index]) {
+                    stepQuiz = { level: lv, index: s.step.index, steps };
+                    learn = { level: lv, index: s.step.index, steps, step: steps[s.step.index], i: 0 };
+                }
+                hide();
+                document.getElementById("score").innerText = totalScore;
+                if (s.screen === "summary" && s.html) {
+                    const sum = document.getElementById("summary-screen");
+                    sum.innerHTML = s.html;
+                    sum.style.display = "block";
+                    return;
+                }
+                document.getElementById("game-screen").style.display = "block";
+                loadQuestion(s.q);
+            } catch (e) {}   // e.g. the word bank can't be loaded offline: stay on the start screen
+        }
+
         // The phone's back button: one extra history entry catches it. A pop-up closes; in a quiz it asks
         // before leaving (like the leave button); other screens go back to the start screen; on the start
         // screen it leaves the app.
@@ -2136,6 +2215,7 @@
             if (["summary-screen", "learn-screen", "learn-done-screen", "shop-screen"].some(shown)) { showStart(); return stay(); }
             history.back();
         });
+        restoreSession();
     </script>
 </body>
 </html>

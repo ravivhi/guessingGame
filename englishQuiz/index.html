@@ -646,11 +646,12 @@
         // The streak is saved on the device, so it survives a reload (e.g. the phone dropping the page in the background).
         const STREAK_KEY = "englishQuizStreak";
         let streak = 0, shownStage = 0;
-        // After the last emoji (a streak of 300), 20 more right answers in a row earn a 🎁 mystery box for the shop
-        // (with a trophy or a medal inside), and the streak starts again from 0 - the faces start over.
-        const BOX_START = streakThreshold(STREAK_EMOJIS.length), BOX_EVERY = 20, BOX_GOAL = BOX_START + BOX_EVERY;
+        // Reaching the last emoji (a streak of 300) earns a 🎁 mystery box for the shop (with a trophy or a medal
+        // inside), and the streak starts again from 0 - the faces start over.
+        const BOX_GOAL = streakThreshold(STREAK_EMOJIS.length);
         try { streak = Math.max(0, parseInt(localStorage.getItem(STREAK_KEY), 10) || 0); } catch (e) {}
-        function updateStreakEmoji() {
+        // keepBig: only the numbers and the saved streak change, the big emoji stays (the last face stays up after a box)
+        function updateStreakEmoji(keepBig) {
             try { localStorage.setItem(STREAK_KEY, String(streak)); } catch (e) {}
             const el = document.getElementById("streak-emoji");
             const stage = streakStage(streak);
@@ -659,8 +660,8 @@
             const countEl = document.getElementById("menu-streak-count");   // the emoji's stage (1-30), next to the small emoji
             if (countEl) countEl.textContent = stage ? String(stage) : "";
             const nextEl = document.getElementById("streak-next");   // in the game: how many more right answers to the next emoji
-            if (nextEl) nextEl.textContent = stage < STREAK_EMOJIS.length ? "עוד " + (streakThreshold(stage + 1) - streak) : "🎁 עוד " + (BOX_GOAL - streak);
-            if (stage === shownStage) return;
+            if (nextEl) nextEl.textContent = stage >= STREAK_EMOJIS.length ? "" : (stage === STREAK_EMOJIS.length - 1 ? "🎁 עוד " : "עוד ") + (streakThreshold(stage + 1) - streak);   // the last face brings the box
+            if (stage === shownStage || keepBig) return;
             shownStage = stage;
             if (stage === 0) { el.classList.remove("on", "pop"); return; }   // a mistake: the emoji fades away
             el.textContent = STREAK_EMOJIS[stage - 1];
@@ -719,7 +720,7 @@
                 canAnswer = false;
                 selectedButton.classList.add("correct");
 
-                if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; streak++; earnBoxes(); updateStreakEmoji(); }
+                if (wrongCount === 0) { totalScore += 1; correctFirstTryCount++; streak++; updateStreakEmoji(); earnBoxes(); }
                 const av = document.getElementById("game-avatar");
                 av.classList.remove("hop"); void av.offsetWidth; av.classList.add("hop");   // the character hops
                 document.getElementById("score").innerText = totalScore;
@@ -1937,57 +1938,59 @@
         // ---- 🛒 The shop: the total points (grandTotal) buy a character, shown next to the title on the main screen,
         // and a background. Bought items stay bought (saved on the device) and can be switched any time for free.
         // Buying takes two taps (tap = "לקנות?", tap again = buy), so a small child doesn't buy by mistake.
-        // 🎁 Mystery boxes (earned after the last streak emoji, see BOX_START) are opened here too.
+        // 🎁 Mystery boxes (earned at the last streak emoji, see BOX_GOAL) are opened here too.
         const SHOP_KEY = "englishquiz-shop";
         const SHOP_AVATARS = [
-            { id: "dog", pic: "🐶", name: "כלבלב", price: 10 }, { id: "cat", pic: "🐱", name: "חתלתול", price: 10 },
-            { id: "rabbit", pic: "🐰", name: "ארנב", price: 15 }, { id: "frog", pic: "🐸", name: "צפרדע", price: 15 },
-            { id: "fox", pic: "🦊", name: "שועל", price: 20 }, { id: "panda", pic: "🐼", name: "פנדה", price: 25 },
-            { id: "penguin", pic: "🐧", name: "פינגווין", price: 25 }, { id: "monkey", pic: "🐵", name: "קוף", price: 30 },
-            { id: "tiger", pic: "🐯", name: "נמר", price: 35 }, { id: "lion", pic: "🦁", name: "אריה", price: 40 },
-            { id: "owl", pic: "🦉", name: "ינשוף", price: 45 }, { id: "robot", pic: "🤖", name: "רובוט", price: 60 },
-            { id: "alien", pic: "👽", name: "חייזר", price: 60 }, { id: "dino", pic: "🦖", name: "דינוזאור", price: 75 },
-            { id: "dragon", pic: "🐉", name: "דרקון", price: 100 }, { id: "unicorn", pic: "🦄", name: "חד-קרן", price: 120 },
-            { id: "pig", pic: "🐷", name: "חזרזיר", price: 15 }, { id: "chick", pic: "🐥", name: "אפרוח", price: 15 },
-            { id: "cow", pic: "🐮", name: "פרה", price: 20 }, { id: "bee", pic: "🐝", name: "דבורה", price: 20 },
-            { id: "bear", pic: "🐻", name: "דובי", price: 30 }, { id: "koala", pic: "🐨", name: "קואלה", price: 30 },
-            { id: "butterfly", pic: "🦋", name: "פרפר", price: 40 }, { id: "giraffe", pic: "🦒", name: "ג׳ירפה", price: 45 },
-            { id: "zebra", pic: "🦓", name: "זברה", price: 45 }, { id: "elephant", pic: "🐘", name: "פיל", price: 50 },
-            { id: "parrot", pic: "🦜", name: "תוכי", price: 50 }, { id: "dolphin", pic: "🐬", name: "דולפין", price: 55 },
-            { id: "octopus", pic: "🐙", name: "תמנון", price: 55 }, { id: "flamingo", pic: "🦩", name: "פלמינגו", price: 65 },
-            { id: "shark", pic: "🦈", name: "כריש", price: 70 }, { id: "sauropod", pic: "🦕", name: "ברונטו", price: 75 },
-            { id: "ghost", pic: "👻", name: "רוח רפאים", price: 80 }, { id: "wizard", pic: "🧙", name: "קוסם", price: 110 },
-            { id: "fairy", pic: "🧚", name: "פיה", price: 110 }, { id: "superhero", pic: "🦸", name: "גיבור על", price: 150 },
-            { id: "mermaid", pic: "🧜‍♀️", name: "בת ים", price: 150 }, { id: "astronaut", pic: "🧑‍🚀", name: "אסטרונאוט", price: 160 },
-            { id: "prince", pic: "🤴", name: "נסיך", price: 180 }, { id: "princess", pic: "👸", name: "נסיכה", price: 180 },
+            { id: "dog", pic: "🐶", name: "כלבלב", price: 10 }, { id: "cat", pic: "🐱", name: "חתלתול", price: 20 },
+            { id: "rabbit", pic: "🐰", name: "ארנב", price: 30 }, { id: "frog", pic: "🐸", name: "צפרדע", price: 40 },
+            { id: "fox", pic: "🦊", name: "שועל", price: 75 }, { id: "panda", pic: "🐼", name: "פנדה", price: 120 },
+            { id: "penguin", pic: "🐧", name: "פינגווין", price: 140 }, { id: "monkey", pic: "🐵", name: "קוף", price: 160 },
+            { id: "tiger", pic: "🐯", name: "נמר", price: 225 }, { id: "lion", pic: "🦁", name: "אריה", price: 250 },
+            { id: "owl", pic: "🦉", name: "ינשוף", price: 300 }, { id: "robot", pic: "🤖", name: "רובוט", price: 570 },
+            { id: "alien", pic: "👽", name: "חייזר", price: 620 }, { id: "dino", pic: "🦖", name: "דינוזאור", price: 800 },
+            { id: "dragon", pic: "🐉", name: "דרקון", price: 1000 }, { id: "unicorn", pic: "🦄", name: "חד-קרן", price: 1300 },
+            { id: "pig", pic: "🐷", name: "חזרזיר", price: 50 }, { id: "chick", pic: "🐥", name: "אפרוח", price: 60 },
+            { id: "cow", pic: "🐮", name: "פרה", price: 90 }, { id: "bee", pic: "🐝", name: "דבורה", price: 105 },
+            { id: "bear", pic: "🐻", name: "דובי", price: 180 }, { id: "koala", pic: "🐨", name: "קואלה", price: 200 },
+            { id: "butterfly", pic: "🦋", name: "פרפר", price: 275 }, { id: "giraffe", pic: "🦒", name: "ג׳ירפה", price: 330 },
+            { id: "zebra", pic: "🦓", name: "זברה", price: 360 }, { id: "elephant", pic: "🐘", name: "פיל", price: 400 },
+            { id: "parrot", pic: "🦜", name: "תוכי", price: 440 }, { id: "dolphin", pic: "🐬", name: "דולפין", price: 480 },
+            { id: "octopus", pic: "🐙", name: "תמנון", price: 520 }, { id: "flamingo", pic: "🦩", name: "פלמינגו", price: 680 },
+            { id: "shark", pic: "🦈", name: "כריש", price: 740 }, { id: "sauropod", pic: "🦕", name: "ברונטו", price: 870 },
+            { id: "ghost", pic: "👻", name: "רוח רפאים", price: 940 }, { id: "wizard", pic: "🧙", name: "קוסם", price: 1100 },
+            { id: "fairy", pic: "🧚", name: "פיה", price: 1200 }, { id: "superhero", pic: "🦸", name: "גיבור על", price: 1400 },
+            { id: "mermaid", pic: "🧜‍♀️", name: "בת ים", price: 1500 }, { id: "astronaut", pic: "🧑‍🚀", name: "אסטרונאוט", price: 1650 },
+            { id: "prince", pic: "🤴", name: "נסיך", price: 1800 }, { id: "princess", pic: "👸", name: "נסיכה", price: 2000 },
         ].sort((a, b) => a.price - b.price);   // cheapest first
         const SHOP_THEMES = [
             { id: "purple", name: "סגול", price: 0, bg: "linear-gradient(135deg, #4a00e0, #8e2de2)" },
-            { id: "ocean", name: "ים", price: 30, bg: "linear-gradient(135deg, #0052d4, #4fc3f7)" },
-            { id: "forest", name: "יער", price: 40, bg: "linear-gradient(135deg, #134e5e, #71b280)" },
-            { id: "sunset", name: "שקיעה", price: 50, bg: "linear-gradient(135deg, #ff512f, #f09819)" },
-            { id: "candy", name: "סוכריה", price: 60, bg: "linear-gradient(135deg, #ec008c, #fc6767)" },
-            { id: "night", name: "לילה", price: 80, bg: "linear-gradient(135deg, #0f2027, #2c5364)" },
-            { id: "space", name: "חלל", price: 100, bg: "radial-gradient(circle at 30% 20%, #6a3093, #1a0b2e 70%)" },
-            { id: "rainbow", name: "קשת", price: 150, bg: "linear-gradient(135deg, #ff595e, #ffca3a, #8ac926, #1982c4, #6a4c93)" },
-            { id: "mint", name: "מנטה", price: 35, bg: "linear-gradient(135deg, #11998e, #38ef7d)" },
-            { id: "lemon", name: "לימון", price: 45, bg: "linear-gradient(135deg, #f7971e, #ffd200)" },
-            { id: "cherry", name: "דובדבן", price: 70, bg: "linear-gradient(135deg, #8e0e00, #eb3349)" },
-            { id: "ice", name: "קרח", price: 90, bg: "linear-gradient(135deg, #2c3e8f, #83a4d4, #b6fbff)" },
-            { id: "jungle", name: "ג׳ונגל", price: 110, bg: "linear-gradient(135deg, #0b3d0b, #3a7d2c, #a8c66c)" },
-            { id: "fire", name: "אש", price: 120, bg: "linear-gradient(0deg, #b21f1f, #f12711, #f5af19)" },
-            { id: "gold", name: "זהב", price: 200, bg: "linear-gradient(135deg, #8a6e2f, #d4af37, #f9e79f, #b8860b)" },
-            { id: "galaxy", name: "גלקסיה", price: 250, bg: "radial-gradient(circle at 70% 30%, #ff6ec4 0%, #7873f5 25%, #1e1b4b 60%, #000 100%)" },
+            { id: "ocean", name: "ים", price: 25, bg: "linear-gradient(135deg, #0052d4, #4fc3f7)" },
+            { id: "forest", name: "יער", price: 75, bg: "linear-gradient(135deg, #134e5e, #71b280)" },
+            { id: "sunset", name: "שקיעה", price: 130, bg: "linear-gradient(135deg, #ff512f, #f09819)" },
+            { id: "candy", name: "סוכריה", price: 160, bg: "linear-gradient(135deg, #ec008c, #fc6767)" },
+            { id: "night", name: "לילה", price: 250, bg: "linear-gradient(135deg, #0f2027, #2c5364)" },
+            { id: "space", name: "חלל", price: 375, bg: "radial-gradient(circle at 30% 20%, #6a3093, #1a0b2e 70%)" },
+            { id: "rainbow", name: "קשת", price: 700, bg: "linear-gradient(135deg, #ff595e, #ffca3a, #8ac926, #1982c4, #6a4c93)" },
+            { id: "mint", name: "מנטה", price: 50, bg: "linear-gradient(135deg, #11998e, #38ef7d)" },
+            { id: "lemon", name: "לימון", price: 100, bg: "linear-gradient(135deg, #f7971e, #ffd200)" },
+            { id: "cherry", name: "דובדבן", price: 200, bg: "linear-gradient(135deg, #8e0e00, #eb3349)" },
+            { id: "ice", name: "קרח", price: 300, bg: "linear-gradient(135deg, #2c3e8f, #83a4d4, #b6fbff)" },
+            { id: "jungle", name: "ג׳ונגל", price: 450, bg: "linear-gradient(135deg, #0b3d0b, #3a7d2c, #a8c66c)" },
+            { id: "fire", name: "אש", price: 550, bg: "linear-gradient(0deg, #b21f1f, #f12711, #f5af19)" },
+            { id: "gold", name: "זהב", price: 900, bg: "linear-gradient(135deg, #8a6e2f, #d4af37, #f9e79f, #b8860b)" },
+            { id: "galaxy", name: "גלקסיה", price: 1200, bg: "radial-gradient(circle at 70% 30%, #ff6ec4 0%, #7873f5 25%, #1e1b4b 60%, #000 100%)" },
         ].sort((a, b) => a.price - b.price);   // cheapest first (the free purple one first)
         let shop = { owned: ["purple"], avatar: null, theme: "purple", boxes: 0, awards: {} };
         try { const v = JSON.parse(localStorage.getItem(SHOP_KEY)); if (v && Array.isArray(v.owned)) shop = { ...shop, ...v }; } catch (e) {}
         if (!shop.owned.includes("purple")) shop.owned.push("purple");
         let shopConfirm = null;   // the item waiting for the second tap
 
-        // A box is earned during the game: count it, start the streak again from 0, show a short note, play the happy sound.
+        // A box is earned during the game at the last face: count it, start the streak again from 0 (the last face
+        // stays up until the next answer), show a short note, play the happy sound.
         function earnBoxes() {
             if (streak < BOX_GOAL) return;
             streak = 0;
+            updateStreakEmoji(true);
             shop.boxes = (shop.boxes || 0) + 1;
             saveShop(); applyShop();
             const t = document.getElementById("box-toast");
@@ -2053,9 +2056,7 @@
             document.getElementById("shop-balance").textContent = `⭐ ${grandTotal}`;
             const boxes = shop.boxes || 0;
             document.getElementById("box-count").textContent = boxes ? `יש לכם ${boxes} ${boxes === 1 ? "קופסה" : "קופסאות"}!` : "אין לכם קופסה עדיין";
-            document.getElementById("box-hint").textContent = streak < BOX_START
-                ? `מגיעים לפרצוף האחרון ועוד ${BOX_EVERY} נכונות ברצף = קופסה`
-                : `עוד ${BOX_GOAL - streak} נכונות ברצף לקופסה!`;
+            document.getElementById("box-hint").textContent = `מגיעים לפרצוף האחרון = קופסה! עוד ${Math.max(0, BOX_GOAL - streak)} נכונות ברצף`;
             const stage = streakStage(streak), faces = document.getElementById("shop-faces");   // faces 1..current stage
             faces.innerHTML = "";
             STREAK_EMOJIS.forEach((e, i) => {

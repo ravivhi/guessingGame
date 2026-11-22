@@ -1382,14 +1382,14 @@ async function testPictures() {
 }
 
 async function testWand() {
-  console.log('\n[wand] the result screen\'s box gives a magic wand that shows the right answer in a quiz');
+  console.log('\n[wand] a magic wand shows the right answer in a quiz (the end-of-quiz box gives none)');
   const page = await openPage();
   await page.evaluate(() => {
     speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 50); speechSynthesis.cancel = () => {}; window.coinSound = () => {};
     document.getElementById('words-input').value = Array.from({ length: 6 }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n');
     renderWords();
   });
-  const wands = () => page.evaluate(() => [shop.wands || 0, JSON.parse(localStorage.getItem(SHOP_KEY)).wands || 0].join());
+  const wands = () => page.evaluate(() => [shop.wands || 0, (JSON.parse(localStorage.getItem(SHOP_KEY)) || {}).wands || 0].join());
   const finishQuiz = () => page.evaluate(() => {
     showStart(); startFromInput();
     while (currentIndex < wordsData.length) { const c = wordsData[currentIndex].correct; [...document.querySelectorAll('#answers-container button')].find(b => b.innerText === c).click(); clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion(); }
@@ -1400,10 +1400,10 @@ async function testWand() {
   check(await shown('#wand-btn') && await page.$eval('#wand-btn', e => e.disabled) && (await page.$eval('#wand-count', e => e.textContent)) === '0', 'without a wand the wand button shows 0 and is disabled');
   await finishQuiz();
   await page.click('#coin-box');
-  check((await wands()) === '1,1', 'opening the box gives a magic wand (saved)');
-  check((await page.$eval('#menu-wands', e => e.textContent)) === '🪄 1' && (await page.$eval('#shop-wands', e => e.textContent)) === '🪄 × 1', 'the main screen and the shop count it (🪄 1)');
-  await page.waitForFunction(() => document.getElementById('box-toast').classList.contains('on'), { timeout: 3000 }).catch(() => {});
-  check((await page.$eval('#box-toast', e => e.textContent)).includes('שרביט קסמים'), 'a note says a magic wand was won');
+  await new Promise(r => setTimeout(r, 1500));
+  check((await wands()) === '0,0' && !(await page.$eval('#box-toast', e => e.classList.contains('on') && e.textContent.includes('שרביט'))), 'the box at the end of a quiz gives no magic wand');
+  await page.evaluate(() => { shop.wands = 1; saveShop(); showWands(); });
+  check((await page.$eval('#menu-wands', e => e.textContent)) === '🪄 1' && (await page.$eval('#shop-wands', e => e.textContent)) === '🪄 × 1', 'with a wand (from the shop box) the main screen and the shop count it (🪄 1)');
 
   // using it
   await page.evaluate(() => { showStart(); startFromInput(); });
@@ -1426,11 +1426,11 @@ async function testWand() {
   await page.evaluate(() => { clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion(); });
   check(await shown('#wand-btn') && await page.$eval('#wand-btn', e => e.disabled) && (await page.$eval('#wand-count', e => e.textContent)) === '0', 'with no wands left the button stays disabled (0) on the next question');
 
-  // no limit: every box gives one more, even boxes collected without opening them
+  // end-of-quiz boxes never add a wand, opened or not
   await finishQuiz(); await page.evaluate(() => showStart());   // left closed
   await finishQuiz(); await page.click('#coin-box');
   await finishQuiz(); await page.evaluate(() => restartGame());
-  check((await wands()) === '3,3', `no limit: every box adds a wand, opened or not (${await wands()})`);
+  check((await wands()) === '0,0', `end-of-quiz boxes add no wands, opened or not (${await wands()})`);
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();
 }

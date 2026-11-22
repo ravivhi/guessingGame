@@ -587,7 +587,7 @@
                 <div class="shop-section">🪄 שרביטי הקסמים שלי</div>
                 <div class="wand-area">
                     <div id="shop-wands"></div>
-                    <div class="wand-info">מקבלים שרביט בכל קופסה בסוף בוחן, ולפעמים גם בקופסת ההפתעה. בבוחן לוחצים עליו והוא מראה את התשובה הנכונה!</div>
+                    <div class="wand-info">מקבלים שרביט בקופסת ההפתעה. בבוחן לוחצים עליו והוא מראה את התשובה הנכונה!</div>
                 </div>
                 <div class="shop-section">🧸 דמויות</div>
                 <div class="shop-grid" id="shop-avatars"></div>
@@ -693,15 +693,13 @@
         let pendingCoins = 0;
         try { pendingCoins = Math.max(0, parseInt(localStorage.getItem(PENDING_KEY), 10) || 0); } catch (e) {}
         function savePending() { try { localStorage.setItem(PENDING_KEY, String(pendingCoins)); } catch (e) {} }
-        // moves the waiting points into the total (returns how many); every box also holds a 🪄 magic wand (no limit)
+        // moves the waiting points into the total (returns how many). (Wands come only from the shop's surprise box.)
         function collectCoins() {
             const n = pendingCoins;
             if (!n) return 0;
             grandTotal += n;
-            shop.wands = (shop.wands || 0) + 1;
             pendingCoins = 0;
             try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
-            saveShop(); showWands();
             savePending();
             showGrandTotal();
             return n;
@@ -2258,8 +2256,7 @@
             if (!here()) return finish();
             pic.textContent = "💰";
             pic.animate([{ transform: "scale(0.4)" }, { transform: "scale(1.6)", offset: 0.6 }, { transform: "scale(1)" }], { duration: 450, easing: "ease-out" });
-            avatarBurst(["💰", "⭐", "✨", "🪄"], 16, pic, true);
-            showToast(`🪄 קיבלתם שרביט קסמים! יש לכם ${shop.wands} – בבוחן הוא מראה את התשובה הנכונה`, 4000);
+            avatarBurst(["💰", "⭐", "✨"], 16, pic, true);
             playUnlockSound();
             await new Promise(r => setTimeout(r, 650));
             if (!here()) return finish();

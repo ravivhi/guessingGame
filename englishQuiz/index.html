@@ -384,6 +384,10 @@
         #coin-box .cb-pic { font-size: 2.4rem; line-height: 1; display: inline-block; animation: shopWiggle 1.6s infinite; }
         #coin-box:disabled { cursor: default; color: #744210; }
         #coin-box:disabled .cb-pic { animation: none; }
+        .shop-item .shop-swatch.pic { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; line-height: 1; }
+        /* with a picture background the card is slightly see-through, so the picture shows a little everywhere */
+        body.pic-theme .game-container { background: rgba(255, 255, 255, 0.72); }
+        .pic-img { width: 1.1em; height: 1.1em; vertical-align: -0.2em; display: inline-block; pointer-events: none; }
         #summary-say .ss-he { font-size: 0.8rem; color: #4a5568; margin-top: 2px; }
         #summary-avatar:empty { display: none; }
         #summary-say { position: absolute; left: 0; right: 0; top: calc(100% - 16px); margin: 0 auto; width: max-content; max-width: 92%; box-sizing: border-box;
@@ -906,7 +910,7 @@
             document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
             stepQuizResult(successRate, wordsData === fullWords);
             const av = SHOP_AVATARS.find(x => x.id === shop.avatar);
-            document.getElementById("summary-avatar").textContent = av ? av.pic : "";
+            putPic(document.getElementById("summary-avatar"), av);
             document.getElementById("summary-say").classList.remove("on");
             saveSession("summary");   // saved with the final numbers (the celebration below only plays once)
             celebrate(successRate, totalScore, av);
@@ -2190,7 +2194,7 @@
                 el.getAnimations().forEach(x => x.cancel());
                 const anim = el.animate(g.keys, { duration: g.ms, easing: "ease-in-out" });
                 avatarBurst(g.fx, 8, el, true);
-                summarySay(`${av.pic} ${g.say}`, g.he);
+                summarySay(`${picPrefix(av)}${g.say}`, g.he);
                 await Promise.all([anim.finished.catch(() => {}), speakTexts([g.speak || g.say])]);
             } finally {
                 summaryBusy = false;
@@ -2222,7 +2226,7 @@
                     if (!here()) return;
                     el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: 900, easing: "ease-in-out" });
                     avatarBurst(fx.fx, tier * 5, el, true);
-                    summarySay(`${av.pic} ${say}`);
+                    summarySay(`${picPrefix(av)}${say}`);
                     return speakTexts([say]);
                   }).catch(() => {}).finally(() => { if (run === celebrateRun) { summaryBusy = false; summarySayLater(); } });
             }
@@ -2349,6 +2353,28 @@
             { id: "fairy", pic: "🧚", name: "פיה", price: 1200 }, { id: "superhero", pic: "🦸", name: "גיבור על", price: 1400 },
             { id: "mermaid", pic: "🧜‍♀️", name: "בת ים", price: 1500 }, { id: "astronaut", pic: "🧑‍🚀", name: "אסטרונאוט", price: 1650 },
             { id: "prince", pic: "🤴", name: "נסיך", price: 1800 }, { id: "princess", pic: "👸", name: "נסיכה", price: 2000 },
+            { id: "hamster", pic: "🐹", name: "אוגר", price: 15 }, { id: "turtle", pic: "🐢", name: "צב", price: 25 },
+            { id: "ladybug", pic: "🐞", name: "פרת משה רבנו", price: 35 }, { id: "crab", pic: "🦀", name: "סרטן", price: 45 },
+            { id: "horse", pic: "🐴", name: "סוס", price: 70 }, { id: "hedgehog", pic: "🦔", name: "קיפוד", price: 85 },
+            { id: "whale", pic: "🐳", name: "לווייתן", price: 130 }, { id: "sloth", pic: "🦥", name: "עצלן", price: 150 },
+            { id: "otter", pic: "🦦", name: "לוטרה", price: 170 }, { id: "kangaroo", pic: "🦘", name: "קנגורו", price: 190 },
+            { id: "hippo", pic: "🦛", name: "היפופוטם", price: 215 }, { id: "llama", pic: "🦙", name: "לאמה", price: 240 },
+            { id: "raccoon", pic: "🦝", name: "דביבון", price: 290 }, { id: "wolf", pic: "🐺", name: "זאב", price: 345 },
+            { id: "swan", pic: "🦢", name: "ברבור", price: 380 }, { id: "peacock", pic: "🦚", name: "טווס", price: 420 },
+            { id: "eagle", pic: "🦅", name: "נשר", price: 460 }, { id: "snowman", pic: "⛄", name: "איש שלג", price: 500 },
+            { id: "pumpkin", pic: "🎃", name: "דלעת", price: 545 }, { id: "clown", pic: "🤡", name: "ליצן", price: 595 },
+            { id: "monster", pic: "👾", name: "מפלצון", price: 650 }, { id: "vampire", pic: "🧛", name: "ערפד", price: 960 },
+            { id: "genie", pic: "🧞", name: "ג׳יני", price: 1700 }, { id: "ninja", pic: "🥷", name: "נינג׳ה", price: 2200 },
+            // there is no capybara emoji: a small drawing instead (pic "" = no emoji in texts; see putPic)
+            { id: "capybara", pic: "", img: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+                <ellipse cx='29' cy='43' rx='24' ry='14' fill='#a86f42'/><ellipse cx='26' cy='38' rx='17' ry='7' fill='#bb8253' opacity='.6'/>
+                <rect x='12' y='49' width='8' height='10' rx='3.5' fill='#7d4f2b'/><rect x='35' y='49' width='8' height='10' rx='3.5' fill='#7d4f2b'/>
+                <rect x='33' y='19' width='27' height='23' rx='11' fill='#bb8253'/><rect x='47' y='26' width='14' height='15' rx='7' fill='#7d4f2b'/>
+                <ellipse cx='38' cy='19.5' rx='4.2' ry='3.6' fill='#7d4f2b'/><path d='M41.5 27.5 q3 -2.6 6 0' stroke='#2d1b0e' stroke-width='2' fill='none' stroke-linecap='round'/>
+                <ellipse cx='57.5' cy='30' rx='1.5' ry='1.1' fill='#2d1b0e'/><path d='M52 36.5 q3 2 6 0' stroke='#2d1b0e' stroke-width='1.4' fill='none' stroke-linecap='round'/>
+                <ellipse cx='42' cy='33' rx='3' ry='1.8' fill='#f6a6a6' opacity='.7'/>
+                <circle cx='45' cy='12.5' r='6.5' fill='#f6993f'/><circle cx='43' cy='10.5' r='1.6' fill='#fbd38d'/><path d='M45 6.2 q4 -4.6 8 -1.4 q-4.4 2.4 -8 1.4z' fill='#38a169'/></svg>`),
+              name: "קפיברה", price: 1150 },
         ].sort((a, b) => a.price - b.price);   // cheapest first
         const SHOP_THEMES = [
             { id: "purple", name: "סגול", price: 0, bg: "linear-gradient(135deg, #4a00e0, #8e2de2)" },
@@ -2367,6 +2393,47 @@
             { id: "fire", name: "אש", price: 550, bg: "linear-gradient(0deg, #b21f1f, #f12711, #f5af19)" },
             { id: "gold", name: "זהב", price: 900, bg: "linear-gradient(135deg, #8a6e2f, #d4af37, #f9e79f, #b8860b)" },
             { id: "galaxy", name: "גלקסיה", price: 1200, bg: "radial-gradient(circle at 70% 30%, #ff6ec4 0%, #7873f5 25%, #1e1b4b 60%, #000 100%)" },
+            // 🖼️ picture backgrounds: a scene drawn on the device (see drawScene). big: [emoji, x, y, size, turn]
+            // (x, y = where its middle is, as parts of the screen; size = part of the screen's short side; "capy" = the capybara drawing)
+            { id: "winter", name: "חורף", price: 600, icon: "⛄", bg: "linear-gradient(180deg, #bfdbfe, #eff6ff)", scene: {
+                sky: ["#bfdbfe", "#dbeafe", "#f8fafc"], ground: "#ffffff", groundH: 0.17, scatter: { e: ["❄️"], n: 30, s: [0.03, 0.07] },
+                big: [["🏔️", 0.5, 0.1, 0.5, 0], ["⛄", 0.2, 0.86, 0.4, 0], ["🌲", 0.84, 0.83, 0.42, 0], ["🌲", 0.66, 0.89, 0.28, 0], ["🦌", 0.45, 0.93, 0.2, 0]] } },
+            { id: "bloom", name: "גינה פורחת", price: 650, icon: "🌸", bg: "linear-gradient(180deg, #ecfccb, #86efac)", scene: {
+                sky: ["#fef9c3", "#ecfccb", "#bbf7d0"], ground: "#4ade80", groundH: 0.14, scatter: { e: ["🌸", "🌷", "🌼", "🌻"], n: 26, s: [0.05, 0.09] },
+                big: [["🦋", 0.2, 0.13, 0.26, -10], ["🐝", 0.82, 0.2, 0.2, 10], ["🌻", 0.12, 0.85, 0.4, 0], ["🌷", 0.88, 0.88, 0.34, 0], ["🐞", 0.6, 0.94, 0.14, 0]] } },
+            { id: "farm", name: "חווה", price: 750, icon: "🐮", bg: "linear-gradient(180deg, #7dd3fc, #bbf7d0)", scene: {
+                sky: ["#38bdf8", "#7dd3fc", "#e0f2fe"], ground: "#4ade80", groundH: 0.2, scatter: { e: ["🌼", "🌻", "🌷"], n: 16, s: [0.04, 0.07], y: [0.84, 1] },
+                big: [["☀️", 0.85, 0.08, 0.3, 0], ["☁️", 0.25, 0.12, 0.3, 0], ["☁️", 0.6, 0.2, 0.2, 0], ["🐄", 0.22, 0.88, 0.34, 0], ["🚜", 0.72, 0.82, 0.28, 0], ["🐑", 0.55, 0.94, 0.22, 0], ["🐓", 0.88, 0.9, 0.22, 0]] } },
+            { id: "beach", name: "חוף הים", price: 800, icon: "🏖️", bg: "linear-gradient(180deg, #38bdf8, #fde68a)", scene: {
+                sky: ["#0ea5e9", "#7dd3fc", "#e0f2fe"], water: { top: 0.7, color: "#0284c7" }, ground: "#fde68a", groundH: 0.15,
+                big: [["☀️", 0.82, 0.08, 0.3, 0], ["☁️", 0.3, 0.13, 0.26, 0], ["⛵", 0.5, 0.72, 0.16, 0], ["🌴", 0.12, 0.8, 0.46, 0], ["⛱️", 0.76, 0.88, 0.3, 0], ["🦀", 0.45, 0.94, 0.15, 0], ["🐚", 0.9, 0.96, 0.12, 0]] } },
+            { id: "sea", name: "מתחת לים", price: 850, icon: "🐠", bg: "linear-gradient(180deg, #38bdf8, #0c4a6e)", scene: {
+                sky: ["#7dd3fc", "#0284c7", "#0c4a6e"], ground: "#fde68a", groundH: 0.1, scatter: { e: ["🫧", "🫧", "🐟", "🐠"], n: 24, s: [0.04, 0.09] },
+                big: [["🐳", 0.76, 0.12, 0.4, 0], ["🐠", 0.2, 0.16, 0.28, 0], ["🐡", 0.88, 0.5, 0.18, 0], ["🪸", 0.12, 0.88, 0.34, 0], ["🐙", 0.8, 0.88, 0.36, -10], ["🐚", 0.35, 0.95, 0.16, 0]] } },
+            { id: "sweets", name: "ארץ הממתקים", price: 950, icon: "🍭", bg: "linear-gradient(180deg, #fce7f3, #f472b6)", scene: {
+                sky: ["#fdf2f8", "#fbcfe8", "#f472b6"], scatter: { e: ["🍬", "🍭", "🍩", "🧁", "🍦", "🍪", "🍫"], n: 30, s: [0.05, 0.1] },
+                big: [["🍦", 0.18, 0.12, 0.3, -10], ["🍩", 0.82, 0.12, 0.3, 20], ["🍭", 0.15, 0.85, 0.4, -10], ["🧁", 0.85, 0.88, 0.34, 0]] } },
+            { id: "wild", name: "ג׳ונגל פרא", price: 1000, icon: "🐒", bg: "linear-gradient(180deg, #4ade80, #14532d)", scene: {
+                sky: ["#bbf7d0", "#4ade80", "#166534"], ground: "#14532d", groundH: 0.12, scatter: { e: ["🌿", "🍃", "🌺"], n: 26, s: [0.05, 0.1] },
+                big: [["🦜", 0.18, 0.14, 0.28, 0], ["🐒", 0.8, 0.15, 0.3, 0], ["🍌", 0.45, 0.07, 0.16, 20], ["🌴", 0.12, 0.82, 0.55, 0], ["🌴", 0.9, 0.86, 0.5, 0], ["🦁", 0.55, 0.9, 0.34, 0]] } },
+            { id: "dinos", name: "דינוזאורים", price: 1100, icon: "🦖", bg: "linear-gradient(180deg, #fb923c, #65a30d)", scene: {
+                sky: ["#fed7aa", "#fb923c", "#c2410c"], ground: "#65a30d", groundH: 0.16, scatter: { e: ["🌿", "🥚"], n: 10, s: [0.04, 0.07], y: [0.86, 1] },
+                big: [["☄️", 0.3, 0.06, 0.18, 0], ["🌋", 0.75, 0.12, 0.45, 0], ["🌴", 0.1, 0.16, 0.34, 0], ["🦕", 0.22, 0.86, 0.45, 0], ["🦖", 0.82, 0.88, 0.38, 0]] } },
+            { id: "spooky", name: "ליל הדלעות", price: 1300, icon: "🎃", bg: "linear-gradient(180deg, #1c1917, #7c2d12)", scene: {
+                sky: ["#1c1917", "#431407", "#9a3412"], stars: 40, ground: "#1c1917", groundH: 0.12, scatter: { e: ["🦇", "🍬"], n: 8, s: [0.04, 0.08] },
+                big: [["🕸️", 0.08, 0.05, 0.3, 0], ["🌕", 0.8, 0.1, 0.32, 0], ["🦇", 0.28, 0.13, 0.18, 0], ["🎃", 0.2, 0.88, 0.36, 0], ["👻", 0.82, 0.84, 0.3, 0]] } },
+            { id: "unicorn", name: "חד-קרן", price: 1400, icon: "🦄", bg: "linear-gradient(180deg, #f9a8d4, #c4b5fd)", scene: {
+                sky: ["#fbcfe8", "#e9d5ff", "#bfdbfe"], ground: "#bbf7d0", groundH: 0.16, scatter: { e: ["✨", "⭐", "💖", "🌸"], n: 26, s: [0.05, 0.1] },
+                big: [["🌈", 0.5, 0.1, 0.75, 0], ["☁️", 0.14, 0.2, 0.28, 0], ["☁️", 0.86, 0.16, 0.32, 0], ["🦄", 0.25, 0.87, 0.5, 0], ["🏰", 0.8, 0.86, 0.38, 0]] } },
+            { id: "kingdom", name: "ממלכה", price: 1500, icon: "🏰", bg: "linear-gradient(180deg, #4c1d95, #f0abfc)", scene: {
+                sky: ["#2e1065", "#7c3aed", "#f0abfc"], stars: 50, ground: "#581c87", groundH: 0.12, scatter: { e: ["✨", "⭐"], n: 18, s: [0.03, 0.07] },
+                big: [["🐉", 0.16, 0.15, 0.32, 0], ["🌙", 0.82, 0.1, 0.26, 0], ["🏰", 0.5, 0.87, 0.5, 0], ["🎆", 0.18, 0.78, 0.2, 0], ["👑", 0.86, 0.88, 0.2, 0]] } },
+            { id: "cosmos", name: "חלל רחוק", price: 1600, icon: "🚀", bg: "linear-gradient(180deg, #020617, #312e81)", scene: {
+                sky: ["#020617", "#1e1b4b", "#312e81"], stars: 120, scatter: { e: ["⭐", "✨"], n: 14, s: [0.03, 0.06] },
+                big: [["☄️", 0.5, 0.06, 0.2, 0], ["🌙", 0.15, 0.1, 0.28, 0], ["🪐", 0.8, 0.13, 0.4, -15], ["👽", 0.9, 0.55, 0.16, 0], ["🚀", 0.2, 0.86, 0.36, -30], ["🛸", 0.82, 0.84, 0.3, 10]] } },
+            { id: "capyspa", name: "ספא קפיברות", price: 1800, icon: "capy", bg: "linear-gradient(180deg, #fdba74, #5eead4)", scene: {
+                sky: ["#fef3c7", "#fdba74", "#fb923c"], water: { top: 0.76, color: "#2dd4bf" }, scatter: { e: ["🍊", "🌺", "🫧"], n: 12, s: [0.04, 0.07] },
+                big: [["☀️", 0.85, 0.1, 0.26, 0], ["🌴", 0.1, 0.2, 0.34, 0], ["♨️", 0.5, 0.7, 0.2, 0], ["capy", 0.28, 0.85, 0.45, 0], ["capy", 0.76, 0.9, 0.32, 0], ["🍊", 0.3, 0.72, 0.1, 0], ["🍊", 0.9, 0.79, 0.09, 0]] } },
         ].sort((a, b) => a.price - b.price);   // cheapest first (the free purple one first)
         let shop = { owned: ["purple"], avatar: null, theme: "purple", boxes: 0, awards: {} };
         try { const v = JSON.parse(localStorage.getItem(SHOP_KEY)); if (v && Array.isArray(v.owned)) shop = { ...shop, ...v }; } catch (e) {}
@@ -2426,14 +2493,103 @@
             clearTimeout(earnBoxes.timer);
             earnBoxes.timer = setTimeout(() => t.classList.remove("on"), ms);
         }
+        // 🖼️ Draws a picture background: a sky, maybe stars, water and a hill, scattered small emojis and the big ones.
+        // The same theme always looks the same (the "random" places come from the theme's name).
+        const EMOJI_FONT = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+        function seeded(text) {
+            let x = 7;
+            for (const c of text) x = (x * 31 + c.charCodeAt(0)) >>> 0;
+            return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; };
+        }
+        async function drawScene(t, W, H) {
+            const sc = t.scene, cv = document.createElement("canvas");
+            cv.width = W; cv.height = H;
+            const ctx = cv.getContext("2d"), m = Math.min(W, H), rnd = seeded(t.id);
+            const sky = ctx.createLinearGradient(0, 0, 0, H);
+            sc.sky.forEach((c, i, a) => sky.addColorStop(i / (a.length - 1), c));
+            ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+            for (let k = 0; k < (sc.stars || 0); k++) {
+                ctx.globalAlpha = 0.4 + rnd() * 0.6; ctx.fillStyle = "#fff";
+                ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H * 0.85, (0.6 + rnd() * 1.6) * m / 400, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+            if (sc.water) {   // the sea / a pool, with a few white waves
+                const top = H * sc.water.top, wg = ctx.createLinearGradient(0, top, 0, H);
+                wg.addColorStop(0, sc.water.color); wg.addColorStop(1, "#0c4a6e");
+                ctx.fillStyle = wg; ctx.fillRect(0, top, W, H - top);
+                ctx.strokeStyle = "rgba(255,255,255,0.6)"; ctx.lineWidth = Math.max(2, m / 150);
+                for (let k = 0; k < 7; k++) { const x = rnd() * W, y = top + (0.15 + rnd() * 0.7) * (H - top), w = m * (0.06 + rnd() * 0.06);
+                    ctx.beginPath(); ctx.moveTo(x - w, y); ctx.quadraticCurveTo(x - w / 2, y - w / 3, x, y); ctx.quadraticCurveTo(x + w / 2, y - w / 3, x + w, y); ctx.stroke(); }
+            }
+            if (sc.ground) {   // two round hills along the bottom
+                ctx.fillStyle = sc.ground;
+                ctx.beginPath(); ctx.ellipse(W * 0.25, H * 1.04, W * 0.75, H * sc.groundH * 1.2, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(W * 0.85, H * 1.06, W * 0.6, H * sc.groundH, 0, 0, Math.PI * 2); ctx.fill();
+            }
+            let capy = null;
+            if (sc.big.some(b => b[0] === "capy")) {
+                capy = new Image(); capy.src = SHOP_AVATARS.find(a => a.id === "capybara").img;
+                try { await capy.decode(); } catch (e) { capy = null; }
+            }
+            const put = (e, x, y, size, turn, alpha = 1) => {
+                ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(turn * Math.PI / 180);
+                if (e === "capy") { if (capy) ctx.drawImage(capy, -size / 2, -size / 2, size, size); }
+                else { ctx.font = `${Math.round(size)}px ${EMOJI_FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(e, 0, 0); }
+                ctx.restore();
+            };
+            const sct = sc.scatter;
+            if (sct) for (let k = 0; k < sct.n; k++) {
+                const y0 = sct.y ? sct.y[0] : 0, y1 = sct.y ? sct.y[1] : 1;
+                put(sct.e[k % sct.e.length], rnd() * W, H * (y0 + rnd() * (y1 - y0)), m * (sct.s[0] + rnd() * (sct.s[1] - sct.s[0])), (rnd() - 0.5) * 50, 0.85);
+            }
+            for (const [e, x, y, s, turn] of sc.big) put(e, x * W, y * H, s * m, turn);
+            return cv;
+        }
+        // paints the chosen picture background for this screen size (again when the size changes a lot)
+        let sceneUrl = null, sceneKey = "";
+        async function paintScene(t) {
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            let W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
+            const k = Math.min(1, 1800 / Math.max(W, H)); W = Math.round(W * k); H = Math.round(H * k);   // not too big
+            const key = `${t.id}:${W}x${H}`;
+            if (key === sceneKey) return;
+            sceneKey = key;
+            try {
+                const cv = await drawScene(t, W, H);
+                const blob = await new Promise(res => cv.toBlob(res, "image/png"));
+                if (sceneKey !== key || !blob) return;   // another background was chosen meanwhile
+                if (sceneUrl) URL.revokeObjectURL(sceneUrl);
+                sceneUrl = URL.createObjectURL(blob);
+                document.body.style.setProperty("--bg", `url(${sceneUrl}) center / cover no-repeat, ${t.bg}`);
+            } catch (e) {}   // the colors stay
+        }
+        let sceneResize = null;
+        window.addEventListener("resize", () => {
+            clearTimeout(sceneResize);
+            sceneResize = setTimeout(() => {
+                const t = SHOP_THEMES.find(x => x.id === shop.theme);
+                if (!t || !t.scene) return;
+                const [w, h] = sceneKey.split(":")[1].split("x").map(Number), dpr = Math.min(2, window.devicePixelRatio || 1);
+                if (Math.abs(innerWidth * dpr - w) / w > 0.15 || Math.abs(innerHeight * dpr - h) / h > 0.15) { sceneKey = ""; paintScene(t); }
+            }, 400);
+        });
+        // a character's picture: its emoji, or its drawing (img) for characters that have no emoji
+        function putPic(el, a) {
+            el.textContent = "";
+            if (a && a.img) { const i = new Image(); i.src = a.img; i.alt = ""; i.className = "pic-img"; i.draggable = false; el.appendChild(i); }
+            else el.textContent = a ? a.pic : "";
+        }
+        const picPrefix = a => a && a.pic ? a.pic + " " : "";   // for texts like "🐶 Woof woof!"
         function saveShop() { try { localStorage.setItem(SHOP_KEY, JSON.stringify(shop)); } catch (e) {} }
         function applyShop() {
             const a = SHOP_AVATARS.find(x => x.id === shop.avatar), t = SHOP_THEMES.find(x => x.id === shop.theme) || SHOP_THEMES[0];
-            document.getElementById("menu-avatar").textContent = a ? a.pic : "";
+            putPic(document.getElementById("menu-avatar"), a);
             const sb = document.getElementById("shop-btn");   // a red count on the shop button while boxes wait to be opened
             if (shop.boxes > 0) sb.dataset.boxes = shop.boxes; else delete sb.dataset.boxes;
-            document.getElementById("game-avatar").textContent = a ? a.pic : "";
-            document.body.style.setProperty("--bg", t.bg);
+            putPic(document.getElementById("game-avatar"), a);
+            document.body.style.setProperty("--bg", t.bg);   // (a picture background starts as its colors, the picture comes a moment later)
+            document.body.classList.toggle("pic-theme", !!t.scene);
+            if (t.scene) paintScene(t);
             const meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute("content", t.bg.match(/#[0-9a-f]{6}/i)[0]);
         }
@@ -2442,6 +2598,19 @@
         // English sound or phrase, read aloud), then teaches a word of the chosen level in a speech bubble (tap the
         // bubble to hear the word again). 5 taps in a row make any character dizzy.
         const AVATAR_FX = {
+            capybara: { move: "float", fx: ["🍊", "♨️", "💤"], say: "I'm so chill!" },
+            hamster: { move: "hop", fx: ["🌻", "🥜"], say: "Nom nom nom!" },     turtle: { move: "float", fx: ["🌊", "🍃"], say: "Slow and steady!" },
+            ladybug: { move: "flutter", fx: ["🍀", "🌼"], say: "I have seven dots!" }, crab: { move: "wiggle", fx: ["🌊", "🐚"], say: "Snip snap!" },
+            horse: { move: "bighop", fx: ["🥕", "🌾"], say: "Neigh!" },          hedgehog: { move: "spin", fx: ["🍎", "🍂"], say: "I'm a little spiky!" },
+            whale: { move: "float", fx: ["💦", "🫧"], say: "Splash!" },          sloth: { move: "fade", fx: ["💤", "🍃"], say: "Sooo sleepy..." },
+            otter: { move: "flip", fx: ["🐚", "💦"], say: "Let's swim!" },       kangaroo: { move: "bighop", fx: ["🌿", "⭐"], say: "Boing boing!" },
+            hippo: { move: "grow", fx: ["💦", "🌿"], say: "I love the mud!" },   llama: { move: "tall", fx: ["🌵", "💨"], say: "No drama, llama!" },
+            raccoon: { move: "zigzag", fx: ["🍪", "🍎"], say: "Any snacks?" },   wolf: { move: "tall", fx: ["🌕"], say: "Awooo!" },
+            swan: { move: "float", fx: ["🪶", "💧"], say: "So graceful!" },      peacock: { move: "grow", fx: ["🪶", "💙", "💚"], say: "Look at my feathers!" },
+            eagle: { move: "fly", fx: ["☁️", "🪶"], say: "I fly high!" },        snowman: { move: "wiggle", fx: ["❄️", "⛄"], say: "I love warm hugs!" },
+            pumpkin: { move: "hop", fx: ["🍬", "🦇"], say: "Trick or treat!" },  clown: { move: "flip", fx: ["🎈", "🤹"], say: "Ha ha ha!" },
+            monster: { move: "zigzag", fx: ["👾", "⭐"], say: "Game on!" },      vampire: { move: "fade", fx: ["🦇", "🌙"], say: "I want to bite... a cookie!" },
+            genie: { move: "float", fx: ["✨", "💨", "🪔"], say: "Your wish is my command!" }, ninja: { move: "spin", fx: ["💨", "⭐"], say: "Hi-yah!" },
             dog: { move: "wag", fx: ["🦴", "🐾"], say: "Woof woof!" },          cat: { move: "wiggle", fx: ["🧶", "💕"], say: "Meow!" },
             rabbit: { move: "hop", fx: ["🥕"], say: "Hop hop!" },                frog: { move: "bighop", fx: ["🍃", "💚"], say: "Ribbit!" },
             fox: { move: "spin", fx: ["🍂"], say: "Hello, friend!" },            panda: { move: "grow", fx: ["🎋"], say: "I love bamboo!" },
@@ -2537,7 +2706,7 @@
                 avatarWord = null;
                 const spin = el.animate(AVATAR_MOVES.dizzy, { duration: 1400, easing: "ease-in-out" });
                 avatarBurst(["💫", "⭐", "😵‍💫"], 12);
-                showAvatarBubble(`${a.pic} Whoa, I'm dizzy!`, "😵‍💫", "וואו, הסתחררתי!", "");
+                showAvatarBubble(`${picPrefix(a)}Whoa, I'm dizzy!`, "😵‍💫", "וואו, הסתחררתי!", "");
                 await Promise.all([moved(spin), speakTexts(["Whoa, I'm dizzy!"])]);
                 return;
             }
@@ -2549,7 +2718,7 @@
             let w;
             do { w = words[Math.floor(Math.random() * words.length)]; } while (words.length > 1 && avatarWord && w.en === avatarWord.en);   // not the same word twice in a row
             avatarWord = w;
-            showAvatarBubble(`${a.pic} ${fx.say}`, (w.pic ? w.pic + " " : "") + w.en, chosen[w.en.toLowerCase()] || w.he, "🔊 לחצו לשמוע שוב");
+            showAvatarBubble(`${picPrefix(a)}${fx.say}`, (w.pic ? w.pic + " " : "") + w.en, chosen[w.en.toLowerCase()] || w.he, "🔊 לחצו לשמוע שוב");
             await Promise.all([moved(move), speakTexts([fx.say, w.en])]);
         }
 
@@ -2606,8 +2775,11 @@
                     b.className = "shop-item" + (active ? " active" : owned ? " owned" : grandTotal < it.price ? " poor" : "") + (shopConfirm === it.id ? " confirm" : "");
                     b.dataset.id = it.id;
                     const pic = document.createElement("div");
-                    if (kind === "avatar") { pic.className = "shop-pic"; pic.textContent = it.pic; }
-                    else { pic.className = "shop-swatch"; pic.style.background = it.bg; }
+                    if (kind === "avatar") { pic.className = "shop-pic"; putPic(pic, it); }
+                    else {
+                        pic.className = "shop-swatch"; pic.style.background = it.bg;
+                        if (it.icon) { pic.classList.add("pic"); if (it.icon === "capy") putPic(pic, SHOP_AVATARS.find(a => a.id === "capybara")); else pic.textContent = it.icon; }
+                    }
                     const name = document.createElement("div");
                     name.className = "shop-name"; name.textContent = it.name;
                     const price = document.createElement("div");

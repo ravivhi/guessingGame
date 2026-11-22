@@ -1327,6 +1327,51 @@ async function testKeep() {
   await ctx.close();
 }
 
+async function testPictures() {
+  console.log('\n[pictures] picture backgrounds and the capybara');
+  const page = await openPage();
+  const info = await page.evaluate(() => ({
+    pics: SHOP_THEMES.filter(t => t.scene).map(t => t.id),
+    uniqueThemePrices: new Set(SHOP_THEMES.map(t => t.price)).size === SHOP_THEMES.length,
+    uniqueAvatarPrices: new Set(SHOP_AVATARS.map(a => a.price)).size === SHOP_AVATARS.length,
+    avatars: SHOP_AVATARS.length,
+  }));
+  check(info.pics.length >= 12 && info.pics.includes('unicorn') && info.pics.includes('capyspa'), `${info.pics.length} picture backgrounds, with a unicorn one and a capybara one`);
+  check(info.avatars >= 60 && info.uniqueThemePrices && info.uniqueAvatarPrices, `${info.avatars} characters; every item still has its own price`);
+  // every picture background is drawn and used (a picture, not just colors); the card becomes see-through
+  const bad = [];
+  for (const id of info.pics) {
+    await page.evaluate(id => { if (!shop.owned.includes(id)) shop.owned.push(id); shop.theme = id; saveShop(); applyShop(); }, id);
+    const ok = await page.waitForFunction(() => getComputedStyle(document.body).getPropertyValue('--bg').includes('blob:'), { timeout: 5000 }).then(() => true, () => false);
+    if (!ok) bad.push(id);
+  }
+  check(!bad.length, `every picture background is drawn as a picture${bad.length ? ' (not: ' + bad.join(', ') + ')' : ''}`);
+  check(await page.evaluate(() => document.body.classList.contains('pic-theme') && getComputedStyle(document.querySelector('.game-container')).backgroundColor.startsWith('rgba')), 'with a picture background the card is see-through');
+  // the picture follows the screen size: a new picture after a big resize
+  const before = await page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--bg'));
+  await page.setViewport({ width: 800, height: 600 });
+  const resized = await page.waitForFunction(b => getComputedStyle(document.body).getPropertyValue('--bg') !== b, { timeout: 5000 }, before).then(() => true, () => false);
+  await page.setViewport({ width: 360, height: 800 });
+  check(resized, 'turning the screen draws the picture again for the new size');
+  // back to a plain background: no picture, the card is white again
+  await page.evaluate(() => { shop.theme = 'purple'; saveShop(); applyShop(); });
+  check(await page.evaluate(() => !document.body.classList.contains('pic-theme') && !getComputedStyle(document.body).getPropertyValue('--bg').includes('blob:')), 'a color background has no picture and a white card');
+  // the capybara: a drawing (no emoji exists) everywhere a character shows
+  await page.evaluate(() => { shop.owned.push('capybara'); shop.avatar = 'capybara'; saveShop(); applyShop(); openShop(); });
+  const capy = await page.evaluate(() => ({
+    menu: !!document.querySelector('#menu-avatar img.pic-img'), game: !!document.querySelector('#game-avatar img.pic-img'),
+    shop: !!document.querySelector('#shop-avatars [data-id="capybara"] img.pic-img'), swatch: !!document.querySelector('#shop-themes [data-id="capyspa"] img.pic-img'),
+    loaded: [...document.querySelectorAll('img.pic-img')].every(i => i.complete && i.naturalWidth > 0),
+  }));
+  check(capy.menu && capy.game && capy.shop && capy.swatch && capy.loaded, `the capybara drawing shows on the main screen, in the quiz, in the shop and on its background's swatch (${JSON.stringify(capy)})`);
+  await page.evaluate(() => { showStart(); speechSynthesis.speak = u => setTimeout(() => u.onend && u.onend(), 50); });
+  await page.click('#menu-avatar');
+  await page.waitForFunction(() => document.getElementById('avatar-bubble').classList.contains('on'), { timeout: 10000 });
+  check((await page.$eval('#avatar-bubble .ab-say', e => e.textContent)) === "I'm so chill!", 'tapping the capybara: "I\'m so chill!"');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
 async function testWand() {
   console.log('\n[wand] the result screen\'s box gives a magic wand that shows the right answer in a quiz');
   const page = await openPage();
@@ -1518,7 +1563,7 @@ async function testCelebrate() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep, wand: testWand };
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate, keep: testKeep, wand: testWand, pictures: testPictures };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

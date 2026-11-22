@@ -363,6 +363,14 @@
         #avatar-bubble .ab-word { font-size: 1.5rem; font-weight: bold; color: #2b6cb0; margin-top: 2px; overflow-wrap: anywhere; }
         #avatar-bubble .ab-he { font-size: 1.1rem; margin-top: 2px; }
         #avatar-bubble .ab-hint { font-size: 0.7rem; color: #a0aec0; margin-top: 4px; }
+        /* end of a test: the character stands next to the trophy and celebrates (its words in a small bubble on the left) */
+        #summary-top { position: relative; }
+        #summary-avatar { display: inline-block; font-size: 3rem; line-height: 1; vertical-align: bottom; margin: 0 8px 22px 0; }
+        #summary-avatar:empty { display: none; }
+        #summary-say { position: absolute; left: 0; top: 50%; transform: translateY(-50%); max-width: 32%; padding: 6px 10px; border-radius: 14px;
+                       background: #fffaf0; border: 3px solid #f6ad55; color: #975a16; font-weight: bold; font-size: 0.9rem; line-height: 1.2;
+                       box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; pointer-events: none; }
+        #summary-say.on { display: block; animation: cardPop 0.3s ease-out; }
         /* emojis bursting out of the character */
         #avatar-fx { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
         #avatar-fx span { position: absolute; font-size: 1.5rem; line-height: 1; will-change: transform, opacity; }
@@ -438,6 +446,7 @@
         @media (max-height: 700px) {
             .btn-restart { margin-top: 12px; padding: 11px 32px; font-size: 1.15rem; }
             .emoji-animation { font-size: 3.2rem; margin: 8px 0; }
+            #summary-avatar { font-size: 2.2rem; margin-bottom: 12px; }
             .result-title { margin-bottom: 8px; }
             .summary-screen p { margin: 6px 0 !important; }
         }
@@ -445,6 +454,7 @@
             .game-container { padding: 14px; }
             .btn-restart { margin-top: 8px; padding: 9px 28px; font-size: 1.05rem; }
             .emoji-animation { font-size: 2.6rem; margin: 4px 0; }
+            #summary-avatar { font-size: 1.9rem; margin-bottom: 8px; }
             .summary-screen #summary-stats { font-size: 1.05rem !important; }
             .summary-screen #summary-final-score { font-size: 1.25rem !important; }
         }
@@ -590,7 +600,10 @@
         </div>
 
         <div id="summary-screen" class="summary-screen">
-            <div class="emoji-animation" id="summary-emoji">🏆</div>
+            <div id="summary-top">
+                <div class="emoji-animation" id="summary-emoji">🏆</div><span id="summary-avatar" aria-hidden="true"></span>
+                <div id="summary-say" dir="ltr" aria-hidden="true"></div>
+            </div>
             <div class="result-title" id="summary-title">וואו! אתם פשוט אלופים!</div>
             <div id="bonus-container"></div>
             <p id="step-result" style="display:none;font-size:1.1rem;font-weight:bold;margin:8px 0;"></p>
@@ -804,7 +817,11 @@
             practiceBtn.innerText = `תרגול המילים שטעיתי (${missed.length})`;
             document.getElementById("all-words-btn").style.display = wordsData !== fullWords ? "" : "none";
             stepQuizResult(successRate, wordsData === fullWords);
-            saveSession("summary");
+            const av = SHOP_AVATARS.find(x => x.id === shop.avatar);
+            document.getElementById("summary-avatar").textContent = av ? av.pic : "";
+            document.getElementById("summary-say").classList.remove("on");
+            saveSession("summary");   // saved with the final numbers (the celebration below only plays once)
+            celebrate(successRate, totalScore, av);
         }
 
         // "→ תפריט" in the middle of a quiz: back to the main menu. The round is abandoned, so its points
@@ -1966,6 +1983,117 @@
             requestAnimationFrame(frame);
         }
 
+        // 🎊 Confetti falling over the whole screen (like the fireworks: a canvas that doesn't catch taps, removed at the end)
+        function confetti(duration = 3000) {
+            const cv = document.createElement("canvas");
+            cv.id = "confetti";
+            cv.setAttribute("aria-hidden", "true");
+            cv.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1500;";
+            document.body.appendChild(cv);
+            const ctx = cv.getContext("2d"), dpr = Math.min(2, window.devicePixelRatio || 1);
+            const W = cv.width = innerWidth * dpr, H = cv.height = innerHeight * dpr;
+            const colors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93", "#ff924c", "#f15bb5", "#00f5d4"];
+            const bits = Array.from({ length: 130 }, () => ({ x: Math.random() * W, y: -Math.random() * H * 0.6, w: (6 + Math.random() * 6) * dpr, h: (3 + Math.random() * 4) * dpr,
+                vx: (Math.random() - 0.5) * 1.5 * dpr, vy: (2 + Math.random() * 2.5) * dpr, r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3,
+                color: colors[Math.floor(Math.random() * colors.length)] }));
+            const t0 = performance.now();
+            const frame = now => {
+                const t = now - t0, fade = Math.max(0, Math.min(1, (duration - t) / 600));
+                ctx.clearRect(0, 0, W, H);
+                ctx.globalAlpha = fade;
+                for (const b of bits) {
+                    b.x += b.vx + Math.sin((t / 300) + b.r) * 0.6 * dpr; b.y += b.vy; b.r += b.vr;
+                    ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r);
+                    ctx.fillStyle = b.color; ctx.fillRect(-b.w / 2, -b.h / 2, b.w, Math.abs(Math.cos(b.r * 2)) * b.h + dpr);   // it flips as it falls
+                    ctx.restore();
+                }
+                if (t < duration) requestAnimationFrame(frame); else cv.remove();
+            };
+            requestAnimationFrame(frame);
+        }
+
+        // 👏 A small cheer: a few emojis float up from the bottom of the screen
+        function cheer() {
+            const layer = document.getElementById("avatar-fx"), pics = ["👏", "💪", "⭐"];
+            for (let k = 0; k < 8; k++) {
+                const s = document.createElement("span");
+                s.textContent = pics[k % pics.length];
+                s.style.left = (10 + Math.random() * 80) + "%"; s.style.top = "100%";
+                layer.appendChild(s);
+                const up = 180 + Math.random() * 160;
+                s.animate([{ transform: "translateY(0) scale(0.6)", opacity: 0 }, { transform: `translateY(${-up * 0.5}px) scale(1.2)`, opacity: 1, offset: 0.4 },
+                           { transform: `translateY(${-up}px) scale(1)`, opacity: 0 }],
+                          { duration: 1600 + Math.random() * 600, delay: k * 120, easing: "ease-out", fill: "backwards" }).onfinish = () => s.remove();
+            }
+        }
+
+        // a little "ding" for every point that is counted (higher and higher)
+        function coinSound(k) {
+            try {
+                audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === "suspended") audioCtx.resume();
+                const t = audioCtx.currentTime + 0.01, o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                o.type = "square";
+                o.frequency.setValueAtTime(880 + Math.min(k, 25) * 25, t);
+                o.frequency.setValueAtTime(1320 + Math.min(k, 25) * 25, t + 0.04);
+                g.gain.setValueAtTime(0.0001, t);
+                g.gain.exponentialRampToValueAtTime(0.06, t + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+                o.connect(g).connect(audioCtx.destination);
+                o.start(t); o.stop(t + 0.15);
+            } catch (e) {}
+        }
+
+        // The end of a test: a celebration as big as the score (90%+ fireworks, 70%+ confetti, otherwise a small cheer),
+        // the trophy pops in, the chosen character jumps in and cheers in English, and the points count up into the total.
+        let celebrateRun = 0;
+        function celebrate(rate, points, av) {
+            const run = ++celebrateRun, here = () => run === celebrateRun && shownEl("summary-screen");
+            const tier = rate >= 90 ? 3 : rate >= 70 ? 2 : 1;
+            document.getElementById("summary-emoji").animate(tier === 3
+                ? [{ transform: "scale(0) rotate(-30deg)" }, { transform: "scale(1.5) rotate(15deg)", offset: 0.5 }, { transform: "scale(0.9) rotate(-8deg)", offset: 0.75 }, { transform: "scale(1) rotate(0)" }]
+                : [{ transform: "scale(0)" }, { transform: `scale(${tier === 2 ? 1.3 : 1.1})`, offset: 0.6 }, { transform: "scale(1)" }],
+                { duration: tier === 3 ? 900 : 600, easing: "ease-out" });
+            if (tier === 3) { if (!document.getElementById("fireworks")) (stepQuiz ? confetti : fireworks)(); }   // in a topic's quiz, fireworks mean "passed"
+            else if (tier === 2) confetti();
+            else cheer();
+
+            const el = document.getElementById("summary-avatar");
+            if (av) {
+                const fx = AVATAR_FX[av.id] || { move: "hop", fx: ["✨"] };
+                const say = tier === 3 ? "You're a champion!" : tier === 2 ? "Great job!" : "Nice try! Keep going!";
+                el.getAnimations().forEach(x => x.cancel());
+                el.animate([{ transform: "translateY(90px) scale(0.3)", opacity: 0 }, { transform: "translateY(-30px) scale(1.25)", opacity: 1, offset: 0.6 },
+                            { transform: "translateY(0) scale(1)", opacity: 1 }], { duration: 700, easing: "ease-out" })
+                  .finished.then(() => {
+                    if (!here()) return;
+                    el.animate(AVATAR_MOVES[fx.move] || AVATAR_MOVES.hop, { duration: 900, easing: "ease-in-out" });
+                    avatarBurst(fx.fx, tier * 5, el, true);
+                    const b = document.getElementById("summary-say");
+                    b.textContent = `${av.pic} ${say}`;
+                    b.classList.add("on");
+                    speakTexts([say]).then(() => setTimeout(() => { if (run === celebrateRun) b.classList.remove("on"); }, 2500));
+                  }).catch(() => {});
+            }
+
+            if (points > 0) {   // the points tick up one by one into the total, with a ding each
+                const scoreEl = document.getElementById("summary-final-score"), finalText = scoreEl.innerText;
+                const before = grandTotal - points, steps = Math.min(points, 25), ms = Math.max(50, Math.min(120, 1500 / steps));
+                const show = n => scoreEl.innerText = `נקודות בבוחן: ${n} · סה״כ: ${before + n}`;
+                let k = 0;
+                show(0);
+                const tick = () => {
+                    if (!here()) { scoreEl.innerText = finalText; return; }
+                    k++;
+                    show(Math.round(points * k / steps));
+                    coinSound(k);
+                    if (k < steps) setTimeout(tick, ms);
+                    else scoreEl.animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], { duration: 400 });
+                };
+                setTimeout(tick, 500);
+            }
+        }
+
         // called by showSummary: in a step's quiz, a full round with no mistakes marks the step as passed (green)
         function stepQuizResult(rate, fullRound) {
             const res = document.getElementById("step-result"), nextBtn = document.getElementById("next-step-btn");
@@ -2179,8 +2307,9 @@
                               { en: "book", he: "ספר", pic: "📖" }, { en: "happy", he: "שמח", pic: "😊" }, { en: "water", he: "מים", pic: "💧" }];
         let avatarTaps = 0, avatarLastTap = 0, avatarWord = null, bubbleTimer = null;
 
-        function avatarBurst(emojis, count = 10) {
-            const from = document.getElementById("menu-avatar").getBoundingClientRect(), layer = document.getElementById("avatar-fx");
+        // emojis burst out of the character (the corner badge; or the given element, then all around it)
+        function avatarBurst(emojis, count = 10, fromEl = null, allAround = false) {
+            const from = (fromEl || document.getElementById("menu-avatar")).getBoundingClientRect(), layer = document.getElementById("avatar-fx");
             const x0 = from.left + from.width / 2, y0 = from.top + from.height / 2;
             for (let k = 0; k < count; k++) {
                 const s = document.createElement("span");
@@ -2188,7 +2317,7 @@
                 s.style.left = (x0 - 12) + "px"; s.style.top = (y0 - 12) + "px";
                 layer.appendChild(s);
                 // mostly down and to the left, away from the screen corner
-                const a = Math.PI * (0.45 + Math.random() * 0.6), d = 60 + Math.random() * 90;
+                const a = allAround ? Math.random() * Math.PI * 2 : Math.PI * (0.45 + Math.random() * 0.6), d = 60 + Math.random() * 90;
                 const dx = Math.cos(a) * d, dy = Math.sin(a) * d, r = (Math.random() - 0.5) * 120;
                 s.animate([{ transform: "translate(0,0) scale(0.4)", opacity: 1 }, { transform: `translate(${dx}px, ${dy}px) rotate(${r}deg) scale(1.1)`, opacity: 1, offset: 0.7 },
                            { transform: `translate(${dx * 1.1}px, ${dy * 1.1 + 25}px) rotate(${r}deg) scale(0.9)`, opacity: 0 }],

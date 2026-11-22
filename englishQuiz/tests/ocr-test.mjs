@@ -969,8 +969,8 @@ async function testLearn() {
   // a quiz from the random tab is not a part's quiz
   await page.click('#tab-random');
   await page.evaluate(() => { document.getElementById('words-input').value = 'cat\tחתול\ndog\tכלב\nsun\tשמש\nmoon\tירח'; renderWords(); startFromInput(); });
-  await playQuiz(0);
-  check(!(await vis('step-result')) && !(await vis('next-step-btn')) && (await text('change-words-btn')) === 'החלפת מילים' && !(await fireworks()), 'a quiz from the random tab shows the usual summary (no fireworks)');
+  await playQuiz(2);   // 50%: no fireworks from the score either (a perfect score has them anyway, see the celebrate test)
+  check(!(await vis('step-result')) && !(await vis('next-step-btn')) && (await text('change-words-btn')) === 'החלפת מילים' && !(await fireworks()), 'a quiz from the random tab shows the usual summary (no topic fireworks)');
   await page.evaluate(() => showStart());
   await page.click('#tab-category');
   await page.waitForSelector('#cat-list .cat-learn');
@@ -1300,7 +1300,83 @@ async function testAvatar() {
   await page.close();
 }
 
-const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar };
+async function testCelebrate() {
+  console.log('\n[celebrate] the end of a test: a celebration as big as the score');
+  const page = await openPage();
+  await page.evaluate(() => {
+    window.spoken = []; speechSynthesis.speak = u => { window.spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 300); }; speechSynthesis.cancel = () => {};
+    window.coins = 0; window.coinSound = () => window.coins++;
+    if (!shop.owned.includes('dog')) shop.owned.push('dog'); shop.avatar = 'dog'; saveShop(); applyShop();
+    document.getElementById('words-input').value = Array.from({ length: 10 }, (_, i) => `word${i + 1}\tמילה${i + 1}`).join('\n');
+    renderWords();
+  });
+  const canvas = id => page.evaluate(id => !!document.getElementById(id), id);
+  const clearFx = () => page.evaluate(() => { document.querySelectorAll('#fireworks, #confetti').forEach(c => c.remove()); document.getElementById('avatar-fx').innerHTML = ''; window.spoken.length = 0; window.coins = 0; });
+  const score = () => page.$eval('#summary-final-score', e => e.innerText);
+  // plays a whole quiz of the 10 words; the first `wrong` questions get a wrong answer first
+  const play = wrong => page.evaluate(wrong => {
+    showStart(); startFromInput();
+    for (let k = 0; currentIndex < wordsData.length; k++) {
+      const c = wordsData[currentIndex].correct, bs = [...document.querySelectorAll('#answers-container button')];
+      if (k < wrong) bs.find(b => b.innerText !== c).click();
+      bs.find(b => b.innerText === c).click();
+      clearTimeout(nextQuestionTimer); nextQuestionTimer = null; currentIndex++; loadQuestion();
+    }
+    return { points: totalScore, total: grandTotal };
+  }, wrong);
+  const sayOn = () => page.waitForFunction(() => document.getElementById('summary-say').classList.contains('on'), { timeout: 5000 }).then(() => page.$eval('#summary-say', e => e.textContent), () => '');
+
+  // no mistakes: fireworks, the dog cheers "You're a champion!", the points count up
+  await clearFx();
+  let r = await play(0);
+  const final = `נקודות בבוחן: ${r.points} · סה״כ: ${r.total}`;
+  check(r.points > 0 && (await score()) === `נקודות בבוחן: 0 · סה״כ: ${r.total - r.points}`, `the points start at 0 and the total at the old total (${await score()})`);
+  check(await canvas('fireworks') && !(await canvas('confetti')), '100%: fireworks');
+  check(await page.$eval('#summary-emoji', e => e.getAnimations().length > 0), 'the trophy pops in');
+  check((await page.$eval('#summary-avatar', e => e.textContent)) === '🐶' && await page.$eval('#summary-avatar', e => e.getAnimations().length > 0), 'the dog jumps onto the result screen');
+  check((await sayOn()).includes("You're a champion!"), 'the dog says "You\'re a champion!"');
+  check((await page.evaluate(() => window.spoken)).includes("You're a champion!"), 'and says it aloud');
+  check((await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).some(t => ['🦴', '🐾'].includes(t)), 'its bones and paw prints burst out');
+  check(await page.$eval('#summary-say', b => { const r = b.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0; }), 'its bubble is on the screen');
+  await page.waitForFunction(f => document.getElementById('summary-final-score').innerText === f, { timeout: 5000 }, final).catch(() => {});
+  check((await score()) === final && (await page.evaluate(() => window.coins)) === Math.min(r.points, 25), `the points tick up to the final numbers with a ding each (${await score()})`);
+
+  // after a reload the result screen comes back with the final numbers and no new party
+  await page.reload({ waitUntil: 'load' });
+  await page.evaluate(() => { window.coins = 0; window.coinSound = () => window.coins++; });
+  await new Promise(res => setTimeout(res, 800));
+  check((await score()) === final && !(await canvas('fireworks')) && (await page.evaluate(() => window.coins)) === 0, 'reopening on the result screen shows the final numbers, without celebrating again');
+  await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => { window.spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 300); }; speechSynthesis.cancel = () => {}; window.coinSound = () => window.coins++; });
+
+  // 2 of 10 wrong (80%): confetti and "Great job!"
+  await clearFx();
+  r = await play(2);
+  check(await canvas('confetti') && !(await canvas('fireworks')), '80%: confetti (no fireworks)');
+  check((await sayOn()).includes('Great job!'), 'the dog says "Great job!"');
+
+  // 5 of 10 wrong (50%): a small cheer and "Nice try! Keep going!"
+  await clearFx();
+  r = await play(5);
+  check(!(await canvas('confetti')) && !(await canvas('fireworks')) && (await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).includes('👏'), '50%: a small cheer of 👏💪⭐, no fireworks or confetti');
+  check((await sayOn()).includes('Nice try! Keep going!'), 'the dog says "Nice try! Keep going!"');
+
+  // leaving in the middle of the count stops it (the numbers are final when you come back)
+  await clearFx();
+  r = await play(0);
+  await page.evaluate(() => showStart());
+  await new Promise(res => setTimeout(res, 900));
+  check((await score()) === `נקודות בבוחן: ${r.points} · סה״כ: ${r.total}`, 'leaving during the count stops it at the final numbers');
+
+  // without a character: the party, but no character
+  await page.evaluate(() => { shop.avatar = null; saveShop(); applyShop(); });
+  await clearFx();
+  await play(0);
+  check(await canvas('fireworks') && (await page.$eval('#summary-avatar', e => e.textContent)) === '' && !(await sayOn()), 'without a character: fireworks, no character and nothing said');
+  check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
+  await page.close();
+}
+
+const TESTS = { wordbank: testWordbank, random: testRandom, layout: testLayout, back: testBack, tabs: testTabs, streak: testStreak, pairs: () => eachFixture('pairs', testPairs), list: () => eachFixture('list', testList), translation: testTranslationRetry, practice: testPractice, chooser: testChooser, header: testHeader, persist: testPersist, learn: testLearn, shop: testShop, box: testBox, phoneback: testPhoneBack, avatar: testAvatar, celebrate: testCelebrate };
 try {
   let ran = 0;
   for (const [name, run] of Object.entries(TESTS)) {

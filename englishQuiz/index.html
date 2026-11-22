@@ -369,6 +369,13 @@
                                border-bottom: 12px solid #f6ad55; }
         #summary-avatar { display: inline-block; font-size: 3rem; line-height: 1; vertical-align: bottom; margin: 0 8px 22px 0; padding: 0;
                           background: none; border: 0; cursor: pointer; font-family: inherit; touch-action: manipulation; }
+        /* the result screen's surprise box with the quiz's points: it wiggles until it is tapped open */
+        #coin-box { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 8px auto; padding: 6px 16px; border-radius: 18px;
+                    border: 3px dashed #d69e2e; background: #fffff0; color: #744210; font-weight: bold; font-size: 1.05rem; font-family: inherit; cursor: pointer;
+                    touch-action: manipulation; box-shadow: 0 3px 0 rgba(0,0,0,0.1); }
+        #coin-box .cb-pic { font-size: 2.4rem; line-height: 1; display: inline-block; animation: shopWiggle 1.6s infinite; }
+        #coin-box:disabled { cursor: default; color: #744210; }
+        #coin-box:disabled .cb-pic { animation: none; }
         #summary-say .ss-he { font-size: 0.8rem; color: #4a5568; margin-top: 2px; }
         #summary-avatar:empty { display: none; }
         #summary-say { position: absolute; left: 0; right: 0; top: calc(100% - 16px); margin: 0 auto; width: max-content; max-width: 92%; box-sizing: border-box;
@@ -452,6 +459,7 @@
             .btn-restart { margin-top: 12px; padding: 11px 32px; font-size: 1.15rem; }
             .emoji-animation { font-size: 3.2rem; margin: 8px 0; }
             #summary-avatar { font-size: 2.2rem; margin-bottom: 12px; }
+            #coin-box .cb-pic { font-size: 2rem; }
             .result-title { margin-bottom: 8px; }
             .summary-screen p { margin: 6px 0 !important; }
         }
@@ -460,6 +468,8 @@
             .btn-restart { margin-top: 8px; padding: 9px 28px; font-size: 1.05rem; }
             .emoji-animation { font-size: 2.6rem; margin: 4px 0; }
             #summary-avatar { font-size: 1.9rem; margin-bottom: 8px; }
+            #coin-box { margin: 4px auto; padding: 2px 12px; font-size: 0.95rem; }
+            #coin-box .cb-pic { font-size: 1.6rem; }
             .summary-screen #summary-stats { font-size: 1.05rem !important; }
             .summary-screen #summary-final-score { font-size: 1.25rem !important; }
         }
@@ -614,6 +624,7 @@
             <p id="step-result" style="display:none;font-size:1.1rem;font-weight:bold;margin:8px 0;"></p>
             <p style="font-size: 1.3rem; margin: 10px 0;" id="summary-stats">צדקתם ב-0 מתוך 0 מילים</p>
             <p style="font-size: 1.5rem; font-weight: bold; color: #2b6cb0;" id="summary-final-score">ציון סופי: 0</p>
+            <button type="button" id="coin-box" style="display:none" onclick="openCoinBox()"><span class="cb-pic">🎁</span><span class="cb-text">קופסת הפתעה! לחצו לפתוח</span></button>
             <button class="btn-restart" onclick="restartGame()">נסו שוב</button>
             <button class="btn-restart" id="practice-missed-btn" style="display:none;margin-top:10px;background:#dd6b20;" onclick="practiceMissed()">תרגול המילים שטעיתי</button>
             <button class="btn-restart" id="all-words-btn" style="display:none;margin-top:10px;background:#718096;" onclick="playAll()">כל המילים</button>
@@ -660,6 +671,23 @@
         const TOTAL_KEY = 'englishquiz-total-points';
         let grandTotal = 0;
         try { grandTotal = Math.max(0, parseInt(localStorage.getItem(TOTAL_KEY), 10) || 0); } catch (e) {}
+        // A finished quiz's points wait in a surprise box on the result screen until it is tapped open.
+        // They are saved right away (never lost): leaving the result screen, or closing the app, collects them anyway.
+        const PENDING_KEY = 'englishquiz-pending-coins';
+        let pendingCoins = 0;
+        try { pendingCoins = Math.max(0, parseInt(localStorage.getItem(PENDING_KEY), 10) || 0); } catch (e) {}
+        function savePending() { try { localStorage.setItem(PENDING_KEY, String(pendingCoins)); } catch (e) {} }
+        // moves the waiting points into the total (returns how many)
+        function collectCoins() {
+            const n = pendingCoins;
+            if (!n) return 0;
+            grandTotal += n;
+            pendingCoins = 0;
+            try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
+            savePending();
+            showGrandTotal();
+            return n;
+        }
         let wrongCount = 0;
         let canAnswer = true;
         let nextQuestionTimer = null;   // the short pause after a right answer, before the next question
@@ -812,14 +840,19 @@
                 bonusContainer.appendChild(bonusBadge);
             }
             totalScore = Math.max(0, totalScore);
-            grandTotal += totalScore;
-            try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
-            showGrandTotal();
+            collectCoins();   // (anything still waiting from before)
+            pendingCoins = totalScore;   // 🎁 the points wait in the surprise box until it is opened
+            savePending();
 
             document.getElementById("summary-emoji").innerText = emoji;
             document.getElementById("summary-title").innerText = title;
             document.getElementById("summary-stats").innerText = `צדקתם בניסיון ראשון ב-${correctFirstTryCount} מתוך ${totalWords} מילים`;
-            document.getElementById("summary-final-score").innerText = `נקודות בבוחן: ${totalScore} · סה״כ: ${grandTotal}`;
+            const scoreEl = document.getElementById("summary-final-score"), box = document.getElementById("coin-box");
+            scoreEl.innerText = `נקודות בבוחן: ${totalScore} · סה״כ: ${grandTotal + totalScore}`;
+            scoreEl.style.display = totalScore ? "none" : "";   // no points: no box, just the numbers
+            box.style.display = totalScore ? "" : "none";
+            box.disabled = false;
+            box.querySelector(".cb-pic").textContent = "🎁";
 
             const practiceBtn = document.getElementById("practice-missed-btn");
             practiceBtn.style.display = missed.length ? "" : "none";
@@ -869,6 +902,7 @@
         }
 
         function restartGame() {
+            collectCoins();   // a box left closed on the result screen: its points are added anyway
             currentIndex = 0;
             totalScore = 0;
             correctFirstTryCount = 0;
@@ -1122,6 +1156,7 @@
         if (!("speechSynthesis" in window)) document.addEventListener("DOMContentLoaded", () => { for (const id of ["speak-btn", "learn-speak"]) { const b = document.getElementById(id); if (b) b.style.display = "none"; } });
 
         function showStart() {
+            collectCoins();   // a box left closed on the result screen: its points are added anyway
             stepQuiz = null;
             for (const id of ["summary-screen", "game-screen", "learn-screen", "learn-done-screen", "shop-screen"]) document.getElementById(id).style.display = "none";
             document.getElementById("start-screen").style.display = "flex";
@@ -2146,22 +2181,39 @@
                   }).catch(() => {}).finally(() => { if (run === celebrateRun) { summaryBusy = false; summarySayLater(); } });
             }
 
-            if (points > 0) {   // the points tick up one by one into the total, with a ding each
-                const scoreEl = document.getElementById("summary-final-score"), finalText = scoreEl.innerText;
-                const before = grandTotal - points, steps = Math.min(points, 25), ms = Math.max(50, Math.min(120, 1500 / steps));
-                const show = n => scoreEl.innerText = `נקודות בבוחן: ${n} · סה״כ: ${before + n}`;
-                let k = 0;
-                show(0);
-                const tick = () => {
-                    if (!here()) { scoreEl.innerText = finalText; return; }
-                    k++;
-                    show(Math.round(points * k / steps));
-                    coinSound(k);
-                    if (k < steps) setTimeout(tick, ms);
-                    else scoreEl.animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], { duration: 400 });
-                };
-                setTimeout(tick, 500);
+        }
+
+        // 🎁 Tapping the surprise box: it shakes, pops open, coins burst out and the points tick up into the total
+        async function openCoinBox() {
+            const box = document.getElementById("coin-box"), pic = box.querySelector(".cb-pic"), scoreEl = document.getElementById("summary-final-score");
+            if (box.disabled) return;
+            box.disabled = true;
+            const points = totalScore, before = grandTotal;
+            collectCoins();   // saved at once; the rest is the show
+            const run = celebrateRun, here = () => run === celebrateRun && shownEl("summary-screen");
+            const show = n => scoreEl.innerText = `נקודות בבוחן: ${n} · סה״כ: ${before + n}`;
+            const finish = () => { if (run !== celebrateRun) return;   // a newer result screen is showing: leave it alone
+                box.style.display = "none"; scoreEl.style.display = ""; show(points); if (shownEl("summary-screen")) saveSession("summary"); };
+            await pic.animate([0, -16, 16, -20, 20, -24, 24, 0].map(d => ({ transform: `rotate(${d}deg) scale(${1 + Math.abs(d) / 80})` })),
+                              { duration: 700, easing: "ease-in-out" }).finished.catch(() => {});
+            if (!here()) return finish();
+            pic.textContent = "💰";
+            pic.animate([{ transform: "scale(0.4)" }, { transform: "scale(1.6)", offset: 0.6 }, { transform: "scale(1)" }], { duration: 450, easing: "ease-out" });
+            avatarBurst(["💰", "⭐", "✨"], 14, pic, true);
+            playUnlockSound();
+            await new Promise(r => setTimeout(r, 650));
+            if (!here()) return finish();
+            box.style.display = "none";
+            scoreEl.style.display = "";
+            const steps = Math.min(points, 25), ms = Math.max(50, Math.min(120, 1500 / steps));
+            for (let k = 1; k <= steps; k++) {   // the points tick up one by one into the total, with a ding each
+                if (!here()) break;
+                show(Math.round(points * k / steps));
+                coinSound(k);
+                await new Promise(r => setTimeout(r, ms));
             }
+            finish();
+            if (here()) scoreEl.animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], { duration: 400 });
         }
 
         // called by showSummary: in a step's quiz, a full round with no mistakes marks the step as passed (green)
@@ -2571,6 +2623,8 @@
         async function restoreSession() {
             let s = null;
             try { s = JSON.parse(localStorage.getItem("englishquiz-session")); } catch (e) {}
+            // points still in a closed surprise box: it waits only if the app reopens on that result screen
+            if (pendingCoins && !(s && s.screen === "summary" && s.html)) collectCoins();
             if (!s || !s.screen || s.screen === "start") return;
             try {
                 if (s.screen === "shop") return openShop();
@@ -2606,6 +2660,14 @@
                     const sum = document.getElementById("summary-screen");
                     sum.innerHTML = s.html;
                     sum.style.display = "block";
+                    const box = document.getElementById("coin-box");
+                    box.disabled = false;
+                    if (!pendingCoins && box.style.display !== "none") {   // (already collected: show the numbers instead of the box)
+                        box.style.display = "none";
+                        const sc = document.getElementById("summary-final-score");
+                        sc.style.display = "";
+                        sc.innerText = `נקודות בבוחן: ${totalScore} · סה״כ: ${grandTotal}`;
+                    }
                     return;
                 }
                 document.getElementById("game-screen").style.display = "block";
@@ -2641,7 +2703,7 @@
         trapWatch.observe(document.body, { childList: true });
         for (const id of ["start-screen", "game-screen", "summary-screen", "learn-screen", "learn-done-screen", "shop-screen"])
             trapWatch.observe(document.getElementById(id), { attributes: true, attributeFilter: ["style"] });
-        restoreSession();
+        restoreSession().finally(() => { if (pendingCoins && !shownEl("summary-screen")) collectCoins(); });   // a box can only wait on its result screen
     </script>
 </body>
 </html>

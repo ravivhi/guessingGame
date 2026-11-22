@@ -1356,8 +1356,11 @@ async function testCelebrate() {
   // no mistakes: fireworks, the dog cheers "You're a champion!", the points count up
   await clearFx();
   let r = await play(0);
-  const final = `נקודות בבוחן: ${r.points} · סה״כ: ${r.total}`;
-  check(r.points > 0 && (await score()) === `נקודות בבוחן: 0 · סה״כ: ${r.total - r.points}`, `the points start at 0 and the total at the old total (${await score()})`);
+  const final = `נקודות בבוחן: ${r.points} · סה״כ: ${r.total + r.points}`;
+  const shown = sel => page.$eval(sel, e => getComputedStyle(e).display !== 'none');
+  const money = () => page.evaluate(() => [grandTotal, pendingCoins, +localStorage.getItem(TOTAL_KEY), +localStorage.getItem(PENDING_KEY)].join());
+  check(r.points > 0 && await shown('#coin-box') && !(await shown('#summary-final-score')), 'after the quiz a surprise box 🎁 waits on the result screen (the numbers come once it is opened)');
+  check((await money()) === [r.total, r.points, r.total, r.points].join(), 'its points are saved as waiting, not in the total yet');
   check(await canvas('fireworks') && !(await canvas('confetti')), '100%: fireworks');
   check(await page.$eval('#summary-emoji', e => e.getAnimations().length > 0), 'the trophy pops in');
   check((await page.$eval('#summary-avatar', e => e.textContent)) === '🐶' && await page.$eval('#summary-avatar', e => e.getAnimations().length > 0), 'the dog jumps onto the result screen');
@@ -1365,8 +1368,16 @@ async function testCelebrate() {
   check((await page.evaluate(() => window.spoken)).includes("You're a champion!"), 'and says it aloud');
   check((await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).some(t => ['🦴', '🐾'].includes(t)), 'its bones and paw prints burst out');
   check(await page.$eval('#summary-say', b => { const r = b.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0; }), 'its bubble is on the screen');
-  await page.waitForFunction(f => document.getElementById('summary-final-score').innerText === f, { timeout: 5000 }, final).catch(() => {});
-  check((await score()) === final && (await page.evaluate(() => window.coins)) === Math.min(r.points, 25), `the points tick up to the final numbers with a ding each (${await score()})`);
+  // open the box
+  await page.evaluate(() => { document.getElementById('avatar-fx').innerHTML = ''; window.coins = 0; });
+  await page.click('#coin-box');
+  check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'tapping the box collects its points into the total at once (saved)');
+  await page.click('#coin-box').catch(() => {});   // a second tap while it opens: nothing more
+  await page.waitForFunction(() => document.querySelector('#coin-box .cb-pic').textContent === '💰', { timeout: 3000 }).catch(() => {});
+  check((await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).includes('💰'), 'it shakes, pops open into 💰 and coins burst out');
+  await page.waitForFunction(() => getComputedStyle(document.getElementById('coin-box')).display === 'none' && window.coins >= Math.min(totalScore, 25), { timeout: 8000 }).catch(() => {});
+  check(!(await shown('#coin-box')) && (await score()) === final && (await page.evaluate(() => window.coins)) === Math.min(r.points, 25), `then the points tick up into the total with a ding each (${await score()})`);
+  check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'a second tap did not add them twice');
 
   // tapping the character: a funny gag (English + Hebrew in the bubble, said aloud), one at a time, never the same twice in a row
   await page.waitForFunction(() => !summaryBusy, { timeout: 8000 });
@@ -1409,12 +1420,42 @@ async function testCelebrate() {
   check(!(await canvas('confetti')) && !(await canvas('fireworks')) && (await page.$$eval('#avatar-fx span', s => s.map(x => x.textContent))).includes('👏'), '50%: a small cheer of 👏💪⭐, no fireworks or confetti');
   check((await sayOn()).includes('Nice try! Keep going!'), 'the dog says "Nice try! Keep going!"');
 
+  // the box is never lost: reopening the app on the result screen keeps it closed and waiting
+  check(await shown('#coin-box') && (await money()) === [r.total, r.points, r.total, r.points].join(), 'a box not opened yet keeps its points waiting');
+  await page.reload({ waitUntil: 'load' });
+  await page.evaluate(() => { window.coinSound = () => {}; });
+  await new Promise(res => setTimeout(res, 500));
+  check(await shown('#coin-box') && !(await page.$eval('#coin-box', e => e.disabled)) && (await money()) === [r.total, r.points, r.total, r.points].join(), 'after reopening the app the box is still there, closed');
+  await page.click('#coin-box');
+  check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'and opening it then collects the points');
+  await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => { window.spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 300); }; speechSynthesis.cancel = () => {}; });
+  // leaving the result screen without opening it: the points are added anyway
+  r = await play(0);
+  await page.evaluate(() => showStart());
+  check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join() && (await page.$eval('#grand-total', e => e.textContent)).includes(String(r.total + r.points)), 'leaving without opening the box still adds its points');
+  r = await play(0);
+  await page.evaluate(() => restartGame());
+  check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'so does "try again"');
+  // closing the app on the result screen and opening it somewhere else: collected on start
+  r = await play(0);
+  await page.evaluate(() => saveSession('start'));
+  await page.reload({ waitUntil: 'load' });
+  await new Promise(res => setTimeout(res, 300));
+  check((await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'reopening the app on another screen collects a closed box too');
+  await page.evaluate(() => { window.spoken = []; speechSynthesis.speak = u => { window.spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 300); }; speechSynthesis.cancel = () => {}; window.coinSound = () => window.coins++; });
+
   // leaving in the middle of the count stops it (the numbers are final when you come back)
   await clearFx();
   r = await play(0);
+  await page.click('#coin-box');
+  await new Promise(res => setTimeout(res, 1500));
   await page.evaluate(() => showStart());
   await new Promise(res => setTimeout(res, 900));
-  check((await score()) === `נקודות בבוחן: ${r.points} · סה״כ: ${r.total}`, 'leaving during the count stops it at the final numbers');
+  check((await score()) === `נקודות בבוחן: ${r.points} · סה״כ: ${r.total + r.points}` && (await money()) === [r.total + r.points, 0, r.total + r.points, 0].join(), 'leaving during the count stops it at the final numbers');
+
+  // a quiz with 0 points: no box, just the numbers
+  r = await play(10);
+  check(r.points === 0 && !(await shown('#coin-box')) && await shown('#summary-final-score'), 'a quiz with 0 points shows no box');
 
   // without a character: the party, but no character
   await page.evaluate(() => { shop.avatar = null; saveShop(); applyShop(); });

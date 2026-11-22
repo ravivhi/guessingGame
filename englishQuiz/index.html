@@ -6,6 +6,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#4a00e0">
+    <meta name="color-scheme" content="only light"><!-- the phone's dark mode must not recolor the app -->
     <title>בוחן באנגלית - אליפות!</title>
     <meta property="og:type" content="website">
     <meta property="og:title" content="בוחן באנגלית">
@@ -48,6 +49,7 @@
             color: #333;
         }
 
+        :root { color-scheme: only light; }
         .game-container {
             width: 100%;
             max-width: 450px;
@@ -470,8 +472,8 @@
 
         /* ---- 🧸 the kid look: chunky round buttons that press down, a happy color for everything, little animations ---- */
         .game-container { position: relative; z-index: 1; border-radius: 28px; box-shadow: 0 8px 0 rgba(0,0,0,0.12), 0 16px 34px rgba(0,0,0,0.22); }
-        #start-screen > .result-title { background: linear-gradient(90deg, #e53e3e, #dd6b20, #d69e2e, #38a169, #3182ce, #805ad5);
-                                        -webkit-background-clip: text; background-clip: text; color: transparent; }
+        /* the app's name: each letter its own solid rainbow color (a see-through gradient text vanished when the phone's dark mode recolored the page) */
+        #app-title span { display: inline-block; text-shadow: 0 2px 0 rgba(0,0,0,0.08); }
         .question-text { color: #4c51bf; }
         .header-info { border-bottom: 3px dashed #e9d8fd; }
         /* the 3 tabs: green / orange / blue */
@@ -565,7 +567,7 @@
             <button type="button" id="shop-btn" onclick="openShop()" aria-label="חנות" title="חנות">🏪</button>
             <button type="button" id="menu-avatar" onclick="avatarTap()" aria-label="הדמות שלי – לחצו עליה" title="לחצו על הדמות!"></button>
             <div id="avatar-bubble" role="status" onclick="avatarBubbleTap()"></div>
-            <div class="result-title" style="margin-bottom:10px;">בוחן באנגלית</div>
+            <div class="result-title" id="app-title" style="margin-bottom:10px;" aria-label="בוחן באנגלית"><span style="color:#e53e3e">ב</span><span style="color:#dd6b20">ו</span><span style="color:#d69e2e">ח</span><span style="color:#38a169">ן</span> <span style="color:#3182ce">ב</span><span style="color:#805ad5">א</span><span style="color:#e53e3e">נ</span><span style="color:#dd6b20">ג</span><span style="color:#d69e2e">ל</span><span style="color:#38a169">י</span><span style="color:#3182ce">ת</span></div>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 6px;">
                 <div id="grand-total" style="font-weight:bold;color:#2b6cb0;"></div>
                 <div id="menu-wands" title="שרביטי קסמים: בבוחן הם מראים את התשובה הנכונה" style="font-weight:bold;color:#6b46c1;white-space:nowrap;"></div>

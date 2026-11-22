@@ -19,9 +19,14 @@
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="icon" type="image/png" href="icons/icon-192.png">
     <style>
+        /* a round, friendly font for Hebrew and English, kept inside the app (works offline) */
+        @font-face { font-family: 'Varela Round'; font-style: normal; font-weight: 400; font-display: swap;
+                     src: url(fonts/varela-round-hebrew.woff2) format('woff2'); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+        @font-face { font-family: 'Varela Round'; font-style: normal; font-weight: 400; font-display: swap;
+                     src: url(fonts/varela-round-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Varela Round', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -405,6 +410,7 @@
         #shop-screen { flex-direction: column; flex: 1 1 auto; min-height: 0; }
         #shop-title { flex: 1; font-weight: bold; color: #4a5568; font-size: 1.15rem; }
         #shop-balance { font-weight: bold; color: #2b6cb0; white-space: nowrap; }
+        #shop-earned { font-weight: bold; color: #276749; background: #f0fff4; border: 2px solid #9ae6b4; border-radius: 14px; padding: 6px 10px; margin: 0 0 6px; font-size: 0.95rem; }
         #shop-msg { min-height: 1.3em; font-size: 0.95rem; font-weight: bold; margin: 0 0 4px; }
         .shop-body { flex: 1 1 auto; min-height: 0; overflow: auto; }
         .shop-section { font-weight: bold; color: #553c9a; text-align: start; margin: 6px 2px 6px; }
@@ -450,9 +456,66 @@
             font-family: inherit; font-size: 1.15rem; font-weight: bold; color: #fff;
             border: none; border-radius: 14px; cursor: pointer; touch-action: manipulation;
         }
-        #learn-prev { flex: 0 0 34%; background: #a0aec0; }
+        #learn-prev { flex: 0 0 34%; background: #b794f4; box-shadow: 0 4px 0 #6b46c1; }
         #learn-next { background: #3182ce; box-shadow: 0 4px 0 #2c5282; }
         .learn-nav button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+        /* ---- 🧸 the kid look: chunky round buttons that press down, a happy color for everything, little animations ---- */
+        .game-container { position: relative; z-index: 1; border-radius: 28px; box-shadow: 0 8px 0 rgba(0,0,0,0.12), 0 16px 34px rgba(0,0,0,0.22); }
+        #start-screen > .result-title { background: linear-gradient(90deg, #e53e3e, #dd6b20, #d69e2e, #38a169, #3182ce, #805ad5);
+                                        -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .question-text { color: #4c51bf; }
+        .header-info { border-bottom: 3px dashed #e9d8fd; }
+        /* the 3 tabs: green / orange / blue */
+        .tab-btn { border: 2px solid transparent; border-radius: 16px; box-shadow: 0 4px 0 rgba(0,0,0,0.12); transition: transform 0.1s, box-shadow 0.1s; }
+        #tab-category { background: #f0fff4; color: #276749; border-color: #9ae6b4; }
+        #tab-random { background: #fffaf0; color: #9c4221; border-color: #fbd38d; }
+        #tab-picture { background: #ebf8ff; color: #2c5282; border-color: #90cdf4; }
+        #tab-category[aria-selected="true"] { background: #48bb78; border-color: #48bb78; color: #fff; box-shadow: 0 4px 0 #2f855a; }
+        #tab-random[aria-selected="true"] { background: #ed8936; border-color: #ed8936; color: #fff; box-shadow: 0 4px 0 #c05621; }
+        #tab-picture[aria-selected="true"] { background: #4299e1; border-color: #4299e1; color: #fff; box-shadow: 0 4px 0 #2b6cb0; }
+        .tab-btn:active, .action-btn:active, .btn-restart:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        /* the answers: each one its own soft color, and they press down like real buttons */
+        .btn-answer { border-radius: 18px; box-shadow: 0 4px 0 rgba(0,0,0,0.14); color: #2d3748; }
+        .btn-answer:nth-child(5n+1) { background-color: #ebf8ff; border-color: #90cdf4; }
+        .btn-answer:nth-child(5n+2) { background-color: #fff5f7; border-color: #fbb6ce; }
+        .btn-answer:nth-child(5n+3) { background-color: #fffff0; border-color: #f6e05e; }
+        .btn-answer:nth-child(5n+4) { background-color: #f0fff4; border-color: #9ae6b4; }
+        .btn-answer:nth-child(5n)   { background-color: #faf5ff; border-color: #d6bcfa; }
+        .btn-answer:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.14); }
+        .btn-answer.correct { animation: answerYay 0.45s ease-out; box-shadow: 0 4px 0 #276749; }
+        .btn-answer.wrong { animation: answerNo 0.4s ease-in-out; box-shadow: 0 4px 0 #9b2c2c; }
+        @keyframes answerYay { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
+        @keyframes answerNo { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+        /* the small buttons: sky blue, round, pressable */
+        .action-btn { background: #ebf8ff; color: #2c5282; border: 2px solid #90cdf4; border-radius: 14px; box-shadow: 0 3px 0 #90cdf4; }
+        .action-btn:active { background: #bee3f8; }
+        #speak-btn { box-shadow: 0 3px 0 rgba(0,0,0,0.15); background: #fefcbf !important; }
+        /* the big buttons */
+        .btn-restart { border-radius: 20px; background-color: #4299e1; box-shadow: 0 5px 0 rgba(0,0,0,0.22); transition: transform 0.1s, box-shadow 0.1s; }
+        .btn-restart:disabled { box-shadow: none; }
+        #start-btn:not(:disabled) { background: linear-gradient(135deg, #48bb78, #38b2ac); animation: kidPulse 2.2s ease-in-out infinite; }
+        @keyframes kidPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+        .words-box { border-color: #bee3f8 !important; border-radius: 14px !important; }
+        #level-select, #cat-level-select { border: 2px solid #d6bcfa !important; border-radius: 12px !important; color: #553c9a !important; }
+        /* every screen pops in */
+        #start-screen, #game-screen, #summary-screen, #shop-screen, #learn-screen, #learn-done-screen { animation: screenIn 0.35s ease-out; }
+        @keyframes screenIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        /* clouds, stars and balloons drift slowly behind the card (not on picture backgrounds, they have their own) */
+        #kid-sky { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        #kid-sky span { position: absolute; line-height: 1; opacity: 0.85; animation: kidFloat 9s ease-in-out infinite alternate; }
+        #kid-sky span:nth-child(1) { top: 4%;  left: 6%;  font-size: 3rem; }
+        #kid-sky span:nth-child(2) { top: 12%; right: 8%; font-size: 1.8rem; animation-duration: 7s; animation-delay: -2s; }
+        #kid-sky span:nth-child(3) { top: 46%; left: 3%;  font-size: 2rem; animation-duration: 11s; }
+        #kid-sky span:nth-child(4) { top: 70%; right: 5%; font-size: 3.4rem; animation-duration: 10s; animation-delay: -4s; }
+        #kid-sky span:nth-child(5) { bottom: 4%; left: 12%; font-size: 1.6rem; animation-duration: 8s; animation-delay: -1s; }
+        #kid-sky span:nth-child(6) { top: 30%; right: 22%; font-size: 1.4rem; animation-duration: 6s; animation-delay: -3s; }
+        #kid-sky span:nth-child(7) { bottom: 18%; left: 40%; font-size: 2.4rem; animation-duration: 12s; animation-delay: -6s; }
+        @keyframes kidFloat { from { transform: translate(0, 0) rotate(-6deg); } to { transform: translate(18px, -26px) rotate(6deg); } }
+        body.pic-theme #kid-sky { display: none; }
+        @media (prefers-reduced-motion: reduce) {
+            #kid-sky span, #start-btn:not(:disabled), .btn-answer.correct, .btn-answer.wrong { animation: none !important; }
+        }
 
         /* Small screens. Keep these LAST: they must come after the base rules above to override them. */
         @media (max-width: 360px) {
@@ -488,6 +551,7 @@
 </head>
 <body>
 
+    <div id="kid-sky" aria-hidden="true"><span>☁️</span><span>⭐</span><span>🎈</span><span>☁️</span><span>✨</span><span>⭐</span><span>🌈</span></div>
     <div class="game-container">
         <div id="start-screen">
             <button type="button" id="shop-btn" onclick="openShop()" aria-label="חנות" title="חנות">🏪</button>
@@ -576,6 +640,7 @@
             </div>
             <p id="shop-msg"></p>
             <div class="shop-body">
+                <div id="shop-earned" title="כל הנקודות שהרווחתם אי פעם – קניות בחנות לא מורידות מהן"></div>
                 <div class="shop-section">🎁 קופסת הפתעה</div>
                 <div class="box-area">
                     <div id="box-pic" aria-hidden="true">🎁</div>
@@ -627,7 +692,7 @@
             <p id="learn-done-text" style="font-size:1.2rem;margin:8px 0;"></p>
             <p id="learn-unlock" style="font-size:1.1rem;font-weight:bold;color:#553c9a;margin:8px 0;">עכשיו בוחן קצר על המילים 📝</p>
             <button class="btn-restart" id="learn-quiz-btn" onclick="startStepQuiz()">📝 לבוחן</button>
-            <button class="btn-restart" style="margin-top:10px;background:#718096;" onclick="showStart()">🗺️ חזרה למסלול</button>
+            <button class="btn-restart" style="margin-top:10px;background:#805ad5;" onclick="showStart()">🗺️ חזרה למסלול</button>
         </div>
 
         <div id="summary-screen" class="summary-screen">
@@ -643,9 +708,9 @@
             <button type="button" id="coin-box" style="display:none" onclick="openCoinBox()"><span class="cb-pic">🎁</span><span class="cb-text">קופסת הפתעה! לחצו לפתוח</span></button>
             <button class="btn-restart" onclick="restartGame()">נסו שוב</button>
             <button class="btn-restart" id="practice-missed-btn" style="display:none;margin-top:10px;background:#dd6b20;" onclick="practiceMissed()">תרגול המילים שטעיתי</button>
-            <button class="btn-restart" id="all-words-btn" style="display:none;margin-top:10px;background:#718096;" onclick="playAll()">כל המילים</button>
+            <button class="btn-restart" id="all-words-btn" style="display:none;margin-top:10px;background:#805ad5;" onclick="playAll()">כל המילים</button>
             <button class="btn-restart" id="next-step-btn" style="display:none;margin-top:10px;background:#38a169;" onclick="nextLearnCategory()"></button>
-            <button class="btn-restart" id="change-words-btn" style="margin-top:10px;background:#718096;" onclick="showStart()">החלפת מילים</button>
+            <button class="btn-restart" id="change-words-btn" style="margin-top:10px;background:#805ad5;" onclick="showStart()">החלפת מילים</button>
         </div>
     </div>
 
@@ -698,6 +763,7 @@
             const n = pendingCoins;
             if (!n) return 0;
             grandTotal += n;
+            addEarned(n);
             pendingCoins = 0;
             try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
             savePending();
@@ -2444,6 +2510,18 @@
         let shop = { owned: ["purple"], avatar: null, theme: "purple", boxes: 0, awards: {} };
         try { const v = JSON.parse(localStorage.getItem(SHOP_KEY)); if (v && Array.isArray(v.owned)) shop = { ...shop, ...v }; } catch (e) {}
         if (!shop.owned.includes("purple")) shop.owned.push("purple");
+        // 🏅 all the points ever earned (quizzes + surprise-box coins). Buying in the shop never takes from it, so it shows how much
+        // the app was used. First run on an older device: the points it has now + what its shop items cost.
+        const EARNED_KEY = "englishquiz-earned-points";
+        let earnedTotal = parseInt(localStorage.getItem(EARNED_KEY), 10);
+        if (!(earnedTotal >= 0)) {
+            earnedTotal = grandTotal + [...SHOP_AVATARS, ...SHOP_THEMES].filter(it => shop.owned.includes(it.id)).reduce((s, it) => s + (it.price || 0), 0);
+            try { localStorage.setItem(EARNED_KEY, String(earnedTotal)); } catch (e) {}
+        }
+        function addEarned(n) {
+            earnedTotal += n;
+            try { localStorage.setItem(EARNED_KEY, String(earnedTotal)); } catch (e) {}
+        }
         let shopConfirm = null;   // the item waiting for the second tap
 
         // A box is earned during the game at the last face: count it, start the streak again from 0 (the last face
@@ -2481,6 +2559,7 @@
                 const coins = r < 0.5 + 1 / 3 ? 50 : 100;
                 it = { id: "coins", pic: "💰", name: `${coins} נקודות`, coins };
                 grandTotal += coins;
+                addEarned(coins);
                 try { localStorage.setItem(TOTAL_KEY, String(grandTotal)); } catch (e) {}
                 showGrandTotal();
             }
@@ -2759,6 +2838,7 @@
 
         function renderShop() {
             document.getElementById("shop-balance").textContent = `⭐ ${grandTotal}`;
+            document.getElementById("shop-earned").textContent = `🏅 נקודות שנצברו מאז ההתחלה: ${earnedTotal}`;
             const boxes = shop.boxes || 0;
             document.getElementById("box-count").textContent = boxes ? `יש לכם ${boxes} ${boxes === 1 ? "קופסה" : "קופסאות"}!` : "אין לכם קופסה עדיין";
             document.getElementById("box-hint").textContent = "הקופסה מגיעה כשאוספים את כל הפרצופים!";

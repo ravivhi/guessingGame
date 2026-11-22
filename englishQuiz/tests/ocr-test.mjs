@@ -1078,6 +1078,27 @@ async function testShop() {
     const shopO = await over();
     check(Math.max(mainO, shopO) <= 0, `${w}x${h}: the main screen and the shop fit without page scrolling (${mainO}/${shopO}px)`);
   }
+
+  // 🏅 all the points ever earned: buying never takes from it
+  const earned = () => page.evaluate(() => [earnedTotal, +localStorage.getItem('englishquiz-earned-points'), document.getElementById('shop-earned').textContent]);
+  await page.evaluate(() => { localStorage.removeItem('englishquiz-earned-points'); localStorage.setItem('englishquiz-total-points', '7'); });
+  await page.reload();
+  const spent = await page.evaluate(() => [...SHOP_AVATARS, ...SHOP_THEMES].filter(it => shop.owned.includes(it.id)).reduce((s, it) => s + it.price, 0));
+  let e = await earned();
+  check(spent > 0 && e[0] === 7 + spent && e[1] === e[0] && e[2].includes(String(e[0])), `an older device starts it at its points + what its shop items cost (7 + ${spent} = ${e[0]}), shown in the shop: "${e[2]}"`);
+  const start0 = e[0];
+  await page.evaluate(() => { pendingCoins = 12; savePending(); collectCoins(); renderShop(); });
+  e = await earned();
+  check(e[0] === start0 + 12 && e[1] === e[0] && e[2].includes(String(e[0])), `the points of a quiz add to it (+12 = ${e[0]})`);
+  await page.evaluate(() => { Math.random = () => 0.6; shop.boxes = 1; openBox(); });
+  e = await earned();
+  check(e[0] === start0 + 62 && e[1] === e[0], `surprise-box coins add to it too (+50 = ${e[0]})`);
+  const lion = await page.evaluate(() => SHOP_AVATARS.find(a => !shop.owned.includes(a.id) && a.price <= grandTotal)?.id);
+  await page.click(item('shop-avatars', lion)); await page.click(item('shop-avatars', lion));
+  e = await earned();
+  check((await page.evaluate(id => shop.owned.includes(id), lion)) && e[0] === start0 + 62 && e[1] === e[0] && e[2].includes(String(e[0])), `buying (${lion}) takes from the points but not from it (still ${e[0]})`);
+  await page.reload();
+  check((await earned())[0] === start0 + 62, 'it is kept after a reload');
   check(page.pageErrors.length === 0, `no page errors${page.pageErrors.length ? ': ' + page.pageErrors.join('; ') : ''}`);
   await page.close();
 }

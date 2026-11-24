@@ -20,13 +20,3 @@ signing-key-info.txt
 *.aab
 *.idsig
 *.stackdump
-
-
-# local-only test photos (copyrighted workbook pages) and test deps
-/englishQuiz/tests/fixtures/
-/englishQuiz/tests/node_modules/
-
-# English Quiz Android build output (keys live in C:\Users\Raviv.Hilleli\signing-keys\englishQuiz)
-/android-englishQuiz/build/
-/android-englishQuiz/app/build/
-/android-englishQuiz/.gradle/

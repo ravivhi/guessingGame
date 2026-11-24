@@ -4,23 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Guessing Game** is a Hebrew-language PWA implementation of a word-guessing party game. Deployed at `ravivh.com` via GitHub Pages. The entire app — markup, styles, logic, and 700+ word dictionary — lives in a single `index.html` file with no build pipeline.
+**Guessing Game** is a Hebrew-language PWA implementation of a word-guessing party game, served at `https://ravivh.com/guessingGame/`. The entire app — markup, styles, logic, and 700+ word dictionary — lives in a single file, `guessingGame/index.html`, with no build pipeline.
 
-## alfi/ is generated — do not edit here
+## Where it is published (since 2026-11-24)
 
-`alfi/` (served at ravivh.com/alfi/) is synced from the separate public repo **ravivhi/alfi** (`web/` folder) by `.github/workflows/sync-alfi.yml` here, which overwrites this folder. It runs automatically on every push to alfi's main that changes web/ (alfi's publish.yml starts it with a fine-grained token that has only Actions read/write here), or by hand (Run workflow). Make alfi changes in that repo. ravivhi/alfi must never get a token that can write contents here (its collaborators must not be able to change anything else here), so keep it a pull, never a push. `.well-known/assetlinks.json` stays here because it must live at the domain root.
+- `ravivh.com` is the custom domain of the user site repo **ravivhi/ravivhi.github.io** (domain root: the redirect page and `.well-known/assetlinks.json` for all the Android apps). So every `ravivhi` repo with Pages is served at `ravivh.com/<repo>/`.
+- This repo publishes only the `guessingGame/` folder (`.github/workflows/pages.yml`) → ravivh.com/guessingGame/. Files outside that folder are not published.
+- English Quiz, alfi, ehadi and butz are separate repos that publish themselves (ravivhi/englishQuiz, ravivhi/alfi, ravivhi/ehadi, ravivhi/butz). Nothing is synced into this repo any more.
 
-## ehadi/ is generated too — do not edit here
+## Android
 
-`ehadi/` (served at ravivh.com/ehadi/) is synced from the public repo **ravivhi/ehadi** by `.github/workflows/sync-ehadi.yml` (tests/, android/, play-assets/, tts-proxy/ and repo files are excluded). Like alfi, it runs automatically on every push to ehadi's main that changes the web app (ehadi's publish.yml, same Actions-only token), or by hand. Make ehadi changes in that repo. Same pull-only rule as alfi.
-
-`android-englishQuiz/` is the English Quiz Android app (Bubblewrap TWA, com.raviv.englishQuiz; merged in from the old local englishQuizApp folder). The Guessing Game Android app is the Bubblewrap project at the repo root (only twa-manifest.json is tracked). Both load the website, so web changes need no rebuild. Keys stay in `C:\Users\Raviv.Hilleli\signing-keys\<app>` (never commit them); never run `bubblewrap update` (reverts targetSdk 36); `android-englishQuiz/twa-manifest.json` must stay LF (its sha1 is in manifest-checksum.txt). Everything committed here is public on ravivh.com.
+The Guessing Game Android app (com.raviv.guessingGame) is the Bubblewrap TWA project at the repo root (only twa-manifest.json is tracked). It loads the website, so web changes need no rebuild. Keys stay in `C:\Users\Raviv.Hilleli\signing-keys\<app>` (never commit them); never run `bubblewrap update` (reverts targetSdk 36).
 
 ## Development
 
 No build step, no package manager, no dependencies. To develop:
-- Open `index.html` directly in a browser, or serve it with any static file server (e.g., `python -m http.server`)
-- Deploy by pushing to `main` — GitHub Pages auto-publishes
+- Serve the repo with any static file server (e.g., `python -m http.server 8000`) and open http://localhost:8000/guessingGame/
+- Deploy by pushing to `main` — the Pages workflow publishes changes to `guessingGame/`
 
 ## Architecture
 

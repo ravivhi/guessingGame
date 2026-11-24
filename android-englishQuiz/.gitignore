@@ -1,8 +1,0 @@
-android.keystore
-signing-secrets.txt
-*.keystore
-build/
-.gradle/
-*.apk
-*.aab
-node_modules/

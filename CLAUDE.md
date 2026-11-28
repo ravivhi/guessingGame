@@ -77,3 +77,27 @@ Service Worker and Web App Manifest are both inline (as `<script>` and data URI)
 - No frameworks — stay vanilla JS/CSS
 - Screen visibility is controlled by toggling a `hidden` CSS class or `display` style directly on the screen `<div>` elements
 - The 60-second game timer is managed with `setInterval`; always clear it (`clearInterval(gameTimer)`) before starting a new round
+
+## Rules
+
+- **Bump the cache version in `guessingGame/sw.js`** (`const CACHE = 'guessing-vN'`, +1) whenever the app's files change, so installed copies update.
+- **Never rename localStorage keys** (`aliasTournamentData`, `aliasDataVersion`). Renaming one wipes players' saved games.
+- **Editing `guessingGame/index.html`:** it has a BOM, mixed CRLF/LF line endings and NUL bytes at the end, so git sees it as binary. Edit it byte by byte with a small node script, changing only what you need; never convert or re-save the whole file.
+- **Never commit keys or build outputs** at the repo root (`*.keystore`, `*.apk`, `*.aab`, `signing-key-info.txt`).
+- **Other sessions' commits:** if one has a problem, fix it in a new commit on top; never rewrite it.
+
+## Testing
+
+There are no automated tests. Serve the repo (`python -m http.server 8000`), open http://localhost:8000/guessingGame/ at phone size, play through the changed screens, and check for no console errors.
+
+## Auto-push
+
+Every time you finish a request, test the change as above. If it works, commit and push right away, without asking. If it doesn't, fix it first; never push something broken. Ask first only for something risky, like deleting data or a big rewrite.
+
+## After every push: watch the GitHub checks
+
+1. Find the run: `gh run list --repo ravivhi/guessingGame --commit $(git rev-parse HEAD)`. If none is listed yet, wait a few seconds and retry.
+2. Watch it in the background: `gh run watch <id> --exit-status`.
+3. When it finishes, tell the user whether it passed or failed.
+4. If it failed: read `gh run view <id> --log-failed`, fix the problem, test, push again and watch the new run too.
+5. If no run started, say so. The Pages deploy only runs when `guessingGame/` changes.
